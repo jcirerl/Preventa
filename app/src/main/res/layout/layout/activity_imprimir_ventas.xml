@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <Button android:id= "@+id/btimprimirventa"
+        android:text= "@string/btimprimirventa"
+        android:layout_width= "wrap_content"
+        android:layout_height= "wrap_content"
+        />
+    <Button android:id= "@+id/btbuscarimp"
+        android:text= "@string/btbuscarimp"
+        android:layout_width= "wrap_content"
+        android:layout_height= "wrap_content"
+        />
+    <EditText android:id="@+id/etimpresora"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:paddingTop="10dip"
+        android:textSize="24sp"
+        android:textColor="#ffff0000"
+ />
+    <TextView android:id="@+id/lblticket"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="TICKET"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:paddingTop="10dip"
+        android:textSize="24sp"
+        android:textColor="#ffff0000"/>
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <LinearLayout android:orientation="vertical"
+            android:id="@+id/edit_cobro"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="ticket"
+        android:id="@+id/tvticket"
+        android:layout_gravity="center"
+        android:paddingLeft="12dp"/>
+     </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

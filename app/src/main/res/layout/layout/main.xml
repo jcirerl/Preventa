@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/rlt"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:id="@+id/frm"
+
+        android:layout_height="250dp">
+
+        <ImageView android:id="@+id/imageView"
+            android:layout_width="fill_parent"
+            android:layout_height="250dp"
+            android:src="@drawable/house_kitchen_table"
+            android:scaleType="matrix" />
+
+
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_below="@+id/frm"
+        android:layout_height="match_parent">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:text="Finalise"
+            android:onClick="ButtonClick"
+            android:layout_height="wrap_content" />
+
+        <ImageView android:id="@+id/imageView1"
+            android:layout_width="fill_parent"
+            android:layout_height="250dp"
+            android:src="@drawable/house_kitchen_table"
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>

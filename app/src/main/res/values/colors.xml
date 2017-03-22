@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="window_background">#ffffff</color>
+
+    <color name="primaryDarkColor">#323232</color>
+    <color name="primaryColor">#484848</color>
+    <color name="accentColor">#F87652</color>
+
+    <color name="background_footer_item_grid_categorias">#90000000</color>
+
+    <color name="color_light">#ffffff</color>
+
+    <color name="background_header_seccion_inicio">#4B4B4B</color>
+    <item name="text_grey" type="color">#8f8f8f</item>
+    <color name="light_blue_100">#B3E5FC</color>
+    <color name="light_blue_300">#4FC3F7</color>
+    <color name="light_blue_500">#03A9F4</color>
+    <color name="light_blue_900">#01579B</color>
+
+    <color name="green_100">#C8E6C9</color>
+    <color name="green_300">#81C784</color>
+    <color name="green_500">#4CAF50</color>
+    <color name="green_900">#1B5E20</color>
+
+    <color name="today_color">#2403a9f4</color>
+    <color name="weekend_color">#1e000000</color>
+
+</resources>

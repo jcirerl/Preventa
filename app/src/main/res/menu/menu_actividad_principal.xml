@@ -1,0 +1,72 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_mesas"
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        app:actionLayout="@layout/action_view_mesas"
+        android:title="Mesas" />
+    <item
+        android:id="@+id/action_facturas"
+        android:orderInCategory="130"
+        app:showAsAction="always"
+        app:actionLayout="@layout/action_view_facturas"
+        android:title="Mesas" />
+    <item
+        android:id="@+id/action_pedidos"
+        android:orderInCategory="130"
+        app:showAsAction="always"
+        app:actionLayout="@layout/action_view_pedidos"
+        android:title="Mesas" />
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="200"
+        android:title="@string/action_settings"
+        app:showAsAction="ifRoom|withText" />
+    <item
+        android:id="@+id/action_search"
+        android:orderInCategory="300"
+        android:icon="@android:drawable/ic_menu_search"
+        android:title="@string/action_search"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="always" />
+      <!--   <item
+          android:id="@+id/action_shop"
+          android:icon="@drawable/notification_drawable"
+          android:orderInCategory="1"
+          android:title="@string/action_shop"
+          app:showAsAction="ifRoom" />
+  -->
+    <item
+        android:id="@+id/action_carrito"
+        android:icon="@drawable/notification_drawable"
+        android:title="@string/action_carrito"
+        android:orderInCategory="400"
+        app:showAsAction="always" />
+    <!-- Insignia flotante -->
+    <item
+        android:id="@+id/ic_badge"
+        android:title="Carrito Compra"
+        android:orderInCategory="400"
+        android:drawable="@drawable/carrito_compras" />
+    <item
+        android:id="@+id/action_total"
+        app:showAsAction="always"
+        app:actionLayout="@layout/action_view_total"
+        android:orderInCategory="400"
+        android:title="Total" />
+
+    <!--    <item
+            android:id="@+id/action_info"
+            android:icon="@android:drawable/ic_dialog_info"
+            android:title="@string/action_info"
+            app:showAsAction="ifRoom" />
+    -->    <item
+        android:id="@+id/action_info"
+        android:orderInCategory="500"
+        app:showAsAction="always"
+        app:actionLayout="@layout/action_view_info"
+        android:title="Info" />
+
+</menu>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+   <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:background="?attr/selectableItemBackground"
+       android:orientation="vertical"
+       android:paddingBottom="@dimen/row_padding"
+       android:paddingLeft="@dimen/general_padding"
+       android:paddingRight="@dimen/general_padding"
+       android:paddingTop="@dimen/row_padding">
+      <!--   <ImageView
+             android:id="@+id/icon"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:adjustViewBounds="true"
+             android:scaleType="centerCrop"
+             android:src="@drawable/camarones"
+             />
+     -->   <ImageView
+       android:id="@+id/icon"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_alignParentTop="true"
+       android:layout_alignParentLeft="true"
+       android:layout_centerVertical="true" />
+      <TextView
+          android:id="@+id/pid"
+          style="@style/RowTitle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentTop="true"
+          android:layout_toEndOf="@+id/icon"
+          android:layout_toRightOf="@+id/icon"
+          android:visibility="gone"
+          android:paddingLeft="@dimen/row_padding" />
+      <TextView
+          android:id="@+id/individual"
+          style="@style/RowTitle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentTop="true"
+          android:layout_toEndOf="@+id/icon"
+          android:layout_toRightOf="@+id/icon"
+          android:visibility="gone"
+          android:paddingLeft="@dimen/row_padding" />
+      <TextView
+          android:id="@+id/swpedido"
+          style="@style/RowTitle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentTop="true"
+          android:layout_toEndOf="@+id/icon"
+          android:layout_toRightOf="@+id/icon"
+          android:visibility="gone"
+          android:paddingLeft="@dimen/row_padding" />
+      <TextView
+          android:id="@+id/swfactura"
+          style="@style/RowTitle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentTop="true"
+          android:layout_toEndOf="@+id/icon"
+          android:layout_toRightOf="@+id/icon"
+          android:visibility="gone"
+          android:paddingLeft="@dimen/row_padding" />
+
+      <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
+          android:id="@+id/cant"
+          style="@style/RowTitle"
+          android:layout_width="45dp"
+          android:layout_height="wrap_content"
+          android:layout_alignParentTop="true"
+          android:layout_toEndOf="@+id/icon"
+          android:layout_toRightOf="@+id/icon"
+          android:paddingLeft="@dimen/row_padding" />
+      <TextView
+          android:id="@+id/articulo"
+          style="@style/RowTitle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentTop="true"
+          android:layout_toEndOf="@+id/cant"
+          android:layout_toRightOf="@+id/cant"
+          android:visibility="gone"
+          android:paddingLeft="@dimen/row_padding" />
+      <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
+          android:id="@+id/nombre"
+          style="@style/RowTitle"
+          android:layout_width="190dp"
+          android:layout_height="wrap_content"
+          android:layout_alignParentTop="true"
+          android:layout_toEndOf="@+id/articulo"
+          android:layout_toRightOf="@+id/articulo"
+          android:paddingLeft="@dimen/row_padding" />
+      <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
+          android:id="@+id/obs"
+          style="@style/RowTitle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentTop="true"
+          android:layout_toEndOf="@+id/nombre"
+          android:layout_toRightOf="@+id/nombre"
+          android:paddingLeft="@dimen/row_padding" />
+      <Button
+          android:id="@+id/btnAdd"
+          style="@style/RowSubtitle"
+          android:layout_gravity="center"
+          android:minHeight="0dp"
+          android:minWidth="0dp"
+          android:layout_alignParentBottom="true"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignLeft="@+id/nombre"
+          android:layout_alignStart="@+id/nombre"
+          android:layout_below="@+id/nombre"
+          android:drawableLeft="@android:drawable/ic_input_add"
+          android:layout_marginLeft="10dp"
+          android:gravity="center"
+          android:text="@string/sumar"
+          android:background="@drawable/button_bg_transparent"/>
+      <Button
+          android:id="@+id/btnMinus"
+          style="@style/RowSubtitle"
+          android:layout_gravity="center"
+          android:minHeight="0dp"
+          android:minWidth="0dp"
+          android:layout_alignParentBottom="true"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignLeft="@+id/obs"
+          android:layout_alignStart="@+id/obs"
+          android:layout_below="@+id/obs"
+          android:layout_toEndOf="@+id/btnAdd"
+          android:layout_toRightOf="@+id/btnAdd"
+          android:layout_marginLeft="20dp"
+          android:drawableLeft="@android:drawable/ic_delete"
+          android:gravity="center"
+          android:text="@string/restar"
+          android:background="@drawable/button_bg_transparent"
+          />
+
+   </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="tpv.cirer.com.marivent" >
+    <!-- Network connectivity permissions -->
+    <uses-permission android:name="android.permission.USB"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
+<!--    <uses-permission android:name="android.permission.START_PRINT_SERVICE_CONFIG_ACTIVITY" />
+    <uses-permission android:name="android.permission.BIND_PRINT_SERVICE"/>
+-->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+
+    <!-- Access Google based webservices -->
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+
+    <!-- External storage for caching. -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <!-- My Location -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/marivent"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.RicoPaRico" >
+        <receiver
+            android:name="tpv.cirer.com.marivent.servicios.AndroPHPAlarmReceiver"
+            android:process=":remote" >
+        </receiver>
+
+        <service
+            android:name="tpv.cirer.com.marivent.servicios.AndroPHPService"
+            android:exported="false" />
+
+
+        <activity
+            android:name=".ui.SplashScreen"
+            android:screenOrientation="landscape"
+            android:label="@string/titulopersonalizado" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                android:resource="@xml/device_filter" />
+
+        </activity>
+        <!--    android:theme="@style/Theme.ConNavigationDrawer"-->
+        <activity android:name=".ui.LoginActivity"
+            android:screenOrientation="landscape"
+            android:icon="@drawable/marivent"
+            android:label="@string/titulopersonalizado"
+            android:theme="@style/Theme.AppCompat.Light.Dialog"
+            android:parentActivityName=".ui.SplashScreen" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.SplashScreen" />
+        </activity>
+
+        <activity
+            android:name=".ui.ActividadPrincipal"
+            android:screenOrientation="landscape"
+            android:label="@string/titulopersonalizado"
+            android:theme="@style/Theme.ConNavigationDrawer"
+            android:parentActivityName=".ui.LoginActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.LoginActivity" />
+         </activity>
+
+<!--        <activity
+            android:name=".ui.ActividadPrincipal"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.ConNavigationDrawer">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+-->        <activity
+            android:name=".ui.ActividadConfiguracion"
+            android:label="@string/titulo_actividad_configuracion"
+            android:parentActivityName=".ui.ActividadPrincipal" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.ActividadPrincipal" />
+        </activity>
+
+        <activity
+            android:name=".ui.MesasActivity"
+            android:label="@string/titulo_actividad_mesas"
+            android:theme="@style/AppTheme"
+            android:parentActivityName=".ui.ActividadPrincipal" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.ActividadPrincipal" />
+        </activity>
+        <activity
+            android:name=".ui.PlanningActivity"
+            android:label="@string/titulo_actividad_mesas"
+            android:theme="@style/AppTheme"
+            android:parentActivityName=".ui.ActividadPrincipal" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.ActividadPrincipal" />
+        </activity>
+
+        <activity
+            android:name=".ui.SignatureActivity"
+            android:screenOrientation="landscape"
+            android:label="Signature"
+            android:parentActivityName=".ui.ActividadPrincipal" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.ActividadPrincipal" />
+        </activity>
+        <activity
+            android:name=".ui.ActivityImprimirVentas"
+            android:label="@string/titulo_actividad_print"
+            android:parentActivityName=".ui.ActividadPrincipal" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.ActividadPrincipal" />
+        </activity>
+
+    </application>
+
+</manifest>

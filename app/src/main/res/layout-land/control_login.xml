@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="500dp"
+  android:layout_height="wrap_content"
+  android:orientation="vertical"  
+  android:padding="10dip">
+
+	<TextView android:id="@+id/LblUsuario"
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content" 
+		android:text="@string/usuario"
+		android:textStyle="bold" />
+
+	<EditText android:id="@+id/TxtUsuario"
+		android:layout_height="wrap_content" 
+		android:layout_width="match_parent" 
+		android:inputType="text" />
+
+	<TextView android:id="@+id/LblPassword"
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content" 
+		android:text="@string/contrasena" 
+		android:textStyle="bold" />
+
+	<EditText android:id="@+id/TxtPassword"
+		android:layout_height="wrap_content" 
+		android:layout_width="match_parent"
+		android:inputType="textPassword" />
+
+	<LinearLayout android:orientation="horizontal" 
+		android:layout_width="match_parent"
+  		android:layout_height="match_parent" >
+  		<!--
+		<Button 
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content" 
+			android:id="@+id/BtnAceptar" 
+			android:text="@string/validar" 
+			android:paddingLeft="20dip" 
+			android:paddingRight="20dip" />-->
+		<Button
+			android:id="@+id/BtnAceptar"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="20dp"
+			android:layout_marginRight="20dp"
+			android:background="@drawable/button_bg_transparent"
+			android:textColor="#ff0000ff"
+			android:text="@string/validar" />
+
+		<Button
+			android:id="@+id/BtnSalir"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_toRightOf="@id/BtnAceptar"
+			android:layout_marginLeft="20dp"
+			android:layout_marginRight="20dp"
+			android:background="@drawable/button_bg_transparent"
+			android:textColor="#ff0000ff"
+			android:text="@string/salir" />
+
+</LinearLayout>
+
+</LinearLayout>

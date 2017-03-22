@@ -1,0 +1,80 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="categoria_servidor_datos"
+        android:title="Servidor">
+        <ListPreference
+            android:defaultValue="@string/opservidor"
+            android:key="opurl"
+            android:title="Servidor Datos"
+            android:summary="Asignacion Servidor Datos Aplicacion"
+            android:dialogTitle="Indicar Servidor"
+            android:entries="@array/servidor"
+            android:entryValues="@array/url" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="categoria_idioma"
+        android:title="Idiomas">
+        <ListPreference
+            android:defaultValue="@string/opidioma"
+            android:key="opidioma"
+            android:title="Lenguaje"
+            android:summary="Asignacion Idioma Aplicacion"
+            android:dialogTitle="Indicar Idioma"
+            android:entries="@array/lenguaje"
+            android:entryValues="@array/idioma" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="categoria_viaual_tablet"
+        android:title="Visual">
+        <ListPreference
+            android:defaultValue="02"
+            android:key="opgrid"
+            android:title="Grid Articulos"
+            android:summary="Asignacion Tamaño Imagenes Articulos"
+            android:dialogTitle="Indicar Tamaño"
+            android:entries="@array/tipogrid"
+            android:entryValues="@array/tamanyo" />
+        <ListPreference
+            android:defaultValue="64"
+            android:key="opmesas"
+            android:title="Planning Mesas"
+            android:summary="Asignacion Tamaño Imagenes Mesas"
+            android:dialogTitle="Indicar Tamaño"
+            android:entries="@array/tipomesa"
+            android:entryValues="@array/tamanyo_mesa" />
+        <ListPreference
+            android:defaultValue="0"
+            android:key="optoolbar"
+            android:title="Toolbar Filtros"
+            android:summary="Activar/Desactivar al iniciar Toolbar Filtros"
+            android:dialogTitle="Indicar Modo Toolbar"
+            android:entries="@array/tipotoolbar"
+            android:entryValues="@array/modo" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="categoria_log"
+        android:title="Log">
+        <ListPreference
+            android:defaultValue="false"
+            android:key="oplog"
+            android:title="Guardar Log"
+            android:summary="Creacion Fichero LOG Aplicacion"
+            android:dialogTitle="Control Log"
+            android:entries="@array/log"
+            android:entryValues="@array/ctrllog" />
+    </PreferenceCategory>
+
+<!--    <PreferenceCategory
+        android:key="categoria_notificaciones"
+        android:title="@string/categoria_notificaciones">
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/lista_frecuencia"
+            android:entryValues="@array/lista_valores_frecuencia"
+            android:key="@string/key_preferencia"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:summary="%s"
+            android:title="@string/titulo_preferencia" />
+    </PreferenceCategory>-->
+</PreferenceScreen>

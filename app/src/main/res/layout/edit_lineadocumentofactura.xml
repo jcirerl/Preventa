@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background = "#ffffff"   android:orientation="vertical" >
+    <ScrollView android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <!-- se colocal el LinearLayout que contendra el formulario -->
+        <LinearLayout android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TextView android:id="@+id/lblNombre"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Nombre Articulo"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:paddingTop="10dip"
+                android:textSize="24sp"/>
+
+            <TextView android:id="@+id/Nombre"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#03A9F4"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:paddingTop="10dip"
+                android:textSize="24sp"/>
+
+            <TextView android:id="@+id/lblCant"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Cantidad"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:paddingTop="10dip"
+                android:textSize="24sp"/>
+
+            <EditText android:id="@+id/Cant"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:paddingTop="10dip"
+                android:textSize="24sp"
+                android:textColor="#ffff0000"
+                android:maxLength="10"
+                android:inputType="numberDecimal"/>
+
+            <TextView android:id="@+id/lblPreu"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Preu"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:paddingTop="10dip"
+                android:textSize="24sp"/>
+
+            <EditText android:id="@+id/Preu"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:paddingTop="10dip"
+                android:textSize="24sp"
+                android:textColor="#ffff0000"
+                android:maxLength="10"
+                android:inputType="numberDecimal"/>
+
+            <TextView android:id="@+id/lblImporte"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Importe"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:paddingTop="10dip"
+                android:textSize="24sp"/>
+
+            <EditText android:id="@+id/Importe"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:paddingTop="10dip"
+                android:textSize="24sp"
+                android:textColor="#ffff0000"
+                android:maxLength="10"
+                android:inputType="numberDecimal"/>
+
+            <!-- Button Guardar Cambios -->
+            <ToggleButton android:id="@+id/BtnGuardar1"
+                android:textOn="@string/on"
+                android:textOff="@string/off"
+                android:layout_width="wrap_content"
+                android:layout_height="90dp"
+                android:background="@drawable/toggle_style" />
+
+         </LinearLayout>
+    </ScrollView>
+</LinearLayout>

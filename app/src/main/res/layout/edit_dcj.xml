@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background = "#ffffff"   android:orientation="vertical" >
+    <ScrollView android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <!-- se colocal el LinearLayout que contendra el formulario -->
+        <LinearLayout android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TextView android:id="@+id/lblSeccion"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/seccion"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:paddingTop="10dip"
+                android:textSize="24sp"/>
+
+            <TextView android:id="@+id/Dcj"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:paddingTop="10dip"
+                android:textSize="24sp"/>
+
+            <!-- Input Fecha -->
+            <TextView android:id="@+id/lblFecha"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/fecha"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:paddingTop="10dip"
+                android:textSize="24sp"/>
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <EditText
+                    android:id="@+id/Fecha_apertura"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="9dp"
+                    android:text="cancel"
+                    android:textColor="#ffff0000"
+                    android:textSize="24sp"
+                    android:inputType="date"/>
+
+                <Button
+                    android:id="@+id/date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentBottom= "true"
+                    android:layout_toRightOf="@id/Fecha_apertura"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="15dp"
+                    android:textColor="#ff0000ff"
+                    android:text="@string/show_date_picker_fragment" />
+
+            </RelativeLayout>
+            <TextView android:id="@+id/lblSaldoInicio"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/saldoinicio"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:paddingTop="10dip"
+                android:textSize="24sp"/>
+
+            <EditText android:id="@+id/SaldoInicio"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:paddingTop="10dip"
+                android:textSize="24sp"
+                android:textColor="#ffff0000"
+                android:maxLength="10"
+                android:inputType="numberDecimal"/>
+
+            <!-- Input Apertura -->
+            <CheckBox
+                android:id="@+id/chkApertura"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ON_apertura"
+                android:textSize="24sp"
+                android:checked="true" />
+
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <!-- Button Guardar Cambios -->
+                <ToggleButton android:id="@+id/BtnGuardar1"
+                    android:textOn="@string/on"
+                    android:textOff="@string/off"
+                    android:layout_width="wrap_content"
+                    android:layout_height="90dp"
+                    android:background="@drawable/toggle_style" />
+                <Button
+                    android:id="@+id/BtnSalir"
+                    android:layout_width="wrap_content"
+                    android:layout_height="90dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentBottom= "true"
+                    android:layout_toRightOf="@id/BtnGuardar1"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/button_bg_transparent"
+                    android:textColor="#ff0000ff"
+                    android:text="@string/salir" />
+            </RelativeLayout>
+            <!--   <Button
+                   android:id="@+id/btnGuardar"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="0.09"
+                   android:textSize="24dip"
+                   android:text="Guardar" />
+                -->
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

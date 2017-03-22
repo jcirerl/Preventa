@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/appbar1"
+    android:layout_height="30dp"
+    android:layout_width="match_parent"
+    android:minHeight="?attr/actionBarSize"
+    android:background="?attr/colorPrimary"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light" >
+    <TextView android:id="@+id/LblGrup"
+        android:layout_width="45dip"
+        android:layout_height="wrap_content"
+        android:text="@string/grupo"
+        />
+    <Spinner android:id="@+id/CmbToolbarGrup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/LblGrup" />
+
+    <TextView android:id="@+id/LblEmpr"
+        android:layout_width="60dip"
+        android:layout_height="wrap_content"
+        android:text="@string/empresa"
+        android:layout_toRightOf="@id/CmbToolbarGrup"/>
+    <Spinner android:id="@+id/CmbToolbarEmpr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/LblEmpr" />
+
+    <TextView android:id="@+id/LblLocal"
+        android:layout_width="40dip"
+        android:layout_height="wrap_content"
+        android:text="@string/local"
+        android:layout_toRightOf="@id/CmbToolbarEmpr"/>
+    <Spinner android:id="@+id/CmbToolbarLocal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/LblLocal" />
+
+    <TextView android:id="@+id/LblSec"
+        android:layout_width="55dip"
+        android:layout_height="wrap_content"
+        android:text="@string/seccion"
+        android:layout_toRightOf="@id/CmbToolbarLocal"/>
+
+    <Spinner android:id="@+id/CmbToolbarSec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/LblSec" />
+
+    <TextView android:id="@+id/LblCaja"
+        android:layout_width="35dip"
+        android:layout_height="wrap_content"
+        android:text="@string/caja"
+        android:layout_toRightOf="@id/CmbToolbarSec"/>
+
+    <Spinner android:id="@+id/CmbToolbarCaja"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/LblCaja" />
+
+    <TextView android:id="@+id/LblTurno"
+        android:layout_width="55dip"
+        android:layout_height="wrap_content"
+        android:text="@string/turno"
+        android:layout_toRightOf="@id/CmbToolbarCaja"/>
+
+    <Spinner android:id="@+id/CmbToolbarTurno"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/LblTurno"    />
+
+    <TextView android:id="@+id/LblFra"
+        android:layout_width="55dip"
+        android:layout_height="wrap_content"
+        android:text="@string/serie"
+        android:layout_toRightOf="@id/CmbToolbarTurno"/>
+
+    <Spinner android:id="@+id/CmbToolbarFra"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/LblFra"    />
+
+</android.support.v7.widget.Toolbar>

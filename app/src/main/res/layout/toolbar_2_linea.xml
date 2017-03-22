@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="30dp"
+    android:layout_width="match_parent"
+    android:minHeight="?attr/actionBarSize"
+    android:background="?attr/colorPrimary"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light" >
+
+     <TextView android:id="@+id/LblEmpleados"
+        android:layout_width="80dip"
+        android:layout_height="wrap_content"
+        android:text="@string/empleados"
+        />
+
+    <Spinner android:id="@+id/CmbToolbarEmpleados"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/LblEmpleados"    />
+
+    <TextView android:id="@+id/LblRangos"
+        android:layout_width="60dip"
+        android:layout_height="wrap_content"
+        android:text="@string/rangos"
+        android:layout_toRightOf="@id/CmbToolbarEmpleados"/>
+
+    <Spinner android:id="@+id/CmbToolbarRangos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/LblRangos"    />
+
+    <TextView android:id="@+id/LblMesa"
+        android:layout_width="60dip"
+        android:layout_height="wrap_content"
+        android:text="@string/mesas"
+        android:layout_toRightOf="@id/CmbToolbarRangos"/>
+
+    <Spinner android:id="@+id/CmbToolbarMesas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/LblMesa"    />
+
+    <TextView android:id="@+id/LblMoneda"
+        android:layout_width="60dip"
+        android:layout_height="wrap_content"
+        android:text="@string/moneda"
+        android:layout_toRightOf="@id/CmbToolbarMesas"/>
+
+    <Spinner android:id="@+id/CmbToolbarMoneda"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/LblMoneda" />
+
+    <TextView android:id="@+id/LblTerminal"
+        android:layout_width="65dip"
+        android:layout_height="wrap_content"
+        android:text="@string/terminal"
+        android:layout_toRightOf="@id/CmbToolbarMesas"/>
+
+    <Spinner android:id="@+id/CmbToolbarTerminal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/LblTerminal" />
+
+    <include layout="@layout/date_layout_view"
+        android:id="@+id/appbar3" />
+
+    <!-- Input Fecha -->
+<!--    <TextView android:id="@+id/lblFecha"
+        android:layout_width="80dip"
+        android:layout_height="wrap_content"
+        android:text="Fecha"
+        android:layout_toRightOf="@id/CmbToolbarMesas"/>
+
+
+        <EditText
+            android:id="@+id/Fecha_apertura"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="cancel"
+            android:inputType="date"
+            android:layout_toRightOf="@id/lblFecha"/>
+
+        <Button
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/Fecha_apertura"
+            android:text="@string/show_date_picker_fragment"
+            />
+-->
+    <!--
+        <TextView android:id="@+id/LblMensaje"
+            android:layout_width="80dip"
+            android:layout_height="wrap_content"
+            android:text="Tabla"
+            android:layout_toRightOf="@id/CmbToolbarOtros"/>
+
+        <Spinner android:id="@+id/CmbToolbarTabla"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/LblMensaje"
+            />
+
+        <TextView android:id="@+id/LblConexion"
+            android:layout_width="180dip"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:layout_toRightOf="@id/CmbToolbarTabla"/>
+    -->
+</android.support.v7.widget.Toolbar>

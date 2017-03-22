@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/appbar1"
+    android:layout_height="30dp"
+    android:layout_width="match_parent"
+    android:minHeight="?attr/actionBarSize"
+    android:background="@color/accentColor"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light" >
+    <TextView android:id="@+id/LblPlato"
+        android:layout_width="45dip"
+        android:layout_height="wrap_content"
+        android:text="@string/plato"
+        />
+    <Spinner android:id="@+id/CmbToolbarPlato"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/LblPlato" />
+
+</android.support.v7.widget.Toolbar>

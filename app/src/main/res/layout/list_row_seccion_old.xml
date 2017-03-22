@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height= "?android:attr/listPreferredItemHeight"
+    android:padding= "6dip">
+    <TextView
+        android:id="@+id/pid"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id= "@+id/icon"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop= "true"
+        android:layout_alignParentBottom= "true"
+        android:layout_marginRight= "6dip"/>
+    <TextView
+        android:id= "@+id/seccion"
+        android:layout_width= "match_parent"
+        android:layout_height= "match_parent"
+        android:layout_toRightOf= "@id/icon"
+        android:layout_alignParentTop= "true"
+        android:layout_alignParentRight= "true"
+        android:singleLine= "true"
+        android:ellipsize= "marquee"/>
+    <TextView
+        android:id= "@+id/row_toptext"
+        android:layout_width= "match_parent"
+        android:layout_height= "match_parent"
+        android:layout_toRightOf= "@id/seccion"
+        android:layout_alignParentTop= "true"
+        android:layout_alignParentRight= "true"
+        android:singleLine= "true"
+        android:ellipsize= "marquee"/>
+
+    <TextView
+        android:id= "@+id/row_bottomtext"
+        android:layout_width= "match_parent"
+        android:layout_height= "match_parent"
+        android:layout_toRightOf= "@id/icon"
+        android:layout_below="@+id/row_toptext"
+        android:layout_alignParentBottom= "true"
+        android:layout_alignParentRight= "true"
+        android:singleLine= "true"
+        android:ellipsize= "marquee"/>
+    <ImageView
+        android:id="@+id/ivaincluido"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop= "true"
+        android:layout_alignParentBottom= "true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/no" />
+
+<!--
+    <ImageView
+            android:id="@+id/thumbnail"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="fitCenter"
+            android:src="@drawable/placeholder" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="8dp"
+            android:maxLines="3" />
+-->
+</RelativeLayout>

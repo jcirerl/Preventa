@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group
+        android:id="@+id/menu_top"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/item_inicio"
+            android:checked="true"
+            android:icon="@drawable/inicio"
+            android:title="@string/item_inicio" />
+        <item
+            android:id="@+id/item_salir"
+            android:checked="true"
+            android:icon="@drawable/close"
+            android:title="@string/item_salir" />
+        <item
+            android:id="@+id/item_cuenta"
+            android:icon="@drawable/cuenta"
+            android:title="@string/item_cuenta" />
+    </group>
+
+    <group
+        android:id="@+id/menu_bottom"
+        android:checkableBehavior="single">
+        <item android:id="@+id/grupitem_seccion"
+              android:title="@string/grupitem_seccion">
+            <menu>
+                <item
+                    android:id="@+id/item_seccion"
+                    android:icon="@drawable/section"
+                    app:actionViewClass="android.widget.TextView"
+                    android:title="@string/item_seccion" />
+                <item
+                    android:id="@+id/item_caja"
+                    android:icon="@android:drawable/ic_lock_lock"
+                    app:actionViewClass="android.widget.TextView"
+                    android:title="@string/item_caja" />
+                <item
+                    android:id="@+id/item_turno"
+                    android:icon="@drawable/turn"
+                    app:actionViewClass="android.widget.TextView"
+                    android:title="@string/item_turno" />
+                <item
+                    android:id="@+id/item_dcj"
+                    android:icon="@drawable/dailycash"
+                    app:actionViewClass="android.widget.TextView"
+                    android:title="@string/item_dcj" />
+
+                <item
+                    android:id="@+id/item_pedido"
+                    android:icon="@drawable/orders"
+                    app:actionViewClass="android.widget.TextView"
+                    android:title="@string/item_pedido" />
+                <item
+                    android:id="@+id/item_factura"
+                    android:icon="@drawable/invoices"
+                    app:actionViewClass="android.widget.TextView"
+                    android:title="@string/item_ticket" />
+                <item
+                    android:id="@+id/item_mesas"
+                    android:icon="@drawable/tables"
+                    app:actionViewClass="android.widget.TextView"
+                    android:title="@string/item_mesas" />
+                <item
+                    android:id="@+id/item_planning"
+                    android:icon="@drawable/tables"
+                    app:actionViewClass="android.widget.TextView"
+                    android:title="@string/item_planning" />
+                <item
+                    android:id="@+id/item_categorias"
+                    android:icon="@drawable/categorias"
+                    android:title="@string/item_categorias" />
+<!--                <item
+                    android:id="@+id/item_print"
+                    android:icon="@android:drawable/ic_menu_gallery"
+                    android:title="@string/item_print" />
+                <item
+                    android:id="@+id/item_archivo"
+                    android:icon="@android:drawable/ic_menu_gallery"
+                    android:title="@string/item_archivo" />
+-->            </menu>
+        </item>
+
+        <item android:id="@+id/grupitem_configuracion"
+              android:title="@string/grupitem_configuracion">
+            <menu>
+                <item
+                    android:id="@+id/item_configuracion"
+                    android:icon="@drawable/configuracion"
+                    android:title="@string/item_configuracion" />
+            </menu>
+        </item>
+
+    </group>
+
+
+</menu>
