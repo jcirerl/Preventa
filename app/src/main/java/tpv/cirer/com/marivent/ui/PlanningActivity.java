@@ -18,7 +18,7 @@ import tpv.cirer.com.marivent.modelo.EmployeePlanItem;
 public class PlanningActivity extends AppCompatActivity
 {
     private static final int GENERATED_AMOUNT = 20;
-    public static TimeTable timeTable;
+    private static TimeTable timeTable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

@@ -17,6 +17,7 @@ import java.util.Random;
 
 import tpv.cirer.com.marivent.herramientas.AbstractGridItem;
 import tpv.cirer.com.marivent.herramientas.TimeRange;
+import tpv.cirer.com.marivent.ui.ActividadPrincipal;
 
 public class EmployeePlanItem extends AbstractGridItem
 {
@@ -45,6 +46,10 @@ public class EmployeePlanItem extends AbstractGridItem
         final String[] projectNames = {"Roof Renovation", "Mall Construction", "Demolition old Hallway"};
         SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MM/dd"); //format it as per your requirement
 ///        String dateNow = formatter.format(currentDate.getTime());
+        final String[] idmesas = new String[ActividadPrincipal.mesasList.size()];
+        for (int i = 0; i < ActividadPrincipal.mesasList.size(); i++) {
+            idmesas[i] = ActividadPrincipal.mesasList.get(i).getMesaNombre_Mesas();
+        }
 
         // Generate a date range between now and 30 days
         Random rand = new Random();
@@ -60,8 +65,8 @@ public class EmployeePlanItem extends AbstractGridItem
         hoy.setTime(start.getTime());
         hoy.add(Calendar.DATE, -1);  // number of days to add
 
-        return new EmployeePlanItem(context, firstNameSamples[rand.nextInt(firstNameSamples.length)] + " " +
-                lastNameSamples[rand.nextInt(lastNameSamples.length)],
+        return new EmployeePlanItem(context,
+                idmesas[rand.nextInt(idmesas.length)],
                 projectNames[rand.nextInt(projectNames.length)],
                 start.getTime(),
                 end.getTime(),

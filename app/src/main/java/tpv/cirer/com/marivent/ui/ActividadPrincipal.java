@@ -313,7 +313,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     private static String url_updatemesa_mesa;
     private static String url_pedido_a_factura_id;
 
-    private ArrayList<Mesa> mesaList;
+    private static ArrayList<Mesa> mesaList;
     private static String URL_MESA;
 
     private ArrayList<Empleado> empleadoList;
@@ -346,7 +346,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     private ArrayList<Rango> rangosList;
     private Spinner cmbToolbarRangos;
 
-    private ArrayList<Mesa> mesasList;
+    public static ArrayList<Mesa> mesasList;
     private Spinner cmbToolbarMesas;
 
     private ArrayList<Empleado> empleadosList;

@@ -168,8 +168,8 @@ public class TimeTable extends FrameLayout
 			allGridItems.addAll(l);
 			
 			for(int i = 0; i < l.size() / columns; i++)
-				itemsY.add(new GuideYItem(i == 0 ? r.getPersonName() : "")); // only write the name once.
-		}
+	    		itemsY.add(new GuideYItem(i == 0 ? r.getPersonName() : "")); // only write the name once.
+			}
 		
 		if (gridAdapter == null)
 		{
