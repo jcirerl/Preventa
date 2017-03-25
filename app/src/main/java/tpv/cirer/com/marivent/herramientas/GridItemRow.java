@@ -11,13 +11,13 @@ import java.util.List;
 public class GridItemRow<T extends IGridItem>
 {
 	private final TimeRange timeRange;
-	private final String personName;
+	private final String mesaName;
 	private final List<GridItem> items;
 	
-	public GridItemRow(final String personName, final TimeRange timeRange, final List<T> containedItems)
+	public GridItemRow(final String mesaName, final TimeRange timeRange, final List<T> containedItems)
 	{
 		this.timeRange = timeRange; // We need to keep track of the time range of this row so we can display the current day
-		this.personName = personName;
+		this.mesaName = mesaName;
 		items = generateGridItems(fitItems(containedItems), timeRange);
 	}
 	
@@ -133,9 +133,9 @@ public class GridItemRow<T extends IGridItem>
 		return gridItems;
 	}
 	
-	public String getPersonName()
+	public String getMesaName()
 	{
-		return personName;
+		return mesaName;
 	}
 	
 	/**

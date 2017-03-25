@@ -19,9 +19,15 @@ import tpv.cirer.com.marivent.herramientas.AbstractGridItem;
 import tpv.cirer.com.marivent.herramientas.TimeRange;
 import tpv.cirer.com.marivent.ui.ActividadPrincipal;
 
+//import com.greasemonk.timetable.AbstractGridItem;
+
+//import tpv.cirer.com.marivent.herramientas.AbstractGridItem;
+//import tpv.cirer.com.marivent.herramientas.TimeRange;
+//import tpv.cirer.com.marivent.ui.ActividadPrincipal;
+
 public class EmployeePlanItem extends AbstractGridItem
 {
-    private String employeeName, projectName;
+    private String mesaName, projectName;
     private String planName = "-";
     private TimeRange timeRange;
     private Context context;
@@ -29,17 +35,17 @@ public class EmployeePlanItem extends AbstractGridItem
 
     public EmployeePlanItem() {}
 
-    public EmployeePlanItem(Context context, String employeeName, String projectName, Date planStart, Date planEnd, String planName, Date fechaDia)
+    public EmployeePlanItem(Context context, String mesaName, String projectName, Date planStart, Date planEnd, String planName, Date fechaDia)
     {
         this.context = context;
-        this.employeeName = employeeName;
+        this.mesaName = mesaName;
         this.projectName = projectName;
         this.timeRange = new TimeRange(planStart, planEnd);
         this.planName = planName;
         this.fechaDia = fechaDia;
     }
 
-    public static EmployeePlanItem generateSample(Context context)
+    public static EmployeePlanItem generateSample(Context context, int ind)
     {
         final String[] firstNameSamples = {"Kristeen", "Carran", "Lillie", "Marje", "Edith", "Steve", "Henry", "Kyle", "Terrence"};
         final String[] lastNameSamples = {"Woodham", "Boatwright", "Lovel", "Dennel", "Wilkerson", "Irvin", "Aston", "Presley"};
@@ -66,8 +72,8 @@ public class EmployeePlanItem extends AbstractGridItem
         hoy.add(Calendar.DATE, -1);  // number of days to add
 
         return new EmployeePlanItem(context,
-                idmesas[rand.nextInt(idmesas.length)],
-                projectNames[rand.nextInt(projectNames.length)],
+                idmesas[ind],
+                projectNames[0],
                 start.getTime(),
                 end.getTime(),
                 formatter.format(hoy.getTime()),
@@ -89,9 +95,9 @@ public class EmployeePlanItem extends AbstractGridItem
 
 
     @Override
-    public String getPersonName()
+    public String getMesaName()
     {
-        return employeeName;
+        return mesaName;
     }
 
 
@@ -127,16 +133,16 @@ public class EmployeePlanItem extends AbstractGridItem
 }
 /*public class EmployeePlanItem implements IGridItem
 {
-    private String employeeName, projectName;
+    private String mesaName, projectName;
     private TimeRange timeRange;
     private Context context;
 
     public EmployeePlanItem() {}
 
-    public EmployeePlanItem(Context context, String employeeName, String projectName, Date planStart, Date planEnd)
+    public EmployeePlanItem(Context context, String mesaName, String projectName, Date planStart, Date planEnd)
     {
         this.context = context;
-        this.employeeName = employeeName;
+        this.mesaName = mesaName;
         this.projectName = projectName;
         this.timeRange = new TimeRange(planStart, planEnd);
     }
@@ -177,6 +183,6 @@ public class EmployeePlanItem extends AbstractGridItem
     @Override
     public String getPersonName()
     {
-        return employeeName;
+        return mesaName;
     }
 }*/

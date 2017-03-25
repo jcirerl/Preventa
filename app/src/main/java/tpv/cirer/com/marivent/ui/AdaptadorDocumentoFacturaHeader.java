@@ -14,11 +14,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import tpv.cirer.com.marivent.R;
-import tpv.cirer.com.marivent.herramientas.AutoResizeTextView;
-import tpv.cirer.com.marivent.herramientas.Filtro;
-import tpv.cirer.com.marivent.herramientas.IMyDocumentoFacturaViewHolderClicks;
-import tpv.cirer.com.marivent.modelo.DocumentoFactura;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +23,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import tpv.cirer.com.marivent.R;
+import tpv.cirer.com.marivent.herramientas.AutoResizeTextView;
+import tpv.cirer.com.marivent.herramientas.Filtro;
+import tpv.cirer.com.marivent.herramientas.IMyDocumentoFacturaViewHolderClicks;
+import tpv.cirer.com.marivent.modelo.DocumentoFactura;
 
 /**
  * Created by JUAN on 08/11/2016.
@@ -58,10 +59,11 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_ITEM) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_row_documentofactura, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_row_documentofactura_sony, parent, false);
             return new VHItem(v, new IMyDocumentoFacturaViewHolderClicks() {
                 //    public void onPotato(View caller) { Log.d("VEGETABLES", "Poh-tah-tos"); };
                 public void onPotato(View caller,
+                                     ImageView imageDocumentoFactura,
                                      final String campoDocumentoFactura,
                                      String iconDocumentoFactura,
                                      String idDocumentoFactura,
@@ -140,6 +142,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
 
                 };
                 public void onDelete(Button callerButton,
+                                     ImageView imageDocumentoFactura,
                                      String idDocumentoFactura,
                                      String estadoDocumentoFactura,
                                      String serieDocumentoFactura,
@@ -161,12 +164,14 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
 
 
                 public void onUpdate(Button callerButton,
+                                     ImageView imageDocumentoFactura,
                                      String idDocumentoFactura,
                                      String estadoDocumentoFactura,
                                      String mesaDocumentoFactura,
                                      String serieDocumentoFactura,
                                      String facturaDocumentoFactura ) {
                     Log.d("UPDATE BUTTON", "+");
+                    final ImageView imageFTP = imageDocumentoFactura;
                     final int idFTP = Integer.parseInt(idDocumentoFactura);
                     final String mesaFTP = mesaDocumentoFactura;
                     final String serieFTP = serieDocumentoFactura;
@@ -174,13 +179,14 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
                     final String estadoFTP = estadoDocumentoFactura;
 
                     try {
-                        mCallbackDocumentoFactura.onUpdateLineasDocumentoFacturaSelected(idFTP,mesaFTP,estadoFTP,serieFTP,facturaFTP);
+                        mCallbackDocumentoFactura.onUpdateLineasDocumentoFacturaSelected(imageFTP,idFTP,mesaFTP,estadoFTP,serieFTP,facturaFTP);
                     } catch (ClassCastException exception) {
                         // do something
                     }
 
                 }
                 public void onCobro (Button callerButton,
+                                     ImageView imageDocumentoFactura,
                                      String idDocumentoFactura,
                                      String estadoDocumentoFactura,
                                      String serieDocumentoFactura,
@@ -341,7 +347,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
 
             //cast holder to VHHeader and set data for header.
             /// SONY //
-/*            myText = " "+
+            myText = " "+
                     "S"+" "+
                     ActividadPrincipal.getPalabras("Factura")+ StringUtils.repeat(space01, 4)+
                     ActividadPrincipal.getPalabras("Fecha")+StringUtils.repeat(space01, 5)+
@@ -354,7 +360,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
                     ActividadPrincipal.getPalabras("Tipo")+StringUtils.repeat(space01, 6)+
                     ActividadPrincipal.getPalabras("Lineas")+space01+space01+
                     ActividadPrincipal.getPalabras("Observacion");
-*/
+/*
             // MARIVENT
             myText = StringUtils.repeat(space01, 5)+
                     "S"+StringUtils.repeat(space01, 2)+
@@ -369,7 +375,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
                     ActividadPrincipal.getPalabras("Tipo")+StringUtils.repeat(space01, 11)+
                     ActividadPrincipal.getPalabras("Lineas")+StringUtils.repeat(space01, 3)+
                     ActividadPrincipal.getPalabras("Observacion");
-            //    Html.fromHtml(myText.replace(" ", "&nbsp;")).toString()
+*/            //    Html.fromHtml(myText.replace(" ", "&nbsp;")).toString()
             //cast holder to VHHeader and set data for header_facturas.
             ((VHHeader) holder).headerDocumentoFactura.setText(Html.fromHtml(myText.replace(" ", "&nbsp;")).toString());
             ((VHHeader) holder).headerDocumentoFactura.setTextColor(Color.WHITE);
@@ -410,7 +416,8 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
         public Button UpdateDocumentoFactura;
         public Button DeleteDocumentoFactura;
         public Button CobroDocumentoFactura;
-//      MARIVENT
+/*
+        //      MARIVENT
         public AutoResizeTextView SerieDocumentoFactura;
         public AutoResizeTextView FacturaDocumentoFactura;
         public AutoResizeTextView FechaDocumentoFactura;
@@ -428,7 +435,8 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
         public AutoResizeTextView ImptotalDocumentoFactura;
         public AutoResizeTextView TfraDocumentoFactura;
 
-/*      SONY
+*/
+//      SONY
         public TextView SerieDocumentoFactura;
         public TextView FacturaDocumentoFactura;
         public TextView FechaDocumentoFactura;
@@ -445,7 +453,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
         public TextView ImpivaDocumentoFactura;
         public TextView ImptotalDocumentoFactura;
         public AutoResizeTextView TfraDocumentoFactura;
-*/
+
         public IMyDocumentoFacturaViewHolderClicks mListenerDocumentoFactura;
 
         public VHItem(View itemView,IMyDocumentoFacturaViewHolderClicks listener) {
@@ -454,6 +462,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
             mListenerDocumentoFactura = listener;
 
             //       this.MinCant.setOnClickListener(this);
+/*
 //         MARIVENT
             this.IdDocumentoFactura = (TextView) itemView.findViewById(R.id.pid);
             this.iconDocumentoFactura = (ImageView) itemView.findViewById(R.id.icon);
@@ -472,7 +481,8 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
             this.ImpivaDocumentoFactura = (TextView) itemView.findViewById(R.id.impiva);
             this.ImptotalDocumentoFactura = (AutoResizeTextView) itemView.findViewById(R.id.imptotal);
             this.TfraDocumentoFactura = (AutoResizeTextView) itemView.findViewById(R.id.tfra);
-/*
+*/
+//  SONY
             this.IdDocumentoFactura = (TextView) itemView.findViewById(R.id.pid);
             this.iconDocumentoFactura = (ImageView) itemView.findViewById(R.id.icon);
             this.EstadoDocumentoFactura = (AutoResizeTextView) itemView.findViewById(R.id.estado);
@@ -490,7 +500,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
             this.ImpivaDocumentoFactura = (TextView) itemView.findViewById(R.id.impiva);
             this.ImptotalDocumentoFactura = (TextView) itemView.findViewById(R.id.imptotal);
             this.TfraDocumentoFactura = (AutoResizeTextView) itemView.findViewById(R.id.tfra);
-*/
+
             this.UpdateDocumentoFactura = (Button) itemView.findViewById(R.id.btnUpdate);
             this.DeleteDocumentoFactura = (Button) itemView.findViewById(R.id.btnDelete);
             this.CobroDocumentoFactura = (Button) itemView.findViewById(R.id.btnCobro);
@@ -540,6 +550,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
                     case R.id.btnUpdate:
                         mListenerDocumentoFactura.onUpdate(
                                 (Button) v,
+                                this.iconDocumentoFactura,
                                 String.valueOf(this.IdDocumentoFactura.getText()),
                                 String.valueOf(this.EstadoDocumentoFactura.getText()),
                                 String.valueOf(this.MesaDocumentoFactura.getText()),
@@ -550,6 +561,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
                     case R.id.btnDelete:
                         mListenerDocumentoFactura.onDelete(
                                 (Button) v,
+                                this.iconDocumentoFactura,
                                 String.valueOf(this.IdDocumentoFactura.getText()),
                                 String.valueOf(this.EstadoDocumentoFactura.getText()),
                                 String.valueOf(this.SerieDocumentoFactura.getText()),
@@ -559,6 +571,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
                     case R.id.btnCobro:
                         mListenerDocumentoFactura.onCobro(
                                 (Button) v,
+                                this.iconDocumentoFactura,
                                 String.valueOf(this.IdDocumentoFactura.getText()),
                                 String.valueOf(this.EstadoDocumentoFactura.getText()),
                                 String.valueOf(this.SerieDocumentoFactura.getText()),
@@ -576,6 +589,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
                         case R.id.nombremesa:
                             mListenerDocumentoFactura.onPotato(
                                     v,
+                                    this.iconDocumentoFactura,
                                     "Mesa",
                                     String.valueOf(this.iconDocumentoFactura.getTag().toString()),
                                     String.valueOf(this.IdDocumentoFactura.getText()),
@@ -593,6 +607,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
                         case R.id.empleado:
                             mListenerDocumentoFactura.onPotato(
                                     v,
+                                    this.iconDocumentoFactura,
                                     "Empleado",
                                     String.valueOf(this.iconDocumentoFactura.getTag().toString()),
                                     String.valueOf(this.IdDocumentoFactura.getText()),
@@ -610,6 +625,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
                         case R.id.obs:
                             mListenerDocumentoFactura.onPotato(
                                     v,
+                                    this.iconDocumentoFactura,
                                     "Obs",
                                     String.valueOf(this.iconDocumentoFactura.getTag().toString()),
                                     String.valueOf(this.IdDocumentoFactura.getText()),
@@ -632,6 +648,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
         }
         @Override
         public void onPotato(View caller,
+                             ImageView imageDocumentoFactura,
                              String campoDocumentoFactura,
                              String iconDocumentoFactura,
                              String idDocumentoFactura,
@@ -649,6 +666,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
 
         @Override
         public void onUpdate(Button callerButton,
+                             ImageView imageDocumentoFactura,
                              String idDocumentoFactura,
                              String estadoDocumentoFactura,
                              String mesaDocumentoFactura,
@@ -659,6 +677,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
 
         @Override
         public void onDelete(Button callerButton,
+                             ImageView imageDocumentoFactura,
                              String idDocumentoFactura,
                              String estadoDocumentoFactura,
                              String serieDocumentoFactura,
@@ -668,6 +687,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
 
         @Override
         public void onCobro (Button callerButton,
+                             ImageView imageDocumentoFactura,
                              String idDocumentoFactura,
                              String estadoDocumentoFactura,
                              String serieDocumentoFactura,
@@ -696,7 +716,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
     public interface OnHeadlineSelectedListenerDocumentoFacturaHeader {
         void onDeleteDocumentoFacturaSelected(int id, String estado, String serie, int factura);
         void onUpdateDocumentoFacturaSelected(int id, String valor, String campo);
-        void onUpdateLineasDocumentoFacturaSelected(int id, String mesa, String estado, String serie, String factura);
+        void onUpdateLineasDocumentoFacturaSelected(ImageView image, int id, String mesa, String estado, String serie, String factura);
         void onCobroDocumentoFacturaSelected(int id, String estado, String serie, String factura);
     }
     /*para filtro*/

@@ -14,14 +14,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import tpv.cirer.com.marivent.R;
-import tpv.cirer.com.marivent.herramientas.Filtro;
-import tpv.cirer.com.marivent.herramientas.IMyLineaDocumentoFacturaViewHolderClicks;
-import tpv.cirer.com.marivent.modelo.LineaDocumentoFactura;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import tpv.cirer.com.marivent.R;
+import tpv.cirer.com.marivent.herramientas.Filtro;
+import tpv.cirer.com.marivent.herramientas.IMyLineaDocumentoFacturaViewHolderClicks;
+import tpv.cirer.com.marivent.modelo.LineaDocumentoFactura;
 
 /**
  * Created by JUAN on 09/11/2016.
@@ -251,11 +252,11 @@ public class AdaptadorLineaDocumentoFacturaHeader extends RecyclerView.Adapter<R
                 ((VHItem) holder).PreuLineaDocumentoFactura.setTextColor(Color.MAGENTA);
 
                 /// TAMANYO LETRA PARA MARIVENT
-                ((VHItem) holder).CantLineaDocumentoFactura.setTextSize(20);
+/*                ((VHItem) holder).CantLineaDocumentoFactura.setTextSize(20);
                 ((VHItem) holder).PreuLineaDocumentoFactura.setTextSize(20);;
                 ((VHItem) holder).ImporteLineaDocumentoFactura.setTextSize(20);
                 ((VHItem) holder).NombreLineaDocumentoFactura.setTextSize(20);;
-
+*/
                  //       LineaDocumentoFacturaRowHolder.NombreLineaDocumentoFactura.setTextSize(16);
                 //        LineaDocumentoFacturaRowHolder.ArticuloLineaDocumentoFactura.setTextSize(16);
 

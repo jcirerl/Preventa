@@ -136,7 +136,7 @@ public class TimeTable extends FrameLayout
 			Pair<String, List<IGridItem>> pair = null;
 			for(Pair<String, List<IGridItem>> p : pairs)
 			{
-				if(p.first.equals(item.getPersonName()))
+				if(p.first.equals(item.getMesaName()))
 				{
 					pair = p;
 					break;
@@ -144,7 +144,7 @@ public class TimeTable extends FrameLayout
 			}
 			
 			if(pair == null)
-				pair = new Pair<String, List<IGridItem>>(item.getPersonName(), new ArrayList<IGridItem>());
+				pair = new Pair<String, List<IGridItem>>(item.getMesaName(), new ArrayList<IGridItem>());
 			
 			pair.second.add(item);
 			
@@ -168,7 +168,7 @@ public class TimeTable extends FrameLayout
 			allGridItems.addAll(l);
 			
 			for(int i = 0; i < l.size() / columns; i++)
-	    		itemsY.add(new GuideYItem(i == 0 ? r.getPersonName() : "")); // only write the name once.
+	    		itemsY.add(new GuideYItem(i == 0 ? r.getMesaName() : "")); // only write the name once.
 			}
 		
 		if (gridAdapter == null)
@@ -192,7 +192,6 @@ public class TimeTable extends FrameLayout
 			@Override
 			public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e)
 			{
-				Log.i("TimeTable Intercept:",rv.getClass().getName().toString()+" - "+ rv.toString());
 
 				return true;
 			}
@@ -200,7 +199,6 @@ public class TimeTable extends FrameLayout
 			@Override
 			public void onTouchEvent(RecyclerView rv, MotionEvent e)
 			{
-				Log.i("TimeTable:",rv.getClass().getName().toString()+" - "+ rv.toString());
 				// Do nothing.
 			}
 			

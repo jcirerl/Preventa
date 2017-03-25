@@ -37,56 +37,59 @@
         android:layout_toRightOf="@+id/icon"
         android:visibility="gone"
         android:paddingLeft="8dp" />
-    <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
-        android:id="@+id/serie"
+    <TextView
+        android:id="@+id/pedido"
         style="@style/RowTitle"
-        android:layout_width="20dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/icon"
         android:layout_toRightOf="@+id/icon"
         android:paddingLeft="@dimen/row_padding" />
-    <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
-        android:id="@+id/factura"
-        style="@style/RowTitle"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/serie"
-        android:layout_toRightOf="@+id/serie"
-        android:paddingLeft="@dimen/row_padding" />
-    <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
+    <TextView
         android:id="@+id/fecha"
         style="@style/RowTitle"
-        android:layout_width="120dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/factura"
-        android:layout_toRightOf="@+id/factura"
+        android:layout_toEndOf="@+id/pedido"
+        android:layout_toRightOf="@+id/pedido"
         android:paddingLeft="@dimen/row_padding" />
 
     <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
-        android:id="@+id/nombremesa"
+        android:id="@+id/comensales"
         style="@style/RowTitle"
-        android:layout_width="80dp"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/fecha"
         android:layout_toRightOf="@+id/fecha"
         android:paddingLeft="@dimen/row_padding" />
+
+    <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
+        android:id="@+id/nombremesa"
+        style="@style/RowTitle"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/comensales"
+        android:layout_toRightOf="@+id/comensales"
+        android:paddingLeft="@dimen/row_padding" />
+
     <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
         android:id="@+id/estado"
         style="@style/RowTitle"
-        android:layout_width="180dp"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/nombremesa"
         android:layout_toRightOf="@+id/nombremesa"
         android:paddingLeft="@dimen/row_padding" />
+
     <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
         android:id="@+id/empleado"
         style="@style/RowTitle"
-        android:layout_width="180dp"
+        android:layout_width="140dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/estado"
@@ -95,7 +98,7 @@
     <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
         android:id="@+id/caja"
         style="@style/RowTitle"
-        android:layout_width="100dp"
+        android:layout_width="105dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/empleado"
@@ -104,60 +107,22 @@
     <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
         android:id="@+id/turno"
         style="@style/RowTitle"
-        android:layout_width="100dp"
+        android:layout_width="110dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/caja"
         android:layout_toRightOf="@+id/caja"
         android:paddingLeft="@dimen/row_padding" />
     <TextView
-        android:id="@+id/impbase"
-        style="@style/RowTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/turno"
-        android:layout_toRightOf="@+id/turno"
-        android:visibility="gone"
-        android:paddingLeft="@dimen/row_padding" />
-    <TextView
-        android:id="@+id/impiva"
-        style="@style/RowTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/impbase"
-        android:layout_toRightOf="@+id/impbase"
-        android:visibility="gone"
-        android:paddingLeft="@dimen/row_padding" />
-    <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
-        android:id="@+id/imptotal"
-        style="@style/RowTitle"
-        android:layout_width="140dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/turno"
-        android:layout_toRightOf="@+id/turno"
-        android:paddingLeft="@dimen/row_padding" />
-    <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
-        android:id="@+id/tfra"
-        style="@style/RowTitle"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/imptotal"
-        android:layout_toRightOf="@+id/imptotal"
-        android:paddingLeft="@dimen/row_padding" />
-    <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
         android:id="@+id/lineas"
         style="@style/RowTitle"
-        android:layout_width="90dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/tfra"
-        android:layout_toRightOf="@+id/tfra"
+        android:layout_toEndOf="@+id/turno"
+        android:layout_toRightOf="@+id/turno"
         android:paddingLeft="@dimen/row_padding" />
-    <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
+    <TextView
         android:id="@+id/obs"
         style="@style/RowTitle"
         android:layout_width="wrap_content"
@@ -166,20 +131,6 @@
         android:layout_toEndOf="@+id/lineas"
         android:layout_toRightOf="@+id/lineas"
         android:paddingLeft="@dimen/row_padding" />
-    <!--    <Button
-            android:id="@+id/BtnSalir"
-            android:layout_width="wrap_content"
-            android:layout_height="90dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentBottom= "true"
-            android:layout_toRightOf="@id/BtnGuardarCobro"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="15dp"
-            android:background="@drawable/button_bg_transparent"
-            android:textColor="#ff0000ff"
-            android:text="@string/salir" />
-    -->
-
     <Button
         android:id="@+id/btnUpdate"
         style="@style/RowSubtitle"
@@ -189,13 +140,13 @@
         android:layout_alignParentBottom="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/factura"
-        android:layout_alignStart="@+id/factura"
-        android:layout_below="@+id/factura"
+        android:layout_alignLeft="@+id/pedido"
+        android:layout_alignStart="@+id/pedido"
+        android:layout_below="@+id/pedido"
         android:drawableLeft="@android:drawable/ic_input_add"
         android:layout_marginLeft="10dp"
-        android:text="@string/modificar"
         android:gravity="center"
+        android:text="@string/modificar"
         android:background="@drawable/button_bg_transparent"/>
     <Button
         android:id="@+id/btnDelete"
@@ -213,12 +164,31 @@
         android:layout_toRightOf="@+id/btnUpdate"
         android:layout_marginLeft="20dp"
         android:drawableLeft="@android:drawable/ic_delete"
-        android:text="@string/anular"
         android:gravity="center"
+        android:text="@string/anular"
         android:background="@drawable/button_bg_transparent"
         />
     <Button
-        android:id="@+id/btnCobro"
+        android:id="@+id/btnSend"
+        style="@style/RowSubtitle"
+        android:layout_gravity="center"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/estado"
+        android:layout_alignStart="@+id/estado"
+        android:layout_below="@+id/estado"
+        android:layout_toEndOf="@+id/btnDelete"
+        android:layout_toRightOf="@+id/btnDelete"
+        android:drawableLeft="@android:drawable/ic_menu_send"
+        android:layout_marginLeft="20dp"
+        android:gravity="center"
+        android:visibility="gone"
+        android:background="@drawable/button_bg_transparent"/>
+    <Button
+        android:id="@+id/btnInvoice"
         style="@style/RowSubtitle"
         android:layout_gravity="center"
         android:minHeight="0dp"
@@ -229,13 +199,15 @@
         android:layout_alignLeft="@+id/empleado"
         android:layout_alignStart="@+id/empleado"
         android:layout_below="@+id/empleado"
-        android:layout_toEndOf="@+id/btnDelete"
-        android:layout_toRightOf="@+id/btnDelete"
-        android:drawableLeft="@drawable/visa32"
+        android:layout_toEndOf="@+id/btnSend"
+        android:layout_toRightOf="@+id/btnSend"
         android:layout_marginLeft="20dp"
+        android:drawableLeft="@drawable/invoice32"
         android:gravity="center"
-        android:text="@string/cobrar"
-        android:background="@drawable/button_bg_transparent"/>
+        android:text="@string/factura"
+        android:background="@drawable/button_bg_transparent"
+        />
 </RelativeLayout>
     <!-- Bottom Sheet-->
+
 

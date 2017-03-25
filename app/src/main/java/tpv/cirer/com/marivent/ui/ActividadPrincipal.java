@@ -2041,17 +2041,21 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             }
         }
     }
-    public void onUpdateLineasDocumentoFacturaSelected(int id, String mesa, String estado, String serie, String factura) {
+    public void onUpdateLineasDocumentoFacturaSelected(ImageView image, int id, String mesa, String estado, String serie, String factura) {
         Filtro.setSerie(serie);
         Filtro.setFactura(Integer.parseInt(factura));
 
         if (!getCruge("action_ftp_update")) {
             Toast.makeText(this, getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
         }else{
+            FragmentManager fragmentManager = this.getSupportFragmentManager();
+            Fragment currentFragment = fragmentManager.findFragmentById(R.id.contenedor_principal);
+            Log.i("Fragment Activo: ",currentFragment.getTag().toString());
             CargaFragment cargafragment = null;
             cargafragment = new CargaFragment(FragmentoPagesFactura.newInstance(id,estado,mesa,serie,factura),getSupportFragmentManager());
             cargafragment.getFragmentManager().addOnBackStackChangedListener(this);
             if (cargafragment.getFragment() != null){
+/////**                cargafragment.setTransactionToBackStackTransition(this,R.id.contenedor_principal,currentFragment,image);
                 cargafragment.setTransactionToBackStack(R.id.contenedor_principal);
                 Toast.makeText(this, getPalabras("Modificar")+" "+getPalabras("Lineas")+" " + getPalabras("Factura")+" "+ factura, Toast.LENGTH_SHORT).show();
 ////                TaskHelper.execute(new CalculaCabecera(),"ftp","lft","0");

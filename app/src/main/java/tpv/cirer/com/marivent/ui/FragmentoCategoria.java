@@ -46,7 +46,6 @@ import tpv.cirer.com.marivent.modelo.Comida;
 
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.comidas;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lcategoria;
-import static tpv.cirer.com.marivent.ui.FragmentoCategorias.adaptadorcategorias;
 
 /**
  * Created by JUAN on 21/09/2016.
@@ -126,8 +125,8 @@ public class FragmentoCategoria extends Fragment implements  UpdateableFragment 
         Filtro.setTipo_are(categoria.getCategoriaTipo_are());
         Log.i("are: ", Integer.toString(indiceSeccion) + " " + categoria.getCategoriaTipo_are() + " _ " + lcomida.size());
         //      new AsyncHttpTaskCategorias().execute(url);
-        mSerialExecutor = new MySerialExecutor(getActivity());
-        mSerialExecutor.execute(null);
+////        mSerialExecutor = new MySerialExecutor(getActivity());
+////        mSerialExecutor.execute(null);
     }
 
     @Override
@@ -147,13 +146,13 @@ public class FragmentoCategoria extends Fragment implements  UpdateableFragment 
             // 3. create an adapter
             indiceSeccion = getArguments().getInt(INDICE_SECCION);
             Log.i("lcomida: ", Integer.toString(indiceSeccion) + " " + lcomida.size() + " _ " + cEstado);
-            adaptador = new AdaptadorCategorias(getActivity(), lcomida, indiceSeccion, cEstado);
+            adaptador = new AdaptadorCategorias(getActivity(), comidas.get(indiceSeccion), indiceSeccion, cEstado);
 
-            adaptadorcategorias.add(adaptador);
+////**            adaptadorcategorias.add(adaptador);
 
             // 4. set adapter
             recViewcomida.setAdapter(adaptador);
-/////           recViewcomida.setAdapter(adaptadorcategorias.get(indiceSeccion));
+ ////**           recViewcomida.setAdapter(adaptadorcategorias.get(indiceSeccion));
 
             // 5. set item animator to DefaultAnimator
             recViewcomida.setItemAnimator(new DefaultItemAnimator());
@@ -218,8 +217,11 @@ public class FragmentoCategoria extends Fragment implements  UpdateableFragment 
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-//            adaptador.notifyDataSetChanged();
-            Log.i("lcomida adaptador ",Integer.toString(indiceSeccion));
+            if (recViewcomida != null) {
+       ////         adaptador.removeComidas();
+       ////         adaptador.addComidas(lcomida);
+                Log.i("lcomida adaptador ", Integer.toString(indiceSeccion));
+            }
         }else{
             // fragment is no longer visible
         }
@@ -260,10 +262,10 @@ public class FragmentoCategoria extends Fragment implements  UpdateableFragment 
         public void execute(TaskParams params) {
             MyParams myParams = (MyParams) params;
 
-/*            for (Iterator<Comida> it = lcomida.iterator(); it.hasNext();){
+            for (Iterator<Comida> it = lcomida.iterator(); it.hasNext();){
                 Comida comida = it.next();
             }
-*/            Log.i("SERIAL COMIDAS SIZE: ", Integer.toString(ActividadPrincipal.comidas.size()));
+            Log.i("SERIAL COMIDAS SIZE: ", Integer.toString(ActividadPrincipal.comidas.size()));
             for (ArrayList<Comida> list : ActividadPrincipal.comidas) { // iterate -list by list
                 Log.i("SERIAL COMIDAS ENTRO: ", Integer.toString(indiceSeccion)+ " "+ lcategoria.get(indiceSeccion).getCategoriaTipo_are());
                 for (Comida comida : list) { //iterate element by element in a list

@@ -34,7 +34,7 @@ public interface IGridItem
 	 * 
 	 * @return the text that is displayed on the Y axis
 	 */
-	String getPersonName();
+	String getMesaName();
 	
 	/**
 	 * Get the item's color.

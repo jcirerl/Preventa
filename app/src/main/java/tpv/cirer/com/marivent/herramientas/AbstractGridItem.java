@@ -35,7 +35,7 @@ public abstract class AbstractGridItem<T extends AbstractGridItem<?,?>, VH exten
 	 * @return the text that is displayed on the Y axis
 	 */
 	@Override
-	public abstract String getPersonName();
+	public abstract String getMesaName();
 	
 	/**
 	 * Get the item color

@@ -71,8 +71,9 @@ public class GridItem extends AbstractItem<GridItem, GridItem.ViewHolder>
 			holder.itemView.setLayoutParams(params);
 		}
 		
-		holder.textView.setText(model != null && isStart ? model.getName() : "");
-		
+//***		holder.textView.setText(model != null && isStart ? model.getName() : "");
+		holder.textView.setText(model != null ? model.getName() : "");
+
 		/*if (model != null)
 		{
 			int resolvedColor = model.getItemColor() != -1 ? model.getItemColor() : holder.itemView.getResources().getColor(R.color.today_color);
@@ -164,7 +165,7 @@ public class GridItem extends AbstractItem<GridItem, GridItem.ViewHolder>
 	{
 		return column;
 	}
-	
+
 	public boolean isEmpty()
 	{
 		return model == null;

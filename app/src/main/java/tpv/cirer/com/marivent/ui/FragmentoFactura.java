@@ -17,11 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import tpv.cirer.com.marivent.R;
-import tpv.cirer.com.marivent.herramientas.Filtro;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import tpv.cirer.com.marivent.R;
+import tpv.cirer.com.marivent.herramientas.Filtro;
 
 /**
  * Created by JUAN on 08/11/2016.

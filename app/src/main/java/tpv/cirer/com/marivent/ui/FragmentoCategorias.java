@@ -80,8 +80,8 @@ public class FragmentoCategorias extends Fragment {
 
             // Setear adaptador al viewpager.
             viewPager = (ViewPager) view.findViewById(R.id.pager);
-            viewPager.setOffscreenPageLimit(lcategoria.size()); // Por defecto 1 poner a zero para que refresque cada fragment
-
+     ////       viewPager.setOffscreenPageLimit(lcategoria.size()); // BIEN PARA 23.1.1
+            viewPager.setOffscreenPageLimit(0);
             if (viewPager != null) {
                 poblarViewPager(viewPager);
             }
@@ -113,7 +113,7 @@ public class FragmentoCategorias extends Fragment {
                 }
             });
   */     //     tabLayout.canScrollHorizontally(View.LAYOUT_DIRECTION_RTL);
-            tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager) {
+            tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager) {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
 /*                     for (Iterator<Comida> it = lcomida.iterator(); it.hasNext();){

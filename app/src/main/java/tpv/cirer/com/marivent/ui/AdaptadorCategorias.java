@@ -211,6 +211,10 @@ public class AdaptadorCategorias extends RecyclerView.Adapter<ComidaRowHolder> i
         mComida.addAll(0, list);
         notifyDataSetChanged();
     }
+    public void removeComidas() {
+        mComida.clear();
+        notifyDataSetChanged();
+    }
 
     class CustomFilter extends Filter {
         @Override

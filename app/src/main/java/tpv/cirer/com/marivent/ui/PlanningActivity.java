@@ -15,6 +15,8 @@ import tpv.cirer.com.marivent.R;
 import tpv.cirer.com.marivent.herramientas.TimeTable;
 import tpv.cirer.com.marivent.modelo.EmployeePlanItem;
 
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.mesasList;
+
 public class PlanningActivity extends AppCompatActivity
 {
     private static final int GENERATED_AMOUNT = 20;
@@ -34,8 +36,8 @@ public class PlanningActivity extends AppCompatActivity
     private static List<EmployeePlanItem> generateSamplePlanData(Context context)
     {
         List<EmployeePlanItem> planItems = new ArrayList<>();
-        for(int i = 0; i < GENERATED_AMOUNT; i++)
-            planItems.add(EmployeePlanItem.generateSample(context));
+        for(int i = 0; i < mesasList.size(); i++)
+            planItems.add(EmployeePlanItem.generateSample(context, i));
 
         return planItems;
     }
