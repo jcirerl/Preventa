@@ -120,7 +120,9 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
     String cLocal;
     String cSeccion;
     String cCaja;
+    String pedidocabecera;
     String pedido;
+    String pedidofinal;
     ProgressDialog pDialog;
     String tabla;
     String lintabla;
@@ -1214,6 +1216,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
 
         pedido = pedido + separador + "\n\n\n\n\n\n";
         ImprimirPedido();
+        Toast.makeText(getActivity(), "ERROR NO UPDATE CABECERA ", Toast.LENGTH_SHORT).show();
         if (!optionprint) {
             comprobar_terminales();
 /*            nPosition += 1;
@@ -1229,41 +1232,42 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
     public void crearPedidoPlato() {
         String space01 = new String(new char[01]).replace('\0', ' ');
         pedido = "";
+        pedidocabecera="";
         String separador = "- - - - - - - - - - - - - - - - - - - - - - - - " + "\n";
         //obteniendo el encabezado del documento
 
         //fecha de emision del documento
-        pedido = pedido + String.format("%-48s", getDate() + " " + getTime()) + "\n";
+        pedidocabecera = pedidocabecera + String.format("%-48s", getDate() + " " + getTime()) + "\n";
 
         // Datos EMPRESA
         for (int i = 0; i < lcabeceraempr.size(); i++) {
             //razon
-            pedido = pedido + String.format("%-48s",String.valueOf(lcabeceraempr.get(i).getCabeceraRazon())) + "\n";
+            pedidocabecera = pedidocabecera + String.format("%-48s",String.valueOf(lcabeceraempr.get(i).getCabeceraRazon())) + "\n";
 
         }
 
-        pedido = pedido + separador;
+        pedidocabecera = pedidocabecera + separador;
 
         // DATOS PEDIDO
         for (int i = 0; i < lcabecerapdd.size(); i++) {
             //LOCAL
-            pedido = pedido + String.format("%-48s","Local: " + String.valueOf(lcabecerapdd.get(i).getCabeceraNombre_local())) + "\n";
+            pedidocabecera = pedidocabecera + String.format("%-48s","Local: " + String.valueOf(lcabecerapdd.get(i).getCabeceraNombre_local())) + "\n";
             //Seccion
-            //           pedido = pedido + String.format("%-48s","Seccion: " + String.valueOf(lcabecerapdd.get(i).getCabeceraNombre_seccion())) + "\n";
+            //           pedidocabecera = pedidocabecera + String.format("%-48s","Seccion: " + String.valueOf(lcabecerapdd.get(i).getCabeceraNombre_seccion())) + "\n";
             //Caja
-//            pedido = pedido + String.format("%-48s","Caja: " + String.valueOf(lcabecerapdd.get(i).getCabeceraNombre_caja())) + "\n";
+//            pedidocabecera = pedidocabecera + String.format("%-48s","Caja: " + String.valueOf(lcabecerapdd.get(i).getCabeceraNombre_caja())) + "\n";
             //Turno
-//            pedido = pedido + String.format("%-48s","Turno: " + String.valueOf(lcabecerapdd.get(i).getCabeceraNombre_turno())) + "\n";
+//            pedidocabecera = pedidocabecera + String.format("%-48s","Turno: " + String.valueOf(lcabecerapdd.get(i).getCabeceraNombre_turno())) + "\n";
             //Mesa
-            pedido = pedido + String.format("%-48s","Mesa: " + String.valueOf(lcabecerapdd.get(i).getCabeceraNombre_mesa())) + "\n";
+            pedidocabecera = pedidocabecera + String.format("%-48s","Mesa: " + String.valueOf(lcabecerapdd.get(i).getCabeceraNombre_mesa())) + "\n";
             //Comensales
-            pedido = pedido + String.format("%-48s","Comensales: " + String.valueOf(lcabecerapdd.get(i).getCabeceraComensales())) + "\n";
+            pedidocabecera = pedidocabecera + String.format("%-48s","Comensales: " + String.valueOf(lcabecerapdd.get(i).getCabeceraComensales())) + "\n";
             //Empleado
-//            pedido = pedido + String.format("%-48s","Empleado: " + String.valueOf(lcabecerapdd.get(i).getCabeceraNombre_empleado())) + "\n";
+//            pedidocabecera = pedidocabecera + String.format("%-48s","Empleado: " + String.valueOf(lcabecerapdd.get(i).getCabeceraNombre_empleado())) + "\n";
             // Terminal
-//            pedido = pedido + String.format("%-48s","Terminal: " + terminalList.get(nPosition).getTerminalTerminal()) + "\n";
+//            pedidocabecera = pedidocabecera + String.format("%-48s","Terminal: " + terminalList.get(nPosition).getTerminalTerminal()) + "\n";
 
-            pedido = pedido + separador;
+            pedidocabecera = pedidocabecera + separador;
             //Observaciones
             ///////////////////////////////////////////////////////////
             if (lcabecerapdd.get(i).getCabeceraObs().trim().length()>0) {
@@ -1271,12 +1275,12 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
                 myTextPddObs = myTextPddObs.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
                 myTextPddObs = myTextPddObs.replaceAll("\\s+$", ""); // Quitamos espacios derecha
 
-                pedido = pedido + String.format("%-48s", "Observaciones: ") + "\n";
-                pedido = pedido + String.format("%-48s", myTextPddObs) + "\n";
-                pedido = pedido + separador;
+                pedidocabecera = pedidocabecera + String.format("%-48s", "Observaciones: ") + "\n";
+                pedidocabecera = pedidocabecera + String.format("%-48s", myTextPddObs) + "\n";
+                pedidocabecera = pedidocabecera + separador;
             }
             //////////////////////////////////////////////////////////
-            //pedido,fecha,
+            //pedidocabecera,fecha,
             SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
             SimpleDateFormat sdf2 = new SimpleDateFormat("dd-MM-yyyy");
             String xfecha = "";
@@ -1287,17 +1291,17 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
             } catch (Exception e) {
                 e.getMessage();
             }
-            pedido = pedido + String.format("%-48s", "PEDIDO      FECHA     ") + "\n";
-            pedido = pedido + String.format("%-48s", String.format("%07d", Integer.parseInt(String.valueOf(lcabecerapdd.get(i).getCabeceraPedido())))
+            pedidocabecera = pedidocabecera + String.format("%-48s", "PEDIDO      FECHA     ") + "\n";
+            pedidocabecera = pedidocabecera + String.format("%-48s", String.format("%07d", Integer.parseInt(String.valueOf(lcabecerapdd.get(i).getCabeceraPedido())))
                     + "    " + xfecha ) + "\n";
 
         }
-        pedido = pedido + separador;
+        pedidocabecera = pedidocabecera + separador;
 
         //Cabecera Lineas
-        pedido = pedido + String.format("%-48s","CANT   NOMBRE              OBSERVACIONES       ") + "\n";
+        pedidocabecera = pedidocabecera + String.format("%-48s","CANT   NOMBRE              OBSERVACIONES       ") + "\n";
 
-        pedido = pedido + separador;
+        pedidocabecera = pedidocabecera + separador;
         boolean primer = true;
         String oldtipoplato="";
         // DATOS LINEAS PEDIDO
@@ -1306,7 +1310,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
                 primer = false;
                 oldtipoplato = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoTipoPlato();
                 pedido = pedido +  "\n";
-                pedido = pedido + String.format("%-48s",llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoNombre_plato()) + "\n";
+                pedido = pedido + String.format("%-24s",llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoNombre_plato()) + "\n";
                 pedido = pedido +  "\n";
 
             }
@@ -1346,8 +1350,9 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
 
         }
 
-        pedido = pedido + separador + "\n\n\n\n\n\n";
+        pedidofinal = separador + "\n\n\n\n\n\n";
         ImprimirPedido();
+///***        Toast.makeText(getActivity(), pedido, Toast.LENGTH_SHORT).show();
         if (!optionprint) {
             comprobar_terminales();
 /*            nPosition += 1;
@@ -1410,7 +1415,12 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
             Bitmap bmp = BitmapFactory.decodeResource(getResources(),R.drawable.logo);
             builder.addImage(bmp, 0, 0, 48, 48, Builder.PARAM_DEFAULT);
             method = "addText";
+            builder.addTextDouble(0,0);
+            builder.addText(pedidocabecera);
+            builder.addTextDouble(1,1);
             builder.addText(getBuilderText());
+            builder.addTextDouble(0,0);
+            builder.addText(pedidofinal);
             builder.addCut(Builder.CUT_FEED);
 
             //send builder data

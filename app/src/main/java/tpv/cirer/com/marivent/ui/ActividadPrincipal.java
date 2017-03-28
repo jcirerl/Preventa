@@ -255,6 +255,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     public static List<Categoria> lcategoria;
     public static List<Userrel> luserrel;
     public static List<Cruge> lcruge;
+
     public static ArrayList<ArrayList<Comida>> comidas; //Definicion array de comidas
     public static List<Articulo> larticulo;
     public static ArrayList<Popular> lpopular;
@@ -377,8 +378,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-
-/*        Toolbar toolbar1 = (Toolbar) findViewById(R.id.appbar1);
+ /*        Toolbar toolbar1 = (Toolbar) findViewById(R.id.appbar1);
         setSupportActionBar(toolbar1);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setIcon(R.drawable.logo); //also displays wide logo
@@ -1098,7 +1098,8 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
                 break;
             case R.id.item_salir:
                 // clean up
-                super.onBackPressed();       // bye
+                finish();
+//                super.onBackPressed();       // bye
                 break;
             case R.id.item_cuenta:
                 if(getCruge("action_search_index")){
@@ -2895,8 +2896,69 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
              }
         }else{
             getSupportFragmentManager().popBackStack();
-
-            if (Filtro.getTag_fragment().equals("FragmentoOpenDocumentoFactura")){
+            Log.i("Fragment backpressed: ",Filtro.getTag_fragment());
+            CargaFragment cargafragment = null;
+            switch (Filtro.getTag_fragment()) {
+                case "FragmentoOpenDocumentoFactura":
+                    cargafragment = new CargaFragment(FragmentoFactura.newInstance(0),getSupportFragmentManager());
+                    break;
+                case "FragmentoCloseDocumentoFactura":
+                    cargafragment = new CargaFragment(FragmentoFactura.newInstance(1),getSupportFragmentManager());
+                    break;
+                case "FragmentoLineaDocumentoFactura":
+                    cargafragment = new CargaFragment(FragmentoFactura.newInstance(0),getSupportFragmentManager());
+                    break;
+                case "FragmentoOpenDocumentoPedido":
+                    cargafragment = new CargaFragment(FragmentoPedido.newInstance(),getSupportFragmentManager());
+                    break;
+                case "FragmentoCloseDocumentoPedido":
+                    cargafragment = new CargaFragment(FragmentoPedido.newInstance(),getSupportFragmentManager());
+                    break;
+                case "FragmentoLineaDocumentoPedido":
+                    cargafragment = new CargaFragment(FragmentoPedido.newInstance(),getSupportFragmentManager());
+                    break;
+                case "FragmentoOpenDcj":
+                    cargafragment = new CargaFragment(FragmentoDcj.newInstance(),getSupportFragmentManager());
+                    break;
+                case "FragmentoCloseDcj":
+                    cargafragment = new CargaFragment(FragmentoDcj.newInstance(),getSupportFragmentManager());
+                    break;
+                case "FragmentoPrintDcj":
+                    cargafragment = new CargaFragment(FragmentoDcj.newInstance(),getSupportFragmentManager());
+                    break;
+                case "FragmentoOpenCaja":
+                    cargafragment = new CargaFragment(FragmentoCaja.newInstance(),getSupportFragmentManager());
+                    break;
+                case "FragmentoCloseCaja":
+                    cargafragment = new CargaFragment(FragmentoCaja.newInstance(),getSupportFragmentManager());
+                    break;
+                case "FragmentoOpenSeccion":
+                    cargafragment = new CargaFragment(FragmentoSeccion.newInstance(),getSupportFragmentManager());
+                    break;
+                case "FragmentoCloseSeccion":
+                    cargafragment = new CargaFragment(FragmentoSeccion.newInstance(),getSupportFragmentManager());
+                    break;
+                case "FragmentoOpenTurno":
+                    cargafragment = new CargaFragment(FragmentoTurno.newInstance(),getSupportFragmentManager());
+                    break;
+                case "FragmentoCloseTurno":
+                    cargafragment = new CargaFragment(FragmentoTurno.newInstance(),getSupportFragmentManager());
+                    break;
+                case "EditOpenSeccionFragment":
+                    cargafragment = new CargaFragment(FragmentoSeccion.newInstance(),getSupportFragmentManager());
+                    break;
+                case "EditCloseSeccionFragment":
+                    cargafragment = new CargaFragment(FragmentoSeccion.newInstance(),getSupportFragmentManager());
+                    break;
+                default:
+                    cargafragment = new CargaFragment(FragmentoInicio.newInstance(),getSupportFragmentManager());
+                    break;
+            }
+            cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
+            if (cargafragment.getFragment() != null){
+                cargafragment.setTransaction(R.id.contenedor_principal);
+            }
+/*            if (Filtro.getTag_fragment().equals("FragmentoOpenDocumentoFactura")){
                 Log.i("Fragment: ","FragmentoOpenDocumentoFactura ok"+Filtro.getTag_fragment());
                 CargaFragment cargafragment = null;
                 cargafragment = new CargaFragment(FragmentoFactura.newInstance(0),getSupportFragmentManager());
@@ -2920,7 +2982,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                 cargafragment = new CargaFragment(FragmentoFactura.newInstance(1),getSupportFragmentManager());
                 cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
                 if (cargafragment.getFragment() != null){
-                    cargafragment.setTransaction(R.id.contenedor_principal);
+                    cargafragment.setTransactionToBackStack(R.id.contenedor_principal);
                 }
             }
             if (Filtro.getTag_fragment().equals("FragmentoOpenDocumentoPedido")){
@@ -2948,7 +3010,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                 cargafragment = new CargaFragment(FragmentoPedido.newInstance(),getSupportFragmentManager());
                 cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
                 if (cargafragment.getFragment() != null){
-                    cargafragment.setTransaction(R.id.contenedor_principal);
+                    cargafragment.setTransactionToBackStack(R.id.contenedor_principal);
                 }
             }
             if (Filtro.getTag_fragment().equals("FragmentoOpenDcj")){
@@ -3050,7 +3112,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                     cargafragment.setTransaction(R.id.contenedor_principal);
                 }
             }
-
+*/
         }
     }
 

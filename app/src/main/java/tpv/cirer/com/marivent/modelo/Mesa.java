@@ -15,13 +15,15 @@ public class Mesa {
     private int MesaModificado;
     private int MesaPedidos;
     private int MesaFacturas;
+    private int MesaComensales;
 
     public Mesa(){}
 
     public Mesa(String Mesa, String nombre){
         this.MesaMesa = Mesa;
         this.MesaNombre_Mesas = nombre;
-    }
+     }
+
     public float getMesaXCoordenate() {
         return MesaXCoordenate;
     }
@@ -95,6 +97,12 @@ public class Mesa {
 
     public void setMesaUrlimagen(String mesaurlimagen) {
         this.MesaUrlimagen = mesaurlimagen;
+    }
+    public int getMesaComensales() {
+        return MesaComensales;
+    }
+    public void setMesaComensales(int mesaComensales) {
+        this.MesaComensales = mesaComensales;
     }
 
 }

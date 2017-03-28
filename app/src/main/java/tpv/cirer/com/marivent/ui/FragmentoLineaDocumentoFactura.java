@@ -135,6 +135,8 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
     String cSeccion;
     String cCaja;
     String ticket;
+    String ticketTotal;
+    String ticketMensaje;
     int nFactura;
     int nId;
     String sSerie;
@@ -878,6 +880,8 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
     public void crearTicket() {
         String space01 = new String(new char[01]).replace('\0', ' ');
         ticket = "";
+        ticketTotal = "";
+        ticketMensaje = "";
         String separador = "- - - - - - - - - - - - - - - - - - - - - - - - " + "\n";
         //obteniendo el encabezado del documento
         ticket = ticket + "\n";
@@ -996,7 +1000,7 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
         ticket = ticket + separador;
 
         //Cabecera Lineas
-        ticket = ticket + String.format("%-48s","CANT   NOMBRE               PREU   IMPORTE % IVA") + "\n";
+        ticket = ticket + String.format("%-48s","CANT   NOMBRE                     PREU   IMPORTE") + "\n";
 
         // DATOS LINEAS FACTURA
         for (int i = 0; i < llineadocumentofacturaprint.size(); i++) {
@@ -1010,11 +1014,11 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
             newTextCant +=myTextCant;
             ///////////////////////////////////////////////////////////
             int lennombre = llineadocumentofacturaprint.get(i).getLineaDocumentoFacturaNombre().trim().length();
-            String myTextNombre = String.format("%1$-19s", String.valueOf(llineadocumentofacturaprint.get(i).getLineaDocumentoFacturaNombre().substring(0,(lennombre>19 ? 19 : lennombre))));
+            String myTextNombre = String.format("%1$-25s", String.valueOf(llineadocumentofacturaprint.get(i).getLineaDocumentoFacturaNombre().substring(0,(lennombre>25 ? 25 : lennombre))));
             myTextNombre = myTextNombre.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
             myTextNombre = myTextNombre.replaceAll("\\s+$", ""); // Quitamos espacios derecha
             String newTextNombre=myTextNombre;
-            for (int ii = 0; ii < (19-myTextNombre.length()); ii++) {
+            for (int ii = 0; ii < (25-myTextNombre.length()); ii++) {
                 newTextNombre+=space01;
             }
             ///////////////////////////////////////////////////////////
@@ -1035,6 +1039,7 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
                 newTextImporte+=space01;
             }
             newTextImporte +=myTextImporte;
+/*
             ///////////////////////////////////////////////////////////
             String myTextTipo_iva = String.format("%1$,.2f", Float.parseFloat(llineadocumentofacturaprint.get(i).getLineaDocumentoFacturaTipo_iva()));
             myTextTipo_iva = myTextTipo_iva.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
@@ -1045,8 +1050,8 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
             }
             newTextTipo_iva +=myTextTipo_iva;
             ///////////////////////////////////////////////////////////
-
-            ticket = ticket + String.format("%-48s",newTextCant+" "+newTextNombre+" "+newTextPreu+" "+newTextImporte+" "+newTextTipo_iva
+*/
+            ticket = ticket + String.format("%-48s",newTextCant+" "+newTextNombre+" "+newTextPreu+" "+newTextImporte
             ) + "\n";
 
         }
@@ -1059,51 +1064,54 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
         float ntotal = 0;
         // DATOS  FACTURA IVA
         for (int i = 0; i < ldocumentofacturaiva.size(); i++) {
-            String myTextBase =  String.format("%1$,.2f", Float.parseFloat(ldocumentofacturaiva.get(i).getDocumentoFacturaIvaImp_base()))+" "+Filtro.getSimbolo();
-            myTextBase = myTextBase.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
-            myTextBase = myTextBase.replaceAll("\\s+$", ""); // Quitamos espacios derecha
-            String newTextBase="";
-            for (int ii = 0; ii < (11-myTextBase.length()); ii++) {
-                newTextBase+=space01;
-            }
-            newTextBase +=myTextBase;
-            ///////////////////////////////////////////////////////////
-            String myTextTipo_iva =  String.format("%1$,.2f", Float.parseFloat(ldocumentofacturaiva.get(i).getDocumentoFacturaIvaTipo_iva()))+" %";
-            myTextTipo_iva = myTextTipo_iva.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
-            myTextTipo_iva = myTextTipo_iva.replaceAll("\\s+$", ""); // Quitamos espacios derecha
-            String newTextTipo_iva="";
-            for (int ii = 0; ii < (7-myTextTipo_iva.length()); ii++) {
-                newTextTipo_iva+=space01;
-            }
-            newTextTipo_iva +=myTextTipo_iva;
-            ///////////////////////////////////////////////////////////
-            String myTextImp_iva =  String.format("%1$,.2f", Float.parseFloat(ldocumentofacturaiva.get(i).getDocumentoFacturaIvaImp_iva()))+" "+Filtro.getSimbolo();
-            myTextImp_iva = myTextImp_iva.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
-            myTextImp_iva = myTextImp_iva.replaceAll("\\s+$", ""); // Quitamos espacios derecha
-            String newTextImp_iva="";
-            for (int ii = 0; ii < (10-myTextImp_iva.length()); ii++) {
-                newTextImp_iva+=space01;
-            }
-            newTextImp_iva +=myTextImp_iva;
-            ///////////////////////////////////////////////////////////
-            String myTextImp_total =  String.format("%1$,.2f", Float.parseFloat(ldocumentofacturaiva.get(i).getDocumentoFacturaIvaImp_total()))+" "+Filtro.getSimbolo();
-            myTextImp_total = myTextImp_total.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
-            myTextImp_total = myTextImp_total.replaceAll("\\s+$", ""); // Quitamos espacios derecha
-            String newTextImp_total="";
-            for (int ii = 0; ii < (11-myTextImp_total.length()); ii++) {
-                newTextImp_total+=space01;
-            }
-            newTextImp_total +=myTextImp_total;
-            ///////////////////////////////////////////////////////////
+            if (!ldocumentofacturaiva.get(i).getDocumentoFacturaIvaImp_base().equals("0.00")){
+                String myTextBase = String.format("%1$,.2f", Float.parseFloat(ldocumentofacturaiva.get(i).getDocumentoFacturaIvaImp_base())) + " " + Filtro.getSimbolo();
+                myTextBase = myTextBase.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+                myTextBase = myTextBase.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+                String newTextBase = "";
+                for (int ii = 0; ii < (11 - myTextBase.length()); ii++) {
+                    newTextBase += space01;
+                }
+                newTextBase += myTextBase;
+                ///////////////////////////////////////////////////////////
+                String myTextTipo_iva = String.format("%1$,.2f", Float.parseFloat(ldocumentofacturaiva.get(i).getDocumentoFacturaIvaTipo_iva())) + " %";
+                myTextTipo_iva = myTextTipo_iva.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+                myTextTipo_iva = myTextTipo_iva.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+                String newTextTipo_iva = "";
+                for (int ii = 0; ii < (7 - myTextTipo_iva.length()); ii++) {
+                    newTextTipo_iva += space01;
+                }
+                newTextTipo_iva += myTextTipo_iva;
+                ///////////////////////////////////////////////////////////
+                String myTextImp_iva = String.format("%1$,.2f", Float.parseFloat(ldocumentofacturaiva.get(i).getDocumentoFacturaIvaImp_iva())) + " " + Filtro.getSimbolo();
+                myTextImp_iva = myTextImp_iva.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+                myTextImp_iva = myTextImp_iva.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+                String newTextImp_iva = "";
+                for (int ii = 0; ii < (10 - myTextImp_iva.length()); ii++) {
+                    newTextImp_iva += space01;
+                }
+                newTextImp_iva += myTextImp_iva;
+                ///////////////////////////////////////////////////////////
+                String myTextImp_total = String.format("%1$,.2f", Float.parseFloat(ldocumentofacturaiva.get(i).getDocumentoFacturaIvaImp_total())) + " " + Filtro.getSimbolo();
+                myTextImp_total = myTextImp_total.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+                myTextImp_total = myTextImp_total.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+                String newTextImp_total = "";
+                for (int ii = 0; ii < (11 - myTextImp_total.length()); ii++) {
+                    newTextImp_total += space01;
+                }
+                newTextImp_total += myTextImp_total;
+                ///////////////////////////////////////////////////////////
 
-            ticket = ticket + String.format("%-48s", "      "+newTextBase+" "+newTextTipo_iva+" "+newTextImp_iva+" "+newTextImp_total
-            ) + "\n";
-            nbase += Float.parseFloat(ldocumentofacturaiva.get(i).getDocumentoFacturaIvaImp_base());
-            ncuota += Float.parseFloat(ldocumentofacturaiva.get(i).getDocumentoFacturaIvaImp_iva());
-            ntotal += Float.parseFloat(ldocumentofacturaiva.get(i).getDocumentoFacturaIvaImp_total());
-
+                ticket = ticket + String.format("%-48s", "      " + newTextBase + " " + newTextTipo_iva + " " + newTextImp_iva + " " + newTextImp_total
+                ) + "\n";
+                nbase += Float.parseFloat(ldocumentofacturaiva.get(i).getDocumentoFacturaIvaImp_base());
+                ncuota += Float.parseFloat(ldocumentofacturaiva.get(i).getDocumentoFacturaIvaImp_iva());
+                ntotal += Float.parseFloat(ldocumentofacturaiva.get(i).getDocumentoFacturaIvaImp_total());
+            }
         }
         ticket = ticket + String.format("%-48s","      ----------- ------- ---------- -----------") + "\n";
+        ticket = ticket + "\n";
+
         String myTextBase =  String.format("%1$,.2f", nbase)+" "+Filtro.getSimbolo();
         myTextBase = myTextBase.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
         myTextBase = myTextBase.replaceAll("\\s+$", ""); // Quitamos espacios derecha
@@ -1131,18 +1139,20 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
         }
         newTextImp_total +=myTextImp_total;
         ///////////////////////////////////////////////////////////
-        ticket = ticket + String.format("%-48s", "Total "+newTextBase+" "+"       "+" "+newTextImp_iva+" "+newTextImp_total) + "\n";
-        ticket = ticket + separador;
+//        ticket = ticket + String.format("%-48s", "Total "+newTextBase+" "+"       "+" "+newTextImp_iva+" "+newTextImp_total) + "\n";
+//        ticket = ticket + separador;
+        ticketTotal = StringUtil.align("Total "+newTextImp_total, 24, ' ', 0) + "\n\n";
 
         if (lcabeceraftp.get(0).getCabeceraMensaje().trim().length()>0) {
 
-            ticket = ticket + StringUtil.align(lcabeceraftp.get(0).getCabeceraMensaje().trim(), 48, ' ', 0) + "\n";
-            ticket = ticket + separador;
+            ticketMensaje = ticketMensaje + separador;
+            ticketMensaje = StringUtil.align(lcabeceraftp.get(0).getCabeceraMensaje().trim(), 48, ' ', 0) + "\n";
+            ticketMensaje = ticketMensaje + separador;
         }
 
 //        ticket = ticket + StringUtil.align("GRACIAS POR SU PREFERENCIA!", 48, ' ', 0) + "\n";
 
-        ticket = ticket + "\n\n";
+        ticketMensaje = ticketMensaje + "\n\n";
         /// EMPEZAMOS A IMPRIMIR
         openPrinter();
         if (printer != null) {
@@ -1150,6 +1160,8 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
             if(builder != null ){
                if(ImprimirTicketLogo()){
                    if(ImprimirTicketCuerpo()){
+                      ImprimirTicketTotal();
+                      ImprimirTicketMensaje();
                       if(lcabeceraftp.get(0).getCabeceraImagen_firma().trim().length()>0){
                           ImprimirTicketFirma();
                       }
@@ -1250,7 +1262,35 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
         }
         return ok_cuerpo;
     }
+    public boolean ImprimirTicketMensaje() {
+        boolean ok_cuerpo=false;
+        String method = "";
+        try {
 
+            method = "addText";
+            builder.addTextSize(1,1);
+            builder.addText(ticketMensaje);
+            ok_cuerpo=true;
+        } catch (Exception e) {
+            ShowMsg.showException(e, method, getActivity());
+        }
+        return ok_cuerpo;
+    }
+
+    public boolean ImprimirTicketTotal() {
+        boolean ok_cuerpo=false;
+        String method = "";
+        try {
+
+            method = "addText";
+            builder.addTextSize(2,2);
+            builder.addText(ticketTotal);
+            ok_cuerpo=true;
+        } catch (Exception e) {
+            ShowMsg.showException(e, method, getActivity());
+        }
+        return ok_cuerpo;
+    }
     public boolean ImprimirTicketFinal() {
         boolean ok_cuerpo=false;
         String method = "";
