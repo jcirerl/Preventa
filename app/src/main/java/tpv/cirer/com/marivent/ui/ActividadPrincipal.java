@@ -17,6 +17,8 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.os.StrictMode;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -56,6 +58,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -130,6 +133,7 @@ import tpv.cirer.com.marivent.modelo.Simbolo;
 import tpv.cirer.com.marivent.modelo.Terminal;
 import tpv.cirer.com.marivent.modelo.Turno;
 import tpv.cirer.com.marivent.modelo.Userrel;
+import tpv.cirer.com.marivent.servicios.ServiceMesas;
 
 import static tpv.cirer.com.marivent.ui.SplashScreen.lpalabras;
 
@@ -145,8 +149,16 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
                                                                      AdaptadorDcjHeader.OnHeadlineSelectedListenerDcjHeader,
                                                                      AdaptadorDocumentoPedidoHeader.OnHeadlineSelectedListenerDocumentoPedidoHeader,
                                                                      AdaptadorDocumentoFacturaHeader.OnHeadlineSelectedListenerDocumentoFacturaHeader,
+                                                                     AdaptadorMessageHeader.OnHeadlineSelectedListenerMessageHeader,
                                                                      AdaptadorLineaDocumentoFacturaHeader.OnHeadlineSelectedListenerLineaDocumentoFacturaHeader,
                                                                      AdaptadorLineaDocumentoPedidoHeader.OnHeadlineSelectedListenerLineaDocumentoPedidoHeader {
+    Intent intent;
+    TextView txtMesaOpen;
+    ImageView imagemesa;
+    MesasResultReceiver resultReceiver;
+    RelativeLayout layout;
+
+
     ProgressDialog pDialogTipoare,pDialogUserrel,pDialogGrup,pDialogTerminal,pDialogFra,pDialogCruge,
             pDialogEmpr,pDialogLocal,pDialogSec,pDialogSecFechas,pDialogCaja,pDialogTurno,pDialogMesa,pDialogRango,pDialogEmpleado,pDialogMoneda;
     ProgressDialog pDialog;
@@ -396,6 +408,13 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         packagesharedPreferences();
         retriveSharedValue();
 */
+
+        resultReceiver = new MesasResultReceiver(null);
+
+
+        intent = new Intent(this, ServiceMesas.class);
+        intent.putExtra("receiver", resultReceiver);
+        startService(intent);
 
         // VALORES PROVISIONALES PARA PRUEBAS //
         Filtro.setInicio(true);
@@ -764,6 +783,57 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         Log.d("retrivesharedPref",""+set);
     }
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopService(intent);
+    }
+
+    class UpdateUI implements Runnable
+    {
+        String updateString;
+
+        public UpdateUI(String updateString) {
+            this.updateString = updateString;
+        }
+        public void run() {
+
+ //           txtview.setText("Timer "+updateString);
+            txtMesaOpen.setText(updateString);
+            if (Integer.parseInt(updateString) == 0) {
+                imagemesa.setAlpha(0.3f); // COLOR APAGADO MESA CERRADA
+            } else {
+                imagemesa.setAlpha(1.0f); // COLOR BRILLANTE MESA ABIERTA
+            }
+
+
+        }
+    }
+
+    class MesasResultReceiver extends ResultReceiver
+    {
+        public MesasResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+
+            if(resultCode == 100){
+////                runOnUiThread(new UpdateUI(resultData.getString("start")));
+                runOnUiThread(new UpdateUI(Integer.toString(resultCode)));
+            }
+            else if(resultCode == 200){
+////                runOnUiThread(new UpdateUI(resultData.getString("end")));
+                runOnUiThread(new UpdateUI(Integer.toString(resultCode)));
+            }
+            else{
+////                runOnUiThread(new UpdateUI("Result Received "+resultCode));
+                runOnUiThread(new UpdateUI(Integer.toString(resultCode)));
+            }
+        }
+    }
+
+    @Override
     public void onBackStackChanged() {
         FragmentManager fragmentManager = this.getSupportFragmentManager();
         int count = this.getSupportFragmentManager().getBackStackEntryCount();
@@ -957,6 +1027,9 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         TextView conn = (TextView) toolbar.findViewById(R.id.txtconnection);
         conn.setText(Filtro.getConexion());
         conn.setTextSize(16);
+    //    txtview = (TextView) toolbar.findViewById(R.id.txtview);
+        txtMesaOpen = (TextView) toolbar.findViewById(R.id.txtMesasOpen);
+        imagemesa = (ImageView) toolbar.findViewById(R.id.imageMesa);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
@@ -1290,7 +1363,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         iconCarrito = (LayerDrawable) itemCarrito.getIcon();
 
         // Actualizar el contador
-        Utils.setBadgeCount(this, iconCarrito, 1);
+        Utils.setBadgeCount(this, iconCarrito, 0);
 
         final MenuItem mesasItem = menu.findItem(R.id.action_mesas);
         if(mesasItem != null)
@@ -2785,6 +2858,31 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             }
         }
     }
+    public void onDeleteMessageSelected(int id, int activo) {
+        if (!getCruge("action_message_delete")){
+            Toast.makeText(this, getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
+        }else {
+            if (activo==0) {
+                Toast.makeText(this, getPalabras("Mensaje")+" " + Integer.toString(activo) + " " + id, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, getPalabras("Borrar")+" "+ getPalabras("Mensaje")+" "+Integer.toString(activo)+" "+ id, Toast.LENGTH_SHORT).show();
+   ////             new DeleteDocumentoFactura().execute(Integer.toString(id), serie, Integer.toString(factura),"ftp");
+            }
+        }
+    }
+    public void onUpdateMessageSelected(int id, int activo) {
+        if (!getCruge("action_message_update")){
+            Toast.makeText(this, getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
+        }else {
+            if (activo==0) {
+                Toast.makeText(this, getPalabras("Mensaje")+" " + Integer.toString(activo) + " " + id, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, getPalabras("Activar")+" "+ getPalabras("Mensaje")+" "+Integer.toString(activo)+" "+ id, Toast.LENGTH_SHORT).show();
+                ////             new DeleteDocumentoFactura().execute(Integer.toString(id), serie, Integer.toString(factura),"ftp");
+            }
+        }
+    }
+
     public void onUpdateDcjSelected(int id, String valor, String campo) {
         if (!getCruge("action_dcj_update")){
             Toast.makeText(this, getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
@@ -2897,6 +2995,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         }else{
             getSupportFragmentManager().popBackStack();
             Log.i("Fragment backpressed: ",Filtro.getTag_fragment());
+            boolean idfragmentpages = false;
             CargaFragment cargafragment = null;
             switch (Filtro.getTag_fragment()) {
                 case "FragmentoOpenDocumentoFactura":
@@ -2907,6 +3006,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                     break;
                 case "FragmentoLineaDocumentoFactura":
                     cargafragment = new CargaFragment(FragmentoFactura.newInstance(0),getSupportFragmentManager());
+                    idfragmentpages = true;
                     break;
                 case "FragmentoOpenDocumentoPedido":
                     cargafragment = new CargaFragment(FragmentoPedido.newInstance(),getSupportFragmentManager());
@@ -2916,6 +3016,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                     break;
                 case "FragmentoLineaDocumentoPedido":
                     cargafragment = new CargaFragment(FragmentoPedido.newInstance(),getSupportFragmentManager());
+                    idfragmentpages = true;
                     break;
                 case "FragmentoOpenDcj":
                     cargafragment = new CargaFragment(FragmentoDcj.newInstance(),getSupportFragmentManager());
@@ -2956,7 +3057,11 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             }
             cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
             if (cargafragment.getFragment() != null){
-                cargafragment.setTransaction(R.id.contenedor_principal);
+                if (idfragmentpages) {
+                    cargafragment.setTransactionToBackStack(R.id.contenedor_principal);
+                }else{
+                    cargafragment.setTransaction(R.id.contenedor_principal);
+                }
             }
 /*            if (Filtro.getTag_fragment().equals("FragmentoOpenDocumentoFactura")){
                 Log.i("Fragment: ","FragmentoOpenDocumentoFactura ok"+Filtro.getTag_fragment());
@@ -9049,6 +9154,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
                 imagelogo = new_icon; // GUARDAMOS EL ICONO MODIFICADO .
                 imagelogoprint = codec(bitmap, Bitmap.CompressFormat.JPEG, 0);// PASAMOS EL ICONO LEIDO AL BITMAP PARA IMPRIMIR.
+
 
                 /// Modificar logo menudrawer
                 int imageViewID = getResources().getIdentifier("imageLogoDrawer", "id", getPackageName());

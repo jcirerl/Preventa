@@ -44,6 +44,38 @@
                 android:gravity="center_vertical|right"
                 android:paddingLeft="4dp" />
 
+
+            <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/frameLayout1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:id="@+id/imageMesa"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/house_kitchen_table" />
+
+
+                <TextView
+                    android:id="@+id/txtMesasOpen"
+                    android:layout_width="20dip"
+                    android:layout_height="20dip"
+                    android:text="0"
+                    android:textColor="@color/green_300"
+                    android:textStyle="bold"
+                    android:padding="2sp"
+                    android:gravity="center"
+                    android:background="@drawable/circle"
+                    android:layout_gravity="top|right" />
+
+            </FrameLayout>
+     <!--       <TextView
+                android:id="@+id/txtview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Timer" />
+-->
         </android.support.v7.widget.Toolbar>
 
      </android.support.design.widget.AppBarLayout>

@@ -59,7 +59,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_ITEM) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_row_documentofactura_sony, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_row_documentofactura_marivent, parent, false);
             return new VHItem(v, new IMyDocumentoFacturaViewHolderClicks() {
                 //    public void onPotato(View caller) { Log.d("VEGETABLES", "Poh-tah-tos"); };
                 public void onPotato(View caller,
@@ -346,6 +346,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
         } else if (holder instanceof VHHeader) {
 
             //cast holder to VHHeader and set data for header.
+ /*
             /// SONY //
             myText = " "+
                     "S"+" "+
@@ -360,7 +361,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
                     ActividadPrincipal.getPalabras("Tipo")+StringUtils.repeat(space01, 6)+
                     ActividadPrincipal.getPalabras("Lineas")+space01+space01+
                     ActividadPrincipal.getPalabras("Observacion");
-/*
+*/
             // MARIVENT
             myText = StringUtils.repeat(space01, 5)+
                     "S"+StringUtils.repeat(space01, 2)+
@@ -375,7 +376,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
                     ActividadPrincipal.getPalabras("Tipo")+StringUtils.repeat(space01, 11)+
                     ActividadPrincipal.getPalabras("Lineas")+StringUtils.repeat(space01, 3)+
                     ActividadPrincipal.getPalabras("Observacion");
-*/            //    Html.fromHtml(myText.replace(" ", "&nbsp;")).toString()
+            //    Html.fromHtml(myText.replace(" ", "&nbsp;")).toString()
             //cast holder to VHHeader and set data for header_facturas.
             ((VHHeader) holder).headerDocumentoFactura.setText(Html.fromHtml(myText.replace(" ", "&nbsp;")).toString());
             ((VHHeader) holder).headerDocumentoFactura.setTextColor(Color.WHITE);
@@ -416,7 +417,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
         public Button UpdateDocumentoFactura;
         public Button DeleteDocumentoFactura;
         public Button CobroDocumentoFactura;
-/*
+
         //      MARIVENT
         public AutoResizeTextView SerieDocumentoFactura;
         public AutoResizeTextView FacturaDocumentoFactura;
@@ -435,7 +436,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
         public AutoResizeTextView ImptotalDocumentoFactura;
         public AutoResizeTextView TfraDocumentoFactura;
 
-*/
+/*
 //      SONY
         public TextView SerieDocumentoFactura;
         public TextView FacturaDocumentoFactura;
@@ -453,7 +454,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
         public TextView ImpivaDocumentoFactura;
         public TextView ImptotalDocumentoFactura;
         public AutoResizeTextView TfraDocumentoFactura;
-
+*/
         public IMyDocumentoFacturaViewHolderClicks mListenerDocumentoFactura;
 
         public VHItem(View itemView,IMyDocumentoFacturaViewHolderClicks listener) {
@@ -462,7 +463,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
             mListenerDocumentoFactura = listener;
 
             //       this.MinCant.setOnClickListener(this);
-/*
+
 //         MARIVENT
             this.IdDocumentoFactura = (TextView) itemView.findViewById(R.id.pid);
             this.iconDocumentoFactura = (ImageView) itemView.findViewById(R.id.icon);
@@ -481,7 +482,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
             this.ImpivaDocumentoFactura = (TextView) itemView.findViewById(R.id.impiva);
             this.ImptotalDocumentoFactura = (AutoResizeTextView) itemView.findViewById(R.id.imptotal);
             this.TfraDocumentoFactura = (AutoResizeTextView) itemView.findViewById(R.id.tfra);
-*/
+/*
 //  SONY
             this.IdDocumentoFactura = (TextView) itemView.findViewById(R.id.pid);
             this.iconDocumentoFactura = (ImageView) itemView.findViewById(R.id.icon);
@@ -500,7 +501,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
             this.ImpivaDocumentoFactura = (TextView) itemView.findViewById(R.id.impiva);
             this.ImptotalDocumentoFactura = (TextView) itemView.findViewById(R.id.imptotal);
             this.TfraDocumentoFactura = (AutoResizeTextView) itemView.findViewById(R.id.tfra);
-
+*/
             this.UpdateDocumentoFactura = (Button) itemView.findViewById(R.id.btnUpdate);
             this.DeleteDocumentoFactura = (Button) itemView.findViewById(R.id.btnDelete);
             this.CobroDocumentoFactura = (Button) itemView.findViewById(R.id.btnCobro);

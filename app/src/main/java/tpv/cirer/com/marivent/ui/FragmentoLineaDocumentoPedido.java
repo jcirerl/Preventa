@@ -1336,7 +1336,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
             String myTextObs;
             int lenobs = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoObs().trim().length();
             if (llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoObs().trim().length()>0) {
-                myTextObs = String.format("%1$-23s", String.valueOf(llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoObs().substring(0,(lenobs>23 ? 23 : lennombre))));
+                myTextObs = String.format("%1$-23s", String.valueOf(llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoObs().substring(0,(lenobs>23 ? 23 : lenobs))));
             }else{
                 myTextObs = String.format("%1$-23s", "");
             }

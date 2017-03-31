@@ -1,8 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+ <!--   <item
+        android:id="@+id/action_mesas_message"
+        android:orderInCategory="110"
+        app:showAsAction="always"
+        app:actionLayout="@layout/action_view_mesas_message"
+        android:title="Mensaje Mesas" />-->
     <item
         android:id="@+id/action_mesas"
-        android:orderInCategory="100"
+        android:orderInCategory="120"
         app:showAsAction="always"
         app:actionLayout="@layout/action_view_mesas"
         android:title="Mesas" />

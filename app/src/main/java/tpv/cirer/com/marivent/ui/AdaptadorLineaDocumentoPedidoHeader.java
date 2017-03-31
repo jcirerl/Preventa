@@ -338,7 +338,8 @@ public class AdaptadorLineaDocumentoPedidoHeader extends RecyclerView.Adapter<Re
             //cast holder to VHHeader and set data for header_pedidos.
             ((VHHeader) holder).headerLineaDocumentoPedido.setText(Html.fromHtml(myText.replace(" ", "&nbsp;")).toString());
             ((VHHeader) holder).headerLineaDocumentoPedido.setTextColor(Color.WHITE);
-////            ((VHHeader) holder).headerLineaDocumentoPedido.setTextSize(18); // PARA MARIVENT
+            // MARIVENT
+            ((VHHeader) holder).headerLineaDocumentoPedido.setTextSize(18);
 
         }
     }

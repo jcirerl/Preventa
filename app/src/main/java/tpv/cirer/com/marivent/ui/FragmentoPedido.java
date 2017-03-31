@@ -17,11 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import tpv.cirer.com.marivent.R;
-import tpv.cirer.com.marivent.herramientas.Filtro;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import tpv.cirer.com.marivent.R;
+import tpv.cirer.com.marivent.herramientas.Filtro;
 
 /**
  * Created by JUAN on 19/09/2016.
@@ -111,7 +111,7 @@ public class FragmentoPedido extends Fragment {
     public void onResume() {
         super.onResume();
         /// Poner Datos CABECERA
-        ((ActividadPrincipal) getActivity()).setCabecera(((ActividadPrincipal) getActivity()).getPalabras("Pedidos"),0.00,1);
+        ((ActividadPrincipal) getActivity()).setCabecera(((ActividadPrincipal) getActivity()).getPalabras("Pedidos"),0.00,0);
         poblarViewPager(viewPager);
     }
 

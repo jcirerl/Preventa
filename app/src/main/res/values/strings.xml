@@ -123,6 +123,10 @@
     <string name="titulo_tab_CloseFactura">CERRADO</string>
     <string name="titulo_tab_PrintFactura">PRINT</string>
 
+    <string name="titulo_tab_OpenMessage">ABIERTO</string>
+    <string name="titulo_tab_CloseMessage">CERRADO</string>
+    <string name="titulo_tab_PrintMessage">PRINT</string>
+
     <string name="texto_no_tarjetas">No tienes ninguna tarjeta asociada</string>
 
     <string name="etiqueta_carrito">Carrito</string>

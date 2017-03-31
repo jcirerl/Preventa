@@ -188,7 +188,7 @@ public class FragmentoCategorias extends Fragment {
         adaptadorcategorias = new ArrayList<AdaptadorCategorias>();
         cEstado = getArguments().getString("ESTADO", "");
          /// Poner Datos CABECERA
-         ((ActividadPrincipal) getActivity()).setCabecera(((ActividadPrincipal) getActivity()).getTitle().toString(),0.00,1);
+         ((ActividadPrincipal) getActivity()).setCabecera(((ActividadPrincipal) getActivity()).getTitle().toString(),0.00,0);
 
          ///        Categorias = this;
  ///        filterManager = new FilterManager();
