@@ -8,6 +8,7 @@
         <item>Facturar Pedidos</item>
         <item>Insertar Facturas</item>
         <item>Consultar Facturas</item>
+        <item>Comensales Mesa</item>
     </string-array>
      <integer-array name="id_array">
         <item>1</item>

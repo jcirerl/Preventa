@@ -23,6 +23,11 @@ public class Mesa {
         this.MesaMesa = Mesa;
         this.MesaNombre_Mesas = nombre;
      }
+    public Mesa(String Mesa, String nombre, int comensales){
+        this.MesaMesa = Mesa;
+        this.MesaNombre_Mesas = nombre;
+        this.MesaComensales = comensales;
+    }
 
     public float getMesaXCoordenate() {
         return MesaXCoordenate;

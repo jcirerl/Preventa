@@ -12,13 +12,16 @@ public interface IMyMessageViewHolderClicks {
     void onPotato(View caller,
                          String idMessage,
                          String mesaMessage,
+                         String comensalesMessage,
                          String creadoMessage,
                          String activoMessage,
                          String cajaMessage);
 
     void onUpdate(Button callerButton,
                          String idMessage,
-                         String activoMessage);
+                         String activoMessage,
+                         String comensalesMessage,
+                         String mesaMessage);
 
     void onDelete(Button callerButton,
                          String idMessage,

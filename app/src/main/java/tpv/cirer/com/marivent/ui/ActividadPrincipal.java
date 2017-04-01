@@ -169,6 +169,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     public static TextView itemdcj;
     public static TextView itemfactura;
     public static TextView itemmesas;
+    public static TextView itemmessage;
 
     public static final String TAG_IP = "IP";
 
@@ -191,6 +192,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     // single Seccion url
     private static final String url_update_caja = Filtro.getUrl()+"/modifica_caja.php";
     private static final String url_update_turno = Filtro.getUrl()+"/modifica_turno.php";
+    private static final String url_update_message = Filtro.getUrl()+"/modifica_message.php";
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
@@ -732,6 +734,10 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         MenuItem nav_mesa = menudrawer.findItem(R.id.item_mesas);
         nav_mesa.setTitle(ValorCampo(R.id.item_mesas,nav_mesa.getClass().getName()));
 
+        itemmessage=(TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.item_message));
+        MenuItem nav_message = menudrawer.findItem(R.id.item_message);
+        nav_message.setTitle(ValorCampo(R.id.item_message,nav_message.getClass().getName()));
+
         MenuItem nav_categoria = menudrawer.findItem(R.id.item_categorias);
         nav_categoria.setTitle(ValorCampo(R.id.item_categorias,nav_categoria.getClass().getName()));
 
@@ -898,6 +904,12 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         itemmesas.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.accentColor));
         itemmesas.setText("0");
         itemmesas.setEnabled(false);
+
+        itemmessage.setGravity(Gravity.CENTER_VERTICAL);
+        itemmessage.setTypeface(null, Typeface.BOLD);
+        itemmessage.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.accentColor));
+        itemmessage.setText("0");
+        itemmessage.setEnabled(false);
 
     }
     private void showDatePicker() {
@@ -1146,6 +1158,11 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
                     startActivityForResult(intent, 1);
 
                 }
+                break;
+            case R.id.item_message:
+//                if(getCruge("action_message_admin")){
+                    fragmentoGenerico = new FragmentoMessage();
+//                }
                 break;
             case R.id.item_planning:
                 if(getCruge("action_mesas_admin")){
@@ -1657,6 +1674,10 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
                 CountTable = "mesas";
                 url_count = Filtro.getUrl() + "/CountMesasOpen.php";
+                mSerialExecutorActivity.execute(null);
+
+                CountTable = "message";
+                url_count = Filtro.getUrl() + "/CountMessageOpen.php";
                 mSerialExecutorActivity.execute(null);
 
             }
@@ -2383,6 +2404,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         cmbToolbarMesa.setAdapter(adapter_mesa);
         if (mesaList.size()>0) {
             Filtro.setMimesa(mesaList.get(0).getMesaMesa());
+            comensales = Integer.toString(mesaList.get(0).getMesaComensales());
         }
 
         cmbToolbarMesa.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -2393,6 +2415,8 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 
                 Filtro.setMimesa(mesaList.get(cmbToolbarMesa.getSelectedItemPosition()).getMesaMesa());
+                comensales = Integer.toString(mesaList.get(cmbToolbarMesa.getSelectedItemPosition()).getMesaComensales());
+
             }
 
             @Override
@@ -2411,8 +2435,6 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                         newvaluemesa = Filtro.getMimesa();
 
                         new UpdateMesaDocumentoPedido().execute(Integer.toString(idPedido),newvaluemesa,oldvaluemesa);
-//                        new UpdateMesaApertura().execute("0",oldvaluemesa);
-//                        new UpdateMesaApertura().execute("1",newvaluemesa);
 
                         Toast.makeText(getApplicationContext(), newvaluemesa,
                                 Toast.LENGTH_SHORT).show();
@@ -2626,6 +2648,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         cmbToolbarMesa.setAdapter(adapter_mesa);
         if (mesaList.size()>0) {
             Filtro.setMimesa(mesaList.get(0).getMesaMesa());
+            comensales = Integer.toString(mesaList.get(0).getMesaComensales());
         }
 
         cmbToolbarMesa.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -2636,6 +2659,8 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 
                 Filtro.setMimesa(mesaList.get(cmbToolbarMesa.getSelectedItemPosition()).getMesaMesa());
+                comensales = Integer.toString(mesaList.get(cmbToolbarMesa.getSelectedItemPosition()).getMesaComensales());
+
             }
 
             @Override
@@ -2654,8 +2679,6 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                     newvaluemesa = Filtro.getMimesa();
 
                     new UpdateMesaDocumentoFactura().execute(Integer.toString(idFactura),newvaluemesa,oldvaluemesa);
-//                        new UpdateMesaApertura().execute("0",oldvaluemesa);
-//                        new UpdateMesaApertura().execute("1",newvaluemesa);
 
                     Toast.makeText(getApplicationContext(), newvaluemesa,
                             Toast.LENGTH_SHORT).show();
@@ -2859,28 +2882,28 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         }
     }
     public void onDeleteMessageSelected(int id, int activo) {
-        if (!getCruge("action_message_delete")){
+/*        if (!getCruge("action_message_delete")){
             Toast.makeText(this, getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
         }else {
-            if (activo==0) {
+*/            if (activo==0) {
                 Toast.makeText(this, getPalabras("Mensaje")+" " + Integer.toString(activo) + " " + id, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, getPalabras("Borrar")+" "+ getPalabras("Mensaje")+" "+Integer.toString(activo)+" "+ id, Toast.LENGTH_SHORT).show();
-   ////             new DeleteDocumentoFactura().execute(Integer.toString(id), serie, Integer.toString(factura),"ftp");
+                new DeleteMessage().execute(Integer.toString(id),"message");
             }
-        }
+//        }
     }
-    public void onUpdateMessageSelected(int id, int activo) {
-        if (!getCruge("action_message_update")){
+    public void onUpdateMessageSelected(int id, int activo, int comensales, String mesa) {
+/*        if (!getCruge("action_message_update")){
             Toast.makeText(this, getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
         }else {
-            if (activo==0) {
+*/            if (activo==0) {
                 Toast.makeText(this, getPalabras("Mensaje")+" " + Integer.toString(activo) + " " + id, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, getPalabras("Activar")+" "+ getPalabras("Mensaje")+" "+Integer.toString(activo)+" "+ id, Toast.LENGTH_SHORT).show();
-                ////             new DeleteDocumentoFactura().execute(Integer.toString(id), serie, Integer.toString(factura),"ftp");
+                new UpdateMessage().execute(Integer.toString(id), Integer.toString(comensales), mesa, "message");
             }
-        }
+//        }
     }
 
     public void onUpdateDcjSelected(int id, String valor, String campo) {
@@ -3017,6 +3040,12 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                 case "FragmentoLineaDocumentoPedido":
                     cargafragment = new CargaFragment(FragmentoPedido.newInstance(),getSupportFragmentManager());
                     idfragmentpages = true;
+                    break;
+                case "FragmentoOpenMessage":
+                    cargafragment = new CargaFragment(FragmentoMessage.newInstance(),getSupportFragmentManager());
+                    break;
+                case "FragmentoCloseMessage":
+                    cargafragment = new CargaFragment(FragmentoMessage.newInstance(),getSupportFragmentManager());
                     break;
                 case "FragmentoOpenDcj":
                     cargafragment = new CargaFragment(FragmentoDcj.newInstance(),getSupportFragmentManager());
@@ -3398,9 +3427,92 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         }
 
     }
-     /**
+    /**
      * Background Async Task to Create new product
      * */
+    class MinusCantLineaDocumentoFactura extends AsyncTask<String, String, Integer> {
+
+        /**
+         * Before starting background thread Show Progress Dialog
+         * */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(ActividadPrincipal.this);
+            pDialog.setMessage(getPalabras("Borrar")+" "+getPalabras("Cantidad")+" 1 "+getPalabras("Linea")+"..");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
+        }
+
+        /**
+         * Creating product
+         * */
+        @Override
+        protected Integer doInBackground(String... args) {
+            pid = args[0];
+            tabla = args[1];
+            // updating UI from Background Thread
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    // Check for success tag
+                    try {
+                        int success;
+                        Calendar currentDate = Calendar.getInstance(); //Get the current date
+                        SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); //format it as per your requirement
+                        String dateNow = formatter.format(currentDate.getTime());
+
+                        // Building Parameters
+                        ContentValues values = new ContentValues();
+                        values.put("pid", pid);
+                        values.put("tabla", tabla);
+                        values.put("updated", dateNow);
+                        values.put("usuario", Filtro.getUsuario());
+                        values.put("ip",getLocalIpAddress());
+
+                        // getting JSON Object
+                        // Note that create product url accepts POST method
+                        JSONObject json = jsonParserNew.makeHttpRequest(url_minuscant_id,
+                                "POST", values);
+
+                        // check log cat fro response
+                        //            Log.d("Create Response", json.toString());
+
+                        // check for success tag
+
+                        success = json.getInt(TAG_SUCCESS);
+                        if (success == 1) {
+                            Toast.makeText(ActividadPrincipal.this, getPalabras("Borrar")+" "+getPalabras("Cantidad")+" "+getPalabras("Linea"), Toast.LENGTH_SHORT).show();
+                            // find your fragment
+                        } else {
+                            Toast.makeText(ActividadPrincipal.this, "ERROR NO "+getPalabras("Borrar")+" "+getPalabras("Cantidad")+" "+getPalabras("Linea"), Toast.LENGTH_SHORT).show();
+                            // failed to create product
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            return null;
+        }
+
+        /**
+         * After completing background task Dismiss the progress dialog
+         * **/
+        @Override
+        protected void onPostExecute(Integer success) {
+            // dismiss the dialog once done
+            pDialog.dismiss();
+////            new CalculaCabecera().execute("ftp","lft","1");
+            TaskHelper.execute(new CalculaCabecera(), "ftp", "lft", "1");
+        }
+
+    }
+    /**
+ge     * */
     class AddCantLineaDocumentoFactura extends AsyncTask<String, String, Integer> {
 
         /**
@@ -3486,7 +3598,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     /**
      * Background Async Task to Create new product
      * */
-    class MinusCantLineaDocumentoFactura extends AsyncTask<String, String, Integer> {
+    class UpdateMessage extends AsyncTask<String, String, Integer> {
 
         /**
          * Before starting background thread Show Progress Dialog
@@ -3495,7 +3607,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(ActividadPrincipal.this);
-            pDialog.setMessage(getPalabras("Borrar")+" "+getPalabras("Cantidad")+" 1 "+getPalabras("Linea")+"..");
+            pDialog.setMessage(getPalabras("Modificar")+" "+getPalabras("Mensaje")+"..");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
             pDialog.show();
@@ -3507,7 +3619,9 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         @Override
         protected Integer doInBackground(String... args) {
             pid = args[0];
-            tabla = args[1];
+            comensales = args[1];
+            valuemesa = args[2];
+            tabla = args[3];
             // updating UI from Background Thread
             runOnUiThread(new Runnable() {
                 @Override
@@ -3529,7 +3643,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
                         // getting JSON Object
                         // Note that create product url accepts POST method
-                        JSONObject json = jsonParserNew.makeHttpRequest(url_minuscant_id,
+                        JSONObject json = jsonParserNew.makeHttpRequest(url_update_message,
                                 "POST", values);
 
                         // check log cat fro response
@@ -3539,10 +3653,18 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
                         success = json.getInt(TAG_SUCCESS);
                         if (success == 1) {
-                            Toast.makeText(ActividadPrincipal.this, getPalabras("Borrar")+" "+getPalabras("Cantidad")+" "+getPalabras("Linea"), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ActividadPrincipal.this, getPalabras("Modificar")+" "+getPalabras("Mensaje")+" "+getPalabras("Linea"), Toast.LENGTH_SHORT).show();
                             // find your fragment
+                            CargaFragment cargafragment = null;
+                            cargafragment = new CargaFragment(FragmentoMessage.newInstance(), getSupportFragmentManager());
+                            cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
+                            if (cargafragment.getFragment() != null) {
+                                cargafragment.setTransaction(R.id.contenedor_principal);
+                            }
+                            pDialog.dismiss();
+                            new UpdateMesaAperturaOn().execute("1",comensales,valuemesa);
                         } else {
-                            Toast.makeText(ActividadPrincipal.this, "ERROR NO "+getPalabras("Borrar")+" "+getPalabras("Cantidad")+" "+getPalabras("Linea"), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ActividadPrincipal.this, "ERROR NO "+getPalabras("Modificar")+" "+getPalabras("Mensaje")+" "+getPalabras("Linea"), Toast.LENGTH_SHORT).show();
                             // failed to create product
                         }
 
@@ -3561,9 +3683,9 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         @Override
         protected void onPostExecute(Integer success) {
             // dismiss the dialog once done
-            pDialog.dismiss();
-////            new CalculaCabecera().execute("ftp","lft","1");
-            TaskHelper.execute(new CalculaCabecera(), "ftp", "lft", "1");
+            if (pDialog!=null) {
+                pDialog.dismiss();
+            }
         }
 
     }
@@ -4804,7 +4926,8 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         protected void onPostExecute(Integer success) {
             // dismiss the dialog once done
             pDialog.dismiss();
-            new UpdateMesaAperturaOff().execute("0",oldvaluemesa);
+    /////        new UpdateMesaAperturaOff().execute("0","0",oldvaluemesa);
+            new UpdateMesaAperturaOn().execute("1",comensales,newvaluemesa);
         }
 
     }
@@ -4894,7 +5017,8 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         protected void onPostExecute(Integer success) {
             // dismiss the dialog once done
             pDialog.dismiss();
-            new UpdateMesaAperturaOff().execute("0",oldvaluemesa);
+////            new UpdateMesaAperturaOff().execute("0","0",oldvaluemesa);
+            new UpdateMesaAperturaOn().execute("1",comensales,newvaluemesa);
         }
 
     }
@@ -4923,7 +5047,8 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         @Override
         protected Integer doInBackground(String... args) {
             pid = args[0];
-            valuemesa = args[1];
+            comensales = args[1];
+            valuemesa = args[2];
             // updating UI from Background Thread
             runOnUiThread(new Runnable() {
                 @Override
@@ -4993,6 +5118,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                         ContentValues values = new ContentValues();
                         values.put("filtro",cSql);
                         values.put("apertura", pid);
+                        values.put("comensales",comensales);
                         values.put("updated", dateNow);
                         values.put("usuario", Filtro.getUsuario());
                         values.put("ip",getLocalIpAddress());
@@ -5037,11 +5163,11 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         protected void onPostExecute(Integer success) {
             // dismiss the dialog once done
             pDialog.dismiss();
-            new UpdateMesaAperturaOn().execute("1",newvaluemesa);
+            new UpdateMesaAperturaOn().execute("1",comensales,newvaluemesa);
         }
 
     }
-    /**
+     /**
      * Background Async Task to Create new product
      * */
     class UpdateMesaAperturaOn extends AsyncTask<String, String, Integer> {
@@ -5065,13 +5191,14 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         @Override
         protected Integer doInBackground(String... args) {
             pid = args[0];
-            valuemesa = args[1];
+            comensales = args[1];
+            valuemesa = args[2];
             // updating UI from Background Thread
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     // Check for success tag
-                    try {
+/*                    try {
                         int success;
                         Calendar currentDate = Calendar.getInstance(); //Get the current date
                         SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); //format it as per your requirement
@@ -5130,11 +5257,148 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                             cSql="Todos";
                         }
                         Log.i("Sql Lista",cSql);
+*/
+                        final AlertDialog.Builder alert = new AlertDialog.Builder(ActividadPrincipal.this);
+                        final EditText inputcomensales = new EditText(ActividadPrincipal.this);
+                        inputcomensales.setText(String.format("%02d", Integer.parseInt(comensales)));
 
+                        // Ponerse al final del edittext
+                        int poscomensales = inputcomensales.getText().length();
+                        inputcomensales.setSelection(poscomensales);
+
+                        inputcomensales.setTextColor(Color.RED);
+                        inputcomensales.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+                        KeyListener keyListener = DigitsKeyListener.getInstance("1234567890");
+                        inputcomensales.setKeyListener(keyListener);
+                        alert.setTitle(getPalabras("Modificar")+" "+getPalabras("Comensales"));
+                        alert.setView(inputcomensales);
+                        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                String value = inputcomensales.getText().toString();
+                                if (value.matches("")) {
+                                    Toast.makeText(getApplicationContext(), getPalabras("Valor")+" "+getPalabras("Vacio")+" " + getPalabras("Comensales"), Toast.LENGTH_SHORT).show();
+                                    //            this.btnGuardar.setEnabled(false);
+                                } else {
+
+                                    value = value.replace(".", "");
+                                    value = value.replace(",", "");
+
+                                    inputcomensales.setText(String.format("%2d", Integer.valueOf(value)));
+                                    comensales=inputcomensales.getText().toString();
+                                    try {
+                                        int success;
+                                        Calendar currentDate = Calendar.getInstance(); //Get the current date
+                                        SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); //format it as per your requirement
+                                        String dateNow = formatter.format(currentDate.getTime());
+
+                                        String cSql = "";
+                                        String xWhere = "";
+
+                                        if(!(Filtro.getGrupo().equals(""))) {
+                                            if (xWhere.equals("")) {
+                                                xWhere += " WHERE mesas.GRUPO='" + Filtro.getGrupo() + "'";
+                                            } else {
+                                                xWhere += " AND mesas.GRUPO='" + Filtro.getGrupo() + "'";
+                                            }
+                                        }
+                                        if(!(Filtro.getEmpresa().equals(""))) {
+                                            if (xWhere.equals("")) {
+                                                xWhere += " WHERE mesas.EMPRESA='" + Filtro.getEmpresa() + "'";
+                                            } else {
+                                                xWhere += " AND mesas.EMPRESA='" + Filtro.getEmpresa() + "'";
+                                            }
+                                        }
+                                        if(!(Filtro.getLocal().equals(""))) {
+                                            if (xWhere.equals("")) {
+                                                xWhere += " WHERE mesas.LOCAL='" + Filtro.getLocal() + "'";
+                                            } else {
+                                                xWhere += " AND mesas.LOCAL='" + Filtro.getLocal() + "'";
+                                            }
+                                        }
+                                        if(!(Filtro.getSeccion().equals(""))) {
+                                            if (xWhere.equals("")) {
+                                                xWhere += " WHERE mesas.SECCION='" + Filtro.getSeccion() + "'";
+                                            } else {
+                                                xWhere += " AND mesas.SECCION='" + Filtro.getSeccion() + "'";
+                                            }
+                                        }
+                                        if(!(Filtro.getCaja().equals(""))) {
+                                            if (xWhere.equals("")) {
+                                                xWhere += " WHERE mesas.CAJA='" + Filtro.getCaja() + "'";
+                                            } else {
+                                                xWhere += " AND mesas.CAJA='" + Filtro.getCaja() + "'";
+                                            }
+                                        }
+                                        if(!(Filtro.getRango().equals(""))) {
+                                            if (xWhere.equals("")) {
+                                                xWhere += " WHERE mesas.RANGO='" + Filtro.getRango() + "'";
+                                            } else {
+                                                xWhere += " AND mesas.RANGO='" + Filtro.getRango() + "'";
+                                            }
+                                        }
+
+                                        xWhere += " AND mesas.MESA='"+valuemesa+"'";
+
+                                        cSql += xWhere;
+                                        if(cSql.equals("")) {
+                                            cSql="Todos";
+                                        }
+                                        Log.i("Sql Lista",cSql);
+                                        // Building Parameters
+                                        ContentValues values = new ContentValues();
+                                        values.put("filtro",cSql);
+                                        values.put("apertura", pid);
+                                        values.put("comensales",comensales);
+                                        values.put("updated", dateNow);
+                                        values.put("usuario", Filtro.getUsuario());
+                                        values.put("ip",getLocalIpAddress());
+
+                                        // getting JSON Object
+                                        // Note that create product url accepts POST method
+                                        JSONObject json = jsonParserNew.makeHttpRequest(url_updatemesa_mesa,
+                                                "POST", values);
+
+                                        // check log cat fro response
+                                        //            Log.d("Create Response", json.toString());
+
+                                        // check for success tag
+
+                                        success = json.getInt(TAG_SUCCESS);
+                                        if (success == 1) {
+                                            Toast.makeText(ActividadPrincipal.this, "ON "+getPalabras("Apertura")+" "+getPalabras("Mesa")+" "+valuemesa, Toast.LENGTH_SHORT).show();
+                                            itemmesas.setText(Integer.toString(Integer.parseInt(itemmesas.getText().toString())+1));
+                                            if (Integer.parseInt(itemmesas.getText().toString()) == 0) {
+                                                itemmesas.setTextColor(Filtro.getColorItemZero());
+                                            } else {
+                                                itemmesas.setTextColor(Filtro.getColorItem());
+                                            }
+                                        } else {
+                                            Toast.makeText(ActividadPrincipal.this, "ERROR NO ON "+getPalabras("Apertura")+" "+getPalabras("Mesa")+" "+valuemesa, Toast.LENGTH_SHORT).show();
+                                            // failed to create product
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    //                                               Snackbar.make(view, "Creando Documento Pedido", Snackbar.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(), inputcomensales.getText().toString(),
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
+                        alert.setNegativeButton(getPalabras("Cancelar"), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                dialog.cancel();
+                            }
+                        });
+                        alert.show();
+/*
                         // Building Parameters
                         ContentValues values = new ContentValues();
                         values.put("filtro",cSql);
                         values.put("apertura", pid);
+                        values.put("comensales",comensales);
                         values.put("updated", dateNow);
                         values.put("usuario", Filtro.getUsuario());
                         values.put("ip",getLocalIpAddress());
@@ -5160,6 +5424,93 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                             }
                         } else {
                             Toast.makeText(ActividadPrincipal.this, "ERROR NO ON "+getPalabras("Apertura")+" "+getPalabras("Mesa")+" "+valuemesa, Toast.LENGTH_SHORT).show();
+                            // failed to create product
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+*/                }
+            });
+
+            return null;
+        }
+
+        /**
+         * After completing background task Dismiss the progress dialog
+         * **/
+        @Override
+        protected void onPostExecute(Integer success) {
+            // dismiss the dialog once done
+            pDialog.dismiss();
+        }
+
+    }
+     /**
+     * Background Async Task to Create new product
+     * */
+    class DeleteMessage extends AsyncTask<String, String, Integer> {
+
+        /**
+         * Before starting background thread Show Progress Dialog
+         * */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(ActividadPrincipal.this);
+            pDialog.setMessage(getPalabras("Borrar")+" "+getPalabras("Mensaje")+"..");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
+        }
+
+        /**
+         * Creating product
+         * */
+        @Override
+        protected Integer doInBackground(String... args) {
+            pid = args[0];
+            tabla = args[1];
+            // updating UI from Background Thread
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    // Check for success tag
+                    try {
+                        int success;
+                        String filtro = "";
+                        String xWhere = "";
+
+                        // Building Parameters
+                        ContentValues values = new ContentValues();
+                        values.put("pid", pid);
+                        values.put("tabla",tabla);
+                        values.put("filtro", filtro);
+                        values.put("lintabla", "");
+
+                        // getting JSON Object
+                        // Note that create product url accepts POST method
+                        JSONObject json = jsonParserNew.makeHttpRequest(url_delete_id,
+                                "POST", values);
+
+                        // check log cat fro response
+                        //            Log.d("Create Response", json.toString());
+
+                        // check for success tag
+
+                        success = json.getInt(TAG_SUCCESS);
+                        if (success == 1) {
+                            Toast.makeText(ActividadPrincipal.this, getPalabras("Borrar")+" "+getPalabras("Linea"), Toast.LENGTH_SHORT).show();
+                            // find your fragment
+////                            FragmentoOpenDocumentoPedido.getInstance().onResume();
+                            CargaFragment cargafragment = null;
+                            cargafragment = new CargaFragment(FragmentoMessage.newInstance(), getSupportFragmentManager());
+                            cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
+                            if (cargafragment.getFragment() != null) {
+                                cargafragment.setTransaction(R.id.contenedor_principal);
+                            }
+                        } else {
+                            Toast.makeText(ActividadPrincipal.this, "ERROR NO "+getPalabras("Borrar")+" "+getPalabras("Linea"), Toast.LENGTH_SHORT).show();
                             // failed to create product
                         }
 
@@ -8050,7 +8401,8 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             for (int ii = 0; ii < posts.length(); ii++) {
                 JSONObject post = posts.optJSONObject(ii);
                 Mesa cat = new Mesa(post.optString("MESA"),
-                        post.optString("NOMBRE"));
+                        post.optString("NOMBRE"),
+                        post.optInt("COMENSALES"));
                 mesaList.add(cat);
 
             }
@@ -8219,7 +8571,8 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             for (int ii = 0; ii < posts.length(); ii++) {
                 JSONObject post = posts.optJSONObject(ii);
                 Mesa cat = new Mesa(post.optString("MESA"),
-                        post.optString("NOMBRE"));
+                        post.optString("NOMBRE"),
+                        post.optInt("COMENSALES"));
                 mesaList.add(cat);
 
             }
@@ -9903,6 +10256,11 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                         itemmesas.setText(Integer.toString(post.optInt("COUNT")));
                         itemmesas.setEnabled(true);
                         break;
+                    case "message":
+                        itemmessage.setText(Integer.toString(post.optInt("COUNT")));
+                        itemmessage.setEnabled(true);
+                        break;
+
                 }
             }
         } catch (JSONException e) {
@@ -9988,6 +10346,25 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                     xWhere += " AND caja.ACTIVO=1";
                     xWhere += " AND caja.APERTURA=1";
                     break;
+                case "message":
+                    if(!(Filtro.getCaja().equals(""))) {
+                        if (xWhere.equals("")) {
+                            xWhere += " WHERE message.CAJA='" + Filtro.getCaja() + "'";
+                        } else {
+                            xWhere += " AND message.CAJA='" + Filtro.getCaja() + "'";
+                        }
+                    }
+                    if(!(Filtro.getFechaapertura().equals(""))) {
+                        if (xWhere.equals("")) {
+                            xWhere += " WHERE DATE(message.creado)='" + Filtro.getFechaapertura() + "'";
+                        } else {
+                            xWhere += " AND DATE(message.creado)='" + Filtro.getFechaapertura() + "'";
+                        }
+                    }
+
+                    xWhere += " AND message.ACTIVO=1";
+                    break;
+
                 case "turno":
                     if(!(Filtro.getCaja().equals(""))) {
                         if (xWhere.equals("")) {
@@ -10315,6 +10692,14 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                                             itemmesas.setTextColor(Filtro.getColorItemZero());
                                         } else {
                                             itemmesas.setTextColor(Filtro.getColorItem());
+                                        }
+                                        break;
+                                    case "message":
+                                        itemmessage.setText(Integer.toString(post.optInt("COUNT")));
+                                        if (Integer.parseInt(itemmessage.getText().toString()) == 0) {
+                                            itemmessage.setTextColor(Filtro.getColorItemZero());
+                                        } else {
+                                            itemmessage.setTextColor(Filtro.getColorItem());
                                         }
                                         break;
                                 }

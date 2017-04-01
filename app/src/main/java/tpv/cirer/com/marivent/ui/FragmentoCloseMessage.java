@@ -42,15 +42,11 @@ import tpv.cirer.com.marivent.herramientas.Filtro;
 import tpv.cirer.com.marivent.herramientas.WrapContentLinearLayoutManager;
 import tpv.cirer.com.marivent.modelo.Message;
 
-import static tpv.cirer.com.marivent.ui.ActividadPrincipal.CountTable;
-import static tpv.cirer.com.marivent.ui.ActividadPrincipal.mSerialExecutorActivity;
-import static tpv.cirer.com.marivent.ui.ActividadPrincipal.url_count;
-
 /**
  * Created by JUAN on 08/11/2016.
  */
 
-public class FragmentoOpenMessage extends Fragment {
+public class FragmentoCloseMessage extends Fragment {
     private String title;
     private int page;
 
@@ -69,25 +65,25 @@ public class FragmentoOpenMessage extends Fragment {
     // JSON Node names
     String TAG_SUCCESS = "success";
 
-    private static FragmentoOpenMessage OpenMessage = null;
+    private static FragmentoCloseMessage CloseMessage = null;
 
-    public static FragmentoOpenMessage newInstance(int page, String title) {
-        FragmentoOpenMessage OpenMessage = new FragmentoOpenMessage();
+    public static FragmentoCloseMessage newInstance(int page, String title) {
+        FragmentoCloseMessage CloseMessage = new FragmentoCloseMessage();
         Bundle args = new Bundle();
         args.putInt("someInt", page);
         args.putString("someTitle", title);
-        OpenMessage.setArguments(args);
-        return OpenMessage;
+        CloseMessage.setArguments(args);
+        return CloseMessage;
     }
 
-    public static FragmentoOpenMessage getInstance(){
-        if(OpenMessage == null){
-            OpenMessage = new FragmentoOpenMessage();
+    public static FragmentoCloseMessage getInstance(){
+        if(CloseMessage == null){
+            CloseMessage = new FragmentoCloseMessage();
         }
-        return OpenMessage;
+        return CloseMessage;
     }
 
-    public FragmentoOpenMessage() {
+    public FragmentoCloseMessage() {
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,7 +97,7 @@ public class FragmentoOpenMessage extends Fragment {
         page = getArguments().getInt("someInt", 0);
         title = getArguments().getString("someTitle");
 
-        Filtro.setTag_fragment("FragmentoOpenMessage");
+        Filtro.setTag_fragment("FragmentoCloseMessage");
     }
 
     @Override
@@ -156,10 +152,10 @@ public class FragmentoOpenMessage extends Fragment {
         if (this.isVisible()) {
             // If we are becoming invisible, then...
             if (!isVisibleToUser) {
-                Log.d("OpenMessage", "Not visible anymore.");
+                Log.d("CloseMessage", "Not visible anymore.");
                 // TODO stop audio playback
             }else{
-                Log.d("OpenMessage", "Yes visible anymore.");
+                Log.d("CloseMessage", "Yes visible anymore.");
                 onResume();
             }
         }
@@ -241,7 +237,7 @@ public class FragmentoOpenMessage extends Fragment {
             if (xWhere.equals("")) {
                 xWhere += " WHERE message.ACTIVO=1";
             } else {
-                xWhere += " AND message.ACTIVO=1";
+                xWhere += " AND message.ACTIVO=0";
             }
 
             cSql += xWhere;
@@ -331,14 +327,6 @@ public class FragmentoOpenMessage extends Fragment {
             if (result == 1) {
                 Log.i("ADAPTADOR Message", Integer.toString(adaptadormessage.getItemCount()));
                 adaptadormessage.notifyDataSetChanged();
-                if (mContext!=null) {
-                    //Calcular Items
-                    mSerialExecutorActivity = new ActividadPrincipal.MySerialExecutor(getActivity());
-
-                    CountTable = "message";
-                    url_count = Filtro.getUrl() + "/CountMessageOpen.php";
-                    mSerialExecutorActivity.execute(null);
-                }
             } else {
                 Log.e(TAG, "Failed to fetch data!");
             }

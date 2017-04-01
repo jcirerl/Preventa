@@ -81,6 +81,7 @@
     <string name="item_ticket">Facturas</string>
     <string name="item_print">Print</string>
     <string name="item_archivo">Archivo</string>
+    <string name="item_message">Mensaje</string>
 
     <string name="item_inicio">Inicio</string>
     <string name="item_salir">Salir</string>

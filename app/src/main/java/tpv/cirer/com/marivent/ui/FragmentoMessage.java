@@ -38,11 +38,8 @@ public class FragmentoMessage extends Fragment {
 
     public FragmentoMessage() {
     }
-    public static FragmentoMessage newInstance(int page) {
+    public static FragmentoMessage newInstance() {
         FragmentoMessage fragmentmessage = new FragmentoMessage();
-        Bundle args = new Bundle();
-        args.putInt("page", page);
-        fragmentmessage.setArguments(args);
         return fragmentmessage;
     }
     public static FragmentoMessage getInstance(){
@@ -104,7 +101,7 @@ public class FragmentoMessage extends Fragment {
     private void poblarViewPager(ViewPager viewPager, int npage) {
         FragmentoMessage.AdaptadorMessages adapter = new FragmentoMessage.AdaptadorMessages(getFragmentManager());
         adapter.addFragment(FragmentoOpenMessage.newInstance(0, "Page # 1"),((ActividadPrincipal) getActivity()).getPalabras( getString(R.string.titulo_tab_OpenMessage)),"FragmentoOpenMessage");
-      //  adapter.addFragment(FragmentoCloseMessage.newInstance(0,"Page # 2"),((ActividadPrincipal) getActivity()).getPalabras( getString(R.string.titulo_tab_CloseMessage)),"FragmentoCloseMessage");
+        adapter.addFragment(FragmentoCloseMessage.newInstance(0,"Page # 2"),((ActividadPrincipal) getActivity()).getPalabras( getString(R.string.titulo_tab_CloseMessage)),"FragmentoCloseMessage");
 //        adapter.addFragment(new FragmentoPrintMessage(), getString(R.string.titulo_tab_PrintMessage));
         if(viewPager.getAdapter() == null)
             viewPager.setAdapter(adapter);
@@ -125,11 +122,6 @@ public class FragmentoMessage extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //      setHasOptionsMenu(true);
-        if (fragmentmessage!=null) {
-            nPage = getArguments().getInt("page", 0);
-        }else{
-            nPage =0;
-        }
     }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

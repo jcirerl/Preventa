@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
@@ -61,6 +62,7 @@ public class AdaptadorMessageHeader extends RecyclerView.Adapter<RecyclerView.Vi
                 public void onPotato(View caller,
                                      String idMessage,
                                      String mesaMessage,
+                                     String comensalesMessage,
                                      String creadoMessage,
                                      String activoMessage,
                                      String cajaMessage) {
@@ -69,18 +71,20 @@ public class AdaptadorMessageHeader extends RecyclerView.Adapter<RecyclerView.Vi
                     final String creadoMESSAGE = creadoMessage;
                     final String cajaMESSAGE = cajaMessage;
                     final String mesaMESSAGE = mesaMessage;
+                    final String comensalesMESSAGE = comensalesMessage;
 
                     AlertDialog.Builder dialog = new AlertDialog.Builder(caller.getContext());
                     dialog.setTitle(ActividadPrincipal.getPalabras("Modificar")+" "+ActividadPrincipal.getPalabras("Mensaje")+": "+idMESSAGE);
                     dialog.setMessage(ActividadPrincipal.getPalabras("Datos")+" "+ActividadPrincipal.getPalabras("Mensaje")+": "+
                             "\n"+ActividadPrincipal.getPalabras("Id")+": "+ idMESSAGE +
+                            "\n"+ActividadPrincipal.getPalabras("Comensales")+".: " + comensalesMESSAGE +
                             "\n"+ActividadPrincipal.getPalabras("Mesa")+".: " + mesaMESSAGE +
                             "\n"+ActividadPrincipal.getPalabras("Activo")+": " + activoMESSAGE +
                             "\n"+ActividadPrincipal.getPalabras("Caja")+": " + cajaMESSAGE +
-                            "\n"+ActividadPrincipal.getPalabras("Creado")+": " + creadoMESSAGE
+                            "\n"+ActividadPrincipal.getPalabras("Fecha")+": " + creadoMESSAGE
                     );
                     dialog.setIcon(R.drawable.mark_as_read);
-                    dialog.setPositiveButton(ActividadPrincipal.getPalabras("Ok"), new DialogInterface.OnClickListener() {
+                    dialog.setPositiveButton(ActividadPrincipal.getPalabras("Consultar"), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
@@ -118,13 +122,18 @@ public class AdaptadorMessageHeader extends RecyclerView.Adapter<RecyclerView.Vi
 
                 public void onUpdate(Button callerButton,
                                      String idMessage,
-                                     String activoMessage ) {
+                                     String activoMessage,
+                                     String comensalesMessage,
+                                     String mesaMessage ) {
                     Log.d("UPDATE BUTTON", "+");
                     final int idMESSAGE = Integer.parseInt(idMessage);
                     final int activoMESSAGE = Integer.parseInt(activoMessage);
+                    final String mesaMESSAGE = mesaMessage;
+                    comensalesMessage = comensalesMessage.replace(Html.fromHtml("&nbsp;"), "");
+                    final int comensalesMESSAGE = Integer.parseInt(comensalesMessage);
 
                     try {
-                        mCallbackMessage.onUpdateMessageSelected(idMESSAGE,activoMESSAGE);
+                        mCallbackMessage.onUpdateMessageSelected(idMESSAGE,activoMESSAGE,comensalesMESSAGE,mesaMESSAGE);
                     } catch (ClassCastException exception) {
                         // do something
                     }
@@ -176,8 +185,8 @@ public class AdaptadorMessageHeader extends RecyclerView.Adapter<RecyclerView.Vi
                 ((VHItem) holder).MesaMessage.setText(Html.fromHtml(model.getMessageMesa()));
 
 
-                SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-                SimpleDateFormat sdf2 = new SimpleDateFormat("dd-MM-yyyy");
+                SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+                SimpleDateFormat sdf2 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
                 try{
                     String StringRecogido = model.getMessageCreado();
                     Date datehora = sdf1.parse(StringRecogido);
@@ -189,10 +198,16 @@ public class AdaptadorMessageHeader extends RecyclerView.Adapter<RecyclerView.Vi
                 } catch (Exception e) {
                     e.getMessage();
                 }
+                ((VHItem) holder).ComensalesMessage.setText(Html.fromHtml(String.format("%02d",model.getMessageComensales())+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"));
 
                 ((VHItem) holder).CajaMessage.setText(model.getMessageCaja().trim());
-
-
+                if (model.getMessageActivo()==0) {
+                    ((VHItem) holder).UpdateMessage.setVisibility(View.GONE);
+                    ((VHItem) holder).DeleteMessage.setVisibility(View.GONE);
+                }else{
+                    ((VHItem) holder).UpdateMessage.setVisibility(View.VISIBLE);
+                    ((VHItem) holder).DeleteMessage.setVisibility(View.VISIBLE);
+                }
 
                 ((VHItem) holder).MesaMessage.setTextColor(Color.BLUE);
 
@@ -208,10 +223,9 @@ public class AdaptadorMessageHeader extends RecyclerView.Adapter<RecyclerView.Vi
         } else if (holder instanceof VHHeader) {
 
             //cast holder to VHHeader and set data for header.
-            myText = StringUtils.repeat(space01, 5)+
-                    ActividadPrincipal.getPalabras("Fecha")+StringUtils.repeat(space01, 11)+
-                    ActividadPrincipal.getPalabras("Mesa")+StringUtils.repeat(space01, 6)+
-                    ActividadPrincipal.getPalabras("Caja")+StringUtils.repeat(space01, 11);
+            myText = ActividadPrincipal.getPalabras("Fecha")+StringUtils.repeat(space01, 13)+
+                     ActividadPrincipal.getPalabras("Np")+StringUtils.repeat(space01, 2)+
+                     ActividadPrincipal.getPalabras("Mesa")+StringUtils.repeat(space01, 6);
             //    Html.fromHtml(myText.replace(" ", "&nbsp;")).toString()
             //cast holder to VHHeader and set data for header_facturas.
             ((VHHeader) holder).headerMessage.setText(Html.fromHtml(myText.replace(" ", "&nbsp;")).toString());
@@ -253,6 +267,7 @@ public class AdaptadorMessageHeader extends RecyclerView.Adapter<RecyclerView.Vi
         public Button DeleteMessage;
 
         public TextView CreadoMessage;
+        public TextView ComensalesMessage;
         public TextView MesaMessage;
         public TextView ActivoMessage;
         public TextView CajaMessage;
@@ -270,6 +285,7 @@ public class AdaptadorMessageHeader extends RecyclerView.Adapter<RecyclerView.Vi
             this.IdMessage = (TextView) itemView.findViewById(R.id.pid);
             this.ActivoMessage = (TextView) itemView.findViewById(R.id.activo);
             this.CreadoMessage = (TextView) itemView.findViewById(R.id.creado);
+            this.ComensalesMessage = (TextView) itemView.findViewById(R.id.comensales);
             this.MesaMessage = (TextView) itemView.findViewById(R.id.mesa);
             this.CajaMessage = (TextView) itemView.findViewById(R.id.caja);
 
@@ -286,6 +302,7 @@ public class AdaptadorMessageHeader extends RecyclerView.Adapter<RecyclerView.Vi
             IdMessage.setText(Integer.toString(Message.getMessageId()));
             ActivoMessage.setText(Integer.toOctalString(Message.getMessageActivo()));
             CreadoMessage.setText(Message.getMessageCreado());
+            ComensalesMessage.setText(Integer.toString(Message.getMessageComensales()));
             MesaMessage.setText(Message.getMessageMesa());
             CajaMessage.setText(Message.getMessageCaja());
         }
@@ -307,7 +324,9 @@ public class AdaptadorMessageHeader extends RecyclerView.Adapter<RecyclerView.Vi
                         mListenerMessage.onUpdate(
                                 (Button) v,
                                 String.valueOf(this.IdMessage.getText()),
-                                String.valueOf(this.ActivoMessage.getText()));
+                                String.valueOf(this.ActivoMessage.getText()),
+                                String.valueOf(this.ComensalesMessage.getText()),
+                                String.valueOf(this.MesaMessage.getText()));
                         break;
                     case R.id.btnDelete:
                         mListenerMessage.onDelete(
@@ -320,12 +339,13 @@ public class AdaptadorMessageHeader extends RecyclerView.Adapter<RecyclerView.Vi
 
             } else {
                 Log.i("instance v dentro", v.getClass().getName().toString());
-                if (v instanceof TextView) {
+                if (v instanceof RelativeLayout) {
                     Log.i("instance v dentro", v.getClass().getName().toString());
                         mListenerMessage.onPotato(
                             v,
                             String.valueOf(this.IdMessage.getText()),
                             String.valueOf(this.MesaMessage.getText()),
+                            String.valueOf(this.ComensalesMessage.getText()),
                             String.valueOf(this.CreadoMessage.getText()),
                             String.valueOf(this.ActivoMessage.getText()),
                             String.valueOf(this.CajaMessage.getText())
@@ -339,6 +359,7 @@ public class AdaptadorMessageHeader extends RecyclerView.Adapter<RecyclerView.Vi
         public void onPotato(View caller,
                              String idMessage,
                              String mesaMessage,
+                             String comensalesMessage,
                              String creadoMessage,
                              String activoMessage,
                              String cajaMessage) {
@@ -348,7 +369,9 @@ public class AdaptadorMessageHeader extends RecyclerView.Adapter<RecyclerView.Vi
         @Override
         public void onUpdate(Button callerButton,
                              String idMessage,
-                             String activoMessage) {
+                             String activoMessage,
+                             String comensalesMessage,
+                             String mesaMessage) {
 
         }
 
@@ -380,7 +403,7 @@ public class AdaptadorMessageHeader extends RecyclerView.Adapter<RecyclerView.Vi
     // La actividad contenedora debe implementar esta interfaz
     public interface OnHeadlineSelectedListenerMessageHeader {
         void onDeleteMessageSelected(int id, int activo);
-        void onUpdateMessageSelected(int id, int activo);
+        void onUpdateMessageSelected(int id, int activo, int comensales, String mesa);
     }
     /*para filtro*/
     public void setFilter(List<Message> Messages) {

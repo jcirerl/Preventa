@@ -21,7 +21,7 @@
     <TextView
         android:id="@+id/activo"
         style="@style/RowTitle"
-        android:layout_width="110dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:visibility="gone"
@@ -36,13 +36,23 @@
         android:paddingLeft="@dimen/row_padding" />
 
     <TextView
-        android:id="@+id/mesa"
+        android:id="@+id/comensales"
         style="@style/RowTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/creado"
         android:layout_toRightOf="@+id/creado"
+        android:paddingLeft="@dimen/row_padding" />
+
+    <TextView
+        android:id="@+id/mesa"
+        style="@style/RowTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/comensales"
+        android:layout_toRightOf="@+id/comensales"
         android:paddingLeft="8dp" />
 
     <TextView
@@ -53,43 +63,34 @@
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/mesa"
         android:layout_toRightOf="@+id/mesa"
+        android:visibility="gone"
         android:paddingLeft="@dimen/row_padding" />
 
     <Button
         android:id="@+id/btnUpdate"
-        style="@style/RowSubtitle"
-        android:layout_gravity="center"
+        style="@style/RowTitle"
         android:minHeight="0dp"
         android:minWidth="0dp"
         android:layout_alignParentBottom="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/factura"
-        android:layout_alignStart="@+id/factura"
-        android:layout_below="@+id/factura"
         android:drawableLeft="@android:drawable/ic_input_add"
         android:layout_marginLeft="10dp"
-        android:text="@string/modificar"
-        android:gravity="center"
+        android:layout_toEndOf="@+id/mesa"
+        android:layout_toRightOf="@+id/mesa"
         android:background="@drawable/button_bg_transparent"/>
     <Button
         android:id="@+id/btnDelete"
-        style="@style/RowSubtitle"
-        android:layout_gravity="center"
+        style="@style/RowTitle"
         android:minHeight="0dp"
         android:minWidth="0dp"
         android:layout_alignParentBottom="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/nombremesa"
-        android:layout_alignStart="@+id/nombremesa"
-        android:layout_below="@+id/mesa"
         android:layout_toEndOf="@+id/btnUpdate"
         android:layout_toRightOf="@+id/btnUpdate"
         android:layout_marginLeft="20dp"
         android:drawableLeft="@android:drawable/ic_delete"
-        android:text="@string/anular"
-        android:gravity="center"
         android:background="@drawable/button_bg_transparent"
         />
 </RelativeLayout>

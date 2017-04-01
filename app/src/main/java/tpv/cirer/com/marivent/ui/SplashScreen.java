@@ -280,6 +280,7 @@ public class SplashScreen extends AppCompatActivity {
 
         // RELLENAMOS PALABRAS IDIOMA
         url_palabras = Filtro.getUrl() + "/RellenaListaPalabras.php";
+        Log.i("Url Palabras",url_palabras);
         lpalabras = new ArrayList<Palabras>();
         TaskHelper.execute(new GetPalabras(), url_palabras);
 
@@ -672,7 +673,7 @@ public class SplashScreen extends AppCompatActivity {
                         post.optString("IDIOMA"),
                         post.optString("CLAVESTRING").trim(),
                         post.optString("PALABRA").trim());
-////                Log.i(TAG_PALABRAS,Integer.toString(post.optInt("ID"))+","+post.optString("IDIOMA")+","+post.optString("CLAVESTRING")+","+post.optString("PALABRA"));
+                Log.i(TAG_PALABRAS,Integer.toString(post.optInt("ID"))+","+post.optString("IDIOMA")+","+post.optString("CLAVESTRING")+","+post.optString("PALABRA"));
                 lpalabras.add(cat);
             }
         } catch (JSONException e) {

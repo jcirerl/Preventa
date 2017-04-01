@@ -63,6 +63,11 @@
                     app:actionViewClass="android.widget.TextView"
                     android:title="@string/item_mesas" />
                 <item
+                    android:id="@+id/item_message"
+                    android:icon="@drawable/message"
+                    app:actionViewClass="android.widget.TextView"
+                    android:title="@string/item_message" />
+                <item
                     android:id="@+id/item_planning"
                     android:icon="@drawable/tables"
                     app:actionViewClass="android.widget.TextView"

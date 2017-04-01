@@ -14,6 +14,7 @@ public class Message {
     private int MessageActivo;
     private String MessageCreado;
     private String MessageCaja;
+    private int MessageComensales;
 
     public Message(){}
     public String getMessageGrupo() {
@@ -83,6 +84,12 @@ public class Message {
 
     public void setMessageMesa(String messageMesa) {
         this.MessageMesa = messageMesa;
+    }
+    public int getMessageComensales() {
+        return MessageComensales;
+    }
+    public void setMessageComensales(int cabeceraComensales) {
+        this.MessageComensales = cabeceraComensales;
     }
 
 

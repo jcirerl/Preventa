@@ -136,7 +136,7 @@ public class MesasActivity extends FragmentActivity {
     Drawable icon1;
     Bitmap bimage;
     RelativeLayout layout;
-    Button image,imagepre;
+    Button image;
     Bitmap innerBitmap;
     TextView texto;
     BadgeView badge;
@@ -631,6 +631,56 @@ public class MesasActivity extends FragmentActivity {
                                                                 returnIntent.putExtra("Tabla", "ftp");
                                                                 setResult(RESULT_OK, returnIntent);
                                                                 finish();
+                                                            }
+                                                        } else {
+                                                            Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("Mesa")+" "+ActividadPrincipal.getPalabras("CERRADA"), Toast.LENGTH_SHORT).show();
+                                                        }
+                                                        break;
+                                                    case 6:
+                                                        if (getMesas(Filtro.getMesa(), 1)) {
+                                                            if (!ActividadPrincipal.getCruge("action_mesas_update")) {
+                                                                Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
+                                                            } else {
+                                                                // DIALOGO PEDIR COMENSALES
+                                                                final AlertDialog.Builder alertcomensales = new AlertDialog.Builder(MesasActivity.this);
+                                                                final EditText input = new EditText(MesasActivity.this);
+                                                                input.setText(String.format("%02d", Integer.parseInt(getMesaComensales(Filtro.getMesa()))));
+
+                                                                // Ponerse al final del edittext
+                                                                int pos = input.getText().length();
+                                                                input.setSelection(pos);
+
+                                                                input.setTextColor(Color.RED);
+                                                                input.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+                                                                KeyListener keyListener = DigitsKeyListener.getInstance("1234567890");
+                                                                input.setKeyListener(keyListener);
+                                                                alertcomensales.setTitle(getPalabras("Insertar")+" "+getPalabras("Comensales"));
+                                                                alertcomensales.setView(input);
+                                                                alertcomensales.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                                                        String value = input.getText().toString();
+                                                                        if (value.matches("")) {
+                                                                            Toast.makeText(MesasActivity.this, getPalabras("Valor")+" "+getPalabras("Vacio")+" " + getPalabras("Comensales"), Toast.LENGTH_SHORT).show();
+                                                                            //            this.btnGuardar.setEnabled(false);
+                                                                        } else {
+
+                                                                            value = value.replace(".", "");
+                                                                            value = value.replace(",", "");
+
+                                                                            input.setText(String.format("%2d", Integer.valueOf(value)));
+                                                                            setMesaComensales(Filtro.getMesa(),Integer.valueOf(value));
+                                                                            new UpdateMesaApertura().execute("1",value);
+
+                                                                        }
+                                                                    }
+                                                                });
+
+                                                                alertcomensales.setNegativeButton(getPalabras("Cancelar"), new DialogInterface.OnClickListener() {
+                                                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                                                        dialog.cancel();
+                                                                    }
+                                                                });
+                                                                alertcomensales.show();
                                                             }
                                                         } else {
                                                             Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("Mesa")+" "+ActividadPrincipal.getPalabras("CERRADA"), Toast.LENGTH_SHORT).show();
