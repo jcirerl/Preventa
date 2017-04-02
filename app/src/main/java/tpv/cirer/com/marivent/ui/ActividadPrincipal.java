@@ -410,14 +410,14 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         packagesharedPreferences();
         retriveSharedValue();
 */
+        // CONTROL PEDIDOS DESDE MESA
+        if (Filtro.getOppedidomesa()) {
+            resultReceiver = new MesasResultReceiver(null);
 
-        resultReceiver = new MesasResultReceiver(null);
-
-
-        intent = new Intent(this, ServiceMesas.class);
-        intent.putExtra("receiver", resultReceiver);
-        startService(intent);
-
+            intent = new Intent(this, ServiceMesas.class);
+            intent.putExtra("receiver", resultReceiver);
+            startService(intent);
+        }
         // VALORES PROVISIONALES PARA PRUEBAS //
         Filtro.setInicio(true);
 /*        Filtro.setPrintDeviceType(Print.DEVTYPE_TCP);
@@ -750,30 +750,6 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
 
         initializeCountDrawer();
 
-/*        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.lista_coordinator);
-        final View bottomSheet = coordinatorLayout.findViewById(R.id.bottom_sheet);
-        final BottomSheetBehavior behavior = ExpandedBottomSheetBehavior.from(bottomSheet);
-        int layoutID = getResources().getIdentifier("lista", "layout", getPackageName());
-        int buttonID = getResources().getIdentifier("button", "id", getPackageName());
-
-        LinearLayout layout = (LinearLayout) LayoutInflater.from(ActividadPrincipal.this).inflate(layoutID, null);
-        Button button = (Button) layout.findViewById(buttonID);
-//        TextView textSaldo = (TextView) findViewById(textViewID);
-
-        button.setText("PULSAME");
-//        button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isExpanded) {
-                    behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                } else {
-                    behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                }
-                isExpanded = !isExpanded;
-            }
-        });
-*/
     }
     private void packagesharedPreferences() {
         SharedPreferences.Editor editor = shared.edit();
@@ -791,7 +767,10 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        stopService(intent);
+        // CONTROL PEDIDO MESA
+        if(Filtro.getOppedidomesa()) {
+            stopService(intent);
+        }
     }
 
     class UpdateUI implements Runnable
@@ -1040,9 +1019,32 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         conn.setText(Filtro.getConexion());
         conn.setTextSize(16);
     //    txtview = (TextView) toolbar.findViewById(R.id.txtview);
-        txtMesaOpen = (TextView) toolbar.findViewById(R.id.txtMesasOpen);
-        imagemesa = (ImageView) toolbar.findViewById(R.id.imageMesa);
 
+        // CONTROL PEDIDO MESA
+        if(Filtro.getOppedidomesa()) {
+            txtMesaOpen = (TextView) toolbar.findViewById(R.id.txtMesasOpen);
+            imagemesa = (ImageView) toolbar.findViewById(R.id.imageMesa);
+
+            txtMesaOpen.setVisibility(View.VISIBLE);
+            imagemesa.setVisibility(View.VISIBLE);
+            imagemesa.findViewById(R.id.imageMesa).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!getCruge("action_message_admin")){
+                        Snackbar.make(v, getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_LONG).show();
+                    }else {
+                        CargaFragment cargafragment = null;
+                        cargafragment = new CargaFragment(FragmentoMessage.newInstance(),getSupportFragmentManager());
+                        cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
+                        if (cargafragment.getFragment() != null){
+                            cargafragment.setTransaction(R.id.contenedor_principal);
+                            Snackbar.make(v, getPalabras("Ir")+" "+getPalabras("Mensaje"), Snackbar.LENGTH_LONG).show();
+                        }
+                    }
+                }
+            });
+
+        }
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
   //      getSupportActionBar().setIcon(R.drawable.logo); //also displays wide logo

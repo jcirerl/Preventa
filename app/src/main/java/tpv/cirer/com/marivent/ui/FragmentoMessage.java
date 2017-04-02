@@ -113,7 +113,7 @@ public class FragmentoMessage extends Fragment {
     public void onResume() {
         super.onResume();
         /// Poner Titulo CABECERA
-        ((ActividadPrincipal) getActivity()).setCabecera(((ActividadPrincipal) getActivity()).getPalabras("Messages"),0.00,0);
+        ((ActividadPrincipal) getActivity()).setCabecera(((ActividadPrincipal) getActivity()).getPalabras("Mensaje"),0.00,0);
 
         poblarViewPager(viewPager,0);
     }

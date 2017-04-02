@@ -63,6 +63,26 @@
             android:entries="@array/log"
             android:entryValues="@array/ctrllog" />
     </PreferenceCategory>
+    <PreferenceCategory
+        android:key="categoria_pedidos_mesa"
+        android:title="@string/pedidomesa">
+        <ListPreference
+            android:defaultValue="false"
+            android:key="oppedidomesa"
+            android:title="@string/pedidodesdemesa"
+            android:summary="@string/titulopedidomesa"
+            android:dialogTitle="@string/controlpedidomesa"
+            android:entries="@array/pedidomesa"
+            android:entryValues="@array/ctrlpedidomesa" />
+        <ListPreference
+            android:defaultValue="10000"
+            android:key="opintervalo"
+            android:title="@string/intervalo"
+            android:summary="@string/titulointervalo"
+            android:dialogTitle="@string/controlintervalo"
+            android:entries="@array/time_mesa"
+            android:entryValues="@array/intervalo" />
+    </PreferenceCategory>
 
 <!--    <PreferenceCategory
         android:key="categoria_notificaciones"

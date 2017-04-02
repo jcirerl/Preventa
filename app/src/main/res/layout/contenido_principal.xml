@@ -54,6 +54,7 @@
                     android:id="@+id/imageMesa"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:src="@drawable/house_kitchen_table" />
 
 
@@ -67,6 +68,7 @@
                     android:padding="2sp"
                     android:gravity="center"
                     android:background="@drawable/circle"
+                    android:visibility="gone"
                     android:layout_gravity="top|right" />
 
             </FrameLayout>

@@ -45,7 +45,7 @@ public class ServiceMesas extends Service {
 		resultReceiver = intent.getParcelableExtra("receiver");
 		
 		timerTask = new MyTimerTask();
-		timer.scheduleAtFixedRate(timerTask, 10000, 10000);
+		timer.scheduleAtFixedRate(timerTask, Filtro.getOpintervalo(), Filtro.getOpintervalo());
 		return START_STICKY;
 	}
 	@Override

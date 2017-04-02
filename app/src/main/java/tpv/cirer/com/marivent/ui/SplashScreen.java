@@ -98,6 +98,8 @@ public class SplashScreen extends AppCompatActivity {
                     Filtro.setOpgrid(Integer.parseInt(pref.getString("opgrid", "8")));
                     Filtro.setOpmesas(Integer.parseInt(pref.getString("opmesas", "128")));
                     Filtro.setOptoolbar(Integer.parseInt(pref.getString("optoolbar", "0")));
+                    Filtro.setOppedidomesa(Boolean.parseBoolean(pref.getString("oppedidomesa","false")));
+                    Filtro.setOpintervalo(Integer.parseInt(pref.getString("opintervalo", "10000")));
                     Filtro.setOplog(Boolean.parseBoolean(pref.getString("oplog","true")));
                     Filtro.setFilelog("");
                     Log.i("oplog",Boolean.toString((Filtro.getOplog())));
@@ -673,7 +675,7 @@ public class SplashScreen extends AppCompatActivity {
                         post.optString("IDIOMA"),
                         post.optString("CLAVESTRING").trim(),
                         post.optString("PALABRA").trim());
-                Log.i(TAG_PALABRAS,Integer.toString(post.optInt("ID"))+","+post.optString("IDIOMA")+","+post.optString("CLAVESTRING")+","+post.optString("PALABRA"));
+//                Log.i(TAG_PALABRAS,Integer.toString(post.optInt("ID"))+","+post.optString("IDIOMA")+","+post.optString("CLAVESTRING")+","+post.optString("PALABRA"));
                 lpalabras.add(cat);
             }
         } catch (JSONException e) {
