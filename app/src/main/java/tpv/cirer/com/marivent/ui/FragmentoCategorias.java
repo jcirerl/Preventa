@@ -1,15 +1,21 @@
 package tpv.cirer.com.marivent.ui;
 
+import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,6 +23,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -26,9 +33,7 @@ import tpv.cirer.com.marivent.R;
 import tpv.cirer.com.marivent.herramientas.Filtro;
 import tpv.cirer.com.marivent.herramientas.UpdateableFragment;
 import tpv.cirer.com.marivent.modelo.Categoria;
-import tpv.cirer.com.marivent.modelo.Comida;
 
-import static tpv.cirer.com.marivent.ui.ActividadPrincipal.comidas;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lcategoria;
 
 
@@ -80,8 +85,8 @@ public class FragmentoCategorias extends Fragment {
 
             // Setear adaptador al viewpager.
             viewPager = (ViewPager) view.findViewById(R.id.pager);
-     ////       viewPager.setOffscreenPageLimit(lcategoria.size()); // BIEN PARA 23.1.1
-            viewPager.setOffscreenPageLimit(0);
+            viewPager.setOffscreenPageLimit(lcategoria.size()); // BIEN PARA 23.1.1
+    ////        viewPager.setOffscreenPageLimit(0);
             if (viewPager != null) {
                 poblarViewPager(viewPager);
             }
@@ -89,7 +94,11 @@ public class FragmentoCategorias extends Fragment {
             assert viewPager != null;
 //            viewPager.setCurrentItem(0);
             tabLayout.setupWithViewPager(viewPager);
-////            tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+            if (Filtro.getOptab()==0){
+               tabLayout.setTabMode(TabLayout.MODE_FIXED);
+            }else{
+               tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+            }
             // Mario Velasco's code
 /*            tabLayout.post(new Runnable()
             {
@@ -116,26 +125,9 @@ public class FragmentoCategorias extends Fragment {
             tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager) {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
-/*                     for (Iterator<Comida> it = lcomida.iterator(); it.hasNext();){
-                        Comida comida = it.next();
-                        it.remove();
-                    }
-*/                       positionTab = tab.getPosition();
+                    positionTab = tab.getPosition();
                     Log.i("TAB POSITION: ",Integer.toString(positionTab));
 
-                    int x = 0;
-//                    if (comidas.size() <= tab.getPosition()){
-                        for (ArrayList<Comida> i : comidas) { // iterate -list by list
-
-                            if (x == tab.getPosition()) {
-                                for (Comida comida : i) { //iterate element by element in a list
-                                    Log.i("TABLAYOUT COMIDA: ",comida.getNombre());
-//                                    lcomida.add(comida);
-                                }
-                            }
-                            x++;
-                        }
- //                   }
                     Log.i("TABLAYOUT: ",Integer.toString(tab.getPosition()));
 
                     switch(tab.getPosition()){
@@ -161,21 +153,13 @@ public class FragmentoCategorias extends Fragment {
 
     private void poblarViewPager(final ViewPager viewPager) {
         AdaptadorSecciones adapter = new AdaptadorSecciones(getFragmentManager());
-/*        AdaptadorSecciones adapter = new AdaptadorSecciones(
-                getActivity(),                    // pass the context,
-                getChildFragmentManager(),        // the fragment manager
-                FragmentoCategorias.getFilterManager()   // and the filter manager
-        );
-*/        Log.i("Estoy PoblarViewPager",Integer.toString(lcategoria.size()));
+        Log.i("Estoy PoblarViewPager",Integer.toString(lcategoria.size()));
         Categoria categoria;
         for(int x=0;x<lcategoria.size();x++) {
             categoria = lcategoria.get(x);
             Log.i("Poblando: ",Integer.toString(x)+" "+categoria.getCategoriaTipo_are()+" "+categoria.getCategoriaOrden());
             adapter.addFragment(FragmentoCategoria.newInstance(categoria.getCategoriaOrden(),cEstado), categoria.getCategoriaNombre_tipoare(),x);
         }
-//        adapter.addFragment(FragmentoCategoria.nuevaInstancia(0), getString(R.string.titulo_tab_platillos));
-//        adapter.addFragment(FragmentoCategoria.nuevaInstancia(1), getString(R.string.titulo_tab_bebidas));
-//        adapter.addFragment(FragmentoCategoria.nuevaInstancia(2), getString(R.string.titulo_tab_postres));
         viewPager.setAdapter(adapter);
 
     }
@@ -187,8 +171,6 @@ public class FragmentoCategorias extends Fragment {
  ////       comidas = new ArrayList<ArrayList<Comida>>();
         adaptadorcategorias = new ArrayList<AdaptadorCategorias>();
         cEstado = getArguments().getString("ESTADO", "");
-         /// Poner Datos CABECERA
-         ((ActividadPrincipal) getActivity()).setCabecera(((ActividadPrincipal) getActivity()).getTitle().toString(),0.00,0);
 
          ///        Categorias = this;
  ///        filterManager = new FilterManager();
@@ -239,6 +221,11 @@ public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
         AdaptadorCategorias adaptadorx = null;
 
         SearchView searchView1 = (SearchView) MenuItemCompat.getActionView(searchItem1);
+
+        ImageView searchButton = (ImageView) searchView1.findViewById(android.support.v7.appcompat.R.id.search_button);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            searchButton.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.accentColor)));
+        }
         // use this method for search process
         searchView1.setOnSearchClickListener(new View.OnClickListener()
         {
@@ -431,11 +418,30 @@ public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
         return;
     }
 */
+ @Override
+ public void onResume() {
+     super.onResume();
+     if (!Filtro.getTag_fragment().contains("Linea")) {
+      //   Filtro.setTag_fragment("FragmentoInicio");
+         /// Poner Datos CABECERA
+         ///    ((ActividadPrincipal) getActivity()).setCabecera("Inicio",0.00,1);
+         ((ActividadPrincipal) getActivity()).setTitle(((ActividadPrincipal) getActivity()).getPalabras("Categorias"));
+         Spannable text = new SpannableString(((ActividadPrincipal) getActivity()).getTitle());
+         text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(((ActividadPrincipal) getActivity()), R.color.light_blue_500)), 0, text.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+         ((ActividadPrincipal) getActivity()).setTitle(text);
+
+     }
+ }
+
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         appBarLayout.removeView(tabLayout);
+ /*       View rootView = ((ActividadPrincipal)getActivity()).getWindow().getDecorView().findViewById(android.R.id.content);
+        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        toolbar.getMenu().removeItem(R.id.mi_search);
+ */
     }
 
     /**

@@ -340,43 +340,7 @@ public class LoginActivity extends AppCompatActivity {
 //                Log.d(TAG, e.getLocalizedMessage());
                 }
 
-/*                ArrayList<String> parametros = new ArrayList<String>();
-
-//          ArrayList parametros = new ArrayList(); 
-                parametros.add("usuario");
-                parametros.add(user.getText().toString());
-                parametros.add("contrasena");
-                parametros.add(md5(pass.getText().toString()));
-                Log.i("md5: ", md5(pass.getText().toString()));
-//          Log.w("user: ", user.getText().toString());
-//          Log.w("Pass: ", pass.getText().toString());
-
-//          parametros.add(pass.getText().toString());          
-                // Llamada a Servidor Web PHP
-                try {
-                    Post post = new Post();
-                    JSONArray datos = post.getServerData(parametros, urlServidor);
-                    Log.i("Datos",Integer.toString(datos.length()));
-                    if (datos != null && datos.length() > 0) {
-                        JSONObject json_data = datos.getJSONObject(0);
-                        int numRegistrados = json_data.getInt("id");
-                        if (numRegistrados > 0) {
-                            Filtro.setUsuario(json_data.getString("username"));
-                            Filtro.setRoles(json_data.getString("roles"));
-                            Log.i("Usuario",Filtro.getUsuario()+" "+Filtro.getRoles());
-                            Toast.makeText(getBaseContext(), "Usuario correcto. ", Toast.LENGTH_SHORT).show();
-                            Intent myIntent = new Intent(LoginActivity.this, ActividadPrincipal.class);
-                            LoginActivity.this.startActivityForResult(myIntent, 0);
-                            finish();
-                        }
-                    } else {
-                        Toast.makeText(getBaseContext(), "Usuario incorrecto. ", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    Toast.makeText(getBaseContext(), "Error al conectar con el servidor. ", Toast.LENGTH_SHORT).show();
-                }
-                // FIN Llamada a Servidor Web PHP
-*/            }
+            }
         });
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.

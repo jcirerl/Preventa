@@ -18,13 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import tpv.cirer.com.marivent.R;
-import tpv.cirer.com.marivent.conexion_http_post.JSONParserNew;
-import tpv.cirer.com.marivent.herramientas.DividerItemDecoration1;
-import tpv.cirer.com.marivent.herramientas.Filtro;
-import tpv.cirer.com.marivent.herramientas.WrapContentLinearLayoutManager;
-import tpv.cirer.com.marivent.modelo.DocumentoFactura;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,6 +42,13 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import tpv.cirer.com.marivent.R;
+import tpv.cirer.com.marivent.conexion_http_post.JSONParserNew;
+import tpv.cirer.com.marivent.herramientas.DividerItemDecoration1;
+import tpv.cirer.com.marivent.herramientas.Filtro;
+import tpv.cirer.com.marivent.herramientas.WrapContentLinearLayoutManager;
+import tpv.cirer.com.marivent.modelo.DocumentoFactura;
 
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.CountTable;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.mSerialExecutorActivity;
@@ -181,9 +181,11 @@ public class FragmentoOpenDocumentoFactura extends Fragment {
             // If we are becoming invisible, then...
             if (!isVisibleToUser) {
                 Log.d("OpenDocumentoFactura", "Not visible anymore.");
+                Filtro.setTag_fragment("FragmentoCloseDocumentoFactura");
                 // TODO stop audio playback
             }else{
                 Log.d("OpenDocumentoFactura", "Yes visible anymore.");
+                Filtro.setTag_fragment("FragmentoOpenDocumentoFactura");
                 onResume();
             }
         }

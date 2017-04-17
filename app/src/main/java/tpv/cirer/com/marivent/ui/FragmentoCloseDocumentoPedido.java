@@ -160,9 +160,11 @@ public class FragmentoCloseDocumentoPedido extends Fragment {
             // If we are becoming invisible, then...
             if (!isVisibleToUser) {
                 Log.d("CloseDocumentoPedido", "Not visible anymore.");
+                Filtro.setTag_fragment("FragmentoOpenDocumentoPedido");
                 // TODO stop audio playback
             }else{
                 Log.d("CloseDocumentoPedido", "Yes visible anymore.");
+                Filtro.setTag_fragment("FragmentoCloseDocumentoPedido");
                 onResume();
             }
         }

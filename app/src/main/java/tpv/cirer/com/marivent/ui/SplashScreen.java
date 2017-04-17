@@ -98,6 +98,7 @@ public class SplashScreen extends AppCompatActivity {
                     Filtro.setOpgrid(Integer.parseInt(pref.getString("opgrid", "8")));
                     Filtro.setOpmesas(Integer.parseInt(pref.getString("opmesas", "128")));
                     Filtro.setOptoolbar(Integer.parseInt(pref.getString("optoolbar", "0")));
+                    Filtro.setOptab(Integer.parseInt(pref.getString("optab", "0")));
                     Filtro.setOppedidomesa(Boolean.parseBoolean(pref.getString("oppedidomesa","false")));
                     Filtro.setOpintervalo(Integer.parseInt(pref.getString("opintervalo", "10000")));
                     Filtro.setOplog(Boolean.parseBoolean(pref.getString("oplog","true")));

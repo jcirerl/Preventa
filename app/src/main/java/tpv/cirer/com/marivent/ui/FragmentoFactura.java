@@ -63,7 +63,7 @@ public class FragmentoFactura extends Fragment {
 
             // Setear adaptador al viewpager.
             viewPager = (ViewPager) view.findViewById(R.id.pager);
-            poblarViewPager(viewPager,nPage);
+            poblarViewPager(viewPager);
 
             assert viewPager != null;
             tabLayout.setupWithViewPager(viewPager);
@@ -101,16 +101,14 @@ public class FragmentoFactura extends Fragment {
         tabLayout.setTabTextColors(Color.parseColor("#FFFFFF"), Color.parseColor("#FFFFFF"));
         appBarLayout.addView(tabLayout);
     }
-    private void poblarViewPager(ViewPager viewPager, int npage) {
+    private void poblarViewPager(ViewPager viewPager) {
         AdaptadorFacturas adapter = new AdaptadorFacturas(getFragmentManager());
         adapter.addFragment(FragmentoOpenDocumentoFactura.newInstance(0, "Page # 1","13"),((ActividadPrincipal) getActivity()).getPalabras( getString(R.string.titulo_tab_OpenFactura)),"FragmentoOpenDocumentoFactura");
         adapter.addFragment(FragmentoCloseDocumentoFactura.newInstance(0,"Page # 2","13"),((ActividadPrincipal) getActivity()).getPalabras( getString(R.string.titulo_tab_CloseFactura)),"FragmentoCloseDocumentoFactura");
 //        adapter.addFragment(new FragmentoPrintFactura(), getString(R.string.titulo_tab_PrintFactura));
         if(viewPager.getAdapter() == null)
             viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(npage);
-//        adapter.getRegisteredFragment(viewPager.getCurrentItem());
-        adapter.getRegisteredFragment(npage);
+        adapter.getRegisteredFragment(viewPager.getCurrentItem());
     }
     @Override
     public void onResume() {
@@ -118,7 +116,7 @@ public class FragmentoFactura extends Fragment {
         /// Poner Titulo CABECERA
         ((ActividadPrincipal) getActivity()).setCabecera(((ActividadPrincipal) getActivity()).getPalabras("Facturas"),0.00,0);
 
-        poblarViewPager(viewPager,0);
+        poblarViewPager(viewPager);
     }
 
     @Override

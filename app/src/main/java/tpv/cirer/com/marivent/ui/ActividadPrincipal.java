@@ -98,6 +98,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import tpv.cirer.com.marivent.BuildConfig;
 import tpv.cirer.com.marivent.R;
 import tpv.cirer.com.marivent.conexion_http_post.JSONParserNew;
 import tpv.cirer.com.marivent.herramientas.ArticulosListArrayAdapter;
@@ -1334,7 +1335,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         return success;
     }
     public void setCabecera(String titulo, double saldo, int numero){
-        /// Poner Titulo CABECERA
+              /// Poner Titulo CABECERA
         this.setTitle(titulo);
 
         Spannable text = new SpannableString(this.getTitle());
@@ -1349,17 +1350,33 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             this.setTitle(text);
         }
 
+        View rootView = ActividadPrincipal.this.getWindow().getDecorView().findViewById(android.R.id.content);
+        int textViewID = getResources().getIdentifier("texto_total_carrito", "id", BuildConfig.APPLICATION_ID);
 
+        TextView textSaldo = (TextView) rootView.findViewById(textViewID);
+        if (textSaldo !=null) {
+            textSaldo.setText(String.format("%1$,.2f", saldo) + " " + Filtro.getSimbolo());
+        }
+        // Datos en appbar
+        //                         int layoutID = getResources().getIdentifier("action_view_total", "layout", getPackageName());
+        int txtViewID = getResources().getIdentifier("total_carrito", "id", BuildConfig.APPLICATION_ID);
+        TextView txtSaldo = (TextView) rootView.findViewById(txtViewID);
+        txtSaldo.setText(String.format("%1$,.2f", saldo)+" "+Filtro.getSimbolo());
+        txtSaldo.setTextSize(16);
+
+/*
         /// Poner a cero saldos
         int textViewID = this.getResources().getIdentifier("texto_total_carrito", "id",this.getPackageName());
+        Log.i("Cabecera ",titulo +" "+String.valueOf(saldo) +" "+String.valueOf(numero) +" "+String.valueOf(textViewID));
+
         TextView textSaldo = (TextView) this.findViewById(textViewID);
-        textSaldo.setText(String.format("%1$,.2f", saldo)+" "+ Filtro.getSimbolo());
+        textSaldo.setText(String.format("%1$,.2f", saldo) + " " + Filtro.getSimbolo());
 
         int txtViewID = this.getResources().getIdentifier("total_carrito", "id", this.getPackageName());
         TextView txtSaldo = (TextView) this.findViewById(txtViewID);
         txtSaldo.setText(String.format("%1$,.2f", saldo)+" "+Filtro.getSimbolo());
         txtSaldo.setTextSize(16);
-
+*/
         if (!Filtro.getTag_fragment().contains("Pages")) {
             int itemViewID = getResources().getIdentifier("mi_search", "id", getPackageName());
             SearchView item = (SearchView) findViewById(itemViewID);
@@ -5942,14 +5959,16 @@ ge     * */
                             // Datos en menu drawer
                             int textViewID = getResources().getIdentifier("texto_total_carrito", "id", getPackageName());
                             TextView textSaldo = (TextView) findViewById(textViewID);
-                            textSaldo.setText(String.format("%1$,.2f", saldo)+" "+Filtro.getSimbolo());
+                            if (textSaldo != null) {
+                                textSaldo.setText(String.format("%1$,.2f", saldo) + " " + Filtro.getSimbolo());
+                            }
                             // Datos en appbar
    //                         int layoutID = getResources().getIdentifier("action_view_total", "layout", getPackageName());
                             int txtViewID = getResources().getIdentifier("total_carrito", "id", getPackageName());
                             TextView txtSaldo = (TextView) findViewById(txtViewID);
                             txtSaldo.setText(String.format("%1$,.2f", saldo)+" "+Filtro.getSimbolo());
                             txtSaldo.setTextSize(16);
-                            Log.i("Saldo Dentro ","txtViewID:"+Integer.toString(txtViewID)+" Total Drawer: "+textSaldo.getText().toString()+" Total Appbar: "+txtSaldo.getText().toString());
+   ///                         Log.i("Saldo Dentro ","txtViewID:"+Integer.toString(txtViewID)+" Total Drawer: "+textSaldo.getText().toString()+" Total Appbar: "+txtSaldo.getText().toString());
 
 
                             if (ok_resume=="1"){
@@ -5961,7 +5980,7 @@ ge     * */
                                     case "ftp":
                                         Utils.setBadgeCount(ActividadPrincipal.this, iconCarrito, Filtro.getFactura());
                                         FragmentoLineaDocumentoFactura.getInstance().onResume();
-                                        Log.i("Saldo Dentro Tabla "," Factura"+Filtro.getFactura()+" txtViewID:"+Integer.toString(txtViewID)+" Total Drawer: "+textSaldo.getText().toString()+" Total Appbar: "+txtSaldo.getText().toString());
+//                                        Log.i("Saldo Dentro Tabla "," Factura"+Filtro.getFactura()+" txtViewID:"+Integer.toString(txtViewID)+" Total Drawer: "+textSaldo.getText().toString()+" Total Appbar: "+txtSaldo.getText().toString());
                                         break;
                                 }
 
@@ -5972,7 +5991,7 @@ ge     * */
                                         break;
                                     case "ftp":
                                         Utils.setBadgeCount(ActividadPrincipal.this, iconCarrito, Filtro.getFactura());
-                                        Log.i("Saldo Dentro Tabla "," Factura"+Filtro.getFactura()+" txtViewID:"+Integer.toString(txtViewID)+" Total Drawer: "+textSaldo.getText().toString()+" Total Appbar: "+txtSaldo.getText().toString());
+//                                        Log.i("Saldo Dentro Tabla "," Factura"+Filtro.getFactura()+" txtViewID:"+Integer.toString(txtViewID)+" Total Drawer: "+textSaldo.getText().toString()+" Total Appbar: "+txtSaldo.getText().toString());
                                         break;
                                 }
                             }
@@ -9799,6 +9818,10 @@ ge     * */
             final List<DocumentoPedido> filteredModelListDocumentoPedido = filterdocumentopedido(FragmentoOpenDocumentoPedido.getInstance().ldocumentopedido, newText);
             FragmentoOpenDocumentoPedido.getInstance().adaptadordocumentopedido.setFilter(filteredModelListDocumentoPedido);
         }
+        if (Filtro.getTag_fragment().equals("FragmentoCloseDocumentoPedido")){
+            final List<DocumentoPedido> filteredModelListDocumentoPedido = filterdocumentopedido(FragmentoCloseDocumentoPedido.getInstance().ldocumentopedido, newText);
+            FragmentoCloseDocumentoPedido.getInstance().adaptadordocumentopedido.setFilter(filteredModelListDocumentoPedido);
+        }
         if (Filtro.getTag_fragment().equals("FragmentoLineaDocumentoPedido")){
             final List<LineaDocumentoPedido> filteredModelListLineaDocumentoPedido = filterlineadocumentopedido(FragmentoLineaDocumentoPedido.getInstance().llineadocumentopedido, newText);
             FragmentoLineaDocumentoPedido.getInstance().adaptadorlineadocumentopedido.setFilter(filteredModelListLineaDocumentoPedido);
@@ -11106,7 +11129,7 @@ ge     * */
                 return d.getPalabrasPalabra();
             }
         }
-        return "";
+        return search;
     }
     public String getNameResource(int id, Activity activity, String view) {
         final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) activity.findViewById(android.R.id.content)).getChildAt(0);

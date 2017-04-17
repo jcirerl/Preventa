@@ -919,17 +919,19 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
                             // Datos en menu drawer
 ///                            int layoutID = getResources().getIdentifier("actividad_principal", "id", BuildConfig.APPLICATION_ID);
                             int textViewID = getResources().getIdentifier("texto_total_carrito", "id", BuildConfig.APPLICATION_ID);
-                            View rootView = ((ActividadPrincipal)getActivity()).getWindow().getDecorView().findViewById(android.R.id.content);
+                            View rootView = ((ActividadPrincipal) getActivity()).getWindow().getDecorView().findViewById(android.R.id.content);
 
                             TextView textSaldo = (TextView) rootView.findViewById(textViewID);
-                            textSaldo.setText(String.format("%1$,.2f", saldo)+" "+Filtro.getSimbolo());
-                            // Datos en appbar
+                            if (textSaldo != null){
+                                textSaldo.setText(String.format("%1$,.2f", saldo) + " " + Filtro.getSimbolo());
+                            }
+                        // Datos en appbar
                             //                         int layoutID = getResources().getIdentifier("action_view_total", "layout", getPackageName());
                             int txtViewID = getResources().getIdentifier("total_carrito", "id", BuildConfig.APPLICATION_ID);
                             TextView txtSaldo = (TextView) rootView.findViewById(txtViewID);
                             txtSaldo.setText(String.format("%1$,.2f", saldo)+" "+Filtro.getSimbolo());
                             txtSaldo.setTextSize(16);
-                            Log.i("Saldo Dentro ","txtViewID:"+Integer.toString(txtViewID)+" Total Drawer: "+textSaldo.getText().toString()+" Total Appbar: "+txtSaldo.getText().toString());
+//                            Log.i("Saldo Dentro ","txtViewID:"+Integer.toString(txtViewID)+" Total Drawer: "+textSaldo.getText().toString()+" Total Appbar: "+txtSaldo.getText().toString());
 
 
                             Utils.setBadgeCount(getActivity(), iconCarrito, Filtro.getPedido());

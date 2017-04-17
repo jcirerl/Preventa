@@ -703,7 +703,9 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
                             View rootView = ((ActividadPrincipal)getActivity()).getWindow().getDecorView().findViewById(android.R.id.content);
 
                             TextView textSaldo = (TextView) rootView.findViewById(textViewID);
-                            textSaldo.setText(String.format("%1$,.2f", saldo)+" "+Filtro.getSimbolo());
+                            if (textSaldo!=null) {
+                                textSaldo.setText(String.format("%1$,.2f", saldo) + " " + Filtro.getSimbolo());
+                            }
                             // Datos en appbar
                             //                         int layoutID = getResources().getIdentifier("action_view_total", "layout", getPackageName());
                             int txtViewID = getResources().getIdentifier("total_carrito", "id", BuildConfig.APPLICATION_ID);
@@ -711,7 +713,7 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
                             txtSaldo.setText(String.format("%1$,.2f", saldo)+" "+Filtro.getSimbolo());
                             txtSaldo.setTextSize(16);
 
-                            Log.i("Saldo Dentro ","txtViewID:"+Integer.toString(txtViewID)+" Total Drawer: "+textSaldo.getText().toString()+" Total Appbar: "+txtSaldo.getText().toString());
+//                            Log.i("Saldo Dentro ","txtViewID:"+Integer.toString(txtViewID)+" Total Drawer: "+textSaldo.getText().toString()+" Total Appbar: "+txtSaldo.getText().toString());
 
 
                             Utils.setBadgeCount(getActivity(), iconCarrito, Filtro.getFactura());

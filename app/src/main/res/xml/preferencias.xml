@@ -50,6 +50,14 @@
             android:dialogTitle="Indicar Modo Toolbar"
             android:entries="@array/tipotoolbar"
             android:entryValues="@array/modo" />
+        <ListPreference
+            android:defaultValue="0"
+            android:key="optab"
+            android:title="Tab Tipos Articulos"
+            android:summary="Asignacion Modo Scroll Tipos Articulos"
+            android:dialogTitle="Indicar Tipo Scroll"
+            android:entries="@array/tipotab"
+            android:entryValues="@array/modotab" />
     </PreferenceCategory>
     <PreferenceCategory
         android:key="categoria_log"

@@ -1,6 +1,7 @@
 package tpv.cirer.com.marivent.herramientas;
 
 public class Filtro {
+    private static int optab;
     private static int opintervalo;
     private static int cobrodesdefactura;
     private static String tipoplato;
@@ -87,6 +88,7 @@ public class Filtro {
 
 
   	public Filtro(){
+        optab = 0;
         cobrodesdefactura = 0;
         tipoplato="";
         oplog = false;
@@ -188,6 +190,11 @@ public class Filtro {
     }
     public static void setOppedidomesa(boolean idoppedidomesa) {
         oppedidomesa = idoppedidomesa;
+    }
+    public static void setOptab(int idoptab) {
+        optab = idoptab;
+    }
+    public static int getOptab() { return optab;
     }
     public static void setOpintervalo(int idopintervalo) {
         opintervalo = idopintervalo;

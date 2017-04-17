@@ -46,6 +46,7 @@ import tpv.cirer.com.marivent.modelo.Comida;
 
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.comidas;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lcategoria;
+import static tpv.cirer.com.marivent.ui.FragmentoCategorias.adaptadorcategorias;
 
 /**
  * Created by JUAN on 21/09/2016.
@@ -148,7 +149,7 @@ public class FragmentoCategoria extends Fragment implements  UpdateableFragment 
             Log.i("lcomida: ", Integer.toString(indiceSeccion) + " " + lcomida.size() + " _ " + cEstado);
             adaptador = new AdaptadorCategorias(getActivity(), comidas.get(indiceSeccion), indiceSeccion, cEstado);
 
-////**            adaptadorcategorias.add(adaptador);
+            adaptadorcategorias.add(adaptador);
 
             // 4. set adapter
             recViewcomida.setAdapter(adaptador);
