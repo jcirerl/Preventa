@@ -52,7 +52,7 @@ public class CargaFragment {
             Transition explodeTransform = TransitionInflater.from(mContext).
                     inflateTransition(android.R.transition.fade);
 
-            // Setup exit transition on first fragment
+            // Setup exit32 transition on first fragment
             current.setSharedElementReturnTransition(changeTransform);
             current.setExitTransition(explodeTransform);
 

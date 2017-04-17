@@ -6,7 +6,8 @@
         app:showAsAction="always"
         app:actionLayout="@layout/action_view_mesas_message"
         android:title="Mensaje Mesas" />-->
-    <item
+
+   <item
         android:id="@+id/action_mesas"
         android:orderInCategory="120"
         app:showAsAction="always"
@@ -17,13 +18,19 @@
         android:orderInCategory="130"
         app:showAsAction="always"
         app:actionLayout="@layout/action_view_facturas"
-        android:title="Mesas" />
+        android:title="facturas" />
     <item
         android:id="@+id/action_pedidos"
-        android:orderInCategory="130"
+        android:orderInCategory="140"
         app:showAsAction="always"
         app:actionLayout="@layout/action_view_pedidos"
-        android:title="Mesas" />
+        android:title="pedidos" />
+   <item
+       android:id="@+id/action_salir"
+       android:orderInCategory="150"
+       app:showAsAction="always"
+       app:actionLayout="@layout/action_view_salir"
+       android:title="salir" />
 
     <item
         android:id="@+id/action_settings"

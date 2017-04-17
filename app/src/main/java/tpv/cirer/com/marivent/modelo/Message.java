@@ -13,6 +13,8 @@ public class Message {
     private int MessageId;
     private int MessageActivo;
     private String MessageCreado;
+    private String MessageUpdated;
+    private String MessageUsuario;
     private String MessageCaja;
     private int MessageComensales;
 
@@ -60,6 +62,21 @@ public class Message {
         this.MessageCreado = messageCreado;
     }
 
+    public String getMessageUpdated() {
+        return MessageUpdated;
+    }
+
+    public void setMessageUpdated(String messageUpdated) {
+        this.MessageUpdated = messageUpdated;
+    }
+
+    public String getMessageUsuario() {
+        return MessageUsuario;
+    }
+
+    public void setMessageUsuario(String messageUsuario) {
+        this.MessageUsuario = messageUsuario;
+    }
 
     public int getMessageId() {
         return MessageId;

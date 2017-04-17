@@ -371,6 +371,8 @@ public class FragmentoCloseMessage extends Fragment {
                 messageItem.setMessageActivo(post.optInt("ACTIVO"));
                 messageItem.setMessageCaja(post.optString("CAJA"));
                 messageItem.setMessageComensales(post.optInt("COMENSALES"));
+                messageItem.setMessageUpdated(post.optString("updated"));
+                messageItem.setMessageUsuario(post.optString("usuario"));
 
                 lmessage.add(messageItem);
             }

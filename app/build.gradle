@@ -53,5 +53,6 @@ dependencies {
     compile 'com.github.greasemonk:timetable:1.2.0'
     compile('com.mikepenz:fastadapter:2.1.7@aar') {transitive = true}
     compile 'com.mikepenz:fastadapter-commons:2.1.0@aar'
+    compile 'com.github.spyhunter99:super-tooltip-aar:4.0.0'
 
 }

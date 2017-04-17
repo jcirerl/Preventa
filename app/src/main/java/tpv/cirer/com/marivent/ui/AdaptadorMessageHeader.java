@@ -183,6 +183,7 @@ public class AdaptadorMessageHeader extends RecyclerView.Adapter<RecyclerView.Vi
                 ((VHItem) holder).IdMessage.setText(Html.fromHtml(Integer.toString(model.getMessageId())));
                 ((VHItem) holder).ActivoMessage.setText(Html.fromHtml(Integer.toString(model.getMessageActivo())));
                 ((VHItem) holder).MesaMessage.setText(Html.fromHtml(model.getMessageMesa()));
+                ((VHItem) holder).UsuarioMessage.setText(Html.fromHtml(model.getMessageUsuario())+StringUtils.repeat(space01, 6));
 
 
                 SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
@@ -194,6 +195,17 @@ public class AdaptadorMessageHeader extends RecyclerView.Adapter<RecyclerView.Vi
                     //System.out.println("Fecha input : "+datehora);
                     myText = sdf2.format(datehora);
                     ((VHItem) holder).CreadoMessage.setText(Html.fromHtml(myText.replace(" ", "&nbsp;")+"&nbsp;&nbsp;").toString());
+
+                } catch (Exception e) {
+                    e.getMessage();
+                }
+                try{
+                    String StringRecogido = model.getMessageUpdated();
+                    Date datehora = sdf1.parse(StringRecogido);
+
+                    //System.out.println("Fecha input : "+datehora);
+                    myText = sdf2.format(datehora);
+                    ((VHItem) holder).UpdatedMessage.setText(Html.fromHtml(myText.replace(" ", "&nbsp;")+"&nbsp;&nbsp;").toString());
 
                 } catch (Exception e) {
                     e.getMessage();
@@ -224,6 +236,8 @@ public class AdaptadorMessageHeader extends RecyclerView.Adapter<RecyclerView.Vi
 
             //cast holder to VHHeader and set data for header.
             myText = ActividadPrincipal.getPalabras("Fecha")+StringUtils.repeat(space01, 13)+
+                     ActividadPrincipal.getPalabras("Modificado")+StringUtils.repeat(space01, 13)+
+                     ActividadPrincipal.getPalabras("Usuario")+StringUtils.repeat(space01, 3)+
                      ActividadPrincipal.getPalabras("Np")+StringUtils.repeat(space01, 2)+
                      ActividadPrincipal.getPalabras("Mesa")+StringUtils.repeat(space01, 6);
             //    Html.fromHtml(myText.replace(" ", "&nbsp;")).toString()
@@ -267,6 +281,8 @@ public class AdaptadorMessageHeader extends RecyclerView.Adapter<RecyclerView.Vi
         public Button DeleteMessage;
 
         public TextView CreadoMessage;
+        public TextView UpdatedMessage;
+        public TextView UsuarioMessage;
         public TextView ComensalesMessage;
         public TextView MesaMessage;
         public TextView ActivoMessage;
@@ -285,6 +301,9 @@ public class AdaptadorMessageHeader extends RecyclerView.Adapter<RecyclerView.Vi
             this.IdMessage = (TextView) itemView.findViewById(R.id.pid);
             this.ActivoMessage = (TextView) itemView.findViewById(R.id.activo);
             this.CreadoMessage = (TextView) itemView.findViewById(R.id.creado);
+            this.UpdatedMessage = (TextView) itemView.findViewById(R.id.updated);
+            this.UsuarioMessage = (TextView) itemView.findViewById(R.id.usuario);
+
             this.ComensalesMessage = (TextView) itemView.findViewById(R.id.comensales);
             this.MesaMessage = (TextView) itemView.findViewById(R.id.mesa);
             this.CajaMessage = (TextView) itemView.findViewById(R.id.caja);
@@ -302,6 +321,9 @@ public class AdaptadorMessageHeader extends RecyclerView.Adapter<RecyclerView.Vi
             IdMessage.setText(Integer.toString(Message.getMessageId()));
             ActivoMessage.setText(Integer.toOctalString(Message.getMessageActivo()));
             CreadoMessage.setText(Message.getMessageCreado());
+            UpdatedMessage.setText(Message.getMessageUpdated());
+            UsuarioMessage.setText(Message.getMessageUsuario());
+
             ComensalesMessage.setText(Integer.toString(Message.getMessageComensales()));
             MesaMessage.setText(Message.getMessageMesa());
             CajaMessage.setText(Message.getMessageCaja());

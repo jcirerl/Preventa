@@ -64,6 +64,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.epson.eposprint.Print;
+import com.spyhunter99.supertooltips.ToolTip;
+import com.spyhunter99.supertooltips.ToolTipManager;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -159,6 +161,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     MesasResultReceiver resultReceiver;
     RelativeLayout layout;
 
+    ToolTipManager tooltips;
 
     ProgressDialog pDialogTipoare,pDialogUserrel,pDialogGrup,pDialogTerminal,pDialogFra,pDialogCruge,
             pDialogEmpr,pDialogLocal,pDialogSec,pDialogSecFechas,pDialogCaja,pDialogTurno,pDialogMesa,pDialogRango,pDialogEmpleado,pDialogMoneda;
@@ -393,6 +396,9 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
+
+        tooltips = new ToolTipManager(this);
+
  /*        Toolbar toolbar1 = (Toolbar) findViewById(R.id.appbar1);
         setSupportActionBar(toolbar1);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
@@ -768,6 +774,9 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        tooltips.onDestroy();
+        tooltips = null;
         // CONTROL PEDIDO MESA
         if(Filtro.getOppedidomesa()) {
             stopService(intent);
@@ -1407,6 +1416,18 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             View viewmesas = MenuItemCompat.getActionView(mesasItem);
             // Find the button within action-view
             Button btnMesas = (Button) viewmesas.findViewById(R.id.btnMesas);
+            btnMesas.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    ToolTip toolTip = new ToolTip()
+                            .withText(getPalabras("Ir")+" "+getPalabras("Mesas"))
+                            .withColor(Color.GREEN) //or whatever you want
+                            .withAnimationType(ToolTip.AnimationType.FROM_MASTER_VIEW)
+                            .withShadow();
+                    tooltips.showToolTip(toolTip, v);
+                    return true;
+                }
+            });
 
             btnMesas.setOnClickListener(new View.OnClickListener() {
 
@@ -1435,6 +1456,19 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             View viewfacturas = MenuItemCompat.getActionView(facturasItem);
             // Find the button within action-view
             Button btnFacturas = (Button) viewfacturas.findViewById(R.id.btnFacturas);
+//in onCreate
+            btnFacturas.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    ToolTip toolTip = new ToolTip()
+                            .withText(getPalabras("Ir")+" "+getPalabras("Facturas"))
+                            .withColor(Color.GREEN) //or whatever you want
+                            .withAnimationType(ToolTip.AnimationType.FROM_MASTER_VIEW)
+                            .withShadow();
+                    tooltips.showToolTip(toolTip, v);
+                    return true;
+                }
+            });
 
             btnFacturas.setOnClickListener(new View.OnClickListener() {
 
@@ -1461,6 +1495,19 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             // Find the button within action-view
             Button btnPedidos = (Button) viewpedidos.findViewById(R.id.btnPedidos);
 
+            btnPedidos.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    ToolTip toolTip = new ToolTip()
+                            .withText(getPalabras("Ir")+" "+getPalabras("Pedidos"))
+                            .withColor(Color.GREEN) //or whatever you want
+                            .withAnimationType(ToolTip.AnimationType.FROM_MASTER_VIEW)
+                            .withShadow();
+                    tooltips.showToolTip(toolTip, v);
+                    return true;
+                }
+            });
+
             btnPedidos.setOnClickListener(new View.OnClickListener() {
 
                 @Override
@@ -1480,6 +1527,33 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                 }
             });
         }
+        final MenuItem salirItem = menu.findItem(R.id.action_salir);
+        if(salirItem != null)
+        {
+            View viewsalir = MenuItemCompat.getActionView(salirItem);
+            // Find the button within action-view
+            Button btnSalir = (Button) viewsalir.findViewById(R.id.btnSalir);
+            btnSalir.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    ToolTip toolTip = new ToolTip()
+                            .withText(getPalabras("Salir")+" "+getPalabras("Aplicacion"))
+                            .withColor(Color.GREEN) //or whatever you want
+                            .withAnimationType(ToolTip.AnimationType.FROM_MASTER_VIEW)
+                            .withShadow();
+                    tooltips.showToolTip(toolTip, v);
+                    return true;
+                }
+            });
+
+            btnSalir.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+                finish();
+                }
+            });
+        }
 
         final MenuItem infoItem = menu.findItem(R.id.action_info);
         if(infoItem != null)
@@ -1487,6 +1561,18 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             View view = MenuItemCompat.getActionView(infoItem);
             // Find the button within action-view
             Button b = (Button) view.findViewById(R.id.btnInfo);
+            b.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    ToolTip toolTip = new ToolTip()
+                            .withText(getPalabras("Activar")+" "+getPalabras("Filtros"))
+                            .withColor(Color.GREEN) //or whatever you want
+                            .withAnimationType(ToolTip.AnimationType.FROM_MASTER_VIEW)
+                            .withShadow();
+                    tooltips.showToolTip(toolTip, v);
+                    return true;
+                }
+            });
 
             b.setOnClickListener(new View.OnClickListener() {
 

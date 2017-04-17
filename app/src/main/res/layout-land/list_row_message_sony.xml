@@ -36,13 +36,34 @@
         android:paddingLeft="@dimen/row_padding" />
 
     <TextView
-        android:id="@+id/comensales"
+        android:id="@+id/updated"
         style="@style/RowTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/creado"
         android:layout_toRightOf="@+id/creado"
+        android:paddingLeft="@dimen/row_padding" />
+
+
+    <TextView
+        android:id="@+id/usuario"
+        style="@style/RowTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/updated"
+        android:layout_toRightOf="@+id/updated"
+        android:paddingLeft="@dimen/row_padding" />
+
+    <TextView
+        android:id="@+id/comensales"
+        style="@style/RowTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/usuario"
+        android:layout_toRightOf="@+id/usuario"
         android:paddingLeft="@dimen/row_padding" />
 
     <TextView
