@@ -276,7 +276,9 @@ public class AdaptadorLineaDocumentoFacturaHeader extends RecyclerView.Adapter<R
             //cast holder to VHHeader and set data for header_facturas.
             ((VHHeader) holder).headerLineaDocumentoFactura.setText(Html.fromHtml(myText.replace(" ", "&nbsp;")).toString());
             ((VHHeader) holder).headerLineaDocumentoFactura.setTextColor(Color.WHITE);
-       /////     ((VHHeader) holder).headerLineaDocumentoFactura.setTextSize(18); /// PARA MARIVENT
+
+            // MARIVENT
+            ((VHHeader) holder).headerLineaDocumentoFactura.setTextSize(18);
 
         }
     }

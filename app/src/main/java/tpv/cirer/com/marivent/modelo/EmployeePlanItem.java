@@ -10,19 +10,18 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Toast;
 
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 
-import tpv.cirer.com.marivent.herramientas.AbstractGridItem;
-import tpv.cirer.com.marivent.herramientas.TimeRange;
 import tpv.cirer.com.marivent.ui.ActividadPrincipal;
 
-//import com.greasemonk.timetable.AbstractGridItem;
+import tpv.cirer.com.marivent.herramientas.TimeRange;
 
-//import tpv.cirer.com.marivent.herramientas.AbstractGridItem;
-//import tpv.cirer.com.marivent.herramientas.TimeRange;
+import tpv.cirer.com.marivent.herramientas.AbstractGridItem;
+
 //import tpv.cirer.com.marivent.ui.ActividadPrincipal;
 
 public class EmployeePlanItem extends AbstractGridItem
@@ -100,8 +99,7 @@ public class EmployeePlanItem extends AbstractGridItem
         return mesaName;
     }
 
-
-    /**
+     /**
      * OPTIONAL
      *
      * @return a random color for demo purposes.

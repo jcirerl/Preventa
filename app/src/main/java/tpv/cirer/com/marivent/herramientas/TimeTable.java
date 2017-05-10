@@ -170,7 +170,7 @@ public class TimeTable extends FrameLayout
 			for(int i = 0; i < l.size() / columns; i++)
 	    		itemsY.add(new GuideYItem(i == 0 ? r.getMesaName() : "")); // only write the name once.
 			}
-		
+
 		if (gridAdapter == null)
 		{
 			gridAdapter = new FastItemAdapter<>();

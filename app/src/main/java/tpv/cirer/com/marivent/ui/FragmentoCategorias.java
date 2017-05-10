@@ -126,9 +126,9 @@ public class FragmentoCategorias extends Fragment {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
                     positionTab = tab.getPosition();
-                    Log.i("TAB POSITION: ",Integer.toString(positionTab));
+////                    Log.i("TAB POSITION: ",Integer.toString(positionTab));
 
-                    Log.i("TABLAYOUT: ",Integer.toString(tab.getPosition()));
+////                    Log.i("TABLAYOUT: ",Integer.toString(tab.getPosition()));
 
                     switch(tab.getPosition()){
 
@@ -153,11 +153,11 @@ public class FragmentoCategorias extends Fragment {
 
     private void poblarViewPager(final ViewPager viewPager) {
         AdaptadorSecciones adapter = new AdaptadorSecciones(getFragmentManager());
-        Log.i("Estoy PoblarViewPager",Integer.toString(lcategoria.size()));
+////        Log.i("Estoy PoblarViewPager",Integer.toString(lcategoria.size()));
         Categoria categoria;
         for(int x=0;x<lcategoria.size();x++) {
             categoria = lcategoria.get(x);
-            Log.i("Poblando: ",Integer.toString(x)+" "+categoria.getCategoriaTipo_are()+" "+categoria.getCategoriaOrden());
+////            Log.i("Poblando: ",Integer.toString(x)+" "+categoria.getCategoriaTipo_are()+" "+categoria.getCategoriaOrden());
             adapter.addFragment(FragmentoCategoria.newInstance(categoria.getCategoriaOrden(),cEstado), categoria.getCategoriaNombre_tipoare(),x);
         }
         viewPager.setAdapter(adapter);

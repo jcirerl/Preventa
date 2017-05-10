@@ -83,6 +83,7 @@ import tpv.cirer.com.marivent.print.ShowMsg;
 
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getLocalIpAddress;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.iconCarrito;
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lplato;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.terminalList;
 
 /**
@@ -233,9 +234,9 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
             cmbToolbarPlato = (Spinner) toolbarPlato.findViewById(R.id.CmbToolbarPlato);
 
             cmbToolbarPlato.setOnItemSelectedListener(this);
-            URL_PLATOS = Filtro.getUrl() + "/get_platos.php";
-            new GetPlatos().execute(URL_PLATOS);
-
+////            URL_PLATOS = Filtro.getUrl() + "/get_platos.php";
+////            new GetPlatos().execute(URL_PLATOS);
+            populateSpinnerPlatobis();
 
 
 
@@ -336,7 +337,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
     /**
      * Adding spinner data grupo
      */
-    private void populateSpinnerPlato() {
+     private void populateSpinnerPlato() {
         List<String> lables_plato = new ArrayList<String>();
         for (int i = 0; i < platoList.size(); i++) {
             lables_plato.add(platoList.get(i).getPlatoNombre_Plato());
@@ -357,6 +358,26 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
         }
 
     }
+    private void populateSpinnerPlatobis() {
+        List<String> lables_plato = new ArrayList<String>();
+        for (int i = 0; i < lplato.size(); i++) {
+            lables_plato.add(lplato.get(i).getPlatoNombre_Plato());
+            Log.i("PLATO ",lplato.get(i).getPlatoTipoPlato());
+        }
+        ArrayAdapter<String> adapter_plato = new ArrayAdapter<>(
+                this.getActivity(),
+                R.layout.appbar_filter_title,lables_plato);
+
+        adapter_plato.setDropDownViewResource(R.layout.appbar_filter_list);
+
+        cmbToolbarPlato.setAdapter(adapter_plato);
+        cmbToolbarPlato.setSelection(0);
+        if (lplato.size()>0) {
+            Filtro.setTipoPlato(lplato.get(0).getPlatoTipoPlato());
+        }else{
+            Filtro.setTipoPlato("00");
+        }
+    }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position,
@@ -364,7 +385,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
         Spinner spinner = (Spinner) parent;
         if(spinner.getId() == R.id.CmbToolbarPlato)
         {
-            Filtro.setTipoPlato(platoList.get(position).getPlatoTipoPlato());
+            Filtro.setTipoPlato(lplato.get(position).getPlatoTipoPlato());
         }
     }
 

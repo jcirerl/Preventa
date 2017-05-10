@@ -183,7 +183,7 @@ public class AdaptadorMessageHeader extends RecyclerView.Adapter<RecyclerView.Vi
                 ((VHItem) holder).IdMessage.setText(Html.fromHtml(Integer.toString(model.getMessageId())));
                 ((VHItem) holder).ActivoMessage.setText(Html.fromHtml(Integer.toString(model.getMessageActivo())));
                 ((VHItem) holder).MesaMessage.setText(Html.fromHtml(model.getMessageMesa()));
-                ((VHItem) holder).UsuarioMessage.setText(Html.fromHtml(model.getMessageUsuario())+StringUtils.repeat(space01, 6));
+                ((VHItem) holder).UserMessage.setText(Html.fromHtml(model.getMessageUsuario())+StringUtils.repeat(space01, 6));
 
 
                 SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
@@ -282,7 +282,7 @@ public class AdaptadorMessageHeader extends RecyclerView.Adapter<RecyclerView.Vi
 
         public TextView CreadoMessage;
         public TextView UpdatedMessage;
-        public TextView UsuarioMessage;
+        public TextView UserMessage;
         public TextView ComensalesMessage;
         public TextView MesaMessage;
         public TextView ActivoMessage;
@@ -302,7 +302,7 @@ public class AdaptadorMessageHeader extends RecyclerView.Adapter<RecyclerView.Vi
             this.ActivoMessage = (TextView) itemView.findViewById(R.id.activo);
             this.CreadoMessage = (TextView) itemView.findViewById(R.id.creado);
             this.UpdatedMessage = (TextView) itemView.findViewById(R.id.updated);
-            this.UsuarioMessage = (TextView) itemView.findViewById(R.id.usuario);
+            this.UserMessage = (TextView) itemView.findViewById(R.id.user);
 
             this.ComensalesMessage = (TextView) itemView.findViewById(R.id.comensales);
             this.MesaMessage = (TextView) itemView.findViewById(R.id.mesa);
@@ -322,7 +322,7 @@ public class AdaptadorMessageHeader extends RecyclerView.Adapter<RecyclerView.Vi
             ActivoMessage.setText(Integer.toOctalString(Message.getMessageActivo()));
             CreadoMessage.setText(Message.getMessageCreado());
             UpdatedMessage.setText(Message.getMessageUpdated());
-            UsuarioMessage.setText(Message.getMessageUsuario());
+            UserMessage.setText(Message.getMessageUsuario());
 
             ComensalesMessage.setText(Integer.toString(Message.getMessageComensales()));
             MesaMessage.setText(Message.getMessageMesa());

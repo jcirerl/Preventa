@@ -177,7 +177,9 @@ public class LoginActivity extends AppCompatActivity {
                         sb.append("Running apps:\n");
                         for (ProcessManager.Process process : processes) {
                             Log.i("SB-", process.name);
-                            if (process.name.contains("com.github.DroidPHP")) { //Añadido
+                                // Process DROIDPHP "com.github.DroidPHP"
+                                // Process PALAPA "com.alfanla.android.pws"
+                            if (process.name.contains("com.alfanla.android.pws")) { //Añadido
                                 sb.append('\n').append(process.name);
                             } //Añadido
                         }
@@ -185,15 +187,15 @@ public class LoginActivity extends AppCompatActivity {
                         if (sb.length() < 58) { //AÑADIDO
 //                                new AlertDialog.Builder(LoginActivity.this).setMessage(sb.toString()).show();
                             AlertDialog.Builder dialog = new AlertDialog.Builder(LoginActivity.this/*,R.style.MyAlertDialogStyle*/);
-                            dialog.setTitle("Confirmacion DroidPHP");
-                            dialog.setMessage("Desea Iniciar Aplicación DroidPHP?");
+                            dialog.setTitle("Confirmacion Palapa Web Server");
+                            dialog.setMessage("Desea Iniciar Aplicación Palapa?");
                             dialog.setIcon(R.drawable.ok);
                             dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     try {
                                         Intent LaunchIntent = getPackageManager()
-                                                .getLaunchIntentForPackage("com.github.DroidPHP");
+                                                .getLaunchIntentForPackage("com.alfanla.android.pws");
                                         startActivity(LaunchIntent);
                                     } catch (ClassCastException exception) {
                                         // do something

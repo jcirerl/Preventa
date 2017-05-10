@@ -346,7 +346,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
         } else if (holder instanceof VHHeader) {
 
             //cast holder to VHHeader and set data for header.
- /*
+/*
             /// SONY //
             myText = " "+
                     "S"+" "+
@@ -376,6 +376,7 @@ public class AdaptadorDocumentoFacturaHeader extends RecyclerView.Adapter<Recycl
                     ActividadPrincipal.getPalabras("Tipo")+StringUtils.repeat(space01, 11)+
                     ActividadPrincipal.getPalabras("Lineas")+StringUtils.repeat(space01, 3)+
                     ActividadPrincipal.getPalabras("Observacion");
+
             //    Html.fromHtml(myText.replace(" ", "&nbsp;")).toString()
             //cast holder to VHHeader and set data for header_facturas.
             ((VHHeader) holder).headerDocumentoFactura.setText(Html.fromHtml(myText.replace(" ", "&nbsp;")).toString());

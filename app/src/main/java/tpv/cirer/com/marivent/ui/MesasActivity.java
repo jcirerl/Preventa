@@ -1441,7 +1441,7 @@ public class MesasActivity extends FragmentActivity {
             pDialog.dismiss();
 
             if (success == 1) {
-                Snackbar.make(layout, ActividadPrincipal.getPalabras("Factura")+" "+ActividadPrincipal.getPalabras("Generada")+" "+Filtro.getSerie()+" "+Integer.toString(Filtro.getFactura()), Snackbar.LENGTH_LONG).show();
+ ////               Snackbar.make(layout, ActividadPrincipal.getPalabras("Factura")+" "+ActividadPrincipal.getPalabras("Generada")+" "+Filtro.getSerie()+" "+Integer.toString(Filtro.getFactura()), Snackbar.LENGTH_LONG).show();
 //                Toast.makeText(getApplicationContext(), "Creado Factura ", Toast.LENGTH_SHORT).show();
                 // SALIR ACTIVITY
                 Intent returnIntent = new Intent();
@@ -1541,7 +1541,8 @@ public class MesasActivity extends FragmentActivity {
             pDialog.dismiss();
 
             if (success == 1) {
-                Snackbar.make(layout, "Documento Pedido Generado "+Integer.toString(Filtro.getPedido()), Snackbar.LENGTH_LONG).show();
+////                Log.i("CreaPDD","ActividadMesas");
+////                Snackbar.make(layout, "Documento Pedido Generado "+Integer.toString(Filtro.getPedido()), Snackbar.LENGTH_SHORT).show();
 //                Toast.makeText(getApplicationContext(), "Creado Pedido ", Toast.LENGTH_SHORT).show();
                 // SALIR ACTIVITY
                 Intent returnIntent = new Intent();

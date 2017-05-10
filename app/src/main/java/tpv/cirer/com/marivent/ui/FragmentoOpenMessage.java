@@ -384,7 +384,7 @@ public class FragmentoOpenMessage extends Fragment {
                 messageItem.setMessageCaja(post.optString("CAJA"));
                 messageItem.setMessageComensales(post.optInt("COMENSALES"));
                 messageItem.setMessageUpdated(post.optString("updated"));
-                messageItem.setMessageUsuario(post.optString("usuario"));
+                messageItem.setMessageUsuario(post.optString("USER"));
 
                 lmessage.add(messageItem);
             }

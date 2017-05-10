@@ -107,6 +107,7 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
     static final int REQUEST_CODE = 12345;
     static final int IMAGE_WIDTH_MAX = 512;
     private static String url_update_cabecera;
+    boolean mIsRestoredFromBackstack;
 
     // JSON parser class
     JSONParserNew jsonParserNew = new JSONParserNew();
@@ -179,6 +180,7 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
+        mIsRestoredFromBackstack = false;
 
         Filtro.setTag_fragment("FragmentoLineaDocumentoFactura");
         llineadocumentofactura = new ArrayList<LineaDocumentoFactura>();
@@ -265,7 +267,7 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
                                 cMaximo = cMaximo.replace(",",".");
 
                                 ((ActividadPrincipal) getActivity()).setCabecera(((ActividadPrincipal) getActivity()).getPalabras("Factura")+": "+Integer.toString(nFactura)+" "+"CLOSE COBRO"+" "+((ActividadPrincipal) getActivity()).getPalabras("Mesa")+": "+Filtro.getMesa(),Double.valueOf(cMaximo),nFactura);
-                                btnCobro.setVisibility(view.GONE);
+                                btnCobro.setVisibility(View.GONE);
                             }
                         }
                     }
@@ -324,11 +326,9 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
 //        return inflater.inflate(R.layout.fragmento_tarjetas, container, false);
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
-        //      adaptadorlineadocumentofactura.setItemViewType(1);
         new AsyncHttpTaskLineaDocumentoFactura().execute(url);
         ///      TaskHelper.execute(new AsyncHttpTaskLineaDocumentoFactura(),url);
     }

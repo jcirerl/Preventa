@@ -129,6 +129,7 @@ import tpv.cirer.com.marivent.modelo.Local;
 import tpv.cirer.com.marivent.modelo.Mesa;
 import tpv.cirer.com.marivent.modelo.Moneda;
 import tpv.cirer.com.marivent.modelo.Palabras;
+import tpv.cirer.com.marivent.modelo.Plato;
 import tpv.cirer.com.marivent.modelo.Popular;
 import tpv.cirer.com.marivent.modelo.Rango;
 import tpv.cirer.com.marivent.modelo.Seccion;
@@ -163,7 +164,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
 
     ToolTipManager tooltips;
 
-    ProgressDialog pDialogTipoare,pDialogUserrel,pDialogGrup,pDialogTerminal,pDialogFra,pDialogCruge,
+    ProgressDialog pDialogTipoare,pDialogUserrel,pDialogGrup,pDialogTerminal,pDialogFra,pDialogCruge,pDialogPlato,
             pDialogEmpr,pDialogLocal,pDialogSec,pDialogSecFechas,pDialogCaja,pDialogTurno,pDialogMesa,pDialogRango,pDialogEmpleado,pDialogMoneda;
     ProgressDialog pDialog;
     public static TextView itempedido;
@@ -193,6 +194,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     String TAG_FACTURA = "factura";
     String TAG_ID = "id";
     String TAG_MESA_FTP = "mesa";
+
     // single Seccion url
     private static final String url_update_caja = Filtro.getUrl()+"/modifica_caja.php";
     private static final String url_update_turno = Filtro.getUrl()+"/modifica_turno.php";
@@ -269,10 +271,12 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     public static final String TAG_CATEGORIA = "Lista Categorias";
     private static final String TAG_USERREL = "Lista Usuarios Rel";
     private static final String TAG_CRUGE = "Lista Cruge";
+    private static final String TAG_PLATO = "Lista Plato: ";
 
     public static List<Categoria> lcategoria;
     public static List<Userrel> luserrel;
     public static List<Cruge> lcruge;
+    public static List<Plato> lplato;
 
     public static ArrayList<ArrayList<Comida>> comidas; //Definicion array de comidas
     public static List<Articulo> larticulo;
@@ -283,6 +287,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     private String url_tipoare;
     private String url_userrel;
     private String url_cruge;
+    private String url_platos;
 
 
     public static MySerialExecutor mSerialExecutorActivity;
@@ -475,13 +480,19 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         Filtro.setColorItemZero(ContextCompat.getColor(getApplicationContext(), R.color.green_300));
         Filtro.setColorItem(ContextCompat.getColor(getApplicationContext(), R.color.accentColor));
 
+        // RELLENAMOS TIPOS DE PLATOS
+        url_platos = Filtro.getUrl() + "/get_platos.php";
+        lplato = new ArrayList<Plato>();
+
         // RELLENAMOS TIPOS DE ARTICULOS
         url_tipoare = Filtro.getUrl() + "/RellenaListaTiposArticulo.php";
         lcategoria = new ArrayList<Categoria>();
+
         // RELLENAMOS RELACION USUARIO
         url_userrel = Filtro.getUrl() + "/RellenaListaUserrel.php";
         luserrel = new ArrayList<Userrel>();
         new GetUserrel().execute(url_userrel);
+
         // RELLENAMOS ACCIONES PERMITIDAS CRUGE
         url_cruge = Filtro.getUrl() + "/RellenaListaCruge.php";
         lcruge = new ArrayList<Cruge>();
@@ -834,12 +845,32 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         int count = this.getSupportFragmentManager().getBackStackEntryCount();
         if (count>0) {
             Fragment currentFragment = fragmentManager.findFragmentById(R.id.contenedor_principal);
-/////            Toast.makeText(this, "Fragment Activo " + currentFragment.getTag().toString()+" "+Integer.toString(count), Toast.LENGTH_SHORT).show();
-            Log.i("Fragment Activo: ",currentFragment.getTag().toString());
+            Fragment currentFragmentCobro = fragmentManager.findFragmentById(R.id.lista_coordinator);
+            if (currentFragmentCobro!=null){
+//                Toast.makeText(this, "FragmentCobro Activo " + currentFragmentCobro.getTag().toString(), Toast.LENGTH_SHORT).show();
+            }else {
+                if (Filtro.getCobroDesdeFactura()==1){
+                    Filtro.setCobroDesdeFactura(0);
 
+                    setCabecera(getPalabras("Inicio"),0.00,0);
+
+                    setTitle(getPalabras("Inicio"));
+                    Spannable text = new SpannableString(getTitle());
+                    text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.light_blue_500)), 0, text.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                    setTitle(text);
+                    CargaFragment cargafragment = new CargaFragment(FragmentoInicio.newInstance(),getSupportFragmentManager());
+                    cargafragment.getFragmentManager().addOnBackStackChangedListener(this);
+                    if (cargafragment.getFragment() != null){
+                        cargafragment.setTransaction(R.id.contenedor_principal);
+                    }
+                }
+
+            }
+            ///           Toast.makeText(this, "Fragment Activo " + currentFragment.getTag().toString()+" "+Integer.toString(count), Toast.LENGTH_SHORT).show();
+            Log.i("Fragment Activo: ",currentFragment.getTag().toString());
             //   System.out.println("====================================================changeeeeeeeeeeeeeeeeeeeeeeeeee");
         }else{
-/////            Toast.makeText(this, "NO HAY FRAGMENT EN LA COLA "+Filtro.getTag_fragment(), Toast.LENGTH_SHORT).show();
+ ///           Toast.makeText(this, "NO HAY FRAGMENT EN LA COLA "+Filtro.getTag_fragment(), Toast.LENGTH_SHORT).show();
 
             int itemViewID = getResources().getIdentifier("mi_search", "id", getPackageName());
             SearchView item = (SearchView) findViewById(itemViewID);
@@ -1259,7 +1290,16 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             switch (data.getStringExtra("Tabla").trim()) {
                 case "pdd":
                     if (data.getStringExtra("Action").equals("ADD")) {
+    ////                    Log.i("CreaPDD","ActividadPrincipal");
 
+                        CargaFragment cargafragment = null;
+                        cargafragment = new CargaFragment(FragmentoPagesPedido.newInstance(Filtro.getPedido(), "OPEN",data.getStringExtra("Mesa") ,Integer.toString(Filtro.getPedido())), getSupportFragmentManager());
+                        cargafragment.getFragmentManager().addOnBackStackChangedListener(this);
+                        if (cargafragment.getFragment() != null) {
+                            cargafragment.setTransactioncommitAllowingStateLoss(R.id.contenedor_principal);
+////                            Toast.makeText(this, getPalabras("Crear")+" "+getPalabras("Lineas")+" "+getPalabras("Pedido")+" " + Integer.toString(Filtro.getId()), Toast.LENGTH_SHORT).show();
+////                            TaskHelper.execute(new CalculaCabecera(), "pdd", "lpd", "0");
+                        }
                         //Calcular Items
                         mSerialExecutorActivity = new MySerialExecutor(getApplicationContext());
 
@@ -1267,14 +1307,6 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                         url_count = Filtro.getUrl()+"/CountPddOpen.php";
                         mSerialExecutorActivity.execute(null);
 
-                        CargaFragment cargafragment = null;
-                        cargafragment = new CargaFragment(FragmentoPagesPedido.newInstance(Filtro.getPedido(), "OPEN",data.getStringExtra("Mesa") ,Integer.toString(Filtro.getPedido())), getSupportFragmentManager());
-                        cargafragment.getFragmentManager().addOnBackStackChangedListener(this);
-                        if (cargafragment.getFragment() != null) {
-                            cargafragment.setTransactioncommitAllowingStateLoss(R.id.contenedor_principal);
-                            Toast.makeText(this, getPalabras("Crear")+" "+getPalabras("Lineas")+" "+getPalabras("Pedido")+" " + Integer.toString(Filtro.getId()), Toast.LENGTH_SHORT).show();
-////                            TaskHelper.execute(new CalculaCabecera(), "pdd", "lpd", "0");
-                        }
                     }
                     if (data.getStringExtra("Action").equals("OPEN")) {
                         CargaFragment cargafragment = null;
@@ -1287,21 +1319,21 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                     break;
                 case "ftp":
                     if (data.getStringExtra("Action").equals("ADD")) {
-                        //Calcular Items
-                        mSerialExecutorActivity = new MySerialExecutor(getApplicationContext());
-
-                        CountTable="ftp";
-                        url_count = Filtro.getUrl()+"/CountFtpOpen.php";
-                        mSerialExecutorActivity.execute(null);
 
                         CargaFragment cargafragment = null;
                         cargafragment = new CargaFragment(FragmentoPagesFactura.newInstance(Filtro.getId(), "OPEN",data.getStringExtra("Mesa"),Filtro.getSerie() ,Integer.toString(Filtro.getFactura())), getSupportFragmentManager());
                         cargafragment.getFragmentManager().addOnBackStackChangedListener(this);
                         if (cargafragment.getFragment() != null) {
                             cargafragment.setTransactioncommitAllowingStateLoss(R.id.contenedor_principal);
-                            Toast.makeText(this, getPalabras("Modificar")+" "+getPalabras("Lineas")+" "+getPalabras("Factura")+" "+ Integer.toString(Filtro.getFactura()), Toast.LENGTH_SHORT).show();
+ ////                           Toast.makeText(this, getPalabras("Modificar")+" "+getPalabras("Lineas")+" "+getPalabras("Factura")+" "+ Integer.toString(Filtro.getFactura()), Toast.LENGTH_SHORT).show();
 ////                            TaskHelper.execute(new CalculaCabecera(), "ftp", "lft", "0");
                         }
+                        //Calcular Items
+                        mSerialExecutorActivity = new MySerialExecutor(getApplicationContext());
+
+                        CountTable="ftp";
+                        url_count = Filtro.getUrl()+"/CountFtpOpen.php";
+                        mSerialExecutorActivity.execute(null);
                     }
                     if (data.getStringExtra("Action").equals("OPEN")) {
                         CargaFragment cargafragment = null;
@@ -6595,6 +6627,158 @@ ge     * */
             e.printStackTrace();
         }
     }
+    public class GetPlatos extends AsyncTask<String, Void, Integer> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialogPlato = new ProgressDialog(ActividadPrincipal.this);
+            pDialogPlato.setMessage(ActividadPrincipal.getPalabras("Cargando")+" Platos...");
+            pDialogPlato.setIndeterminate(false);
+            pDialogPlato.setCancelable(true);
+            pDialogPlato.show();
+            //setProgressBarIndeterminateVisibility(true);
+        }
+
+        @Override
+        protected Integer doInBackground(String... params) {
+//            Integer result = 0;
+            String cSql = "";
+            String xWhere = "";
+
+            if(!(Filtro.getGrupo().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE plato.GRUPO='" + Filtro.getGrupo() + "'";
+                } else {
+                    xWhere += " AND plato.GRUPO='" + Filtro.getGrupo() + "'";
+                }
+            }
+            if(!(Filtro.getEmpresa().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE plato.EMPRESA='" + Filtro.getEmpresa() + "'";
+                } else {
+                    xWhere += " AND plato.EMPRESA='" + Filtro.getEmpresa() + "'";
+                }
+            }
+            if(!(Filtro.getLocal().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE plato.LOCAL='" + Filtro.getLocal() + "'";
+                } else {
+                    xWhere += " AND plato.LOCAL='" + Filtro.getLocal() + "'";
+                }
+            }
+            if(!(Filtro.getSeccion().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE plato.SECCION='" + Filtro.getSeccion() + "'";
+                } else {
+                    xWhere += " AND plato.SECCION='" + Filtro.getSeccion() + "'";
+                }
+            }
+
+
+            cSql += xWhere;
+            if(cSql.equals("")) {
+                cSql="Todos";
+            }
+            Log.i("Sql Lista",cSql);
+            InputStream inputStream = null;
+            Integer result = 0;
+            HttpURLConnection urlConnection = null;
+
+            try {
+                // forming th java.net.URL object
+                URL url = new URL(params[0]);
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                // for Get request
+                ///           urlConnection.setRequestMethod("GET");
+
+                urlConnection.setReadTimeout(10000);
+                urlConnection.setConnectTimeout(15000);
+                urlConnection.setRequestMethod("GET");
+                urlConnection.setDoInput(true);
+                urlConnection.setDoOutput(true);
+//                List<NameValuePair> params1 = new ArrayList<NameValuePair>();
+//                params1.add(new BasicNameValuePair("filtro", cSql));
+
+                ContentValues values = new ContentValues();
+                values.put("filtro", cSql);
+
+                OutputStream os = urlConnection.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+//                writer.write(getQuery(params1));
+                writer.write(getQuery(values));
+                writer.flush();
+                writer.close();
+                os.close();
+                urlConnection.connect();
+
+                int statusCode = urlConnection.getResponseCode();
+                Log.i("STATUS CODE: ", Integer.toString(urlConnection.getResponseCode()) + " - " + urlConnection.getResponseMessage());
+                // 200 represents HTTP OK
+                if (statusCode ==  200) {
+
+                    BufferedReader r = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = r.readLine()) != null) {
+                        response.append(line);
+                    }
+                    Log.i("JSON-->", response.toString());
+                    for (Iterator<Plato> it = lplato.iterator(); it.hasNext();){
+                        Plato plato = it.next();
+                        it.remove();
+                    }
+
+                    parseResultTipoPlato(response.toString());
+                    result = 1; // Successful
+                }else{
+                    result = 0; //"Failed to fetch data!";
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+//                Log.d(TAG, e.getLocalizedMessage());
+            }
+
+            return result; //"Failed to fetch data!";
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            /* Download complete. Lets update UI */
+            pDialogPlato.dismiss();
+            if (result == 1) {
+                Log.e(TAG_PLATO, "OK PLATOS");
+            } else {
+                Log.e(TAG_PLATO, "Failed to fetch data!");
+            }
+        }
+    }
+    private void parseResultTipoPlato(String result) {
+        try {
+            JSONObject response = new JSONObject(result);
+            JSONArray posts = response.optJSONArray("posts");
+
+            Log.i("Longitud Datos: ",Integer.toString(posts.length()));
+            for (int ii = 0; ii < posts.length(); ii++) {
+                JSONObject post = posts.optJSONObject(ii);
+                Log.i("POST: ",post.optString("TIPOPLATO")+ post.optString("NOMBRE"));
+                Plato cat = new Plato(post.optString("TIPOPLATO"),
+                        post.optString("NOMBRE"));
+                lplato.add(cat);
+                Log.i("POST Longitud: ",Integer.toString(lplato.size()));
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public class GetCruge extends AsyncTask<String, Void, Integer> {
 
         @Override
@@ -9637,6 +9821,8 @@ ge     * */
                 Filtro.setSeccion(secList.get(position).getSeccionSeccion());
                 Filtro.setIvaIncluido(secList.get(position).getSeccionIvaIncluido());
 
+                /// almacenar platos en arraylist
+                TaskHelper.execute(new GetPlatos(), url_platos);
                 /// almacenar categorias en arraylist
                 TaskHelper.execute(new GetCategorias(), url_tipoare);
                 ///////////////////////////////////////////////////////////////
