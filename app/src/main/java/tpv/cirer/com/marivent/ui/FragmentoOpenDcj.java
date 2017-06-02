@@ -17,13 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import tpv.cirer.com.marivent.R;
-import tpv.cirer.com.marivent.conexion_http_post.JSONParserNew;
-import tpv.cirer.com.marivent.herramientas.DividerItemDecoration1;
-import tpv.cirer.com.marivent.herramientas.Filtro;
-import tpv.cirer.com.marivent.herramientas.WrapContentLinearLayoutManager;
-import tpv.cirer.com.marivent.modelo.Dcj;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,6 +37,13 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import tpv.cirer.com.marivent.R;
+import tpv.cirer.com.marivent.conexion_http_post.JSONParserNew;
+import tpv.cirer.com.marivent.herramientas.DividerItemDecoration1;
+import tpv.cirer.com.marivent.herramientas.Filtro;
+import tpv.cirer.com.marivent.herramientas.WrapContentLinearLayoutManager;
+import tpv.cirer.com.marivent.modelo.Dcj;
 
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getLocalIpAddress;
 
@@ -256,10 +256,18 @@ public class FragmentoOpenDcj  extends Fragment {
                 }
             }
             if(!(Filtro.getFechaapertura().equals(""))) {
-                if (xWhere.equals("")) {
-                    xWhere += " WHERE dcj.FECHA_APERTURA='" + Filtro.getFechaapertura() + "'";
-                } else {
-                    xWhere += " AND dcj.FECHA_APERTURA='" + Filtro.getFechaapertura() + "'";
+                if(Filtro.getUrl().contains("sqlsrv")) {
+                    if (xWhere.equals("")) {
+                        xWhere += " WHERE dcj.FECHA_APERTURA=CONVERT(DATETIME, '" +Filtro.getFechaapertura() + "', 120)";
+                    } else {
+                        xWhere += " AND dcj.FECHA_APERTURA=CONVERT(DATETIME, '" + Filtro.getFechaapertura() + "', 120)";
+                    }
+                }else{
+                    if (xWhere.equals("")) {
+                        xWhere += " WHERE dcj.FECHA_APERTURA='" + Filtro.getFechaapertura() + "'";
+                    } else {
+                        xWhere += " AND dcj.FECHA_APERTURA='" + Filtro.getFechaapertura() + "'";
+                    }
                 }
             }
             xWhere += " AND dcj.APERTURA=1";

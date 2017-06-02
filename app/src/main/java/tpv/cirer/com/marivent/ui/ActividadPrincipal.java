@@ -63,6 +63,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.epson.eposprint.Print;
 import com.spyhunter99.supertooltips.ToolTip;
 import com.spyhunter99.supertooltips.ToolTipManager;
@@ -467,7 +468,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         Filtro.setRango("");
         Filtro.setMesa("");
         Filtro.setEmpleado("");
-        Filtro.setFecha("");
+        Filtro.setFecha(dateNow);
         Filtro.setEstado("");
         Filtro.setFechaInicio("");
         Filtro.setFechaFinal("");
@@ -1290,13 +1291,15 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             switch (data.getStringExtra("Tabla").trim()) {
                 case "pdd":
                     if (data.getStringExtra("Action").equals("ADD")) {
-    ////                    Log.i("CreaPDD","ActividadPrincipal");
+///                        Log.i("CreaPDD","ActividadPrincipal");
 
                         CargaFragment cargafragment = null;
                         cargafragment = new CargaFragment(FragmentoPagesPedido.newInstance(Filtro.getPedido(), "OPEN",data.getStringExtra("Mesa") ,Integer.toString(Filtro.getPedido())), getSupportFragmentManager());
                         cargafragment.getFragmentManager().addOnBackStackChangedListener(this);
                         if (cargafragment.getFragment() != null) {
                             cargafragment.setTransactioncommitAllowingStateLoss(R.id.contenedor_principal);
+///                            Log.i("CreaPDD","Generado FragmentoPagesPedido");
+
 ////                            Toast.makeText(this, getPalabras("Crear")+" "+getPalabras("Lineas")+" "+getPalabras("Pedido")+" " + Integer.toString(Filtro.getId()), Toast.LENGTH_SHORT).show();
 ////                            TaskHelper.execute(new CalculaCabecera(), "pdd", "lpd", "0");
                         }
@@ -10633,10 +10636,18 @@ ge     * */
                         }
                     }
                     if(!(Filtro.getFechaapertura().equals(""))) {
-                        if (xWhere.equals("")) {
-                            xWhere += " WHERE caja.FECHA_APERTURA='" + Filtro.getFechaapertura() + "'";
-                        } else {
-                            xWhere += " AND caja.FECHA_APERTURA='" + Filtro.getFechaapertura() + "'";
+                        if(Filtro.getUrl().contains("sqlsrv")) {
+                            if (xWhere.equals("")) {
+                                xWhere += " WHERE caja.FECHA_APERTURA=CONVERT(DATETIME, '" +Filtro.getFechaapertura() + "', 120)";
+                            } else {
+                                xWhere += " AND caja.FECHA_APERTURA=CONVERT(DATETIME, '" + Filtro.getFechaapertura() + "', 120)";
+                            }
+                        }else{
+                            if (xWhere.equals("")) {
+                                xWhere += " WHERE caja.FECHA_APERTURA='" + Filtro.getFechaapertura() + "'";
+                            } else {
+                                xWhere += " AND caja.FECHA_APERTURA='" + Filtro.getFechaapertura() + "'";
+                            }
                         }
                     }
 
@@ -10652,10 +10663,18 @@ ge     * */
                         }
                     }
                     if(!(Filtro.getFechaapertura().equals(""))) {
-                        if (xWhere.equals("")) {
-                            xWhere += " WHERE DATE(message.creado)='" + Filtro.getFechaapertura() + "'";
-                        } else {
-                            xWhere += " AND DATE(message.creado)='" + Filtro.getFechaapertura() + "'";
+                        if(Filtro.getUrl().contains("sqlsrv")) {
+                            if (xWhere.equals("")) {
+                                xWhere += " WHERE message.creado=CONVERT(DATETIME, '" +Filtro.getFechaapertura() + "', 120)";
+                            } else {
+                                xWhere += " AND message.creado=CONVERT(DATETIME, '" + Filtro.getFechaapertura() + "', 120)";
+                            }
+                        }else{
+                            if (xWhere.equals("")) {
+                                xWhere += " WHERE DATE(message.creado)='" + Filtro.getFechaapertura() + "'";
+                            } else {
+                                xWhere += " AND DATE(message.creado)='" + Filtro.getFechaapertura() + "'";
+                            }
                         }
                     }
 
@@ -10671,10 +10690,18 @@ ge     * */
                         }
                     }
                     if(!(Filtro.getFechaapertura().equals(""))) {
-                        if (xWhere.equals("")) {
-                            xWhere += " WHERE turno.FECHA_APERTURA='" + Filtro.getFechaapertura() + "'";
-                        } else {
-                            xWhere += " AND turno.FECHA_APERTURA='" + Filtro.getFechaapertura() + "'";
+                        if(Filtro.getUrl().contains("sqlsrv")) {
+                            if (xWhere.equals("")) {
+                                xWhere += " WHERE turno.FECHA_APERTURA=CONVERT(DATETIME, '" +Filtro.getFechaapertura() + "', 120)";
+                            } else {
+                                xWhere += " AND turno.FECHA_APERTURA=CONVERT(DATETIME, '" + Filtro.getFechaapertura() + "', 120)";
+                            }
+                        }else{
+                            if (xWhere.equals("")) {
+                                xWhere += " WHERE turno.FECHA_APERTURA='" + Filtro.getFechaapertura() + "'";
+                            } else {
+                                xWhere += " AND turno.FECHA_APERTURA='" + Filtro.getFechaapertura() + "'";
+                            }
                         }
                     }
                     if(!(Filtro.getTurno().equals(""))) {
@@ -10696,10 +10723,18 @@ ge     * */
                         }
                     }
                     if(!(Filtro.getFechaapertura().equals(""))) {
-                        if (xWhere.equals("")) {
-                            xWhere += " WHERE dcj.FECHA_APERTURA='" + Filtro.getFechaapertura() + "'";
-                        } else {
-                            xWhere += " AND dcj.FECHA_APERTURA='" + Filtro.getFechaapertura() + "'";
+                        if(Filtro.getUrl().contains("sqlsrv")) {
+                            if (xWhere.equals("")) {
+                                xWhere += " WHERE dcj.FECHA_APERTURA=CONVERT(DATETIME, '" +Filtro.getFechaapertura() + "', 120)";
+                            } else {
+                                xWhere += " AND dcj.FECHA_APERTURA=CONVERT(DATETIME, '" + Filtro.getFechaapertura() + "', 120)";
+                            }
+                        }else{
+                            if (xWhere.equals("")) {
+                                xWhere += " WHERE dcj.FECHA_APERTURA='" + Filtro.getFechaapertura() + "'";
+                            } else {
+                                xWhere += " AND dcj.FECHA_APERTURA='" + Filtro.getFechaapertura() + "'";
+                            }
                         }
                     }
                     if(!(Filtro.getTurno().equals(""))) {
@@ -10733,11 +10768,20 @@ ge     * */
                             xWhere += " AND pdd.EMPLEADO='" + Filtro.getEmpleado() + "'";
                         }
                     }
-*/                    if(!(Filtro.getFechaapertura().equals(""))) {
-                        if (xWhere.equals("")) {
-                            xWhere += " WHERE pdd.FECHA='" + Filtro.getFechaapertura() + "'";
-                        } else {
-                            xWhere += " AND pdd.FECHA='" + Filtro.getFechaapertura() + "'";
+*/
+                    if(!(Filtro.getFechaapertura().equals(""))) {
+                        if(Filtro.getUrl().contains("sqlsrv")) {
+                            if (xWhere.equals("")) {
+                                xWhere += " WHERE pdd.FECHA=CONVERT(DATETIME, '" +Filtro.getFechaapertura() + "', 120)";
+                            } else {
+                                xWhere += " AND pdd.FECHA=CONVERT(DATETIME, '" + Filtro.getFechaapertura() + "', 120)";
+                            }
+                        }else{
+                            if (xWhere.equals("")) {
+                                xWhere += " WHERE pdd.FECHA='" + Filtro.getFechaapertura() + "'";
+                            } else {
+                                xWhere += " AND pdd.FECHA='" + Filtro.getFechaapertura() + "'";
+                            }
                         }
                     }
 
@@ -10769,11 +10813,20 @@ ge     * */
                             xWhere += " AND ftp.EMPLEADO='" + Filtro.getEmpleado() + "'";
                         }
                     }
-*/                    if(!(Filtro.getFechaapertura().equals(""))) {
-                        if (xWhere.equals("")) {
-                            xWhere += " WHERE ftp.FECHA='" + Filtro.getFechaapertura() + "'";
-                        } else {
-                            xWhere += " AND ftp.FECHA='" + Filtro.getFechaapertura() + "'";
+*/
+                    if(!(Filtro.getFechaapertura().equals(""))) {
+                        if(Filtro.getUrl().contains("sqlsrv")) {
+                            if (xWhere.equals("")) {
+                                xWhere += " WHERE ftp.FECHA=CONVERT(DATETIME, '" +Filtro.getFechaapertura() + "', 120)";
+                            } else {
+                                xWhere += " AND ftp.FECHA=CONVERT(DATETIME, '" + Filtro.getFechaapertura() + "', 120)";
+                            }
+                        }else{
+                            if (xWhere.equals("")) {
+                                xWhere += " WHERE ftp.FECHA='" + Filtro.getFechaapertura() + "'";
+                            } else {
+                                xWhere += " AND ftp.FECHA='" + Filtro.getFechaapertura() + "'";
+                            }
                         }
                     }
 
@@ -10888,7 +10941,7 @@ ge     * */
                                 comidaItem.setIndividual(post.optInt("INDIVIDUAL"));
                                 lcomida.add(comidaItem);
                                 Log.i("ImagenUrl",comidaItem.getUrlimagen());
-
+                                Glide.with(mContext).load(comidaItem.getUrlimagen()).preload();
                             }
 
                             // AÑADIMOS LA CATEGORIA DE COMIDA AL ARRAY DE COMIDAS
@@ -11020,6 +11073,7 @@ ge     * */
             }
         }
     }
+
     public class GetAreAre extends AsyncTask<String, Void, Integer> {
 
         @Override

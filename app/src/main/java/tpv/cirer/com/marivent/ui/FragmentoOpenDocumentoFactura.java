@@ -271,10 +271,18 @@ public class FragmentoOpenDocumentoFactura extends Fragment {
                 }
             }
             if(!(Filtro.getFechaapertura().equals(""))) {
-                if (xWhere.equals("")) {
-                    xWhere += " WHERE ftp.FECHA='" + Filtro.getFechaapertura() + "'";
-                } else {
-                    xWhere += " AND ftp.FECHA='" + Filtro.getFechaapertura() + "'";
+                if(Filtro.getUrl().contains("sqlsrv")) {
+                    if (xWhere.equals("")) {
+                        xWhere += " WHERE ftp.FECHA=CONVERT(DATETIME, '" +Filtro.getFechaapertura() + "', 120)";
+                    } else {
+                        xWhere += " AND ftp.FECHA=CONVERT(DATETIME, '" + Filtro.getFechaapertura() +  "', 120)";
+                    }
+                }else{
+                    if (xWhere.equals("")) {
+                        xWhere += " WHERE ftp.FECHA='" + Filtro.getFechaapertura() + "'";
+                    } else {
+                        xWhere += " AND ftp.FECHA='" + Filtro.getFechaapertura() + "'";
+                    }
                 }
             }
 

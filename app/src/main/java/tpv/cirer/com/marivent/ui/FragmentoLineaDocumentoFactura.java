@@ -199,11 +199,7 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
         cEstado = getArguments().getString("ESTADO", "");
 
         pid = Integer.toBinaryString(nId);
-        if (!cEstado.contains("CLOSE")) {
-            Filtro.setCobroDesdeFactura(0);
-        }else{
-            Filtro.setCobroDesdeFactura(1);
-        }
+        Filtro.setCobroDesdeFactura(0);
     }
 
     @Override

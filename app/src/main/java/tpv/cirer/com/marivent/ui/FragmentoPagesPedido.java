@@ -141,7 +141,7 @@ public class FragmentoPagesPedido extends Fragment {
                     .addToBackStack(null) //añadido
                     .commit();
         }
-////        Log.i("CreaPDD","ActividadPagesPedido");
+////        Log.i("CreaPDD","Creado PagesPedido");
 
         return rootView;
     }

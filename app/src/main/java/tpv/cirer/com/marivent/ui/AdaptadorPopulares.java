@@ -11,13 +11,13 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import tpv.cirer.com.marivent.R;
-import tpv.cirer.com.marivent.herramientas.PopularRowHolder;
-import tpv.cirer.com.marivent.herramientas.DownloadImageTask;
-import tpv.cirer.com.marivent.modelo.Popular;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import tpv.cirer.com.marivent.R;
+import tpv.cirer.com.marivent.herramientas.PopularRowHolder;
+import tpv.cirer.com.marivent.modelo.Popular;
 
 /**
  * Created by JUAN on 18/11/2016.
@@ -87,8 +87,7 @@ public class AdaptadorPopulares extends RecyclerView.Adapter<PopularRowHolder> i
                     .centerCrop()
                     .into(PopularRowHolder.imagen);
 */            Glide.with(mContext)
-                    .load(new DownloadImageTask(PopularRowHolder.imagen)
-                            .execute(Popular.getUrlimagen()))
+                    .load(Popular.getUrlimagen())
                     .centerCrop()
                     .into(PopularRowHolder.imagen);
 

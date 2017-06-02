@@ -249,13 +249,6 @@ public class FragmentoCloseDocumentoFactura extends Fragment {
                     xWhere += " AND ftp.COD_TURNO='" + Filtro.getTurno() + "'";
                 }
             }
-            if(!(Filtro.getEmpleado().equals("00"))) {
-                if (xWhere.equals("")) {
-                    xWhere += " WHERE ftp.EMPLEADO='" + Filtro.getEmpleado() + "'";
-                } else {
-                    xWhere += " AND ftp.EMPLEADO='" + Filtro.getEmpleado() + "'";
-                }
-            }
             if(!(Filtro.getMesa().equals("00"))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE ftp.MESA='" + Filtro.getMesa() + "'";
@@ -264,10 +257,18 @@ public class FragmentoCloseDocumentoFactura extends Fragment {
                 }
             }
             if(!(Filtro.getFecha().equals(""))) {
-                if (xWhere.equals("")) {
-                    xWhere += " WHERE ftp.FECHA='" + Filtro.getFecha() + "'";
-                } else {
-                    xWhere += " AND ftp.FECHA='" + Filtro.getFecha() + "'";
+                if(Filtro.getUrl().contains("sqlsrv")) {
+                    if (xWhere.equals("")) {
+                        xWhere += " WHERE ftp.FECHA=CONVERT(DATETIME, '" +Filtro.getFecha().substring(0,10)+" 00:00:00" + "', 120)";
+                    } else {
+                        xWhere += " AND ftp.FECHA=CONVERT(DATETIME, '" + Filtro.getFecha().substring(0,10)+" 00:00:00" + "', 120)";
+                    }
+                }else{
+                    if (xWhere.equals("")) {
+                        xWhere += " WHERE ftp.FECHA='" + Filtro.getFecha() + "'";
+                    } else {
+                        xWhere += " AND ftp.FECHA='" + Filtro.getFecha() + "'";
+                    }
                 }
             }
 

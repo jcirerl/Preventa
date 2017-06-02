@@ -318,10 +318,18 @@ public class FragmentoOpenDocumentoPedido extends Fragment    {
                         }
                     }
                     if(!(Filtro.getFechaapertura().equals(""))) {
-                        if (xWhere.equals("")) {
-                            xWhere += " WHERE pdd.FECHA='" + Filtro.getFechaapertura() + "'";
-                        } else {
-                            xWhere += " AND pdd.FECHA='" + Filtro.getFechaapertura() + "'";
+                        if(Filtro.getUrl().contains("sqlsrv")) {
+                            if (xWhere.equals("")) {
+                                xWhere += " WHERE pdd.FECHA=CONVERT(DATETIME, '" +Filtro.getFechaapertura() + "', 120)";
+                            } else {
+                                xWhere += " AND pdd.FECHA=CONVERT(DATETIME, '" + Filtro.getFechaapertura() + "', 120)";
+                            }
+                        }else{
+                            if (xWhere.equals("")) {
+                                xWhere += " WHERE pdd.FECHA='" + Filtro.getFechaapertura() + "'";
+                            } else {
+                                xWhere += " AND pdd.FECHA='" + Filtro.getFechaapertura() + "'";
+                            }
                         }
                     }
 

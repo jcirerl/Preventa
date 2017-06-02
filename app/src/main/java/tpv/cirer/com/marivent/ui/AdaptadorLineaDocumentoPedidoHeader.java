@@ -340,7 +340,7 @@ public class AdaptadorLineaDocumentoPedidoHeader extends RecyclerView.Adapter<Re
             ((VHHeader) holder).headerLineaDocumentoPedido.setTextColor(Color.WHITE);
 
             // MARIVENT
-            ((VHHeader) holder).headerLineaDocumentoPedido.setTextSize(18);
+///            ((VHHeader) holder).headerLineaDocumentoPedido.setTextSize(18);
 
         }
     }

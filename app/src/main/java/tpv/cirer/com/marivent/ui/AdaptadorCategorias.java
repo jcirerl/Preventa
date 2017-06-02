@@ -11,12 +11,9 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 
-import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.resource.UnitTransformation;
-import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
 import java.util.ArrayList;
@@ -93,14 +90,14 @@ public class AdaptadorCategorias extends RecyclerView.Adapter<ComidaRowHolder> i
         @Override
         public void onBindViewHolder(ComidaRowHolder ComidaRowHolder, int i) {
             String myText;
-            final DrawableRequestBuilder<String> req = Glide
+/*            final DrawableRequestBuilder<String> req = Glide
                     .with(mContext)
                     .fromString()
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE) // disable network delay for demo
                     .skipMemoryCache(true) // make sure transform runs for demo
                     .crossFade(2000) // default, just stretch time for noticability
                     ;
-
+*/
             Log.i("recview comida fuera", Integer.toString(mComida.size()));
             try {
                 Comida item = mComida.get(i);
@@ -113,19 +110,21 @@ public class AdaptadorCategorias extends RecyclerView.Adapter<ComidaRowHolder> i
                     .centerCrop()
                     .into(ComidaRowHolder.imagen);
 */
+                Glide.with(mContext)
+                        .load(Comida.getUrlimagen())
+                        .into(ComidaRowHolder.imagen);
 /*                Glide.with(mContext)
-                        .load(new DownloadImageTask(ComidaRowHolder.imagen)
-                        .execute(Comida.getUrlimagen()))
+                        .load(Comida.getUrlimagen())
                         .override(640,426) //640,426
                         .centerCrop()
-                        .into(ComidaRowHolder.imagen);
-*/                Picasso.with(mContext)
+                        .into(ComidaRowHolder.imagen);*/
+/*                Picasso.with(mContext)
                         .load(Comida.getUrlimagen())
                         .error(R.drawable.placeholder)
                         .fit()
                         .centerCrop()
                         .into(ComidaRowHolder.imagen);
-
+*/
 /*                req.clone()
                         .load(Comida.getUrlimagen())
                         .placeholder(R.drawable.placeholder)

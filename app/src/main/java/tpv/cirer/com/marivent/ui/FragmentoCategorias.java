@@ -154,12 +154,14 @@ public class FragmentoCategorias extends Fragment {
     private void poblarViewPager(final ViewPager viewPager) {
         AdaptadorSecciones adapter = new AdaptadorSecciones(getFragmentManager());
 ////        Log.i("Estoy PoblarViewPager",Integer.toString(lcategoria.size()));
+////        Log.i("CreaPDD","Inicio Carga Categorias");
         Categoria categoria;
         for(int x=0;x<lcategoria.size();x++) {
             categoria = lcategoria.get(x);
 ////            Log.i("Poblando: ",Integer.toString(x)+" "+categoria.getCategoriaTipo_are()+" "+categoria.getCategoriaOrden());
             adapter.addFragment(FragmentoCategoria.newInstance(categoria.getCategoriaOrden(),cEstado), categoria.getCategoriaNombre_tipoare(),x);
         }
+////        Log.i("CreaPDD","Final Carga Categorias");
         viewPager.setAdapter(adapter);
 
     }

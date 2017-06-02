@@ -31,10 +31,11 @@
 
     <application
         android:allowBackup="true"
+        android:largeHeap="true"
         android:icon="@drawable/marivent"
         android:label="@string/app_name"
         android:theme="@style/Theme.RicoPaRico" >
-        <receiver
+             <receiver
             android:name="tpv.cirer.com.marivent.servicios.AndroPHPAlarmReceiver"
             android:process=":remote" >
         </receiver>
@@ -56,7 +57,8 @@
             </intent-filter>
             <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter" />
-
+            <meta-data android:name="tpv.cirer.com.marivent.GlideConfiguration"
+                android:value="GlideModule"/>
         </activity>
         <!--    android:theme="@style/Theme.ConNavigationDrawer"-->
         <activity android:name=".ui.LoginActivity"

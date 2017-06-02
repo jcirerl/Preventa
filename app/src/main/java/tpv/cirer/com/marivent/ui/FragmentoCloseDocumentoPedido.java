@@ -256,11 +256,19 @@ public class FragmentoCloseDocumentoPedido extends Fragment {
                     xWhere += " AND pdd.MESA='" + Filtro.getMesa() + "'";
                 }
             }
-            if(!(Filtro.getFechaapertura().equals(""))) {
-                if (xWhere.equals("")) {
-                    xWhere += " WHERE pdd.FECHA='" + Filtro.getFechaapertura() + "'";
-                } else {
-                    xWhere += " AND pdd.FECHA='" + Filtro.getFechaapertura() + "'";
+            if(!(Filtro.getFecha().equals(""))) {
+                if(Filtro.getUrl().contains("sqlsrv")) {
+                    if (xWhere.equals("")) {
+                        xWhere += " WHERE pdd.FECHA=CONVERT(DATETIME, '" +Filtro.getFecha().substring(0,10)+" 00:00:00" + "', 120)";
+                    } else {
+                        xWhere += " AND pdd.FECHA=CONVERT(DATETIME, '" + Filtro.getFecha().substring(0,10)+" 00:00:00" + "', 120)";
+                    }
+                }else{
+                    if (xWhere.equals("")) {
+                        xWhere += " WHERE pdd.FECHA='" + Filtro.getFecha() + "'";
+                    } else {
+                        xWhere += " AND pdd.FECHA='" + Filtro.getFecha() + "'";
+                    }
                 }
             }
 

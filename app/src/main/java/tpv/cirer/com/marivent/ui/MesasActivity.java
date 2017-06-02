@@ -572,7 +572,7 @@ public class MesasActivity extends FragmentActivity {
                                                             if (!ActividadPrincipal.getCruge("action_pdd_create")) {
                                                                 Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
                                                             } else {
-
+     ////                                                             Log.i("CreaPDD","Llama Crear Pedido");                                                                 Log.i("PEDIDO","LLAMA CREADOCUMENTOPEDIOD");
                                                                   new CreaDocumentoPedido().execute(getMesaComensales(Filtro.getMesa()));
                                                             }
                                                         } else {
@@ -1541,7 +1541,8 @@ public class MesasActivity extends FragmentActivity {
             pDialog.dismiss();
 
             if (success == 1) {
-////                Log.i("CreaPDD","ActividadMesas");
+
+////               Log.i("CreaPDD","Sale Crear Pedido");
 ////                Snackbar.make(layout, "Documento Pedido Generado "+Integer.toString(Filtro.getPedido()), Snackbar.LENGTH_SHORT).show();
 //                Toast.makeText(getApplicationContext(), "Creado Pedido ", Toast.LENGTH_SHORT).show();
                 // SALIR ACTIVITY

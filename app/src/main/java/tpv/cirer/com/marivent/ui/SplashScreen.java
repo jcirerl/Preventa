@@ -22,6 +22,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.GlideBuilder;
+import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.module.GlideModule;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -93,7 +98,7 @@ public class SplashScreen extends AppCompatActivity {
                     SharedPreferences pref =
                             PreferenceManager.getDefaultSharedPreferences(
                                             SplashScreen.this);
-                    Filtro.setOpurl(pref.getString("opurl", "LOCAL")); // CAMBIADO PARA HACER PRUEBAS TIENE QUE ARRANCAR SIEMPRE EN LOCAL
+                    Filtro.setOpurl(pref.getString("opurl", "HOSTING"));
                     Filtro.setIdioma(pref.getString("opidioma", "ESP"));
                     Filtro.setOpgrid(Integer.parseInt(pref.getString("opgrid", "8")));
                     Filtro.setOpmesas(Integer.parseInt(pref.getString("opmesas", "128")));
@@ -530,9 +535,9 @@ public class SplashScreen extends AppCompatActivity {
                 Filtro.setDirpdfname(post.optString("DIRPDFNAME").trim());
                 Filtro.setDriver(post.optString("DRIVER").trim());
                 Filtro.setHost(post.optString("HOST").trim());
-                Filtro.setDbname(post.optString("DBNAME").trim());
-                Filtro.setUsername(post.optString("USERNAME").trim());
-                Filtro.setPwdname(post.optString("PWDNAME").trim());
+                Filtro.setDbname(post.optString("DATABASENAME").trim());
+                Filtro.setUsername(post.optString("USER").trim());
+                Filtro.setPwdname(post.optString("PASSWORD").trim());
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -676,7 +681,7 @@ public class SplashScreen extends AppCompatActivity {
                         post.optString("IDIOMA"),
                         post.optString("CLAVESTRING").trim(),
                         post.optString("PALABRA").trim());
-//                Log.i(TAG_PALABRAS,Integer.toString(post.optInt("ID"))+","+post.optString("IDIOMA")+","+post.optString("CLAVESTRING")+","+post.optString("PALABRA"));
+                Log.i(TAG_PALABRAS,Integer.toString(post.optInt("ID"))+","+post.optString("IDIOMA")+","+post.optString("CLAVESTRING")+","+post.optString("PALABRA"));
                 lpalabras.add(cat);
             }
         } catch (JSONException e) {
@@ -724,6 +729,19 @@ public class SplashScreen extends AppCompatActivity {
                 break;
         }
          return "**";
+    }
+    public class GlideConfiguration implements GlideModule {
+
+        @Override
+        public void applyOptions(Context context, GlideBuilder builder) {
+            // Apply options to the builder here.
+            builder.setDecodeFormat(DecodeFormat.PREFER_ARGB_8888);
+        }
+
+        @Override
+        public void registerComponents(Context context, Glide glide) {
+            // register ModelLoaders here.
+        }
     }
 }
  

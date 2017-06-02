@@ -24,16 +24,6 @@ import android.widget.ToggleButton;
 import com.epson.eposprint.Builder;
 import com.epson.eposprint.EposException;
 import com.epson.eposprint.Print;
-import tpv.cirer.com.marivent.R;
-import tpv.cirer.com.marivent.conexion_http_post.JSONParser;
-import tpv.cirer.com.marivent.conexion_http_post.JSONParserNew;
-import tpv.cirer.com.marivent.herramientas.Filtro;
-import tpv.cirer.com.marivent.herramientas.StringUtil;
-import tpv.cirer.com.marivent.modelo.CabeceraEmpr;
-import tpv.cirer.com.marivent.modelo.CabeceraFtp;
-import tpv.cirer.com.marivent.modelo.Dcj;
-import tpv.cirer.com.marivent.modelo.DocumentoFacturaIva;
-import tpv.cirer.com.marivent.print.ShowMsg;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,6 +47,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import tpv.cirer.com.marivent.R;
+import tpv.cirer.com.marivent.conexion_http_post.JSONParser;
+import tpv.cirer.com.marivent.conexion_http_post.JSONParserNew;
+import tpv.cirer.com.marivent.herramientas.Filtro;
+import tpv.cirer.com.marivent.herramientas.StringUtil;
+import tpv.cirer.com.marivent.modelo.CabeceraEmpr;
+import tpv.cirer.com.marivent.modelo.CabeceraFtp;
+import tpv.cirer.com.marivent.modelo.Dcj;
+import tpv.cirer.com.marivent.modelo.DocumentoFacturaIva;
+import tpv.cirer.com.marivent.print.ShowMsg;
 
 //import static com.google.android.gms.internal.zzir.runOnUiThread;
 
@@ -1368,10 +1369,19 @@ public class PrintDcjFragment extends Fragment {
                 }
             }
             if(!(dcjlist.get(0).getDcjFecha_Apertura().equals(""))) {
-                if (xWhere.equals("")) {
-                    xWhere += " WHERE ftp.FECHA='" + dcjlist.get(0).getDcjFecha_Apertura() + "'";
-                } else {
-                    xWhere += " AND ftp.FECHA='" + dcjlist.get(0).getDcjFecha_Apertura() + "'";
+                if(Filtro.getUrl().contains("sqlsrv")) {
+                    if (xWhere.equals("")) {
+                        xWhere += " WHERE ftp.FECHA=CONVERT(DATETIME, '" + dcjlist.get(0).getDcjFecha_Apertura() + "', 120)";
+                    } else {
+                        xWhere += " AND ftp.FECHA=CONVERT(DATETIME, '" + dcjlist.get(0).getDcjFecha_Apertura() + "', 120)";
+                    }
+                }else{
+                    if (xWhere.equals("")) {
+                        xWhere += " WHERE ftp.FECHA='" + dcjlist.get(0).getDcjFecha_Apertura() + "'";
+                    } else {
+                        xWhere += " AND ftp.FECHA='" + dcjlist.get(0).getDcjFecha_Apertura() + "'";
+                    }
+
                 }
             }
 
