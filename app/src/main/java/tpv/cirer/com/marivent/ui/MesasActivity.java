@@ -1629,10 +1629,18 @@ public class MesasActivity extends FragmentActivity {
                 }
             }
             if(!(Filtro.getFechaapertura().equals(""))) {
-                if (xWhere.equals("")) {
-                    xWhere += " WHERE pdd.FECHA='" + Filtro.getFechaapertura() + "'";
-                } else {
-                    xWhere += " AND pdd.FECHA='" + Filtro.getFechaapertura() + "'";
+                if(Filtro.getUrl().contains("sqlsrv")) {
+                    if (xWhere.equals("")) {
+                        xWhere += " WHERE pdd.FECHA=CONVERT(DATETIME, '" +Filtro.getFechaapertura() + "', 120)";
+                    } else {
+                        xWhere += " AND pdd.FECHA=CONVERT(DATETIME, '" + Filtro.getFechaapertura() + "', 120)";
+                    }
+                }else{
+                    if (xWhere.equals("")) {
+                        xWhere += " WHERE pdd.FECHA='" + Filtro.getFechaapertura() + "'";
+                    } else {
+                        xWhere += " AND pdd.FECHA='" + Filtro.getFechaapertura() + "'";
+                    }
                 }
             }
 
@@ -1791,10 +1799,18 @@ public class MesasActivity extends FragmentActivity {
                 }
             }
             if(!(Filtro.getFechaapertura().equals(""))) {
-                if (xWhere.equals("")) {
-                    xWhere += " WHERE ftp.FECHA='" + Filtro.getFechaapertura() + "'";
-                } else {
-                    xWhere += " AND ftp.FECHA='" + Filtro.getFechaapertura() + "'";
+                if(Filtro.getUrl().contains("sqlsrv")) {
+                    if (xWhere.equals("")) {
+                        xWhere += " WHERE ftp.FECHA=CONVERT(DATETIME, '" +Filtro.getFechaapertura() + "', 120)";
+                    } else {
+                        xWhere += " AND ftp.FECHA=CONVERT(DATETIME, '" + Filtro.getFechaapertura() + "', 120)";
+                    }
+                }else{
+                    if (xWhere.equals("")) {
+                        xWhere += " WHERE ftp.FECHA='" + Filtro.getFechaapertura() + "'";
+                    } else {
+                        xWhere += " AND ftp.FECHA='" + Filtro.getFechaapertura() + "'";
+                    }
                 }
             }
 
@@ -1971,10 +1987,18 @@ public class MesasActivity extends FragmentActivity {
                 }
             }
             if(!(Filtro.getFechaapertura().equals(""))) {
-                if (xWhere.equals("")) {
-                    xWhere += " WHERE pdd.FECHA='" + Filtro.getFechaapertura() + "'";
-                } else {
-                    xWhere += " AND pdd.FECHA='" + Filtro.getFechaapertura() + "'";
+                if(Filtro.getUrl().contains("sqlsrv")) {
+                    if (xWhere.equals("")) {
+                        xWhere += " WHERE pdd.FECHA=CONVERT(DATETIME, '" +Filtro.getFechaapertura() + "', 120)";
+                    } else {
+                        xWhere += " AND pdd.FECHA=CONVERT(DATETIME, '" + Filtro.getFechaapertura() + "', 120)";
+                    }
+                }else{
+                    if (xWhere.equals("")) {
+                        xWhere += " WHERE pdd.FECHA='" + Filtro.getFechaapertura() + "'";
+                    } else {
+                        xWhere += " AND pdd.FECHA='" + Filtro.getFechaapertura() + "'";
+                    }
                 }
             }
 

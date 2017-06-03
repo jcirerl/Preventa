@@ -15,10 +15,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import tpv.cirer.com.marivent.R;
-import tpv.cirer.com.marivent.herramientas.Filtro;
-import tpv.cirer.com.marivent.herramientas.IMyDcjViewHolderClicks;
-import tpv.cirer.com.marivent.modelo.Dcj;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -26,6 +22,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import tpv.cirer.com.marivent.R;
+import tpv.cirer.com.marivent.herramientas.Filtro;
+import tpv.cirer.com.marivent.herramientas.IMyDcjViewHolderClicks;
+import tpv.cirer.com.marivent.modelo.Dcj;
 
 /**
  * Created by JUAN on 21/11/2016.
@@ -102,10 +103,12 @@ public class AdaptadorDcjHeader extends RecyclerView.Adapter<RecyclerView.ViewHo
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             try {
-                                switch (campoDCJ) {
-                                    case "Saldo_inicio":
-                                        mCallbackDcj.onUpdateDcjSelected(idDCJ, saldoinicioDCJ, campoDCJ);
-                                        break;
+                                if (apertura==1) {
+                                    switch (campoDCJ) {
+                                        case "Saldo_inicio":
+                                            mCallbackDcj.onUpdateDcjSelected(idDCJ, saldoinicioDCJ, campoDCJ);
+                                            break;
+                                    }
                                 }
                             } catch (ClassCastException exception) {
                                 // do something
