@@ -64,6 +64,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.epson.eposprint.Print;
 import com.spyhunter99.supertooltips.ToolTip;
 import com.spyhunter99.supertooltips.ToolTipManager;
@@ -10941,7 +10942,7 @@ ge     * */
                                 comidaItem.setIndividual(post.optInt("INDIVIDUAL"));
                                 lcomida.add(comidaItem);
                                 Log.i("ImagenUrl",comidaItem.getUrlimagen());
-                                Glide.with(mContext).load(comidaItem.getUrlimagen()).preload();
+                                Glide.with(mContext).load(comidaItem.getUrlimagen()).thumbnail(0.1f).diskCacheStrategy(DiskCacheStrategy.ALL).preload();
                             }
 
                             // AÑADIMOS LA CATEGORIA DE COMIDA AL ARRAY DE COMIDAS

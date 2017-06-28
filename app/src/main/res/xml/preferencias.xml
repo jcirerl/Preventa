@@ -58,6 +58,15 @@
             android:dialogTitle="Indicar Tipo Scroll"
             android:entries="@array/tipotab"
             android:entryValues="@array/modotab" />
+        <ListPreference
+            android:defaultValue="false"
+            android:key="optabtodos"
+            android:title="Carga Tab Tipos Articulos"
+            android:summary="Asignacion Carga Todos Tabs Tipos Articulos"
+            android:dialogTitle="Control Tab Todos Tipos Articulos"
+            android:entries="@array/tabtodos"
+            android:entryValues="@array/ctrltabtodos" />
+
     </PreferenceCategory>
     <PreferenceCategory
         android:key="categoria_log"

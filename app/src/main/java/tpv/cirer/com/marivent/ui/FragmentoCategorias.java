@@ -85,8 +85,11 @@ public class FragmentoCategorias extends Fragment {
 
             // Setear adaptador al viewpager.
             viewPager = (ViewPager) view.findViewById(R.id.pager);
-            viewPager.setOffscreenPageLimit(lcategoria.size()); // BIEN PARA 23.1.1
-    ////        viewPager.setOffscreenPageLimit(0);
+            if(Filtro.getOptabtodos()) {
+                viewPager.setOffscreenPageLimit(lcategoria.size()); // BIEN PARA 23.1.1
+            }else {
+                viewPager.setOffscreenPageLimit(1);
+            }
             if (viewPager != null) {
                 poblarViewPager(viewPager);
             }

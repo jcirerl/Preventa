@@ -12,6 +12,7 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.resource.UnitTransformation;
 import com.squareup.picasso.Transformation;
@@ -112,6 +113,8 @@ public class AdaptadorCategorias extends RecyclerView.Adapter<ComidaRowHolder> i
 */
                 Glide.with(mContext)
                         .load(Comida.getUrlimagen())
+                        .thumbnail(0.1f)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(ComidaRowHolder.imagen);
 /*                Glide.with(mContext)
                         .load(Comida.getUrlimagen())
