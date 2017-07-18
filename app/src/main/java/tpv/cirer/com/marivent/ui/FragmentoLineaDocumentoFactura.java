@@ -22,7 +22,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.text.format.Formatter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,16 +52,12 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -86,6 +81,7 @@ import tpv.cirer.com.marivent.print.ShowMsg;
 
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.LoadImageFromWebOperations;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.codec;
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getLocalIpAddress;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.iconCarrito;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.imagelogoprint;
 
@@ -146,7 +142,9 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
     String lintabla;
     boolean fragmentAlreadyLoaded = false;
     public static RecyclerView recViewlineadocumentofactura;
-    public static AdaptadorLineaDocumentoFacturaHeader adaptadorlineadocumentofactura;
+//    public static AdaptadorLineaDocumentoFacturaHeader adaptadorlineadocumentofactura;
+    public static AdaptadorLineaDocumentoFacturaHeaderAsus adaptadorlineadocumentofacturaasus;
+    public static AdaptadorLineaDocumentoFacturaHeaderSony adaptadorlineadocumentofacturasony;
     View rootViewlineadocumentofactura;
     FloatingActionButton btnPrint,btnCobro;
 
@@ -213,12 +211,39 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
 
             // 2. set layoutManger
             recViewlineadocumentofactura.setLayoutManager(new WrapContentLinearLayoutManager(getActivity()));
+/*
             // 3. create an adapter
             ///           adaptadorlineadocumentofactura = new AdaptadorLineaDocumentoFactura(getActivity(),llineadocumentofactura);
             adaptadorlineadocumentofactura = new AdaptadorLineaDocumentoFacturaHeader(getActivity(),llineadocumentofactura,cEstado);
 
             // 4. set adapter
             recViewlineadocumentofactura.setAdapter(adaptadorlineadocumentofactura);
+            */
+            
+            // 3. create an adapter
+            switch (Filtro.getOptipotablet()) {
+                case 0:
+                    adaptadorlineadocumentofacturaasus = new AdaptadorLineaDocumentoFacturaHeaderAsus(getActivity(),llineadocumentofactura,cEstado);
+                    break;
+                case 1:
+                    adaptadorlineadocumentofacturasony = new AdaptadorLineaDocumentoFacturaHeaderSony(getActivity(),llineadocumentofactura,cEstado);
+                    break;
+                case 2:
+                    adaptadorlineadocumentofacturasony = new AdaptadorLineaDocumentoFacturaHeaderSony(getActivity(),llineadocumentofactura,cEstado);
+                    break;
+            }
+            // 4. set adapter
+            switch (Filtro.getOptipotablet()) {
+                case 0:
+                    recViewlineadocumentofactura.setAdapter(adaptadorlineadocumentofacturaasus);
+                    break;
+                case 1:
+                    recViewlineadocumentofactura.setAdapter(adaptadorlineadocumentofacturasony);
+                    break;
+                case 2:
+                    recViewlineadocumentofactura.setAdapter(adaptadorlineadocumentofacturasony);
+                    break;
+            }
 
             // 5. set item animator to DefaultAnimator
             recViewlineadocumentofactura.setItemAnimator(new DefaultItemAnimator());
@@ -488,8 +513,24 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
 
             /* Download complete. Lets update UI */
             if (result == 1) {
-                Log.i("ADAPTADOR LFT", Integer.toString(adaptadorlineadocumentofactura.getItemCount()));
+/*                Log.i("ADAPTADOR LFT", Integer.toString(adaptadorlineadocumentofactura.getItemCount()));
                 adaptadorlineadocumentofactura.notifyDataSetChanged();
+*/
+                switch (Filtro.getOptipotablet()) {
+                    case 0:
+                        Log.i("ADAPTADOR LFT", Integer.toString(adaptadorlineadocumentofacturaasus.getItemCount()));
+                        adaptadorlineadocumentofacturaasus.notifyDataSetChanged();
+                        break;
+                    case 1:
+                        Log.i("ADAPTADOR LFT", Integer.toString(adaptadorlineadocumentofacturasony.getItemCount()));
+                        adaptadorlineadocumentofacturasony.notifyDataSetChanged();
+                        break;
+                    case 2:
+                        Log.i("ADAPTADOR LFT", Integer.toString(adaptadorlineadocumentofacturasony.getItemCount()));
+                        adaptadorlineadocumentofacturasony.notifyDataSetChanged();
+                        break;
+                }
+                
                 if (!Filtro.getCabecera()) {
                     TaskHelper.execute(new CalculaCabecera(), "ftp", "lft", "0");
                     Filtro.setCabecera(true);
@@ -1193,6 +1234,7 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
         printer = new Print(getActivity());
         try {
             printer.openPrinter(Filtro.getPrintdeviceType(), Filtro.getPrintIp(), 1, Filtro.getPrintInterval());
+            printer.beginTransaction();
             Log.e("PRINTER", "PRINT OPEN!");
         } catch (Exception e) {
             printer = null;
@@ -1424,6 +1466,7 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
 
     public static void closePrinter(){
         try{
+            printer.endTransaction();
             printer.closePrinter();
             printer = null;
         }catch(Exception e){
@@ -2204,24 +2247,6 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
         }
     }
 
-    public String getLocalIpAddress() {
-        try {
-            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
-                NetworkInterface intf = en.nextElement();
-                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
-                    InetAddress inetAddress = enumIpAddr.nextElement();
-                    if (!inetAddress.isLoopbackAddress()) {
-                        String ip = Formatter.formatIpAddress(inetAddress.hashCode());
-                        Log.i(TAG, "***** IP="+ ip);
-                        return ip;
-                    }
-                }
-            }
-        } catch (SocketException ex) {
-            Log.e(TAG, ex.toString());
-        }
-        return null;
-    }
 
 
 }

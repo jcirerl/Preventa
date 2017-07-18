@@ -27,6 +27,14 @@
         android:key="categoria_viaual_tablet"
         android:title="Visual">
         <ListPreference
+            android:defaultValue="0"
+            android:key="optipotablet"
+            android:title="Tipo Tablet"
+            android:summary="Asignacion Tipo Tablet"
+            android:dialogTitle="Control Tipo Tablet"
+            android:entries="@array/tipotablet"
+            android:entryValues="@array/ctrltipotablet" />
+        <ListPreference
             android:defaultValue="02"
             android:key="opgrid"
             android:title="Grid Articulos"

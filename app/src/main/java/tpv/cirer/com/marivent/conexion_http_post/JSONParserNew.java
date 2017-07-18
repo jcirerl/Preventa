@@ -102,6 +102,8 @@ public class JSONParserNew {
 
         for (Map.Entry<String, Object> entry : values.valueSet()) {
             String key = entry.getKey();
+     //       Log.i("Result QUERY KEY", entry.getKey());
+     //       Log.i("Result QUERY VALUE", entry.getValue().toString());
             String value = entry.getValue().toString();
             if (first)
                 first = false;

@@ -38,7 +38,7 @@ public class BadgeDrawable extends Drawable {
         mBadgePaint.setStyle(Paint.Style.FILL);
 
         mTextPaint = new Paint();
-        mTextPaint.setColor(Color.WHITE);
+        mTextPaint.setColor( Color.GREEN);
         mTextPaint.setTypeface(Typeface.DEFAULT_BOLD);
         mTextPaint.setTextSize(mTextSize);
         mTextPaint.setAntiAlias(true);

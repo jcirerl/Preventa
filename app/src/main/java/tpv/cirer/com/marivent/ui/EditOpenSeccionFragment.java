@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
-import android.text.format.Formatter;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -27,6 +26,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
 import tpv.cirer.com.marivent.BuildConfig;
 import tpv.cirer.com.marivent.R;
 import tpv.cirer.com.marivent.conexion_http_post.JSONParser;
@@ -35,22 +47,7 @@ import tpv.cirer.com.marivent.herramientas.DatePickerFragment;
 import tpv.cirer.com.marivent.herramientas.Filtro;
 import tpv.cirer.com.marivent.modelo.Seccion;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Locale;
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getLocalIpAddress;
 
 //import static com.google.android.gms.internal.zzir.runOnUiThread;
 
@@ -698,24 +695,6 @@ public class EditOpenSeccionFragment extends Fragment implements View.OnKeyListe
         // display Seccion data in EditText
         textFecha.setText(xfecha);getActivity().onBackPressed();}
  
-    public String getLocalIpAddress() {
-        try {
-            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
-                NetworkInterface intf = en.nextElement();
-                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
-                    InetAddress inetAddress = enumIpAddr.nextElement();
-                    if (!inetAddress.isLoopbackAddress()) {
-                        String ip = Formatter.formatIpAddress(inetAddress.hashCode());
-                        Log.i(TAG, "***** IP="+ ip);
-                        return ip;
-                    }
-                }
-            }
-        } catch (SocketException ex) {
-            Log.e(TAG, ex.toString());
-        }
-        return null;
-    }
 
     @Override
     public boolean onKey(View view, int keyCode, KeyEvent event) {

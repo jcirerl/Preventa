@@ -11,7 +11,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.Formatter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,15 +29,11 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +46,7 @@ import tpv.cirer.com.marivent.herramientas.WrapContentLinearLayoutManager;
 import tpv.cirer.com.marivent.modelo.DocumentoFactura;
 
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.CountTable;
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getLocalIpAddress;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.mSerialExecutorActivity;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.url_count;
 
@@ -70,7 +66,9 @@ public class FragmentoOpenDocumentoFactura extends Fragment {
     //public FragmentManager fragment;
 
     public static RecyclerView recViewopendocumentofactura;
-    public static AdaptadorDocumentoFacturaHeader adaptadordocumentofactura;
+
+    public static AdaptadorDocumentoFacturaHeaderAsus adaptadordocumentofacturaasus;
+    public static AdaptadorDocumentoFacturaHeaderSony adaptadordocumentofacturasony;
     View rootViewopendocumentofactura;
     FloatingActionButton btnFab;
     Context cont;
@@ -130,11 +128,36 @@ public class FragmentoOpenDocumentoFactura extends Fragment {
 
             // 2. set layoutManger
             recViewopendocumentofactura.setLayoutManager(new WrapContentLinearLayoutManager(getActivity()));
-
+/*
             // 3. create an adapter
             adaptadordocumentofactura = new AdaptadorDocumentoFacturaHeader(getActivity(),ldocumentofactura);
             // 4. set adapter
             recViewopendocumentofactura.setAdapter(adaptadordocumentofactura);
+*/  
+            // 3. create an adapter
+            switch (Filtro.getOptipotablet()) {
+                case 0:
+                    adaptadordocumentofacturaasus = new AdaptadorDocumentoFacturaHeaderAsus(getActivity(),ldocumentofactura);
+                    break;
+                case 1:
+                    adaptadordocumentofacturasony = new AdaptadorDocumentoFacturaHeaderSony(getActivity(),ldocumentofactura);
+                    break;
+                case 2:
+                    adaptadordocumentofacturasony = new AdaptadorDocumentoFacturaHeaderSony(getActivity(),ldocumentofactura);
+                    break;
+            }
+            // 4. set adapter
+            switch (Filtro.getOptipotablet()) {
+                case 0:
+                    recViewopendocumentofactura.setAdapter(adaptadordocumentofacturaasus);
+                    break;
+                case 1:
+                    recViewopendocumentofactura.setAdapter(adaptadordocumentofacturasony);
+                    break;
+                case 2:
+                    recViewopendocumentofactura.setAdapter(adaptadordocumentofacturasony);
+                    break;
+            }
 
             // 5. set item animator to DefaultAnimator
             recViewopendocumentofactura.setItemAnimator(new DefaultItemAnimator());
@@ -388,8 +411,23 @@ public class FragmentoOpenDocumentoFactura extends Fragment {
                 pDialog.dismiss();
             }
             if (result == 1) {
-                Log.i("ADAPTADOR FTP", Integer.toString(adaptadordocumentofactura.getItemCount()));
+/*                Log.i("ADAPTADOR FTP", Integer.toString(adaptadordocumentofactura.getItemCount()));
                 adaptadordocumentofactura.notifyDataSetChanged();
+*/
+                switch (Filtro.getOptipotablet()) {
+                    case 0:
+                        Log.i("ADAPTADOR FTP", Integer.toString(adaptadordocumentofacturaasus.getItemCount()));
+                        adaptadordocumentofacturaasus.notifyDataSetChanged();
+                        break;
+                    case 1:
+                        Log.i("ADAPTADOR FTP", Integer.toString(adaptadordocumentofacturasony.getItemCount()));
+                        adaptadordocumentofacturasony.notifyDataSetChanged();
+                        break;
+                    case 2:
+                        Log.i("ADAPTADOR FTP", Integer.toString(adaptadordocumentofacturasony.getItemCount()));
+                        adaptadordocumentofacturasony.notifyDataSetChanged();
+                        break;
+                }
                 if (mContext!=null) {
                     //Calcular Items
                     mSerialExecutorActivity = new ActividadPrincipal.MySerialExecutor(getActivity());
@@ -552,24 +590,6 @@ public class FragmentoOpenDocumentoFactura extends Fragment {
             }
         }
 
-    }
-    public String getLocalIpAddress() {
-        try {
-            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
-                NetworkInterface intf = en.nextElement();
-                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
-                    InetAddress inetAddress = enumIpAddr.nextElement();
-                    if (!inetAddress.isLoopbackAddress()) {
-                        String ip = Formatter.formatIpAddress(inetAddress.hashCode());
-                        Log.i(TAG, "***** IP="+ ip);
-                        return ip;
-                    }
-                }
-            }
-        } catch (SocketException ex) {
-            Log.e(TAG, ex.toString());
-        }
-        return null;
     }
 
 }

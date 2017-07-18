@@ -19,7 +19,6 @@ import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.text.format.Formatter;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -49,22 +48,20 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
 import java.net.MalformedURLException;
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Enumeration;
 import java.util.List;
 
 import tpv.cirer.com.marivent.R;
 import tpv.cirer.com.marivent.conexion_http_post.JSONParser;
 import tpv.cirer.com.marivent.conexion_http_post.JSONParserNew;
 import tpv.cirer.com.marivent.herramientas.Filtro;
+
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getLocalIpAddress;
 
 //import static com.google.android.gms.internal.zzir.runOnUiThread;
 
@@ -607,25 +604,7 @@ public class FirmaFragment extends Fragment {
             //          pDialogftp.dismiss();
         }
     }
-    public String getLocalIpAddress() {
-        try {
-            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
-                NetworkInterface intf = en.nextElement();
-                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
-                    InetAddress inetAddress = enumIpAddr.nextElement();
-                    if (!inetAddress.isLoopbackAddress()) {
-                        String ip = Formatter.formatIpAddress(inetAddress.hashCode());
-                        Log.i(TAG, "***** IP="+ ip);
-                        return ip;
-                    }
-                }
-            }
-        } catch (SocketException ex) {
-            Log.e(TAG, ex.toString());
-        }
-        return null;
-    }
-    /**
+     /**
      * Background Async Task to Create new product
      * */
 

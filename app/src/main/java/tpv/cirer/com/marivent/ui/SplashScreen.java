@@ -19,6 +19,7 @@ import android.os.MessageQueue;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -107,7 +108,8 @@ public class SplashScreen extends AppCompatActivity {
                     Filtro.setOppedidomesa(Boolean.parseBoolean(pref.getString("oppedidomesa","false")));
                     Filtro.setOpintervalo(Integer.parseInt(pref.getString("opintervalo", "10000")));
                     Filtro.setOplog(Boolean.parseBoolean(pref.getString("oplog","true")));
-                    Filtro.setOptabtodos(Boolean.parseBoolean(pref.getString("optabtodos","false")));
+                    Filtro.setOptab(Integer.parseInt(pref.getString("optab", "0")));
+                    Filtro.setOptipotablet(Integer.parseInt(pref.getString("optipotablet","0")));
                     Filtro.setFilelog("");
                     Log.i("oplog",Boolean.toString((Filtro.getOplog())));
                     if(Filtro.getOptoolbar()==0){
@@ -117,6 +119,7 @@ public class SplashScreen extends AppCompatActivity {
                         Filtro.setHide_toolbar1(true);
                         Filtro.setHide_toolbar2(true);
                     }
+////                    Log.i("pixels",Double.toString(checkDimension(getApplicationContext())));
                     if (Filtro.getOplog()) {
                         Log.i("oplog",Boolean.toString((Filtro.getOplog())));
                         /// REGISTRAR LOG APLICACION
@@ -214,6 +217,19 @@ public class SplashScreen extends AppCompatActivity {
             }
         };
         timerThread.start();
+    }
+    private double checkDimension(Context context) {
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int width=dm.widthPixels;
+        int height=dm.heightPixels;
+        int dens=dm.densityDpi;
+        double wi=(double)width/(double)dens;
+        double hi=(double)height/(double)dens;
+        double x = Math.pow(wi,2);
+        double y = Math.pow(hi,2);
+        double screenInches = Math.sqrt(x+y);
+        return screenInches;
     }
     @Override
     protected void onPause() {

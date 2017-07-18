@@ -58,7 +58,7 @@ public class AdaptadorDocumentoPedidoHeader extends RecyclerView.Adapter<Recycle
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_ITEM) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_row_documentopedido_sony, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_row_documentopedido_asus, parent, false);
             return new VHItem(v, new IMyDocumentoPedidoViewHolderClicks() {
                 //    public void onPotato(View caller) { Log.d("VEGETABLES", "Poh-tah-tos"); };
                 public void onPotato(View caller,
@@ -315,7 +315,7 @@ public class AdaptadorDocumentoPedidoHeader extends RecyclerView.Adapter<Recycle
             }
 
         } else if (holder instanceof VHHeader) {
-
+/*
             /// SONY
             myText = " "+
                     ActividadPrincipal.getPalabras("Pedido")+StringUtils.repeat(space01, 5)+
@@ -328,7 +328,7 @@ public class AdaptadorDocumentoPedidoHeader extends RecyclerView.Adapter<Recycle
                     ActividadPrincipal.getPalabras("Turno")+StringUtils.repeat(space01, 10)+
                     ActividadPrincipal.getPalabras("Lineas")+StringUtils.repeat(space01, 2)+
                     ActividadPrincipal.getPalabras("Observacion");
- /*
+ */
              // MARIVENT
             myText = StringUtils.repeat(space01, 6)+
                     ActividadPrincipal.getPalabras("Pedido")+ StringUtils.repeat(space01, 6)+
@@ -341,7 +341,7 @@ public class AdaptadorDocumentoPedidoHeader extends RecyclerView.Adapter<Recycle
                     ActividadPrincipal.getPalabras("Turno")+StringUtils.repeat(space01, 9)+
                     ActividadPrincipal.getPalabras("Lineas")+StringUtils.repeat(space01, 3)+
                     ActividadPrincipal.getPalabras("Observacion");
-*/
+
             //cast holder to VHHeader and set data for header.
             //    Html.fromHtml(myText.replace(" ", "&nbsp;")).toString()
             //cast holder to VHHeader and set data for header_pedidos.
@@ -388,7 +388,7 @@ public class AdaptadorDocumentoPedidoHeader extends RecyclerView.Adapter<Recycle
         public Button DeleteDocumentoPedido;
         public Button SendDocumentoPedido;
         public Button InvoiceDocumentoPedido;
-/*
+
 //      MARIVENT
         public AutoResizeTextView PedidoDocumentoPedido;
         public AutoResizeTextView FechaDocumentoPedido;
@@ -402,7 +402,7 @@ public class AdaptadorDocumentoPedidoHeader extends RecyclerView.Adapter<Recycle
         public AutoResizeTextView ObsDocumentoPedido;
         public TextView IdDocumentoPedido;
         public AutoResizeTextView LineasDocumentoPedido;
-*/
+/*
 //      sony
         public TextView PedidoDocumentoPedido;
         public TextView FechaDocumentoPedido;
@@ -416,7 +416,7 @@ public class AdaptadorDocumentoPedidoHeader extends RecyclerView.Adapter<Recycle
         public TextView ObsDocumentoPedido;
         public TextView IdDocumentoPedido;
         public TextView LineasDocumentoPedido;
-
+*/
         public IMyDocumentoPedidoViewHolderClicks mListenerDocumentoPedido;
 
         public VHItem(View itemView,IMyDocumentoPedidoViewHolderClicks listener) {
@@ -425,7 +425,7 @@ public class AdaptadorDocumentoPedidoHeader extends RecyclerView.Adapter<Recycle
             mListenerDocumentoPedido = listener;
 
             //       this.MinCant.setOnClickListener(this);
-/*
+
 //          MARIVENT
             this.IdDocumentoPedido = (TextView) itemView.findViewById(R.id.pid);
             this.iconDocumentoPedido = (ImageView) itemView.findViewById(R.id.icon);
@@ -440,7 +440,7 @@ public class AdaptadorDocumentoPedidoHeader extends RecyclerView.Adapter<Recycle
             this.TurnoDocumentoPedido = (AutoResizeTextView) itemView.findViewById(R.id.turno);
             this.ObsDocumentoPedido = (AutoResizeTextView) itemView.findViewById(R.id.obs);
             this.LineasDocumentoPedido = (AutoResizeTextView) itemView.findViewById(R.id.lineas);
-*/
+/*
 //          SONY
             this.IdDocumentoPedido = (TextView) itemView.findViewById(R.id.pid);
             this.iconDocumentoPedido = (ImageView) itemView.findViewById(R.id.icon);
@@ -455,7 +455,7 @@ public class AdaptadorDocumentoPedidoHeader extends RecyclerView.Adapter<Recycle
             this.TurnoDocumentoPedido = (AutoResizeTextView) itemView.findViewById(R.id.turno);
             this.ObsDocumentoPedido = (TextView) itemView.findViewById(R.id.obs);
             this.LineasDocumentoPedido = (TextView) itemView.findViewById(R.id.lineas);
-
+*/
             this.UpdateDocumentoPedido = (Button) itemView.findViewById(R.id.btnUpdate);
             this.DeleteDocumentoPedido = (Button) itemView.findViewById(R.id.btnDelete);
             this.SendDocumentoPedido = (Button) itemView.findViewById(R.id.btnSend);

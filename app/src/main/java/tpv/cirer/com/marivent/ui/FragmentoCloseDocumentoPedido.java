@@ -56,7 +56,9 @@ public class FragmentoCloseDocumentoPedido extends Fragment {
     private String url = Filtro.getUrl()+"/RellenaListaPDD.php";
 
     public static RecyclerView recViewopendocumentopedido;
-    public static AdaptadorDocumentoPedidoHeader adaptadordocumentopedido;
+    public static AdaptadorDocumentoPedidoHeaderAsus adaptadordocumentopedidoasus;
+    public static AdaptadorDocumentoPedidoHeaderSony adaptadordocumentopedidosony;
+
     View rootViewopendocumentopedido;
     FloatingActionButton btnFab;
     Context cont;
@@ -119,9 +121,29 @@ public class FragmentoCloseDocumentoPedido extends Fragment {
             recViewopendocumentopedido.setLayoutManager(new WrapContentLinearLayoutManager(getActivity()));
 
             // 3. create an adapter
-            adaptadordocumentopedido = new AdaptadorDocumentoPedidoHeader(getActivity(),ldocumentopedido);
+            switch (Filtro.getOptipotablet()) {
+                case 0:
+                    adaptadordocumentopedidoasus = new AdaptadorDocumentoPedidoHeaderAsus(getActivity(),ldocumentopedido);
+                    break;
+                case 1:
+                    adaptadordocumentopedidosony = new AdaptadorDocumentoPedidoHeaderSony(getActivity(),ldocumentopedido);
+                    break;
+                case 2:
+                    adaptadordocumentopedidosony = new AdaptadorDocumentoPedidoHeaderSony(getActivity(),ldocumentopedido);
+                    break;
+            }
             // 4. set adapter
-            recViewopendocumentopedido.setAdapter(adaptadordocumentopedido);
+            switch (Filtro.getOptipotablet()) {
+                case 0:
+                    recViewopendocumentopedido.setAdapter(adaptadordocumentopedidoasus);
+                    break;
+                case 1:
+                    recViewopendocumentopedido.setAdapter(adaptadordocumentopedidosony);
+                    break;
+                case 2:
+                    recViewopendocumentopedido.setAdapter(adaptadordocumentopedidosony);
+                    break;
+            }
 
             // 5. set item animator to DefaultAnimator
             recViewopendocumentopedido.setItemAnimator(new DefaultItemAnimator());
@@ -383,8 +405,20 @@ public class FragmentoCloseDocumentoPedido extends Fragment {
 
             /* Download complete. Lets update UI */
             if (result == 1) {
-                Log.i("ADAPTADOR PDD", Integer.toString(adaptadordocumentopedido.getItemCount()));
-                adaptadordocumentopedido.notifyDataSetChanged();
+                switch (Filtro.getOptipotablet()) {
+                    case 0:
+                        Log.i("ADAPTADOR PDD", Integer.toString(adaptadordocumentopedidoasus.getItemCount()));
+                        adaptadordocumentopedidoasus.notifyDataSetChanged();
+                        break;
+                    case 1:
+                        Log.i("ADAPTADOR PDD", Integer.toString(adaptadordocumentopedidosony.getItemCount()));
+                        adaptadordocumentopedidosony.notifyDataSetChanged();
+                        break;
+                    case 2:
+                        Log.i("ADAPTADOR PDD", Integer.toString(adaptadordocumentopedidosony.getItemCount()));
+                        adaptadordocumentopedidosony.notifyDataSetChanged();
+                        break;
+                }
             } else {
                 Log.e(TAG, "Failed to fetch data!");
             }

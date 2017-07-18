@@ -153,11 +153,15 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
                                                                      AdaptadorCajaHeader.OnHeadlineSelectedListenerCajaHeader,
                                                                      AdaptadorTurnoHeader.OnHeadlineSelectedListenerTurnoHeader,
                                                                      AdaptadorDcjHeader.OnHeadlineSelectedListenerDcjHeader,
-                                                                     AdaptadorDocumentoPedidoHeader.OnHeadlineSelectedListenerDocumentoPedidoHeader,
-                                                                     AdaptadorDocumentoFacturaHeader.OnHeadlineSelectedListenerDocumentoFacturaHeader,
+                                                                     AdaptadorDocumentoPedidoHeaderAsus.OnHeadlineSelectedListenerDocumentoPedidoHeader,
+                                                                     AdaptadorDocumentoPedidoHeaderSony.OnHeadlineSelectedListenerDocumentoPedidoHeader,
+                                                                     AdaptadorDocumentoFacturaHeaderAsus.OnHeadlineSelectedListenerDocumentoFacturaHeader,
+                                                                     AdaptadorDocumentoFacturaHeaderSony.OnHeadlineSelectedListenerDocumentoFacturaHeader,
                                                                      AdaptadorMessageHeader.OnHeadlineSelectedListenerMessageHeader,
-                                                                     AdaptadorLineaDocumentoFacturaHeader.OnHeadlineSelectedListenerLineaDocumentoFacturaHeader,
-                                                                     AdaptadorLineaDocumentoPedidoHeader.OnHeadlineSelectedListenerLineaDocumentoPedidoHeader {
+                                                                     AdaptadorLineaDocumentoFacturaHeaderAsus.OnHeadlineSelectedListenerLineaDocumentoFacturaHeader,
+                                                                     AdaptadorLineaDocumentoFacturaHeaderSony.OnHeadlineSelectedListenerLineaDocumentoFacturaHeader,
+                                                                     AdaptadorLineaDocumentoPedidoHeaderAsus.OnHeadlineSelectedListenerLineaDocumentoPedidoHeader,
+                                                                     AdaptadorLineaDocumentoPedidoHeaderSony.OnHeadlineSelectedListenerLineaDocumentoPedidoHeader {
     Intent intent;
     TextView txtMesaOpen;
     ImageView imagemesa;
@@ -6904,13 +6908,14 @@ ge     * */
     }
 
     public static String getLocalIpAddress() {
+        String ip ="127.0.0.1";
         try {
             for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
                 NetworkInterface intf = en.nextElement();
                 for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
                     InetAddress inetAddress = enumIpAddr.nextElement();
                     if (!inetAddress.isLoopbackAddress()) {
-                        String ip = Formatter.formatIpAddress(inetAddress.hashCode());
+                        ip = Formatter.formatIpAddress(inetAddress.hashCode());
                         Log.i(TAG_IP, "***** IP="+ ip);
                         return ip;
                     }
@@ -6919,7 +6924,7 @@ ge     * */
         } catch (SocketException ex) {
             Log.e(TAG_IP, ex.toString());
         }
-        return null;
+        return ip;
     }
     /**
      * Async task to get all food categories
@@ -10092,19 +10097,59 @@ ge     * */
     public boolean onQueryTextChange(String newText) {
         if (Filtro.getTag_fragment().equals("FragmentoOpenDocumentoPedido")){
             final List<DocumentoPedido> filteredModelListDocumentoPedido = filterdocumentopedido(FragmentoOpenDocumentoPedido.getInstance().ldocumentopedido, newText);
-            FragmentoOpenDocumentoPedido.getInstance().adaptadordocumentopedido.setFilter(filteredModelListDocumentoPedido);
+            switch (Filtro.getOptipotablet()) {
+                case 0:
+                    FragmentoOpenDocumentoPedido.getInstance().adaptadordocumentopedidoasus.setFilter(filteredModelListDocumentoPedido);
+                    break;
+                case 1:
+                    FragmentoOpenDocumentoPedido.getInstance().adaptadordocumentopedidosony.setFilter(filteredModelListDocumentoPedido);
+                    break;
+                case 2:
+                    FragmentoOpenDocumentoPedido.getInstance().adaptadordocumentopedidosony.setFilter(filteredModelListDocumentoPedido);
+                    break;
+            }
         }
         if (Filtro.getTag_fragment().equals("FragmentoCloseDocumentoPedido")){
             final List<DocumentoPedido> filteredModelListDocumentoPedido = filterdocumentopedido(FragmentoCloseDocumentoPedido.getInstance().ldocumentopedido, newText);
-            FragmentoCloseDocumentoPedido.getInstance().adaptadordocumentopedido.setFilter(filteredModelListDocumentoPedido);
+            switch (Filtro.getOptipotablet()) {
+                case 0:
+                    FragmentoCloseDocumentoPedido.getInstance().adaptadordocumentopedidoasus.setFilter(filteredModelListDocumentoPedido);
+                    break;
+                case 1:
+                    FragmentoCloseDocumentoPedido.getInstance().adaptadordocumentopedidosony.setFilter(filteredModelListDocumentoPedido);
+                    break;
+                case 2:
+                    FragmentoCloseDocumentoPedido.getInstance().adaptadordocumentopedidosony.setFilter(filteredModelListDocumentoPedido);
+                    break;
+            }
         }
         if (Filtro.getTag_fragment().equals("FragmentoLineaDocumentoPedido")){
             final List<LineaDocumentoPedido> filteredModelListLineaDocumentoPedido = filterlineadocumentopedido(FragmentoLineaDocumentoPedido.getInstance().llineadocumentopedido, newText);
-            FragmentoLineaDocumentoPedido.getInstance().adaptadorlineadocumentopedido.setFilter(filteredModelListLineaDocumentoPedido);
+            switch (Filtro.getOptipotablet()) {
+                case 0:
+                    FragmentoLineaDocumentoPedido.getInstance().adaptadorlineadocumentopedidoasus.setFilter(filteredModelListLineaDocumentoPedido);
+                    break;
+                case 1:
+                    FragmentoLineaDocumentoPedido.getInstance().adaptadorlineadocumentopedidosony.setFilter(filteredModelListLineaDocumentoPedido);
+                    break;
+                case 2:
+                    FragmentoLineaDocumentoPedido.getInstance().adaptadorlineadocumentopedidosony.setFilter(filteredModelListLineaDocumentoPedido);
+                    break;
+            }
         }
         if (Filtro.getTag_fragment().equals("FragmentoLineaDocumentoFactura")){
             final List<LineaDocumentoFactura> filteredModelListLineaDocumentoFactura = filterlineadocumentofactura(FragmentoLineaDocumentoFactura.getInstance().llineadocumentofactura, newText);
-            FragmentoLineaDocumentoFactura.getInstance().adaptadorlineadocumentofactura.setFilter(filteredModelListLineaDocumentoFactura);
+            switch (Filtro.getOptipotablet()) {
+                case 0:
+                    FragmentoLineaDocumentoFactura.getInstance().adaptadorlineadocumentofacturaasus.setFilter(filteredModelListLineaDocumentoFactura);
+                    break;
+                case 1:
+                    FragmentoLineaDocumentoFactura.getInstance().adaptadorlineadocumentofacturasony.setFilter(filteredModelListLineaDocumentoFactura);
+                    break;
+                case 2:
+                    FragmentoLineaDocumentoFactura.getInstance().adaptadorlineadocumentofacturasony.setFilter(filteredModelListLineaDocumentoFactura);
+                    break;
+            }
         }
         if (Filtro.getTag_fragment().equals("FragmentoOpenSeccion")){
             final List<Seccion> filteredModelListSeccion = filterseccion(FragmentoOpenSeccion.getInstance().lseccion, newText);
@@ -10140,11 +10185,31 @@ ge     * */
         }
         if (Filtro.getTag_fragment().equals("FragmentoOpenDocumentoFactura")){
             final List<DocumentoFactura> filteredModelListDocumentoFactura = filterdocumentofactura(FragmentoOpenDocumentoFactura.getInstance().ldocumentofactura, newText);
-            FragmentoOpenDocumentoFactura.getInstance().adaptadordocumentofactura.setFilter(filteredModelListDocumentoFactura);
+            switch (Filtro.getOptipotablet()) {
+                case 0:
+                    FragmentoOpenDocumentoFactura.getInstance().adaptadordocumentofacturaasus.setFilter(filteredModelListDocumentoFactura);
+                    break;
+                case 1:
+                    FragmentoOpenDocumentoFactura.getInstance().adaptadordocumentofacturasony.setFilter(filteredModelListDocumentoFactura);
+                    break;
+                case 2:
+                    FragmentoOpenDocumentoFactura.getInstance().adaptadordocumentofacturasony.setFilter(filteredModelListDocumentoFactura);
+                    break;
+            }
         }
         if (Filtro.getTag_fragment().equals("FragmentoCloseDocumentoFactura")){
             final List<DocumentoFactura> filteredModelListDocumentoFactura = filterdocumentofactura(FragmentoCloseDocumentoFactura.getInstance().ldocumentofactura, newText);
-            FragmentoCloseDocumentoFactura.getInstance().adaptadordocumentofactura.setFilter(filteredModelListDocumentoFactura);
+            switch (Filtro.getOptipotablet()) {
+                case 0:
+                    FragmentoCloseDocumentoFactura.getInstance().adaptadordocumentofacturaasus.setFilter(filteredModelListDocumentoFactura);
+                    break;
+                case 1:
+                    FragmentoCloseDocumentoFactura.getInstance().adaptadordocumentofacturasony.setFilter(filteredModelListDocumentoFactura);
+                    break;
+                case 2:
+                    FragmentoCloseDocumentoFactura.getInstance().adaptadordocumentofacturasony.setFilter(filteredModelListDocumentoFactura);
+                    break;
+            }
         }
         if (Filtro.getTag_fragment().equals("FragmentoInicio")){
             final List<Popular> filteredModelListPopular = filterpopular(lpopular, newText);

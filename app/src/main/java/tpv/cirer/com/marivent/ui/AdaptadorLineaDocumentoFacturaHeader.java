@@ -252,11 +252,11 @@ public class AdaptadorLineaDocumentoFacturaHeader extends RecyclerView.Adapter<R
                 ((VHItem) holder).PreuLineaDocumentoFactura.setTextColor(Color.MAGENTA);
 
                 /// TAMANYO LETRA PARA MARIVENT
- /*               ((VHItem) holder).CantLineaDocumentoFactura.setTextSize(20);
+                ((VHItem) holder).CantLineaDocumentoFactura.setTextSize(20);
                 ((VHItem) holder).PreuLineaDocumentoFactura.setTextSize(20);;
                 ((VHItem) holder).ImporteLineaDocumentoFactura.setTextSize(20);
                 ((VHItem) holder).NombreLineaDocumentoFactura.setTextSize(20);;
-*/
+
                  //       LineaDocumentoFacturaRowHolder.NombreLineaDocumentoFactura.setTextSize(16);
                 //        LineaDocumentoFacturaRowHolder.ArticuloLineaDocumentoFactura.setTextSize(16);
 
@@ -278,7 +278,7 @@ public class AdaptadorLineaDocumentoFacturaHeader extends RecyclerView.Adapter<R
             ((VHHeader) holder).headerLineaDocumentoFactura.setTextColor(Color.WHITE);
 
             // MARIVENT
-///            ((VHHeader) holder).headerLineaDocumentoFactura.setTextSize(18);
+            ((VHHeader) holder).headerLineaDocumentoFactura.setTextSize(18);
 
         }
     }

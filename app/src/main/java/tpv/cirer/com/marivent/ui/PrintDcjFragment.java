@@ -950,6 +950,7 @@ public class PrintDcjFragment extends Fragment {
         printer = new Print(getActivity());
         try{
             printer.openPrinter(Filtro.getPrintdeviceType(), Filtro.getPrintIp(), 1, Filtro.getPrintInterval());
+            printer.beginTransaction();
             Log.e("PRINTER", "PRINT OPEN!");
         }catch(Exception e){
             printer = null;
@@ -1027,6 +1028,7 @@ public class PrintDcjFragment extends Fragment {
 
     public static void closePrinter(){
         try{
+            printer.endTransaction();
             printer.closePrinter();
             printer = null;
         }catch(Exception e){
