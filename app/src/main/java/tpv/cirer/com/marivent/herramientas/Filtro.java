@@ -1,6 +1,9 @@
 package tpv.cirer.com.marivent.herramientas;
 
 public class Filtro {
+    private static String seriefac;
+    private static String cod_cliente;
+    private static float optipoarticulo;
     private static int optipotablet;
     private static boolean optabtodos;
     private static int optab;
@@ -90,6 +93,8 @@ public class Filtro {
 
 
   	public Filtro(){
+        seriefac = "";
+        cod_cliente = "";
         optipotablet = 0;
         optabtodos = false;
         optab = 0;
@@ -159,6 +164,7 @@ public class Filtro {
         opidioma = "ESP";
         opgrid = 0;
         opmesas = 0;
+        optipoarticulo=0;
         opurl="";
         iconAPP="";
         nomEmpresa="";
@@ -175,6 +181,12 @@ public class Filtro {
         fechainicio="";
         fechafinal="";
         lineas=false;
+    }
+    public static String getCod_cliente() {
+        return cod_cliente;
+    }
+    public static void setCod_cliente(String idcod_cliente) {
+        cod_cliente = idcod_cliente;
     }
     public static String getTipoPlato() {
         return tipoplato;
@@ -199,6 +211,11 @@ public class Filtro {
         optipotablet = idoptipotablet;
     }
     public static int getOptipotablet() { return optipotablet;
+    }
+    public static void setOptipoarticulo(float idoptipoarticulo) {
+        optipoarticulo = idoptipoarticulo;
+    }
+    public static float getOptipoarticulo() { return optipoarticulo;
     }
 
     public static boolean getOppedidomesa() {
@@ -632,11 +649,17 @@ public class Filtro {
         height_toolbar2 = idheight;
     }
 
-  	public static String getSerie() {
+    public static String getSerie() {
         return serie;
-     }
+    }
     public static void setSerie(String idserie) {
         serie = idserie;
+    }
+    public static String getSerieFac() {
+        return seriefac;
+    }
+    public static void setSerieFac(String idseriefac) {
+        seriefac = idseriefac;
     }
 
     public static int getFactura() {

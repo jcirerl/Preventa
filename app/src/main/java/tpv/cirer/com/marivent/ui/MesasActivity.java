@@ -85,6 +85,11 @@ import static tpv.cirer.com.marivent.ui.ActividadPrincipal.mSerialExecutorActivi
  */
 
 public class MesasActivity extends FragmentActivity {
+    private float mDownX;
+    private float mDownY;
+    private final float SCROLL_THRESHOLD = 10;
+    private boolean isOnClick;
+
     private int mActivePointerId = INVALID_POINTER_ID;
     private float xCoOrdinate, yCoOrdinate, mLastTouchX,mLastTouchY, mPosX,mPosY;
     // JSON parser class
@@ -129,7 +134,7 @@ public class MesasActivity extends FragmentActivity {
 
     public static List<DocumentoPedido> ldocumentopedido;
     ImageView imageview;
-    Drawable icon1;
+    Drawable dpedidos,dfacturas;
     Bitmap bimage;
     RelativeLayout layout;
     Button image;
@@ -293,16 +298,39 @@ public class MesasActivity extends FragmentActivity {
         return (int) ((nDP * conversionScale) + 0.5f) ;
 
     }
+    private View findViewAtPosition(View parent, int x, int y) {
+        if (parent instanceof ViewGroup) {
+            ViewGroup viewGroup = (ViewGroup)parent;
+            for (int i=0; i<viewGroup.getChildCount(); i++) {
+                View child = viewGroup.getChildAt(i);
+                View viewAtPosition = findViewAtPosition(child, x, y);
+                if (viewAtPosition != null) {
+                    return viewAtPosition;
+                }
+            }
+            return null;
+        } else {
+            Rect rect = new Rect();
+            parent.getGlobalVisibleRect(rect);
+            if (rect.contains(x, y)) {
+                return parent;
+            } else {
+                return null;
+            }
+        }
+    }
     /**
      * Adding spinner data mesas
      */
     private void populatePlanningMesas() {
         layout = (RelativeLayout)findViewById(R.id.topleft);
-
         for (int i = 0; i < mesaplanningList.size(); i++) {
             model = mesaplanningList.get(i);
+
             image = new Button(this);
             image.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+
 ////           image.setLayoutParams(new ViewGroup.LayoutParams(264, 246));
      //            image.setBackgroundResource(R.drawable.house_kitchen_table);
 //            Drawable icon1=this.getResources(). getDrawable( R.drawable.house_kitchen_table);
@@ -330,12 +358,17 @@ public class MesasActivity extends FragmentActivity {
 
             Drawable[] layers2 = {image.getBackground()};
             Drawable[] layers3 = {image.getBackground()};
-            Drawable dpedidos = new DecoratedTextViewDrawable(image, layers2, model.getMesaPedidos(), "PEDIDOS");
-            Drawable dfacturas = new DecoratedTextViewDrawable(image, layers3, model.getMesaFacturas(), "FACTURAS");
+
+            dpedidos = new DecoratedTextViewDrawable(image, layers2, model.getMesaPedidos(), "PEDIDOS");
+            dfacturas = new DecoratedTextViewDrawable(image, layers3, model.getMesaFacturas(), "FACTURAS");
+
 
             image.setCompoundDrawablesWithIntrinsicBounds( (model.getMesaPedidos()>0 ? dpedidos : null), (model.getMesaFacturas()>0 ? dfacturas : null), null, d1 );
+     ///       image.setCompoundDrawablesWithIntrinsicBounds( (model.getMesaApertura()>0 ? dpedidos : null), (model.getMesaApertura()>0 ? dfacturas : null), null, d1 );
+  //          image.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ok, 0, 0, 0);
             image.setBackgroundColor(Color.TRANSPARENT);
             image.setText(model.getMesaMesa());
+
             image.setVisibility(View.VISIBLE);
             image.setTag(model.getMesaMesa());
             image.setX(model.getMesaXCoordenate());
@@ -429,8 +462,7 @@ public class MesasActivity extends FragmentActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-
-    private final class MyTouchListenerImage implements View.OnTouchListener {
+      private final class MyTouchListenerImage implements View.OnTouchListener {
         public boolean onTouch(final View view, MotionEvent motionEvent) {
             int rawX, rawY;
             final int actionIndex = motionEvent.getAction() >> MotionEvent.ACTION_POINTER_ID_SHIFT;
@@ -438,17 +470,42 @@ public class MesasActivity extends FragmentActivity {
             view.getLocationOnScreen(location);
             rawX = (int) motionEvent.getX(actionIndex) + location[0];
             rawY = (int) motionEvent.getY(actionIndex) + location[1];
-
-            Log.i("instance view ",view.getClass().getName().toString()+" - "+view.getTag()+ " - " + Integer.toString(rawX) + " - " + Integer.toString(rawY) );
+ //           Log.i("TOUCH", "View under finger: " + findViewAtPosition(view, (int)motionEvent.getRawX(), (int)motionEvent.getRawY()));
+            Log.i("Location ",view.getClass().getName().toString()+" - "+view.getTag()+ " - " + Integer.toString(rawX) + " - " + Integer.toString(rawY) );
             switch (motionEvent.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
+                    mDownX = motionEvent.getX();
+                    mDownY = motionEvent.getY();
+                    xCoOrdinate = view.getX() - motionEvent.getRawX();
+                    yCoOrdinate = view.getY() - motionEvent.getRawY();
+                    isOnClick = true;
+/****
                     actionMove=false;
                     xCoOrdinate = view.getX() - motionEvent.getRawX();
                     yCoOrdinate = view.getY() - motionEvent.getRawY();
                     Log.i("instance view DOWN",view.getClass().getName().toString()+" - "+view.getTag()+ " y "+Float.toString(yCoOrdinate)+" x "+Float.toString(xCoOrdinate));
-                    break;
+****/                    break;
                 case MotionEvent.ACTION_MOVE:
-                    actionMove=true;
+                    if (isOnClick && (Math.abs(mDownX - motionEvent.getX()) > SCROLL_THRESHOLD || Math.abs(mDownY - motionEvent.getY()) > SCROLL_THRESHOLD)) {
+                        Log.i("TOUCH", "movement detected");
+                        isOnClick = false;
+                        x =  motionEvent.getX();
+                        y =  motionEvent.getY();
+                        dx = motionEvent.getRawX();
+                        dy = motionEvent.getRawY();
+                        Log.d("DEBUG", "getX=" + x + "getY=" + y + "\n" + "getRawX=" + dx
+                                + "getRawY=" + dy + "\n");
+                        view.animate().x(motionEvent.getRawX() + xCoOrdinate).y(motionEvent.getRawY() + yCoOrdinate).setDuration(0).start();
+                        Log.i("instance view MOVE",view.getClass().getName().toString()+" - "+view.getTag()+ " y "+Float.toString(motionEvent.getRawY()+yCoOrdinate)+" x "+Float.toString(motionEvent.getRawX()+xCoOrdinate));
+                        setMesaModificado(view.getTag().toString(),1);
+
+                        xCoordenate = motionEvent.getRawX() + xCoOrdinate;
+                        yCoordenate = motionEvent.getRawY() + yCoOrdinate;
+
+                        setMesaCoordenadas(view.getTag().toString(),xCoordenate,yCoordenate);
+
+                    }
+/****                    actionMove=true;
                     x =  motionEvent.getX();
                     y =  motionEvent.getY();
                     dx = motionEvent.getRawX();
@@ -458,8 +515,279 @@ public class MesasActivity extends FragmentActivity {
                     view.animate().x(motionEvent.getRawX() + xCoOrdinate).y(motionEvent.getRawY() + yCoOrdinate).setDuration(0).start();
                     Log.i("instance view MOVE",view.getClass().getName().toString()+" - "+view.getTag()+ " y "+Float.toString(motionEvent.getRawY()+yCoOrdinate)+" x "+Float.toString(motionEvent.getRawX()+xCoOrdinate));
                     setMesaModificado(view.getTag().toString(),1);
-                    break;
+****/                    break;
                 case MotionEvent.ACTION_UP:
+                    if (isOnClick) {
+
+                        Log.i("TOUCH", "onClick ");
+                        //TODO onClick code
+                        xCoordenate = motionEvent.getRawX() + xCoOrdinate;
+                        yCoordenate = motionEvent.getRawY() + yCoOrdinate;
+
+                        setMesaCoordenadas(view.getTag().toString(),xCoordenate,yCoordenate);
+                        Filtro.setMesa(view.getTag().toString());
+                        Toast.makeText(getApplicationContext(),ActividadPrincipal.getPalabras("Mesa")+": "+Filtro.getMesa(),Toast.LENGTH_LONG).show();
+//                        if (!actionMove) {
+                            String[] test = getResources().getStringArray(R.array.menu_mesas);
+                            String[] opciones;
+                            if (getMesas(Filtro.getMesa(), 0)) {
+                                opciones = new String[1];
+                                for (int i = 0; i < opciones.length; i++) {
+                                    opciones[i] = ActividadPrincipal.getPalabras(test[i]);
+                                }
+                            }else{
+                                opciones = new String[test.length-1];
+                                for (int i = 0; i < opciones.length; i++) {
+                                    opciones[i] = ActividadPrincipal.getPalabras(test[i+1]);
+                                }
+                            }
+
+
+                            //                    new AlertDialog.Builder(MesasActivity.this).setTitle("Operaciones con Mesa").setMessage("Hola").setNeutralButton(getResources().getString(R.string.accept),null).show();
+                            AlertDialog.Builder alert = new AlertDialog.Builder(MesasActivity.this);
+//                        image = (Button)layout.findViewWithTag(Filtro.getMesa());
+                            Drawable d = LoadImageFromWebOperations(getMesaImagen(Filtro.getMesa()));
+                            alert.setIcon(d);
+                            alert.setTitle(ActividadPrincipal.getPalabras("Operaciones")+" "+ActividadPrincipal.getPalabras("Mesa")+" " + Filtro.getMesa() + " " + (getMesas(Filtro.getMesa(), 0) ? ActividadPrincipal.getPalabras("CERRADO") : ActividadPrincipal.getPalabras("ABIERTO")))
+                                    .setItems(opciones, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // The 'which' argument contains the index position
+                                            // of the selected item
+                                            if(!(ActividadPrincipal.itemdcj.getText().equals("0"))) {
+
+                                                if (getMesas(Filtro.getMesa(), 0)) {
+                                                    switch (which) {
+                                                        case 0: //Abrir Mesa
+                                                            if (getMesas(Filtro.getMesa(), 0)) {
+                                                                if (!ActividadPrincipal.getCruge("action_mesas_update")) {
+                                                                    Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
+                                                                } else {
+                                                                    // DIALOGO PEDIR COMENSALES
+                                                                    final AlertDialog.Builder alertcomensales = new AlertDialog.Builder(MesasActivity.this);
+                                                                    final EditText input = new EditText(MesasActivity.this);
+                                                                    input.setText(String.format("%02d", 0));
+
+                                                                    // Ponerse al final del edittext
+                                                                    int pos = input.getText().length();
+                                                                    input.setSelection(pos);
+
+                                                                    input.setTextColor(Color.RED);
+                                                                    input.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+                                                                    KeyListener keyListener = DigitsKeyListener.getInstance("1234567890");
+                                                                    input.setKeyListener(keyListener);
+                                                                    alertcomensales.setTitle(getPalabras("Insertar")+" "+getPalabras("Comensales"));
+                                                                    alertcomensales.setView(input);
+                                                                    alertcomensales.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                                                            String value = input.getText().toString();
+                                                                            if (value.matches("")) {
+                                                                                Toast.makeText(MesasActivity.this, getPalabras("Valor")+" "+getPalabras("Vacio")+" " + getPalabras("Comensales"), Toast.LENGTH_SHORT).show();
+                                                                                //            this.btnGuardar.setEnabled(false);
+                                                                            } else {
+
+                                                                                value = value.replace(".", "");
+                                                                                value = value.replace(",", "");
+
+                                                                                input.setText(String.format("%2d", Integer.valueOf(value)));
+                                                                                setMesaComensales(Filtro.getMesa(),Integer.valueOf(value));
+                                                                                new UpdateMesaApertura().execute("1",value);
+
+                                                                            }
+                                                                        }
+                                                                    });
+
+                                                                    alertcomensales.setNegativeButton(getPalabras("Cancelar"), new DialogInterface.OnClickListener() {
+                                                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                                                            dialog.cancel();
+                                                                        }
+                                                                    });
+                                                                    alertcomensales.show();
+                                                                }
+                                                            } else {
+                                                                Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("Mesa")+" "+ActividadPrincipal.getPalabras("ABIERTA"), Toast.LENGTH_SHORT).show();
+                                                            }
+                                                            break;
+                                                    }
+                                                }else {
+                                                    switch (which) {
+                                                        case 0: //Cerrar Mesa
+                                                            if (getMesas(Filtro.getMesa(), 1)) {
+                                                                if (!ActividadPrincipal.getCruge("action_mesas_update")) {
+                                                                    Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
+                                                                } else {
+
+                                                                    url_count = Filtro.getUrl() + "/CountPddOpen.php";
+                                                                    new CountOpenPdd().execute(url_count, "pdd");
+                                                                }
+                                                            } else {
+                                                                Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("Mesa")+" "+ActividadPrincipal.getPalabras("CERRADA"), Toast.LENGTH_SHORT).show();
+                                                            }
+                                                            break;
+                                                        case 1:
+                                                            if (getMesas(Filtro.getMesa(), 1)) {
+                                                                if (!ActividadPrincipal.getCruge("action_pdd_create")) {
+                                                                    Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
+                                                                } else {
+                                                                    ////                                                             Log.i("CreaPDD","Llama Crear Pedido");                                                                 Log.i("PEDIDO","LLAMA CREADOCUMENTOPEDIOD");
+                                                                    new CreaDocumentoPedido().execute(getMesaComensales(Filtro.getMesa()));
+                                                                }
+                                                            } else {
+                                                                Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("Mesa")+" "+ActividadPrincipal.getPalabras("CERRADA"), Toast.LENGTH_SHORT).show();
+                                                            }
+                                                            break;
+                                                        case 2:
+                                                            if (getMesas(Filtro.getMesa(), 1)) {
+                                                                if (!ActividadPrincipal.getCruge("action_pdd_admin")) {
+                                                                    Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
+                                                                } else {
+                                                                    // SALIR ACTIVITY
+                                                                    Intent returnIntent = new Intent();
+                                                                    returnIntent.putExtra("Mesa", Filtro.getMesa());
+                                                                    returnIntent.putExtra("Action", "OPEN");
+                                                                    returnIntent.putExtra("Tabla", "pdd");
+                                                                    setResult(RESULT_OK, returnIntent);
+                                                                    finish();
+                                                                }
+                                                            } else {
+                                                                Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("Mesa")+" "+ActividadPrincipal.getPalabras("CERRADA"), Toast.LENGTH_SHORT).show();
+                                                            }
+                                                            break;
+                                                        case 3:
+                                                            if (getMesas(Filtro.getMesa(), 1)) {
+                                                                if (!ActividadPrincipal.getCruge("action_ftp_create")) {
+                                                                    Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
+                                                                } else {
+                                                                    ldocumentopedido = new ArrayList<DocumentoPedido>();
+                                                                    new GetDocumentoPedidos().execute(url_pedido_factura);
+                                                                }
+                                                            } else {
+                                                                Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("Mesa")+" "+ActividadPrincipal.getPalabras("CERRADA"), Toast.LENGTH_SHORT).show();
+                                                            }
+                                                            break;
+                                                        case 4:
+                                                            if (getMesas(Filtro.getMesa(), 1)) {
+                                                                if (!ActividadPrincipal.getCruge("action_ftp_create")) {
+                                                                    Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
+                                                                } else {
+                                                                    new CreaDocumentoFactura().execute();
+                                                                }
+                                                            } else {
+                                                                Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("Mesa")+" "+ActividadPrincipal.getPalabras("CERRADA"), Toast.LENGTH_SHORT).show();
+                                                            }
+                                                            break;
+                                                        case 5:
+                                                            if (getMesas(Filtro.getMesa(), 1)) {
+                                                                if (!ActividadPrincipal.getCruge("action_ftp_admin")) {
+                                                                    Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
+                                                                } else {
+                                                                    // SALIR ACTIVITY
+                                                                    Intent returnIntent = new Intent();
+                                                                    returnIntent.putExtra("Mesa", Filtro.getMesa());
+                                                                    returnIntent.putExtra("Action", "OPEN");
+                                                                    returnIntent.putExtra("Tabla", "ftp");
+                                                                    setResult(RESULT_OK, returnIntent);
+                                                                    finish();
+                                                                }
+                                                            } else {
+                                                                Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("Mesa")+" "+ActividadPrincipal.getPalabras("CERRADA"), Toast.LENGTH_SHORT).show();
+                                                            }
+                                                            break;
+                                                        case 6:
+                                                            if (getMesas(Filtro.getMesa(), 1)) {
+                                                                if (!ActividadPrincipal.getCruge("action_mesas_update")) {
+                                                                    Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
+                                                                } else {
+                                                                    // DIALOGO PEDIR COMENSALES
+                                                                    final AlertDialog.Builder alertcomensales = new AlertDialog.Builder(MesasActivity.this);
+                                                                    final EditText input = new EditText(MesasActivity.this);
+                                                                    input.setText(String.format("%02d", Integer.parseInt(getMesaComensales(Filtro.getMesa()))));
+
+                                                                    // Ponerse al final del edittext
+                                                                    int pos = input.getText().length();
+                                                                    input.setSelection(pos);
+
+                                                                    input.setTextColor(Color.RED);
+                                                                    input.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+                                                                    KeyListener keyListener = DigitsKeyListener.getInstance("1234567890");
+                                                                    input.setKeyListener(keyListener);
+                                                                    alertcomensales.setTitle(getPalabras("Insertar")+" "+getPalabras("Comensales"));
+                                                                    alertcomensales.setView(input);
+                                                                    alertcomensales.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                                                            String value = input.getText().toString();
+                                                                            if (value.matches("")) {
+                                                                                Toast.makeText(MesasActivity.this, getPalabras("Valor")+" "+getPalabras("Vacio")+" " + getPalabras("Comensales"), Toast.LENGTH_SHORT).show();
+                                                                                //            this.btnGuardar.setEnabled(false);
+                                                                            } else {
+
+                                                                                value = value.replace(".", "");
+                                                                                value = value.replace(",", "");
+
+                                                                                input.setText(String.format("%2d", Integer.valueOf(value)));
+                                                                                setMesaComensales(Filtro.getMesa(),Integer.valueOf(value));
+                                                                                new UpdateMesaApertura().execute("1",value);
+
+                                                                            }
+                                                                        }
+                                                                    });
+
+                                                                    alertcomensales.setNegativeButton(getPalabras("Cancelar"), new DialogInterface.OnClickListener() {
+                                                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                                                            dialog.cancel();
+                                                                        }
+                                                                    });
+                                                                    alertcomensales.show();
+                                                                }
+                                                            } else {
+                                                                Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("Mesa")+" "+ActividadPrincipal.getPalabras("CERRADA"), Toast.LENGTH_SHORT).show();
+                                                            }
+                                                            break;
+                                                    }
+                                                }
+                                            } else {
+                                                Snackbar.make(view, "No Hay Diario Caja Abierto", Snackbar.LENGTH_LONG).show();
+                                            }
+
+                                        }
+                                    });
+
+    /*                            alert.setTitle("Operaciones con Mesa");
+                                alert.setPositiveButton("Crear Pedido", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        if (!ActividadPrincipal.getCruge("action_pdd_create")){
+                                            Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
+                                        }else {
+                                            new CreaDocumentoPedido().execute();
+                                            Snackbar.make(view, "Creando Documento Pedido", Snackbar.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
+                                alert.setNeutralButton("Crear Factura", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        if (!ActividadPrincipal.getCruge("action_ftp_create")){
+                                            Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
+                                        }else {
+                                            new CreaDocumentoFactura().execute();
+                                            Snackbar.make(view, "Creando Documento Factura", Snackbar.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
+    */
+                            alert.setNegativeButton(ActividadPrincipal.getPalabras("Cancelar"), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    dialog.cancel();
+                                }
+                            });
+                            //        alert.show();
+                            // Create the AlertDialog
+                            AlertDialog dialog = alert.create();
+                            dialog.show();
+//                        }
+                        Log.i("instance view UP",view.getClass().getName().toString()+" - "+view.getTag()+ " y "+Float.toString(yCoordenate)+" x "+Float.toString(xCoordenate));
+                        //              mSerialExecutor.execute(null);
+
+                    }
+/****
                     actionMove=false;
                     xCoordenate = motionEvent.getRawX() + xCoOrdinate;
                     yCoordenate = motionEvent.getRawY() + yCoOrdinate;
@@ -691,28 +1019,6 @@ public class MesasActivity extends FragmentActivity {
                                     }
                                 });
 
-    /*                            alert.setTitle("Operaciones con Mesa");
-                                alert.setPositiveButton("Crear Pedido", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        if (!ActividadPrincipal.getCruge("action_pdd_create")){
-                                            Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
-                                        }else {
-                                            new CreaDocumentoPedido().execute();
-                                            Snackbar.make(view, "Creando Documento Pedido", Snackbar.LENGTH_LONG).show();
-                                        }
-                                    }
-                                });
-                                alert.setNeutralButton("Crear Factura", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        if (!ActividadPrincipal.getCruge("action_ftp_create")){
-                                            Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
-                                        }else {
-                                            new CreaDocumentoFactura().execute();
-                                            Snackbar.make(view, "Creando Documento Factura", Snackbar.LENGTH_LONG).show();
-                                        }
-                                    }
-                                });
-    */
                         alert.setNegativeButton(ActividadPrincipal.getPalabras("Cancelar"), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 dialog.cancel();
@@ -725,7 +1031,7 @@ public class MesasActivity extends FragmentActivity {
                     }
                     Log.i("instance view UP",view.getClass().getName().toString()+" - "+view.getTag()+ " y "+Float.toString(yCoordenate)+" x "+Float.toString(xCoordenate));
       //              mSerialExecutor.execute(null);
-                    break;
+****/                    break;
                 default:
                     return false;
             }

@@ -7,7 +7,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
-import android.widget.TextView;
+import android.widget.Button;
 
 /**
  * Created by JUAN on 27/02/2017.
@@ -16,14 +16,15 @@ import android.widget.TextView;
 public class DecoratedTextViewDrawable extends LayerDrawable {
     private int mCnt = 0;
     private Paint mPaint;
-    private TextView mParent;
+    private Button mParent;
     private ColorStateList mColors;
     private Rect mBounds;
     private String mModelo;
 
-    public DecoratedTextViewDrawable(TextView tv, Drawable[] layers, int cnt, String modelo) {
+    public DecoratedTextViewDrawable(Button tv, Drawable[] layers, int cnt, String modelo) {
         super(layers);
         mParent = tv;
+        mModelo=modelo;
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setTextAlign(Paint.Align.CENTER);
         mPaint.setTextSize(tv.getTextSize());
@@ -38,7 +39,6 @@ public class DecoratedTextViewDrawable extends LayerDrawable {
         mBounds = new Rect();
         setCnt(cnt);
 
-        mModelo=modelo;
     }
 
     public void setCnt(int cnt) {
@@ -78,6 +78,5 @@ public class DecoratedTextViewDrawable extends LayerDrawable {
         canvas.drawCircle(x, base + mBounds.top + mBounds.height() / 2, r, mPaint);
         mPaint.setColor(0xffeeeeee);
         canvas.drawText(Integer.toString(mCnt), x, base, mPaint);
-
     }
 }

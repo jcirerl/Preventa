@@ -45,6 +45,12 @@ public interface IMyDocumentoFacturaViewHolderClicks {
                   String estadoDocumentoFactura,
                   String serieDocumentoFactura,
                   String facturaDocumentoFactura);
+    void onFactura (Button callerButton,
+                  ImageView imageDocumentoFactura,
+                  String idDocumentoFactura,
+                  String estadoDocumentoFactura,
+                  String serieDocumentoFactura,
+                  String facturaDocumentoFactura);
     void onTomato(ImageView callerImage);
 
 }

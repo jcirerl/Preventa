@@ -112,6 +112,17 @@
     <item>MEDIANO</item>
     <item>PEQUEÑO</item>
 </string-array>
+    <string-array name="tamanyo_tipoarticulo">
+        <item>16.0</item>
+        <item>21.0</item>
+        <item>25.0</item>
+    </string-array>
+    <string-array name="tipoarticulo">
+        <item>NORMAL</item>
+        <item>MEDIANO</item>
+        <item>GRANDE</item>
+    </string-array>
+
     <string-array name="tamanyo_mesa">
         <item>32</item>
         <item>64</item>

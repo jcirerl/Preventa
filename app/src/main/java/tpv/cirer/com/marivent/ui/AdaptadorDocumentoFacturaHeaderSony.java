@@ -204,6 +204,25 @@ public class AdaptadorDocumentoFacturaHeaderSony extends RecyclerView.Adapter<Re
                     }
 
                 }
+                public void onFactura (Button callerButton,
+                                       ImageView imageDocumentoFactura,
+                                       String idDocumentoFactura,
+                                       String estadoDocumentoFactura,
+                                       String serieDocumentoFactura,
+                                       String facturaDocumentoFactura) {
+                    Log.d("UPDATE BUTTON", "+");
+                    final String idFTP = idDocumentoFactura;
+                    final String estadoFTP = estadoDocumentoFactura;
+                    final String serieFTP = serieDocumentoFactura;
+                    final String facturaFTP = facturaDocumentoFactura;
+
+                    try {
+                        mCallbackDocumentoFactura.onFacturarDocumentoFacturaSelected(Integer.parseInt(idFTP),estadoFTP,serieFTP,facturaFTP);
+                    } catch (ClassCastException exception) {
+                        // do something
+                    }
+
+                }
 
                 public void onTomato(ImageView callerImage) {
                     Log.d("VEGETABLES", "To-m8-tohs");
@@ -404,6 +423,7 @@ public class AdaptadorDocumentoFacturaHeaderSony extends RecyclerView.Adapter<Re
         public Button UpdateDocumentoFactura;
         public Button DeleteDocumentoFactura;
         public Button CobroDocumentoFactura;
+        public Button FacturarDocumentoFactura;
 
         //      SONY
         public TextView SerieDocumentoFactura;
@@ -454,10 +474,12 @@ public class AdaptadorDocumentoFacturaHeaderSony extends RecyclerView.Adapter<Re
             this.UpdateDocumentoFactura = (Button) itemView.findViewById(R.id.btnUpdate);
             this.DeleteDocumentoFactura = (Button) itemView.findViewById(R.id.btnDelete);
             this.CobroDocumentoFactura = (Button) itemView.findViewById(R.id.btnCobro);
+            this.FacturarDocumentoFactura = (Button) itemView.findViewById(R.id.btnFactura);
 
             this.UpdateDocumentoFactura.setOnClickListener(this);
             this.DeleteDocumentoFactura.setOnClickListener(this);
             this.CobroDocumentoFactura.setOnClickListener(this);
+            this.FacturarDocumentoFactura.setOnClickListener(this);
 
             this.ObsDocumentoFactura.setOnClickListener(this);
             this.NombreMesaDocumentoFactura.setOnClickListener(this);
@@ -520,6 +542,16 @@ public class AdaptadorDocumentoFacturaHeaderSony extends RecyclerView.Adapter<Re
                         break;
                     case R.id.btnCobro:
                         mListenerDocumentoFactura.onCobro(
+                                (Button) v,
+                                this.iconDocumentoFactura,
+                                String.valueOf(this.IdDocumentoFactura.getText()),
+                                String.valueOf(this.EstadoDocumentoFactura.getText()),
+                                String.valueOf(this.SerieDocumentoFactura.getText()),
+                                String.valueOf(this.FacturaDocumentoFactura.getText())
+                        );
+                        break;
+                    case R.id.btnFactura:
+                        mListenerDocumentoFactura.onFactura(
                                 (Button) v,
                                 this.iconDocumentoFactura,
                                 String.valueOf(this.IdDocumentoFactura.getText()),
@@ -644,6 +676,15 @@ public class AdaptadorDocumentoFacturaHeaderSony extends RecyclerView.Adapter<Re
                              String facturaDocumentoFactura) {
 
         }
+        @Override
+        public void onFactura (Button callerButton,
+                             ImageView imageDocumentoFactura,
+                             String idDocumentoFactura,
+                             String estadoDocumentoFactura,
+                             String serieDocumentoFactura,
+                             String facturaDocumentoFactura) {
+
+        }
 
         @Override
         public void onTomato(ImageView callerImage) {
@@ -668,6 +709,7 @@ public class AdaptadorDocumentoFacturaHeaderSony extends RecyclerView.Adapter<Re
         void onUpdateDocumentoFacturaSelected(int id, String valor, String campo);
         void onUpdateLineasDocumentoFacturaSelected(ImageView image, int id, String mesa, String estado, String serie, String factura);
         void onCobroDocumentoFacturaSelected(int id, String estado, String serie, String factura);
+        void onFacturarDocumentoFacturaSelected(int id, String estado, String serie, String factura);
     }
     /*para filtro*/
     public void setFilter(List<DocumentoFactura> DocumentoFacturas) {

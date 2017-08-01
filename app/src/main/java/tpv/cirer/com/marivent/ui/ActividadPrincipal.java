@@ -34,6 +34,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -123,6 +124,7 @@ import tpv.cirer.com.marivent.modelo.DocumentoFactura;
 import tpv.cirer.com.marivent.modelo.DocumentoPedido;
 import tpv.cirer.com.marivent.modelo.Empleado;
 import tpv.cirer.com.marivent.modelo.Empresa;
+import tpv.cirer.com.marivent.modelo.Fac;
 import tpv.cirer.com.marivent.modelo.Fra;
 import tpv.cirer.com.marivent.modelo.Grupo;
 import tpv.cirer.com.marivent.modelo.LineaDocumentoFactura;
@@ -170,7 +172,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
 
     ToolTipManager tooltips;
 
-    ProgressDialog pDialogTipoare,pDialogUserrel,pDialogGrup,pDialogTerminal,pDialogFra,pDialogCruge,pDialogPlato,
+    ProgressDialog pDialogTipoare,pDialogUserrel,pDialogGrup,pDialogTerminal,pDialogFra,pDialogCruge,pDialogPlato,pDialogFac,
             pDialogEmpr,pDialogLocal,pDialogSec,pDialogSecFechas,pDialogCaja,pDialogTurno,pDialogMesa,pDialogRango,pDialogEmpleado,pDialogMoneda;
     ProgressDialog pDialog;
     public static TextView itempedido;
@@ -200,11 +202,13 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     String TAG_FACTURA = "factura";
     String TAG_ID = "id";
     String TAG_MESA_FTP = "mesa";
+    String TAG_FAC = "FACTURA";
 
     // single Seccion url
     private static final String url_update_caja = Filtro.getUrl()+"/modifica_caja.php";
     private static final String url_update_turno = Filtro.getUrl()+"/modifica_turno.php";
     private static final String url_update_message = Filtro.getUrl()+"/modifica_message.php";
+    private static final String url_create_cliente = Filtro.getUrl()+"/crear_cliente.php";
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
@@ -242,6 +246,8 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     int idPedido;
     int idFactura;
     int oksucces;
+    int factura_ftp;
+    String serie_ftp;
 
     public static Bitmap imagelogo;
     public static Bitmap imagelogoprint;
@@ -283,18 +289,20 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     public static List<Userrel> luserrel;
     public static List<Cruge> lcruge;
     public static List<Plato> lplato;
+    public static List<Fac> lfac;
 
     public static ArrayList<ArrayList<Comida>> comidas; //Definicion array de comidas
     public static List<Articulo> larticulo;
-    public static ArrayList<Popular> lpopular;
+    public static ArrayList<ArrayList<Popular>> populares;
     private static ArrayList<Comida> lcomida;
+    public static ArrayList<Popular> lpopular;
     private static int IndiceSeccion;
 
     private String url_tipoare;
     private String url_userrel;
     private String url_cruge;
     private String url_platos;
-
+    private String url_fac;
 
     public static MySerialExecutor mSerialExecutorActivity;
 
@@ -342,13 +350,16 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
 
     private static String url_updatemesa_mesa;
     private static String url_pedido_a_factura_id;
+    private static String url_ticket_a_factura;
 
     private static ArrayList<Mesa> mesaList;
     private static String URL_MESA;
 
+    private static ArrayList<Fra> frafacturaList;
+    private static String URL_FRA;
+
     private ArrayList<Empleado> empleadoList;
     private static String URL_EMPLEADO;
-
 
     private ArrayList<Simbolo> simboloList;
 
@@ -479,12 +490,17 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         Filtro.setFechaFinal("");
         Filtro.setMoneda("");
         Filtro.setSimbolo("");
+        Filtro.setCod_cliente("");
+        Filtro.setSerieFac("");
 
         Filtro.setTag_fragment("");
         Filtro.setValueFactura(10000000);
         Filtro.setSearch(false);
         Filtro.setColorItemZero(ContextCompat.getColor(getApplicationContext(), R.color.green_300));
         Filtro.setColorItem(ContextCompat.getColor(getApplicationContext(), R.color.accentColor));
+
+        lfac = new ArrayList<Fac>();
+        url_fac = Filtro.getUrl() + "/get_fac.php";
 
         // RELLENAMOS TIPOS DE PLATOS
         url_platos = Filtro.getUrl() + "/get_platos.php";
@@ -519,6 +535,8 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         turnoList = new ArrayList<Turno>();
         // Rellenar string toolbar_fra
         fraList = new ArrayList<Fra>();
+        frafacturaList = new ArrayList<Fra>();
+
         // Rellenar string toolbar_rango
         rangosList = new ArrayList<Rango>();
         // Rellenar string toolbar_mesas
@@ -701,6 +719,8 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         url_updatemesa_mesa = Filtro.getUrl()+"/updatemesa_mesa.php";
 
         url_pedido_a_factura_id = Filtro.getUrl()+"/invoice_pdd_ftp.php";
+        url_ticket_a_factura = Filtro.getUrl()+"/invoice_ftp_fac.php";
+
         /////////////////////////////////////////////
         /// leemos altura APPBARLAYOUT
         TypedValue tv = new TypedValue();
@@ -2094,6 +2114,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         mSerialExecutorActivity = new MySerialExecutor(getApplicationContext());
 
         /// CARGAR POPULARES
+        populares = new ArrayList<ArrayList<Popular>>();
         lpopular = new ArrayList<Popular>();
         CountTable="popular";
         url_count = Filtro.getUrl()+"/RellenaListaPopulares.php";
@@ -3024,6 +3045,321 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                     Toast.makeText(this, getPalabras("Cobro")+" " + getPalabras("Factura") + " " + id, Toast.LENGTH_SHORT).show();
                 }
             }
+        }
+    }
+
+    public void dialog_factura(){
+
+        final LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                final EditText inputSerie = new EditText(this);
+                final EditText inputNif = new EditText(this);
+                final EditText inputRazon = new EditText(this);
+                final EditText inputFactura = new EditText(this);
+                final EditText inputFecha = new EditText(this);
+                final EditText inputTotal = new EditText(this);
+
+
+                int maxLengthSerie = 10;
+                int maxLengthNif = 25;
+                int maxLengthRazon = 128;
+                int maxLengthFactura = 25;
+                int maxLengthFecha = 20;
+                int maxLengthTotal = 25;
+
+                inputSerie.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLengthSerie)});
+                inputSerie.setText("Serie: "+lfac.get(0).getFacSerie());
+                inputSerie.setInputType(InputType.TYPE_NULL);
+
+                inputFactura.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLengthFactura)});
+                inputFactura.setText("Factura: "+String.format("%08d",lfac.get(0).getFacFactura()));
+                inputFactura.setInputType(InputType.TYPE_NULL);
+
+                inputNif.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLengthNif)});
+                inputNif.setText("NIF: "+lfac.get(0).getFacNif());
+                inputNif.setInputType(InputType.TYPE_NULL);
+
+                inputRazon.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLengthRazon)});
+                inputRazon.setText("Razon: "+lfac.get(0).getFacRazon());
+                inputRazon.setInputType(InputType.TYPE_NULL);
+
+                String myText="";
+                SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+                SimpleDateFormat sdf2 = new SimpleDateFormat("dd-MM-yyyy");
+                try{
+                    String StringRecogido = lfac.get(0).getFacFecha();
+                    Date datehora = sdf1.parse(StringRecogido);
+
+                    //System.out.println("Fecha input : "+datehora);
+                    myText = sdf2.format(datehora);
+
+                } catch (Exception e) {
+                    e.getMessage();
+                }
+                inputFecha.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLengthFecha)});
+                inputFecha.setText("Fecha: "+myText);
+                inputFecha.setInputType(InputType.TYPE_NULL);
+
+                inputTotal.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLengthTotal)});
+                inputTotal.setText("Total: "+String.format("%1$,.2f", Float.parseFloat(lfac.get(0).getFacTotal()))+" "+Filtro.getSimbolo());
+                inputTotal.setInputType(InputType.TYPE_NULL);
+
+
+
+                inputSerie.setTextColor(Color.RED);
+                inputNif.setTextColor(Color.RED);
+                inputRazon.setTextColor(Color.RED);
+                inputFactura.setTextColor(Color.RED);
+                inputFecha.setTextColor(Color.RED);
+                inputTotal.setTextColor(Color.RED);
+
+                layout.addView(inputSerie);
+                layout.addView(inputFactura);
+                layout.addView(inputNif);
+                layout.addView(inputRazon);
+                layout.addView(inputFecha);
+                layout.addView(inputTotal);
+
+
+                alert.setTitle(getPalabras("Datos")+" "+getPalabras("Factura"));
+                alert.setView(layout);
+
+                alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+
+
+                    }
+                });
+
+                alert.setNegativeButton(getPalabras("Cancelar"), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel();
+                    }
+                });
+                alert.show();
+
+    }
+    public void dialog_cliente(){
+
+        final LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        final EditText inputCodigo = new EditText(this);
+        final EditText inputNif = new EditText(this);
+        final EditText inputRazon = new EditText(this);
+        final EditText inputNombre = new EditText(this);
+        final EditText inputDireccion = new EditText(this);
+        final EditText inputPoblacion = new EditText(this);
+        final EditText inputProvincia = new EditText(this);
+        final EditText inputPais = new EditText(this);
+        final EditText inputTelefono = new EditText(this);
+        final EditText inputEmail = new EditText(this);
+
+        int pos = 0;
+
+        int maxLengthCodigo = 20;
+        int maxLengthNif = 20;
+        int maxLengthRazon = 128;
+        int maxLengthNombre = 128;
+        int maxLengthDireccion = 128;
+        int maxLengthPoblacion = 128;
+        int maxLengthProvincia = 128;
+        int maxLengthPais = 128;
+        int maxLengthTelefono = 15;
+        int maxLengthEmail = 128;
+
+        inputCodigo.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLengthCodigo)});
+        inputCodigo.setText("");
+
+        inputNif.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLengthNif)});
+        inputNif.setText("");
+
+        inputRazon.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLengthRazon)});
+        inputRazon.setText("");
+
+        inputNombre.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLengthNombre)});
+        inputNombre.setText("");
+
+        inputDireccion.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLengthDireccion)});
+        inputDireccion.setText("");
+
+        inputPoblacion.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLengthPoblacion)});
+        inputPoblacion.setText("");
+
+        inputProvincia.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLengthProvincia)});
+        inputProvincia.setText("");
+
+        inputPais.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLengthPais)});
+        inputPais.setText("");
+
+        inputTelefono.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLengthTelefono)});
+        inputTelefono.setText("");
+
+        inputEmail.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLengthEmail)});
+        inputEmail.setText("");
+
+        // Ponerse al final del edittext
+        pos = inputCodigo.getText().length();
+        inputCodigo.setSelection(pos);
+
+        pos = inputNif.getText().length();
+        inputNif.setSelection(pos);
+
+        pos = inputRazon.getText().length();
+        inputRazon.setSelection(pos);
+
+        pos = inputNombre.getText().length();
+        inputNombre.setSelection(pos);
+
+        pos = inputDireccion.getText().length();
+        inputDireccion.setSelection(pos);
+
+        pos = inputPoblacion.getText().length();
+        inputPoblacion.setSelection(pos);
+
+        pos = inputProvincia.getText().length();
+        inputProvincia.setSelection(pos);
+
+        pos = inputPais.getText().length();
+        inputPais.setSelection(pos);
+
+        pos = inputTelefono.getText().length();
+        inputTelefono.setSelection(pos);
+
+        pos = inputEmail.getText().length();
+        inputEmail.setSelection(pos);
+
+        inputCodigo.setTextColor(Color.RED);
+        inputNif.setTextColor(Color.RED);
+        inputRazon.setTextColor(Color.RED);
+        inputNombre.setTextColor(Color.RED);
+        inputDireccion.setTextColor(Color.RED);
+        inputPoblacion.setTextColor(Color.RED);
+        inputProvincia.setTextColor(Color.RED);
+        inputPais.setTextColor(Color.RED);
+        inputTelefono.setTextColor(Color.RED);
+        inputEmail.setTextColor(Color.RED);
+
+        inputCodigo.setHint("Codigo");
+        layout.addView(inputCodigo);
+
+        inputNif.setHint("Nif");
+        layout.addView(inputNif);
+
+        inputRazon.setHint("Razon");
+        layout.addView(inputRazon);
+
+        inputNombre.setHint("Nombre");
+        layout.addView(inputNombre);
+
+        inputDireccion.setHint("Direccion");
+        layout.addView(inputDireccion);
+
+        inputPoblacion.setHint("Poblacion");
+        layout.addView(inputPoblacion);
+
+        inputProvincia.setHint("Provincia");
+        layout.addView(inputProvincia);
+
+        inputPais.setHint("Pais");
+        layout.addView(inputPais);
+
+        inputTelefono.setHint("Telefono");
+        layout.addView(inputTelefono);
+
+        inputEmail.setHint("Email");
+        layout.addView(inputEmail);
+
+        /// RELLENAR SPINNER SERIE FACTURACION
+        final TextView titleBox = new TextView(this);
+        titleBox.setHint("SELECCIONAR SERIE FACTURA");
+        titleBox.setTextColor(Color.RED);
+        layout.addView(titleBox);
+
+        final Spinner cmbToolbarFra = new Spinner(this);
+
+        List<String> lables_fra = new ArrayList<String>();
+
+        for (int i = 0; i < frafacturaList.size(); i++) {
+            lables_fra.add(frafacturaList.get(i).getFraSerie());
+            //            Log.i("zona ",zonasList.get(i).getDescripcion());
+        }
+        ArrayAdapter<String> adapter_fra = new ArrayAdapter<>(
+                this,
+                R.layout.appbar_filter_title,lables_fra);
+
+        adapter_fra.setDropDownViewResource(R.layout.appbar_filter_list);
+
+        cmbToolbarFra.setAdapter(adapter_fra);
+        if (frafacturaList.size()>0) {
+            Filtro.setSerieFac(frafacturaList.get(0).getFraSerie());
+        }
+
+        layout.addView(cmbToolbarFra);
+
+        cmbToolbarFra.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1,
+                                       int arg2, long arg3) {
+
+
+                Filtro.setSerieFac(frafacturaList.get(cmbToolbarFra.getSelectedItemPosition()).getFraSerie());
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+
+
+
+
+        alert.setTitle(getPalabras("Datos")+" "+getPalabras("Cliente"));
+        alert.setView(layout);
+
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+
+                new InsertarCliente().execute(
+                        inputCodigo.getText().toString().trim(),
+                        inputNif.getText().toString().trim(),
+                        inputRazon.getText().toString().trim(),
+                        inputNombre.getText().toString().trim(),
+                        inputDireccion.getText().toString().trim(),
+                        inputPoblacion.getText().toString().trim(),
+                        inputProvincia.getText().toString().trim(),
+                        inputPais.getText().toString().trim(),
+                        inputTelefono.getText().toString().trim(),
+                        inputEmail.getText().toString().trim()
+
+                );
+
+            }
+        });
+
+        alert.setNegativeButton(getPalabras("Cancelar"), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.cancel();
+            }
+        });
+        alert.show();
+
+    }
+
+    public void onFacturarDocumentoFacturaSelected(int id, String estado, String serie, String factura) {
+        if (!getCruge("action_ftp_create")){ //HAY QUE CAMBIAR POR action_fac_create
+            Toast.makeText(this, getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
+        }else {
+            serie_ftp=serie;
+            factura_ftp=Integer.parseInt(factura);
+            new CompruebaDocumentoFactura().execute(url_fac,serie,factura);
         }
     }
     public void onDeleteMessageSelected(int id, int activo) {
@@ -6149,6 +6485,548 @@ ge     * */
         }
 
     }
+    class InsertarCliente extends AsyncTask<String, String, Integer> {
+
+        /**
+         * Before starting background thread Show Progress Dialog
+         * */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(ActividadPrincipal.this);
+            pDialog.setMessage(getPalabras("Crear")+" "+getPalabras("Cliente")+"..");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
+        }
+
+        /**
+         * Creating product
+         * */
+        @Override
+        protected Integer doInBackground(String... args) {
+            // updating UI from Background Thread
+            int success=0;
+            try {
+                Calendar currentDate = Calendar.getInstance(); //Get the current date
+                SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); //format it as per your requirement
+                String dateNow = formatter.format(currentDate.getTime());
+
+                Filtro.setCod_cliente(args[0]);
+                // Building Parameters
+                ContentValues values = new ContentValues();
+                values.put("grupo", Filtro.getGrupo());
+                values.put("empresa",Filtro.getEmpresa());
+                values.put("cliente", args[0]);
+                values.put("nif",args[1]);
+                values.put("razon", args[2]);
+                values.put("nombre",args[3]);
+                values.put("direccion", args[4]);
+                values.put("poblacion",args[5]);
+                values.put("provincia", args[6]);
+                values.put("pais",args[7]);
+                values.put("telefono", args[8]);
+                values.put("email",args[9]);
+                values.put("creado", dateNow);
+                values.put("updated", dateNow);
+                values.put("usuario", Filtro.getUsuario());
+                values.put("ip",getLocalIpAddress());
+
+                // getting JSON Object
+                // Note that create product url accepts POST method
+                JSONObject json = jsonParserNew.makeHttpRequest(url_create_cliente,
+                        "POST", values);
+
+                // check log cat fro response
+                //            Log.d("Create Response", json.toString());
+
+                // check for success tag
+
+                success = json.getInt(TAG_SUCCESS);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return success;
+        }
+
+        /**
+         * After completing background task Dismiss the progress dialog
+         * **/
+        @Override
+        protected void onPostExecute(Integer success) {
+            // dismiss the dialog once done
+            pDialog.dismiss();
+            if (success == 1) {
+                new TraspasoTicketFactura().execute();
+            } else {
+                Log.e(TAG_FAC, "Failed to fetch data!");
+            }
+
+        }
+
+    }
+
+    public class CompruebaDocumentoFactura extends AsyncTask<String, Void, Integer> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialogFac = new ProgressDialog(ActividadPrincipal.this);
+            pDialogFac.setMessage(ActividadPrincipal.getPalabras("Cargando")+" Facturas...");
+            pDialogFac.setIndeterminate(false);
+            pDialogFac.setCancelable(true);
+            pDialogFac.show();
+            //setProgressBarIndeterminateVisibility(true);
+        }
+
+        @Override
+        protected Integer doInBackground(String... params) {
+//            Integer result = 0;
+            String cSql = "";
+            String xWhere = "";
+
+            if(!(Filtro.getGrupo().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE frf.GRUPO='" + Filtro.getGrupo() + "'";
+                } else {
+                    xWhere += " AND frf.GRUPO='" + Filtro.getGrupo() + "'";
+                }
+            }
+            if(!(Filtro.getEmpresa().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE frf.EMPRESA='" + Filtro.getEmpresa() + "'";
+                } else {
+                    xWhere += " AND frf.EMPRESA='" + Filtro.getEmpresa() + "'";
+                }
+            }
+            if(!(Filtro.getLocal().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE frf.LOCAL='" + Filtro.getLocal() + "'";
+                } else {
+                    xWhere += " AND frf.LOCAL='" + Filtro.getLocal() + "'";
+                }
+            }
+            if(!(Filtro.getSeccion().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE frf.SECCION='" + Filtro.getSeccion() + "'";
+                } else {
+                    xWhere += " AND frf.SECCION='" + Filtro.getSeccion() + "'";
+                }
+            }
+            if(!(Filtro.getCaja().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE frf.CAJA='" + Filtro.getCaja() + "'";
+                } else {
+                    xWhere += " AND frf.CAJA='" + Filtro.getCaja() + "'";
+                }
+            }
+            xWhere += " AND frf.SERIE_FTP='"+params[1]+"'";
+            xWhere += " AND frf.FACTURA_FTP="+params[2];
+
+            cSql += xWhere;
+            if(cSql.equals("")) {
+                cSql="Todos";
+            }
+            Log.i("Sql Lista",cSql);
+            InputStream inputStream = null;
+            Integer result = 0;
+            HttpURLConnection urlConnection = null;
+
+            try {
+                // forming th java.net.URL object
+                URL url = new URL(params[0]);
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                // for Get request
+                ///           urlConnection.setRequestMethod("GET");
+
+                urlConnection.setReadTimeout(10000);
+                urlConnection.setConnectTimeout(15000);
+                urlConnection.setRequestMethod("GET");
+                urlConnection.setDoInput(true);
+                urlConnection.setDoOutput(true);
+//                List<NameValuePair> params1 = new ArrayList<NameValuePair>();
+//                params1.add(new BasicNameValuePair("filtro", cSql));
+
+                ContentValues values = new ContentValues();
+                values.put("filtro", cSql);
+
+                OutputStream os = urlConnection.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+//                writer.write(getQuery(params1));
+                writer.write(getQuery(values));
+                writer.flush();
+                writer.close();
+                os.close();
+                urlConnection.connect();
+
+                int statusCode = urlConnection.getResponseCode();
+                Log.i("STATUS CODE: ", Integer.toString(urlConnection.getResponseCode()) + " - " + urlConnection.getResponseMessage());
+                // 200 represents HTTP OK
+                if (statusCode ==  200) {
+
+                    BufferedReader r = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = r.readLine()) != null) {
+                        response.append(line);
+                    }
+                    Log.i("JSON-->", response.toString());
+                    for (Iterator<Fac> it = lfac.iterator(); it.hasNext();){
+                        Fac fac = it.next();
+                        it.remove();
+                    }
+
+                    parseResultFac(response.toString());
+                    result = 1; // Successful
+                }else{
+                    result = 0; //"Failed to fetch data!";
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+//                Log.d(TAG, e.getLocalizedMessage());
+            }
+
+            return result; //"Failed to fetch data!";
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            /* Download complete. Lets update UI */
+            pDialogFac.dismiss();
+            if (result == 1) {
+                Log.e(TAG_FAC, "OK FAC");
+                if(lfac.size()>0){
+                    Toast.makeText(
+                        getApplicationContext(), "FACTURA EXISTE " + lfac.get(0).getFacSerie() + " " + lfac.get(0).getFacFactura(),
+                        Toast.LENGTH_LONG).show();
+                    dialog_factura();
+                }else{
+                    Toast.makeText(getApplicationContext(), "FACTURA NO EXISTE", Toast.LENGTH_LONG).show();
+
+                    URL_FRA = Filtro.getUrl() + "/get_fras.php";
+                    new GetFraFactura().execute(URL_FRA);
+
+                 ////*****   new TraspasoTicketFactura().execute();
+
+                }
+            } else {
+                Log.e(TAG_FAC, "Failed to fetch data!");
+            }
+        }
+    }
+    private void parseResultFac(String result) {
+        try {
+            JSONObject response = new JSONObject(result);
+            JSONArray posts = response.optJSONArray("posts");
+
+            Log.i("Longitud Datos: ",Integer.toString(posts.length()));
+            for (int ii = 0; ii < posts.length(); ii++) {
+                JSONObject post = posts.optJSONObject(ii);
+                Log.i("POST: ",post.optString("SERIE")+ post.optInt("FACTURA"));
+                Fac fac = new Fac(post.optString("SERIE"),
+                        post.optInt("FACTURA"),
+                        post.optString("NIF"),
+                        post.optString("RAZON"),
+                        post.optString("TOTAL"),
+                        post.optString("FECHA"));
+                lfac.add(fac);
+                Log.i("POST Longitud: ",Integer.toString(lfac.size()));
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    class TraspasoTicketFactura extends AsyncTask<String, String, Integer> {
+
+        /**
+         * Before starting background thread Show Progress Dialog
+         * */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+/*            pDialog = new ProgressDialog(ActividadPrincipal.this);
+            pDialog.setMessage(getPalabras("Traspaso")+" "+getPalabras("Ticket")+" "+getPalabras("Factura")+"..");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
+*/        }
+
+        /**
+         * Creating product
+         * */
+        @Override
+        protected Integer doInBackground(String... args) {
+            // updating UI from Background Thread
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    // Check for success tag
+                    try {
+                        int success;
+                        String filtro = "";
+                        String xWhere = "";
+                        if(!(Filtro.getGrupo().equals(""))) {
+                            if (xWhere.equals("")) {
+                                xWhere += "GRUPO='" + Filtro.getGrupo() + "'";
+                            } else {
+                                xWhere += " AND GRUPO='" + Filtro.getGrupo() + "'";
+                            }
+                        }
+                        if(!(Filtro.getEmpresa().equals(""))) {
+                            if (xWhere.equals("")) {
+                                xWhere += "EMPRESA='" + Filtro.getEmpresa() + "'";
+                            } else {
+                                xWhere += " AND EMPRESA='" + Filtro.getEmpresa() + "'";
+                            }
+                        }
+                        if(!(Filtro.getLocal().equals(""))) {
+                            if (xWhere.equals("")) {
+                                xWhere += "LOCAL='" + Filtro.getLocal() + "'";
+                            } else {
+                                xWhere += " AND LOCAL='" + Filtro.getLocal() + "'";
+                            }
+                        }
+                        if(!(Filtro.getSeccion().equals(""))) {
+                            if (xWhere.equals("")) {
+                                xWhere += "SECCION='" + Filtro.getSeccion() + "'";
+                            } else {
+                                xWhere += " AND SECCION='" + Filtro.getSeccion() + "'";
+                            }
+                        }
+                        if(!(Filtro.getCaja().equals(""))) {
+                            if (xWhere.equals("")) {
+                                xWhere += "CAJA='" + Filtro.getCaja() + "'";
+                            } else {
+                                xWhere += " AND CAJA='" + Filtro.getCaja() + "'";
+                            }
+                        }
+                        filtro+=xWhere;
+
+                        Calendar currentDate = Calendar.getInstance(); //Get the current date
+                        SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); //format it as per your requirement
+                        String dateNow = formatter.format(currentDate.getTime());
+
+                        long maxDate = currentDate.getTime().getTime(); // Twice!
+
+                        // Building Parameters
+                        ContentValues values = new ContentValues();
+                        values.put("serie_ftp", serie_ftp);
+                        values.put("factura_ftp", factura_ftp);
+                        values.put("filtro",filtro);
+                        values.put("cliente",Filtro.getCod_cliente());
+                        values.put("serie",Filtro.getSerieFac());
+                        values.put("factura",Long.toString(maxDate));
+                        values.put("updated", dateNow);
+                        values.put("creado", dateNow);
+                        values.put("usuario", Filtro.getUsuario());
+                        values.put("ip",getLocalIpAddress());
+
+                        // getting JSON Object
+                        // Note that create product url accepts POST method
+                        JSONObject json = jsonParserNew.makeHttpRequest(url_ticket_a_factura,
+                                "POST", values);
+
+                        // check log cat fro response
+                        //            Log.d("Create Response", json.toString());
+
+                        // check for success tag
+
+                        success = json.getInt(TAG_SUCCESS);
+                        if (success == 1) {
+
+                        } else {
+                            Toast.makeText(ActividadPrincipal.this, "ERROR NO "+getPalabras("Traspaso")+" "+getPalabras("Pedido")+" "+getPalabras("Factura"), Toast.LENGTH_SHORT).show();
+                            // failed to create product
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            return null;
+        }
+
+        /**
+         * After completing background task Dismiss the progress dialog
+         * **/
+        @Override
+        protected void onPostExecute(Integer success) {
+            // dismiss the dialog once done
+//            pDialog.dismiss();
+
+        }
+
+    }
+    public class GetFraFactura extends AsyncTask<String, Void, Integer> {
+
+        @Override
+        protected void onPreExecute() {
+            //setProgressBarIndeterminateVisibility(true);
+            super.onPreExecute();
+            pDialogFra = new ProgressDialog(ActividadPrincipal.this);
+            pDialogFra.setMessage(getPalabras("Cargando")+" Serie Factura. "+getPalabras("Espere por favor")+"...");
+            pDialogFra.setIndeterminate(false);
+            pDialogFra.setCancelable(true);
+            pDialogFra.show();
+        }
+
+        @Override
+        protected Integer doInBackground(String... params) {
+//            Integer result = 0;
+            String cSql = "";
+            String xWhere = "";
+
+            if(!(Filtro.getGrupo().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE fra.GRUPO='" + Filtro.getGrupo() + "'";
+                } else {
+                    xWhere += " AND fra.GRUPO='" + Filtro.getGrupo() + "'";
+                }
+            }
+            if(!(Filtro.getEmpresa().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE fra.EMPRESA='" + Filtro.getEmpresa() + "'";
+                } else {
+                    xWhere += " AND fra.EMPRESA='" + Filtro.getEmpresa() + "'";
+                }
+            }
+            if(!(Filtro.getLocal().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE fra.LOCAL='" + Filtro.getLocal() + "'";
+                } else {
+                    xWhere += " AND fra.LOCAL='" + Filtro.getLocal() + "'";
+                }
+            }
+            if(!(Filtro.getSeccion().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE fra.SECCION='" + Filtro.getSeccion() + "'";
+                } else {
+                    xWhere += " AND fra.SECCION='" + Filtro.getSeccion() + "'";
+                }
+            }
+            if(!(Filtro.getCaja().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE fra.CAJA='" + Filtro.getCaja() + "'";
+                } else {
+                    xWhere += " AND fra.CAJA='" + Filtro.getCaja() + "'";
+                }
+            }
+
+            xWhere += " AND fra.T_SERIE='FACT'";
+
+            cSql += xWhere;
+            if(cSql.equals("")) {
+                cSql="Todos";
+            }
+            Log.i("Sql Lista",cSql);
+            InputStream inputStream = null;
+            Integer result = 0;
+            HttpURLConnection urlConnection = null;
+
+            try {
+                // forming th java.net.URL object
+                URL url = new URL(params[0]);
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                // for Get request
+                ///           urlConnection.setRequestMethod("GET");
+
+                urlConnection.setReadTimeout(10000);
+                urlConnection.setConnectTimeout(15000);
+                urlConnection.setRequestMethod("GET");
+                urlConnection.setDoInput(true);
+                urlConnection.setDoOutput(true);
+//                List<NameValuePair> params1 = new ArrayList<NameValuePair>();
+//                params1.add(new BasicNameValuePair("filtro", cSql));
+
+                ContentValues values = new ContentValues();
+                values.put("filtro", cSql);
+
+                OutputStream os = urlConnection.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+//                writer.write(getQuery(params1));
+                writer.write(getQuery(values));
+                writer.flush();
+                writer.close();
+                os.close();
+                urlConnection.connect();
+
+                int statusCode = urlConnection.getResponseCode();
+                Log.i("STATUS CODE: ", Integer.toString(urlConnection.getResponseCode()) + " - " + urlConnection.getResponseMessage());
+                // 200 represents HTTP OK
+                if (statusCode ==  200) {
+
+                    BufferedReader r = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = r.readLine()) != null) {
+                        response.append(line);
+                    }
+                    Log.i("JSON-->", response.toString());
+
+                    for (Iterator<Fra> it = frafacturaList.iterator(); it.hasNext();){
+                        Fra fra = it.next();
+                        it.remove();
+                    }
+
+                    parseResultFraFactura(response.toString());
+                    result = 1; // Successful
+                }else{
+                    result = 0; //"Failed to fetch data!";
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+//                Log.d(TAG, e.getLocalizedMessage());
+            }
+
+            return result; //"Failed to fetch data!";
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            /* Download complete. Lets update UI */
+            pDialogFra.dismiss();
+            if (result == 1) {
+                Log.e(TAG_SERIE, "OK SERIE");
+                // Introducir datos clientes
+                dialog_cliente();
+            } else {
+                Log.e(TAG_SERIE, "Failed to fetch data!");
+            }
+        }
+    }
+    private void parseResultFraFactura(String result) {
+        try {
+            JSONObject response = new JSONObject(result);
+            JSONArray posts = response.optJSONArray("posts");
+
+            Log.i("Longitud Datos: ",Integer.toString(posts.length()));
+            for (int ii = 0; ii < posts.length(); ii++) {
+                JSONObject post = posts.optJSONObject(ii);
+                Fra cat = new Fra(post.optString("SERIE"),
+                        post.optInt("FACTURA"));
+                frafacturaList.add(cat);
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Background Async Task to Traspaso Pedido a Factura
      * */
@@ -10984,9 +11862,12 @@ ge     * */
                                 popularItem.setTipo_are(post.optString("TIPO_ARE"));
                                 popularItem.setUrlimagen(Filtro.getUrl() + "/image/" + post.optString("IMAGEN").trim());
                                 lpopular.add(popularItem);
-                                Log.i("Articulo: ", popularItem.getTipo_are() + " - " + popularItem.getNombre());
+                                Glide.with(mContext).load(popularItem.getUrlimagen()).thumbnail(0.1f).diskCacheStrategy(DiskCacheStrategy.ALL).preload();
+                                Log.i("Popular: ", popularItem.getTipo_are() + " - " + popularItem.getNombre()+ " - " + lpopular.size());
 
                             }
+                            // AÑADIMOS POPULAR AL ARRAY DE POPULARES
+                            populares.add(lpopular);
                             break;
                         case "are":
                             Log.i("Longitud Datos: ", Integer.toString(posts.length()));

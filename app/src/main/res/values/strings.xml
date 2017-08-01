@@ -71,6 +71,7 @@
     <string name="cobrar">Cobrar</string>
     <string name="sumar">Sumar</string>
     <string name="restar">Restar</string>
+    <string name="facturar">Facturar</string>
 
     <string name="action_settings">Configuración</string>
     <string name="action_search">Buscar</string>

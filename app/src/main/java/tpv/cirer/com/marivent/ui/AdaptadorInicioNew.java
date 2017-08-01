@@ -13,10 +13,14 @@ import tpv.cirer.com.marivent.R;
 import tpv.cirer.com.marivent.modelo.Comida;
 
 /**
+ * Created by JUAN on 20/07/2017.
+ */
+
+/**
  * Adaptador para mostrar las comidas más pedidas en la sección "Inicio"
  */
-public class AdaptadorInicio
-        extends RecyclerView.Adapter<AdaptadorInicio.ViewHolder> {
+public class AdaptadorInicioNew
+        extends RecyclerView.Adapter<AdaptadorInicioNew.ViewHolder> {
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -33,7 +37,7 @@ public class AdaptadorInicio
         }
     }
 
-    public AdaptadorInicio() {
+    public AdaptadorInicioNew() {
     }
 
     @Override
@@ -56,7 +60,6 @@ public class AdaptadorInicio
                 .load(item.getIdDrawable())
                 .centerCrop()
                 .into(viewHolder.imagen);
-
         viewHolder.nombre.setText(item.getNombre());
         viewHolder.precio.setText("$" + item.getPrecio());
 

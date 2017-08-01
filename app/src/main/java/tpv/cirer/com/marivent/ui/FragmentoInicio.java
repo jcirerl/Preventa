@@ -24,13 +24,6 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import tpv.cirer.com.marivent.R;
-import tpv.cirer.com.marivent.herramientas.CargaFragment;
-import tpv.cirer.com.marivent.herramientas.DividerItemDecoration;
-import tpv.cirer.com.marivent.herramientas.Filtro;
-import tpv.cirer.com.marivent.herramientas.WrapContentLinearLayoutManager;
-import tpv.cirer.com.marivent.modelo.Popular;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,8 +38,16 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
+
+import tpv.cirer.com.marivent.R;
+import tpv.cirer.com.marivent.herramientas.CargaFragment;
+import tpv.cirer.com.marivent.herramientas.DividerItemDecoration;
+import tpv.cirer.com.marivent.herramientas.Filtro;
+import tpv.cirer.com.marivent.herramientas.WrapContentLinearLayoutManager;
+import tpv.cirer.com.marivent.modelo.Popular;
 
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lpopular;
 
@@ -94,9 +95,10 @@ public class FragmentoInicio extends Fragment {
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_POPULAR = "posts";
 
-////    public static ArrayList<Popular> lpopular = null;
+    private static ArrayList<Popular> lpopular1 = null;
 
     public static AdaptadorPopulares adaptadorpopulares;
+    public static AdaptadorPopulares adaptador;
 
 
 
@@ -133,11 +135,9 @@ public class FragmentoInicio extends Fragment {
             StrictMode.setThreadPolicy(policy);
         }
 
- ////       lpopular = new ArrayList<Popular>();
+        lpopular1 = new ArrayList<Popular>();
 
         url_rellenaponpulares = Filtro.getUrl()+"/RellenaListaPopulares.php";
-
-
     }
 
     @Override
@@ -230,6 +230,9 @@ public class FragmentoInicio extends Fragment {
 
         return rootViewpopular;
     }
+
+
+
     public String getNameResource(int id, String view, int num) {
 //        final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) activity.findViewById(android.R.id.content)).getChildAt(0);
         Log.i("get1TypeResource",view);
@@ -287,8 +290,8 @@ public class FragmentoInicio extends Fragment {
             text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(((ActividadPrincipal) getActivity()), R.color.light_blue_500)), 0, text.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
             ((ActividadPrincipal) getActivity()).setTitle(text);
 
-////        new AsyncHttpTaskPopulares().execute(url_rellenaponpulares);
-            adaptadorpopulares.notifyDataSetChanged();
+ ////           new AsyncHttpTaskPopulares().execute(url_rellenaponpulares);
+////            adaptadorpopulares.notifyDataSetChanged();
     }
 
     public class AsyncHttpTaskPopulares extends AsyncTask<String, Void, Integer> {
@@ -385,7 +388,7 @@ public class FragmentoInicio extends Fragment {
                     }
                     Log.i("JSON-->", response.toString());
 
-                    for (Iterator<Popular> it = lpopular.iterator(); it.hasNext();){
+                    for (Iterator<Popular> it = lpopular1.iterator(); it.hasNext();){
                         Popular popular = it.next();
                         it.remove();
                     }
@@ -456,7 +459,7 @@ public class FragmentoInicio extends Fragment {
                 popularItem.setArticulo(post.optString("ARTICULO"));
                 popularItem.setTipo_are(post.optString("TIPO_ARE"));
                 popularItem.setUrlimagen(Filtro.getUrl() + "/image/" + post.optString("IMAGEN").trim());
-                lpopular.add(popularItem);
+                lpopular1.add(popularItem);
                 Log.i("Articulo: ", popularItem.getTipo_are() + " - " + popularItem.getNombre());
 
             }

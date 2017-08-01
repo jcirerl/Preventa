@@ -2,6 +2,7 @@ package tpv.cirer.com.marivent.ui;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,11 +12,13 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import tpv.cirer.com.marivent.R;
+import tpv.cirer.com.marivent.herramientas.Filtro;
 import tpv.cirer.com.marivent.herramientas.PopularRowHolder;
 import tpv.cirer.com.marivent.modelo.Popular;
 
@@ -79,17 +82,29 @@ public class AdaptadorPopulares extends RecyclerView.Adapter<PopularRowHolder> i
         try {
             Popular item = mPopular.get(i);
             PopularRowHolder.bind(item);
-            Popular Popular = mPopular.get(i);
-            Log.i("recview seleccionado", Popular.getNombre());
+ ////           Popular Popular = mPopular.get(i);
+            Log.i("Popular seleccionado", item.getNombre());
 
 /*            Glide.with(PopularRowHolder.itemView.getContext())
                     .load(item.getIdDrawable())
                     .centerCrop()
                     .into(PopularRowHolder.imagen);
 */            Glide.with(mContext)
-                    .load(Popular.getUrlimagen())
+                    .load(item.getUrlimagen())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .centerCrop()
                     .into(PopularRowHolder.imagen);
+/*            Glide.with(mContext)
+                    .load(item.getUrlimagen())
+                    .thumbnail(0.1f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .centerCrop()
+                    .into(PopularRowHolder.imagen);
+*/            myText =String.format("%1$-50s",item.getNombre());
+            PopularRowHolder.nombre.setText(Html.fromHtml(myText.replace(" ", "&nbsp;")).toString());
+            PopularRowHolder.precio.setText(Html.fromHtml(String.format("%1$,.2f", item.getPrecio())+" "+ Filtro.getSimbolo()));
+            PopularRowHolder.articulo.setText(item.getArticulo());
+            PopularRowHolder.tiva_id.setText(Integer.toString(item.getTiva_id()));
 
         } catch (Exception e) {
             Log.i("recview LFT dentro", Integer.toString(mPopular.size()));

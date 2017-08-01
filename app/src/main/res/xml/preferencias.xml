@@ -67,6 +67,14 @@
             android:entries="@array/tipotab"
             android:entryValues="@array/modotab" />
         <ListPreference
+            android:defaultValue="21"
+            android:key="optipoarticulo"
+            android:title="Tipo Articulo"
+            android:summary="Asignacion Tamaño Descripcion Tipo Articulo"
+            android:dialogTitle="Indicar Tamaño"
+            android:entries="@array/tipoarticulo"
+            android:entryValues="@array/tamanyo_tipoarticulo" />
+        <ListPreference
             android:defaultValue="false"
             android:key="optabtodos"
             android:title="Carga Tab Tipos Articulos"

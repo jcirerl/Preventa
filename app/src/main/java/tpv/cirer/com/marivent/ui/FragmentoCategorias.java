@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -82,7 +83,6 @@ public class FragmentoCategorias extends Fragment {
 
         if (savedInstanceState == null) {
             insertarTabs(container);
-
             // Setear adaptador al viewpager.
             viewPager = (ViewPager) view.findViewById(R.id.pager);
             if(Filtro.getOptabtodos()) {
@@ -97,6 +97,7 @@ public class FragmentoCategorias extends Fragment {
             assert viewPager != null;
 //            viewPager.setCurrentItem(0);
             tabLayout.setupWithViewPager(viewPager);
+            changeTabsSize1();
             if (Filtro.getOptab()==0){
                tabLayout.setTabMode(TabLayout.MODE_FIXED);
             }else{
@@ -153,7 +154,48 @@ public class FragmentoCategorias extends Fragment {
         tabLayout.setTabTextColors(Color.parseColor("#FFFFFF"), Color.parseColor("#FFFFFF"));
         appBarLayout.addView(tabLayout);
     }
+    private void changeTabsSize1(){
+        for (int i = 0; i < tabLayout.getTabCount(); i++) {
 
+            TabLayout.Tab tab = tabLayout.getTabAt(i);
+            if (tab != null) {
+
+                TextView tabTextView = new TextView(getActivity());
+                tab.setCustomView(tabTextView);
+
+                tabTextView.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                tabTextView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+
+                tabTextView.setText(tab.getText());
+                tabTextView.setTextColor(Color.parseColor("#FFFFFF"));
+                // First tab is the selected tab, so if i==0 then set BOLD typeface
+/*                if (i == 0) {
+                    tabTextView.setTypeface(null, Typeface.BOLD);
+                }
+*/              Log.i("tabsize",String.valueOf(tabTextView.getTextSize()));
+                tabTextView.setTextSize(Filtro.getOptipoarticulo());
+            }
+
+        }
+
+    }
+    private void changeTabsSize() {
+//        Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "fonts/"+ Constants.FontStyle);
+        ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
+        int tabsCount = vg.getChildCount();
+        for (int j = 0; j < tabsCount; j++) {
+            ViewGroup vgTab = (ViewGroup) vg.getChildAt(j);
+            int tabChildsCount = vgTab.getChildCount();
+            for (int i = 0; i < tabChildsCount; i++) {
+                View tabViewChild = vgTab.getChildAt(i);
+                if (tabViewChild instanceof TextView) {
+  //                  ((TextView) tabViewChild).setTypeface(font);
+                    ((TextView) tabViewChild).setTextSize(30);
+
+                }
+            }
+        }
+    }
     private void poblarViewPager(final ViewPager viewPager) {
         AdaptadorSecciones adapter = new AdaptadorSecciones(getFragmentManager());
 ////        Log.i("Estoy PoblarViewPager",Integer.toString(lcategoria.size()));
