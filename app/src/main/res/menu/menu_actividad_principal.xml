@@ -8,6 +8,12 @@
         android:title="Mensaje Mesas" />-->
 
    <item
+        android:id="@+id/action_buffet"
+        android:orderInCategory="110"
+        app:showAsAction="always"
+        app:actionLayout="@layout/action_view_buffet"
+        android:title="Buffet" />
+    <item
         android:id="@+id/action_mesas"
         android:orderInCategory="120"
         app:showAsAction="always"

@@ -15,7 +15,8 @@ public class Fac {
 
     public Fac(){}
 
-    public Fac(String serie, int factura, String nif, String razon, String total, String fecha){
+    public Fac(int id, String serie, int factura, String nif, String razon, String total, String fecha){
+        this.FacId = id;
         this.FacSerie = serie;
         this.FacFactura = factura;
         this.FacNif = nif;

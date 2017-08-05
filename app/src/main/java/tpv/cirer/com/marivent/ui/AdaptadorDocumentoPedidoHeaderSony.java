@@ -102,7 +102,7 @@ public class AdaptadorDocumentoPedidoHeaderSony  extends RecyclerView.Adapter<Re
                             "\n"+ActividadPrincipal.getPalabras("Lineas")+": " + lineasPDD
                     );
                     dialog.setIcon(R.drawable.mark_as_read);
-                    dialog.setPositiveButton("Modificar", new DialogInterface.OnClickListener() {
+                    dialog.setPositiveButton(ActividadPrincipal.getPalabras("Modificar"), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             try {
@@ -128,7 +128,7 @@ public class AdaptadorDocumentoPedidoHeaderSony  extends RecyclerView.Adapter<Re
                             dialog.cancel();
                         }
                     });
-                    dialog.setNegativeButton("Borrar", new DialogInterface.OnClickListener() {
+                    dialog.setNegativeButton(ActividadPrincipal.getPalabras("Borrar"), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             try {
@@ -442,6 +442,11 @@ public class AdaptadorDocumentoPedidoHeaderSony  extends RecyclerView.Adapter<Re
             TurnoDocumentoPedido.setText(DocumentoPedido.getDocumentoPedidoCod_turno());
             ObsDocumentoPedido.setText(DocumentoPedido.getDocumentoPedidoObs());
             LineasDocumentoPedido.setText(Integer.toString(DocumentoPedido.getDocumentoPedidoLineas()));
+
+            UpdateDocumentoPedido.setText(ActividadPrincipal.getPalabras("Modificar"));
+            DeleteDocumentoPedido.setText(ActividadPrincipal.getPalabras("Borrar"));
+            SendDocumentoPedido.setText(ActividadPrincipal.getPalabras("Enviar"));
+            InvoiceDocumentoPedido.setText(ActividadPrincipal.getPalabras("Facturar"));
 
         }
         @Override

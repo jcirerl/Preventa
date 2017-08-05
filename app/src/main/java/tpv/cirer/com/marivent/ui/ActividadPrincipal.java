@@ -3,6 +3,7 @@ package tpv.cirer.com.marivent.ui;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,11 +16,14 @@ import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -74,10 +78,17 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapPrimitive;
+import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.ksoap2.transport.HttpTransportSE;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -105,6 +116,7 @@ import java.util.Set;
 
 import tpv.cirer.com.marivent.BuildConfig;
 import tpv.cirer.com.marivent.R;
+import tpv.cirer.com.marivent.conexion_http_post.FileDownloader;
 import tpv.cirer.com.marivent.conexion_http_post.JSONParserNew;
 import tpv.cirer.com.marivent.herramientas.ArticulosListArrayAdapter;
 import tpv.cirer.com.marivent.herramientas.CargaFragment;
@@ -172,7 +184,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
 
     ToolTipManager tooltips;
 
-    ProgressDialog pDialogTipoare,pDialogUserrel,pDialogGrup,pDialogTerminal,pDialogFra,pDialogCruge,pDialogPlato,pDialogFac,
+    ProgressDialog pDialogTipoare,pDialogUserrel,pDialogGrup,pDialogTerminal,pDialogFra,pDialogCruge,pDialogPlato,pDialogFac,pDialogPalabras,
             pDialogEmpr,pDialogLocal,pDialogSec,pDialogSecFechas,pDialogCaja,pDialogTurno,pDialogMesa,pDialogRango,pDialogEmpleado,pDialogMoneda;
     ProgressDialog pDialog;
     public static TextView itempedido;
@@ -185,6 +197,8 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     public static TextView itemmessage;
 
     public static final String TAG_IP = "IP";
+    private static final String TAG_PALABRAS = "Lista Palabras";
+    private String url_palabras;
 
     String TAG = "Nueva Linea";
     String TAG_GRUPO = "GRUPO: ";
@@ -296,6 +310,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     public static ArrayList<ArrayList<Popular>> populares;
     private static ArrayList<Comida> lcomida;
     public static ArrayList<Popular> lpopular;
+
     private static int IndiceSeccion;
 
     private String url_tipoare;
@@ -449,6 +464,63 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         }
         // VALORES PROVISIONALES PARA PRUEBAS //
         Filtro.setInicio(true);
+        SharedPreferences pref =
+                PreferenceManager.getDefaultSharedPreferences(
+                        ActividadPrincipal.this);
+        if (!Filtro.getIdioma().equals(pref.getString("opidioma","ESP"))) {
+            Filtro.setIdioma(pref.getString("opidioma", "ESP"));
+            Thread timerThread = new Thread(){
+                @Override
+                public void run(){
+                    try{
+                         // RELLENAMOS PALABRAS IDIOMA
+                        lpalabras = new ArrayList<Palabras>();
+                        url_palabras = Filtro.getUrl() + "/RellenaListaPalabras.php";
+                        Log.i("Url Palabras", url_palabras);
+                        new GetPalabras().execute(url_palabras);
+                        sleep(10000);
+                    }catch(InterruptedException e){
+                        e.printStackTrace();
+                    }finally{
+                 }
+                }
+            };
+            timerThread.start();
+        }
+        Filtro.setOpgrid(Integer.parseInt(pref.getString("opgrid", "8")));
+        Filtro.setOpmesas(Integer.parseInt(pref.getString("opmesas", "128")));
+        Filtro.setOptipoarticulo(Float.parseFloat(pref.getString("optipoarticulo", "16.0")));
+        Filtro.setOptoolbar(Integer.parseInt(pref.getString("optoolbar", "0")));
+        Filtro.setOptab(Integer.parseInt(pref.getString("optab", "0")));
+        Filtro.setOppedidomesa(Boolean.parseBoolean(pref.getString("oppedidomesa","false")));
+        Filtro.setOpintervalo(Integer.parseInt(pref.getString("opintervalo", "10000")));
+        Filtro.setOplog(Boolean.parseBoolean(pref.getString("oplog","true")));
+        Filtro.setOptab(Integer.parseInt(pref.getString("optab", "0")));
+        Filtro.setOptipotablet(Integer.parseInt(pref.getString("optipotablet","0")));
+        Filtro.setFilelog("");
+        Log.i("oplog",Boolean.toString((Filtro.getOplog())));
+        if(Filtro.getOptoolbar()==0){
+            Filtro.setHide_toolbar1(false);
+            Filtro.setHide_toolbar2(false);
+        }else{
+            Filtro.setHide_toolbar1(true);
+            Filtro.setHide_toolbar2(true);
+        }
+////                    Log.i("pixels",Double.toString(checkDimension(getApplicationContext())));
+        if (Filtro.getOplog()) {
+            Log.i("oplog",Boolean.toString((Filtro.getOplog())));
+            /// REGISTRAR LOG APLICACION
+            String fileName = "logcat_" + System.currentTimeMillis() + ".txt";
+            try {
+                File outputFile = new File(Environment.getExternalStoragePublicDirectory("/www/tpv/log"), fileName);
+                Filtro.setFilelog(outputFile.getAbsolutePath());
+                @SuppressWarnings("unused")
+                Process process = Runtime.getRuntime().exec("logcat -v time -f " + outputFile.getAbsolutePath() + " -r 32000 ");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
 /*        Filtro.setPrintDeviceType(Print.DEVTYPE_TCP);
         Filtro.setPrintIp("192.168.1.100");
         Filtro.setPrintInterval(1000);
@@ -773,6 +845,9 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
 
         MenuItem nav_inicio = menudrawer.findItem(R.id.item_inicio);
         nav_inicio.setTitle(ValorCampo(R.id.item_inicio,nav_inicio.getClass().getName()));
+
+        MenuItem nav_salir = menudrawer.findItem(R.id.item_salir);
+        nav_salir.setTitle(ValorCampo(R.id.item_salir,nav_salir.getClass().getName()));
 
         itemmesas=(TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.item_mesas));
         MenuItem nav_mesa = menudrawer.findItem(R.id.item_mesas);
@@ -1469,6 +1544,74 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         // Actualizar el contador
         Utils.setBadgeCount(this, iconCarrito, 0);
+        final MenuItem buffetItem = menu.findItem(R.id.action_buffet);
+        if(buffetItem != null)
+        {
+            View viewbuffet = MenuItemCompat.getActionView(buffetItem);
+            // Find the button within action-view
+            Button btnBuffet = (Button) viewbuffet.findViewById(R.id.btnBuffet);
+            btnBuffet.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    ToolTip toolTip = new ToolTip()
+                            .withText(getPalabras("Ir")+" "+getPalabras("Buffet"))
+                            .withColor(Color.GREEN) //or whatever you want
+                            .withAnimationType(ToolTip.AnimationType.FROM_MASTER_VIEW)
+                            .withShadow();
+                    tooltips.showToolTip(toolTip, v);
+                    return true;
+                }
+            });
+
+            btnBuffet.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+                    if (!getCruge("action_buffet_admin")){ // HAY QUE CREAR ESTA ACCION
+                        Snackbar.make(view, getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_LONG).show();
+                    }else {
+                        ArticuloIdGrupo = 0;
+                        nArticuloPositionSelected = 0;
+///                        ArticuloImagenGrupo = ""; IMAGEVIEW
+                        ArticuloCodigoGrupo = "";
+                        ArticuloNombreGrupo ="";
+                        for(int x=0;x<lcategoria.size();x++) {
+                            if (lcategoria.get(x).getCategoriaTipo_are().equals("BUFFET")) {
+                                ArticuloCodigoGrupo = lcategoria.get(x).getCategoriaTipo_are();
+                                ArticuloNombreGrupo = lcategoria.get(x).getCategoriaNombre_tipoare();
+                                Log.i("BUFFET: ", Integer.toString(x) + " " + lcategoria.get(x).getCategoriaTipo_are());
+                                // Limpiamos tabla lcomida
+                                for (Iterator<Comida> it = lcomida.iterator(); it.hasNext();){
+                                    Comida comida = it.next();
+                                }
+
+                                for (ArrayList<Comida> list : ActividadPrincipal.comidas) { // iterate -list by list
+                                    for (Comida comida : list) { //iterate element by element in a list
+                                        if (comida.getTipo_are().equals(lcategoria.get(x).getCategoriaTipo_are()))  {
+                                            lcomida.add(comida);
+                                            Log.i("SERIAL COMIDA: ", comida.getNombre());
+                                            Log.i("ImagenUrl",comida.getTipo_are()+" "+comida.getNombre()+" "+comida.getUrlimagen());
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (!ArticuloCodigoGrupo.equals("")) {
+                            Log.i("ARE BUFFET", "OK");
+                            dialog_buffet();
+                        } else {
+                            Log.e(TAG, "Failed to fetch data!");
+                            Toast.makeText(getApplicationContext(), getPalabras("No existe tipo articulo BUFFET"), Toast.LENGTH_SHORT).show();
+                        }
+
+/*
+                        larticulo = new ArrayList<Articulo>();
+                        URL_ARTICULOS = Filtro.getUrl() + "/RellenaListaARE.php";
+                        new GetAreBuffet().execute(URL_ARTICULOS, "BUFFET");
+*/                    }
+                }
+            });
+        }
 
         final MenuItem mesasItem = menu.findItem(R.id.action_mesas);
         if(mesasItem != null)
@@ -3047,7 +3190,99 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             }
         }
     }
+    public void dialog_buffet(){
+        final LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
 
+        String[] articulos = new String[lcomida.size()];
+        String space01 = new String(new char[01]).replace('\0', ' ');
+
+        articulosList = new ArrayList<Articulos>();
+
+        for (int i = 0; i < lcomida.size(); i++) {
+            //////////////////////////////////////////////////////////
+            String myTextCantidad = String.format("%1$,.2f", Float.parseFloat("1"));
+            myTextCantidad = myTextCantidad.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+            myTextCantidad = myTextCantidad.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+            String newTextCantidad="";
+            for (int ii = 0; ii < (8-myTextCantidad.length()); ii++) {
+                newTextCantidad+=space01;
+            }
+            newTextCantidad +=myTextCantidad;
+
+            String myTextNombreArticulo = String.format("%1$-32s", lcomida.get(i).getNombre());
+            myTextNombreArticulo = myTextNombreArticulo.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+            myTextNombreArticulo = myTextNombreArticulo.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+//            myTextNombreArticulo+= StringUtils.repeat(space01, (32-myTextNombreArticulo.length()));
+            String indent = StringUtils.repeat(" ", 32);
+            String output = lcomida.get(i).getNombre().trim();
+            output += indent.substring(0, indent.length() - output.length());
+            String format = "%-40s%s%n";
+
+            articulos[i] =  newTextCantidad+ " " + StringUtils.rightPad(lcomida.get(i).getNombre().trim(),32,space01);
+
+            Drawable d = LoadImageFromWebOperations(lcomida.get(i).getUrlimagen());
+
+            articulosList.add(new Articulos(articulos[i], lcomida.get(i).getArticulo(), d));
+
+        }
+        ArrayAdapter<Articulos> adapter = new ArticulosListArrayAdapter(this, articulosList);
+
+
+        mSelectedItems = new ArrayList();  // Where we track the selected items
+        AlertDialog.Builder builder = new AlertDialog.Builder(ActividadPrincipal.this);
+
+//        builder.setIcon(ArticuloImagenGrupo.getDrawable());
+        builder.setTitle(ActividadPrincipal.getPalabras("Articulo")+" "+ArticuloNombreGrupo )
+                // Specify the list array, the items to be selected by default (null for none),
+                // and the listener through which to receive callbacks when items are selected
+                .setMultiChoiceItems(articulos, null,
+                        new DialogInterface.OnMultiChoiceClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which,
+                                                boolean isChecked) {
+                                if (isChecked) {
+                                    // If the user checked the item, add it to the selected items
+                                    mSelectedItems.add(which);
+                                } else if (mSelectedItems.contains(which)) {
+                                    // Else, if the item is already in the array, remove it
+                                    mSelectedItems.remove(Integer.valueOf(which));
+                                }
+                            }
+                        })
+                // Set the action buttons
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked OK, so save the mSelectedItems results somewhere
+                        // or return them to the component that opened the dialog
+                        if (mSelectedItems.size()>0) {
+                            ArticuloGrupo = true;
+                            new CreaLineaDocumentoPedido().execute(ArticuloCodigoGrupo,
+                                    ArticuloNombreGrupo,
+                                    ArticuloPrecioGrupo,
+                                    ArticuloTivaGrupo,
+                                    "0",
+                                    "1",
+                                    "",
+                                    Integer.toString(ArticuloIdGrupo),
+                                    "00");
+
+
+                        }
+                    }
+                })
+                .setNegativeButton(ActividadPrincipal.getPalabras("Cancelar"), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog dialog1 = builder.create();
+        dialog1.show();
+
+    }
     public void dialog_factura(){
 
         final LinearLayout layout = new LinearLayout(this);
@@ -3070,19 +3305,19 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                 int maxLengthTotal = 25;
 
                 inputSerie.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLengthSerie)});
-                inputSerie.setText("Serie: "+lfac.get(0).getFacSerie());
+                inputSerie.setText(getPalabras("Serie")+": "+lfac.get(0).getFacSerie());
                 inputSerie.setInputType(InputType.TYPE_NULL);
 
                 inputFactura.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLengthFactura)});
-                inputFactura.setText("Factura: "+String.format("%08d",lfac.get(0).getFacFactura()));
+                inputFactura.setText(getPalabras("Factura")+": "+String.format("%08d",lfac.get(0).getFacFactura()));
                 inputFactura.setInputType(InputType.TYPE_NULL);
 
                 inputNif.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLengthNif)});
-                inputNif.setText("NIF: "+lfac.get(0).getFacNif());
+                inputNif.setText(getPalabras("NIF")+": "+lfac.get(0).getFacNif());
                 inputNif.setInputType(InputType.TYPE_NULL);
 
                 inputRazon.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLengthRazon)});
-                inputRazon.setText("Razon: "+lfac.get(0).getFacRazon());
+                inputRazon.setText(getPalabras("Razon")+": "+lfac.get(0).getFacRazon());
                 inputRazon.setInputType(InputType.TYPE_NULL);
 
                 String myText="";
@@ -3092,18 +3327,18 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                     String StringRecogido = lfac.get(0).getFacFecha();
                     Date datehora = sdf1.parse(StringRecogido);
 
-                    //System.out.println("Fecha input : "+datehora);
+                    //System.out.println("Fecha input ")+": "+datehora);
                     myText = sdf2.format(datehora);
 
                 } catch (Exception e) {
                     e.getMessage();
                 }
                 inputFecha.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLengthFecha)});
-                inputFecha.setText("Fecha: "+myText);
+                inputFecha.setText(getPalabras("Fecha")+": "+myText);
                 inputFecha.setInputType(InputType.TYPE_NULL);
 
                 inputTotal.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLengthTotal)});
-                inputTotal.setText("Total: "+String.format("%1$,.2f", Float.parseFloat(lfac.get(0).getFacTotal()))+" "+Filtro.getSimbolo());
+                inputTotal.setText(getPalabras("Total")+": "+String.format("%1$,.2f", Float.parseFloat(lfac.get(0).getFacTotal()))+" "+Filtro.getSimbolo());
                 inputTotal.setInputType(InputType.TYPE_NULL);
 
 
@@ -3126,9 +3361,10 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                 alert.setTitle(getPalabras("Datos")+" "+getPalabras("Factura"));
                 alert.setView(layout);
 
-                alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                alert.setPositiveButton(getPalabras("Imprimir"), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-
+                        // IMPRIMIR MEDIANTE WEBSERVICE SOAP
+                        new WSFactura().execute();
 
                     }
                 });
@@ -3243,39 +3479,39 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         inputTelefono.setTextColor(Color.RED);
         inputEmail.setTextColor(Color.RED);
 
-        inputCodigo.setHint("Codigo");
+        inputCodigo.setHint(getPalabras("Codigo"));
         layout.addView(inputCodigo);
 
-        inputNif.setHint("Nif");
+        inputNif.setHint(getPalabras("Nif"));
         layout.addView(inputNif);
 
-        inputRazon.setHint("Razon");
+        inputRazon.setHint(getPalabras("Razon"));
         layout.addView(inputRazon);
 
-        inputNombre.setHint("Nombre");
+        inputNombre.setHint(getPalabras("Nombre"));
         layout.addView(inputNombre);
 
-        inputDireccion.setHint("Direccion");
+        inputDireccion.setHint(getPalabras("Direccion"));
         layout.addView(inputDireccion);
 
-        inputPoblacion.setHint("Poblacion");
+        inputPoblacion.setHint(getPalabras("Poblacion"));
         layout.addView(inputPoblacion);
 
-        inputProvincia.setHint("Provincia");
+        inputProvincia.setHint(getPalabras("Provincia"));
         layout.addView(inputProvincia);
 
-        inputPais.setHint("Pais");
+        inputPais.setHint(getPalabras("Pais"));
         layout.addView(inputPais);
 
-        inputTelefono.setHint("Telefono");
+        inputTelefono.setHint(getPalabras("Telefono"));
         layout.addView(inputTelefono);
 
-        inputEmail.setHint("Email");
+        inputEmail.setHint(getPalabras("Email"));
         layout.addView(inputEmail);
 
         /// RELLENAR SPINNER SERIE FACTURACION
         final TextView titleBox = new TextView(this);
-        titleBox.setHint("SELECCIONAR SERIE FACTURA");
+        titleBox.setHint(getPalabras("Seleccionar")+" "+getPalabras("Serie")+" "+getPalabras("Factura"));
         titleBox.setTextColor(Color.RED);
         layout.addView(titleBox);
 
@@ -6730,7 +6966,9 @@ ge     * */
             for (int ii = 0; ii < posts.length(); ii++) {
                 JSONObject post = posts.optJSONObject(ii);
                 Log.i("POST: ",post.optString("SERIE")+ post.optInt("FACTURA"));
-                Fac fac = new Fac(post.optString("SERIE"),
+                Fac fac = new Fac(
+                        post.optInt("ID"),
+                        post.optString("SERIE"),
                         post.optInt("FACTURA"),
                         post.optString("NIF"),
                         post.optString("RAZON"),
@@ -6752,12 +6990,12 @@ ge     * */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-/*            pDialog = new ProgressDialog(ActividadPrincipal.this);
+            pDialog = new ProgressDialog(ActividadPrincipal.this);
             pDialog.setMessage(getPalabras("Traspaso")+" "+getPalabras("Ticket")+" "+getPalabras("Factura")+"..");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
             pDialog.show();
-*/        }
+        }
 
         /**
          * Creating product
@@ -6765,95 +7003,83 @@ ge     * */
         @Override
         protected Integer doInBackground(String... args) {
             // updating UI from Background Thread
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    // Check for success tag
-                    try {
-                        int success;
-                        String filtro = "";
-                        String xWhere = "";
-                        if(!(Filtro.getGrupo().equals(""))) {
-                            if (xWhere.equals("")) {
-                                xWhere += "GRUPO='" + Filtro.getGrupo() + "'";
-                            } else {
-                                xWhere += " AND GRUPO='" + Filtro.getGrupo() + "'";
-                            }
-                        }
-                        if(!(Filtro.getEmpresa().equals(""))) {
-                            if (xWhere.equals("")) {
-                                xWhere += "EMPRESA='" + Filtro.getEmpresa() + "'";
-                            } else {
-                                xWhere += " AND EMPRESA='" + Filtro.getEmpresa() + "'";
-                            }
-                        }
-                        if(!(Filtro.getLocal().equals(""))) {
-                            if (xWhere.equals("")) {
-                                xWhere += "LOCAL='" + Filtro.getLocal() + "'";
-                            } else {
-                                xWhere += " AND LOCAL='" + Filtro.getLocal() + "'";
-                            }
-                        }
-                        if(!(Filtro.getSeccion().equals(""))) {
-                            if (xWhere.equals("")) {
-                                xWhere += "SECCION='" + Filtro.getSeccion() + "'";
-                            } else {
-                                xWhere += " AND SECCION='" + Filtro.getSeccion() + "'";
-                            }
-                        }
-                        if(!(Filtro.getCaja().equals(""))) {
-                            if (xWhere.equals("")) {
-                                xWhere += "CAJA='" + Filtro.getCaja() + "'";
-                            } else {
-                                xWhere += " AND CAJA='" + Filtro.getCaja() + "'";
-                            }
-                        }
-                        filtro+=xWhere;
-
-                        Calendar currentDate = Calendar.getInstance(); //Get the current date
-                        SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); //format it as per your requirement
-                        String dateNow = formatter.format(currentDate.getTime());
-
-                        long maxDate = currentDate.getTime().getTime(); // Twice!
-
-                        // Building Parameters
-                        ContentValues values = new ContentValues();
-                        values.put("serie_ftp", serie_ftp);
-                        values.put("factura_ftp", factura_ftp);
-                        values.put("filtro",filtro);
-                        values.put("cliente",Filtro.getCod_cliente());
-                        values.put("serie",Filtro.getSerieFac());
-                        values.put("factura",Long.toString(maxDate));
-                        values.put("updated", dateNow);
-                        values.put("creado", dateNow);
-                        values.put("usuario", Filtro.getUsuario());
-                        values.put("ip",getLocalIpAddress());
-
-                        // getting JSON Object
-                        // Note that create product url accepts POST method
-                        JSONObject json = jsonParserNew.makeHttpRequest(url_ticket_a_factura,
-                                "POST", values);
-
-                        // check log cat fro response
-                        //            Log.d("Create Response", json.toString());
-
-                        // check for success tag
-
-                        success = json.getInt(TAG_SUCCESS);
-                        if (success == 1) {
-
-                        } else {
-                            Toast.makeText(ActividadPrincipal.this, "ERROR NO "+getPalabras("Traspaso")+" "+getPalabras("Pedido")+" "+getPalabras("Factura"), Toast.LENGTH_SHORT).show();
-                            // failed to create product
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+            int success=0;
+            try {
+                String filtro = "";
+                String xWhere = "";
+                if(!(Filtro.getGrupo().equals(""))) {
+                    if (xWhere.equals("")) {
+                        xWhere += "GRUPO='" + Filtro.getGrupo() + "'";
+                    } else {
+                        xWhere += " AND GRUPO='" + Filtro.getGrupo() + "'";
                     }
                 }
-            });
+                if(!(Filtro.getEmpresa().equals(""))) {
+                    if (xWhere.equals("")) {
+                        xWhere += "EMPRESA='" + Filtro.getEmpresa() + "'";
+                    } else {
+                        xWhere += " AND EMPRESA='" + Filtro.getEmpresa() + "'";
+                    }
+                }
+                if(!(Filtro.getLocal().equals(""))) {
+                    if (xWhere.equals("")) {
+                        xWhere += "LOCAL='" + Filtro.getLocal() + "'";
+                    } else {
+                        xWhere += " AND LOCAL='" + Filtro.getLocal() + "'";
+                    }
+                }
+                if(!(Filtro.getSeccion().equals(""))) {
+                    if (xWhere.equals("")) {
+                        xWhere += "SECCION='" + Filtro.getSeccion() + "'";
+                    } else {
+                        xWhere += " AND SECCION='" + Filtro.getSeccion() + "'";
+                    }
+                }
+                if(!(Filtro.getCaja().equals(""))) {
+                    if (xWhere.equals("")) {
+                        xWhere += "CAJA='" + Filtro.getCaja() + "'";
+                    } else {
+                        xWhere += " AND CAJA='" + Filtro.getCaja() + "'";
+                    }
+                }
+                filtro+=xWhere;
 
-            return null;
+                Calendar currentDate = Calendar.getInstance(); //Get the current date
+                SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); //format it as per your requirement
+                String dateNow = formatter.format(currentDate.getTime());
+
+                long maxDate = currentDate.getTime().getTime(); // Twice!
+
+                // Building Parameters
+                ContentValues values = new ContentValues();
+                values.put("serie_ftp", serie_ftp);
+                values.put("factura_ftp", factura_ftp);
+                values.put("filtro",filtro);
+                values.put("cliente",Filtro.getCod_cliente());
+                values.put("serie",Filtro.getSerieFac());
+                values.put("factura",Long.toString(maxDate));
+                values.put("updated", dateNow);
+                values.put("creado", dateNow);
+                values.put("usuario", Filtro.getUsuario());
+                values.put("ip",getLocalIpAddress());
+
+                // getting JSON Object
+                // Note that create product url accepts POST method
+                JSONObject json = jsonParserNew.makeHttpRequest(url_ticket_a_factura,
+                        "POST", values);
+
+                // check log cat fro response
+                //            Log.d("Create Response", json.toString());
+
+                // check for success tag
+
+                success = json.getInt(TAG_SUCCESS);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return success;
         }
 
         /**
@@ -6862,7 +7088,13 @@ ge     * */
         @Override
         protected void onPostExecute(Integer success) {
             // dismiss the dialog once done
-//            pDialog.dismiss();
+            pDialog.dismiss();
+            if (success == 1) {
+               new CompruebaDocumentoFactura().execute(url_fac,serie_ftp,String.valueOf(factura_ftp));
+            } else {
+                Toast.makeText(ActividadPrincipal.this, "ERROR NO "+getPalabras("Traspaso")+" "+getPalabras("Pedido")+" "+getPalabras("Factura"), Toast.LENGTH_SHORT).show();
+                // failed to create product
+            }
 
         }
 
@@ -7021,6 +7253,266 @@ ge     * */
                         post.optInt("FACTURA"));
                 frafacturaList.add(cat);
 
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    //Tarea Asíncrona para llamar al WS de consulta en segundo plano
+    private class WSFactura extends AsyncTask<String,Integer,Boolean> {
+
+        protected Boolean doInBackground(String... params) {
+
+            boolean resul = true;
+            final String NAMESPACE = Filtro.getNamespace();
+            final String URL=Filtro.getNamespace()+"MyServiceCRLinux.asmx?WSDL";
+            final String METHOD_NAME = "exportToPdf";
+            final String SOAP_ACTION = Filtro.getNamespace()+METHOD_NAME;
+            //           final String SOAP_ACTION = "http://83.56.29.190:8082/"+METHOD_NAME;
+            Log.i("SOAP","NAMESPACE: "+NAMESPACE+" URL: "+URL+" METHOD_NAME: "+METHOD_NAME+" SOAP_ACTION: "+SOAP_ACTION);
+            Log.i("SOAP","DRIVER: "+Filtro.getDriver()+" HOST: "+Filtro.getHost()+" DBNAME: "+Filtro.getDbname()+" USERNAME: "+Filtro.getUsername()+" PWDNAME: "+Filtro.getPwdname());
+
+            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+            request.addProperty("reportName", Filtro.getDirreportname()+"FACTURA.rpt");
+            request.addProperty("pdfName", Filtro.getDirpdfname()+"FACTURA"+String.format("%06d",lfac.get(0).getFacFactura())+".pdf");
+            request.addProperty("wfId", "");
+            request.addProperty("cpId", "");
+            request.addProperty("dbViewName", "{fac.ID}="+lfac.get(0).getFacId());
+            request.addProperty("viewType", "view");
+            request.addProperty("driver", Filtro.getDriver());
+            request.addProperty("host", Filtro.getHost());
+            request.addProperty("dbName", Filtro.getDbname());
+            request.addProperty("userName", Filtro.getUsername());
+            request.addProperty("pwdName", Filtro.getPwdname());
+            request.addProperty("p01", "");
+            request.addProperty("p02", "");
+            request.addProperty("p03", "");
+
+            SoapSerializationEnvelope envelope =
+                    new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+
+            envelope.setOutputSoapObject(request);
+
+            HttpTransportSE transporte = new HttpTransportSE(URL);
+
+            try
+            {
+                transporte.call(SOAP_ACTION, envelope);
+
+                SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
+                String res = String.valueOf(response.toString());
+                Log.i("SOAP: ",res);
+                //          String foo = "This,that,other";
+                //        EQUIVALENTE EXPLODE PHP
+                String[] split = res.split("~");
+                ////////////////////////////////////////////
+/*              EQUIVALENTE IMPLODE DE PHP
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < split.length; i++) {
+                    sb.append(split[i]);
+                    if (i != split.length - 1) {
+                        sb.append(" ");
+                    }
+                }
+                String joined = sb.toString();
+      /////////////////////////////////////////////
+*/              int ok_existe=0;
+                for (int i = -1; (i = split[0].indexOf("OK", i + 1)) != -1; ) {
+                    ok_existe = i;
+                }
+                if (ok_existe==0){
+                    resul = false;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.e("SOAP", "Error WEBSERVICE [" + e.getMessage()+"] ");
+                resul = false;
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result) {
+
+            if (result)
+            {
+                new DownloadFile().execute(Filtro.getNamespace()+Filtro.getDirpdfname()+"FACTURA"+String.format("%06d",lfac.get(0).getFacFactura())+".pdf", "FACTURA"+String.format("%06d",lfac.get(0).getFacFactura())+".pdf");
+            }
+            else
+            {
+                Log.e(TAG, "NOT FILE PDF GENERATED!");
+
+            }
+        }
+    }
+
+    private class DownloadFile extends AsyncTask<String, Integer, Boolean>{
+
+        @Override
+        protected Boolean doInBackground(String... strings) {
+            String fileUrl = strings[0];   // -> http://maven.apache.org/maven-1.x/maven.pdf
+            String fileName = strings[1];  // -> maven.pdf
+            String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
+            File folder = new File(extStorageDirectory, "testthreepdf");
+            folder.mkdir();
+            Log.i("FOLDER",folder.getPath());
+            File pdfFile = new File(folder, fileName);
+
+            boolean resul = true;
+
+            try{
+                pdfFile.createNewFile();
+            }catch (IOException e){
+                resul = false;
+                e.printStackTrace();
+            }
+            FileDownloader.downloadFile(fileUrl, pdfFile);
+            return resul;
+        }
+        protected void onPostExecute(Boolean result) {
+
+            if (result)
+            {
+                File pdfFile = new File(Environment.getExternalStorageDirectory() + "/testthreepdf/" + "FACTURA"+String.format("%06d",lfac.get(0).getFacFactura())+".pdf");  // -> filename = maven.pdf
+                Uri path = Uri.fromFile(pdfFile);
+                Intent pdfIntent = new Intent(Intent.ACTION_VIEW);
+                pdfIntent.setDataAndType(path, "application/pdf");
+                pdfIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                try{
+                    startActivity(pdfIntent);
+                }catch(ActivityNotFoundException e){
+                    Toast.makeText(getApplicationContext(), "No Application available to view PDF", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+            else
+            {
+                Log.e(TAG, "NOT FILE PDF VIEW!");
+
+            }
+        }
+    }
+
+    public class GetPalabras extends AsyncTask<String, Void, Integer> {
+
+        @Override
+        protected void onPreExecute() {
+            //setProgressBarIndeterminateVisibility(true);
+            super.onPreExecute();
+/*            pDialogPalabras = new ProgressDialog(ActividadPrincipal.this);
+            pDialogPalabras.setMessage("Cargando Palabras. Espere por favor...");
+            pDialogPalabras.setIndeterminate(false);
+            pDialogPalabras.setCancelable(true);
+            pDialogPalabras.show();
+*/
+        }
+
+        @Override
+        protected Integer doInBackground(String... params) {
+            String cSql = "";
+            String xWhere = "";
+            if(!(Filtro.getIdioma().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE palabras.IDIOMA='" + Filtro.getIdioma() + "'";
+                } else {
+                    xWhere += " AND palabras.IDIOMA='" + Filtro.getIdioma() + "'";
+                }
+            }
+
+            cSql += xWhere;
+            if(cSql.equals("")) {
+                cSql="Todos";
+            }
+            Log.i("Sql Lista",cSql);
+            InputStream inputStream = null;
+            Integer result = 0;
+            HttpURLConnection urlConnection = null;
+
+            try {
+                // forming th java.net.URL object
+                URL url = new URL(params[0]);
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                urlConnection.setReadTimeout(10000);
+                urlConnection.setConnectTimeout(15000);
+                urlConnection.setRequestMethod("GET");
+                urlConnection.setDoInput(true);
+                urlConnection.setDoOutput(true);
+
+                ContentValues values = new ContentValues();
+                values.put("filtro", cSql);
+
+                OutputStream os = urlConnection.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+                writer.write(getQuery(values));
+                writer.flush();
+                writer.close();
+                os.close();
+                urlConnection.connect();
+
+                int statusCode = urlConnection.getResponseCode();
+                Log.i("STATUS CODE: ", Integer.toString(urlConnection.getResponseCode()) + " - " + urlConnection.getResponseMessage());
+                // 200 represents HTTP OK
+                if (statusCode ==  200) {
+
+                    BufferedReader r = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = r.readLine()) != null) {
+                        response.append(line);
+                    }
+                    Log.i("JSON-->", response.toString());
+                    for (Iterator<Palabras> it = lpalabras.iterator(); it.hasNext();){
+                        Palabras palabras = it.next();
+                        it.remove();
+                    }
+
+                    parseResultpalabras(response.toString());
+                    result = 1; // Successful
+                }else{
+                    result = 0; //"Failed to fetch data!";
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+//                Log.d(TAG, e.getLocalizedMessage());
+            }
+
+            return result; //"Failed to fetch data!";
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            /* Download complete. Lets update UI */
+  //          pDialogPalabras.dismiss();
+            if (result == 1) {
+                Log.i(TAG_PALABRAS, Integer.toString(lpalabras.size()));
+            } else {
+                Log.e(TAG_PALABRAS, "Failed to fetch data!");
+            }
+        }
+    }
+
+    private void parseResultpalabras(String result) {
+        try {
+            JSONObject response = new JSONObject(result);
+            JSONArray posts = response.optJSONArray("posts");
+
+            Log.i("Longitud Datos: ",Integer.toString(posts.length()));
+            for (int ii = 0; ii < posts.length(); ii++) {
+                JSONObject post = posts.optJSONObject(ii);
+                Palabras cat = new Palabras(post.optInt("ID"),
+                        post.optString("IDIOMA"),
+                        post.optString("CLAVESTRING").trim(),
+                        post.optString("PALABRA").trim());
+                Log.i(TAG_PALABRAS,Integer.toString(post.optInt("ID"))+","+post.optString("IDIOMA")+","+post.optString("CLAVESTRING")+","+post.optString("PALABRA"));
+                lpalabras.add(cat);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -7368,14 +7860,11 @@ ge     * */
             for (int ii = 0; ii < posts.length(); ii++) {
                 JSONObject post = posts.optJSONObject(ii);
 
-                String tipo_are = post.optString("TIPO_ARE");
-                String nombre_tipoare = post.optString("NOMBRE_TIPOARE");
-                int orden = post.optInt("ORDEN");
-
                 Categoria categoriaItem = new Categoria();
-                categoriaItem.setCategoriaOrden(orden);
-                categoriaItem.setCategoriaTipo_are(tipo_are);
-                categoriaItem.setCategoriaNombre_tipoare(nombre_tipoare);
+                categoriaItem.setCategoriaOrden(post.optInt("ORDEN"));
+                categoriaItem.setCategoriaTipo_are(post.optString("TIPO_ARE"));
+                categoriaItem.setCategoriaNombre_tipoare(post.optString("NOMBRE_TIPOARE"));
+                categoriaItem.setCategoriaUrlimagen(Filtro.getUrl() + "/image/" + post.optString("IMAGEN").trim());
                 lcategoria.add(categoriaItem);
             }
         } catch (JSONException e) {
@@ -7777,7 +8266,7 @@ ge     * */
             for (int ii = 0; ii < posts.length(); ii++) {
                 JSONObject post = posts.optJSONObject(ii);
                 Cruge cat = new Cruge(post.optString("ACTION"));
-///                Log.i(TAG_CRUGE,post.optString("ACTION"));
+//                Log.i(TAG_CRUGE,post.optString("ACTION"));
                 lcruge.add(cat);
             }
         } catch (JSONException e) {
@@ -12017,6 +12506,143 @@ ge     * */
 
             public MyParams(int param) {
                 // ... params init
+            }
+        }
+    }
+    public class GetAreBuffet extends AsyncTask<String, Void, Integer> {
+
+        @Override
+        protected void onPreExecute() {
+            //setProgressBarIndeterminateVisibility(true);
+            super.onPreExecute();
+            pDialog = new ProgressDialog(ActividadPrincipal.this);
+            pDialog.setMessage(ActividadPrincipal.getPalabras("Cargando")+" "+ActividadPrincipal.getPalabras("Articulos")+"...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
+        }
+
+        @Override
+        protected Integer doInBackground(String... params) {
+//            Integer result = 0;
+            String cSql = "";
+            String xWhere = "";
+            if(!(Filtro.getGrupo().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE are.GRUPO='" + Filtro.getGrupo() + "'";
+                } else {
+                    xWhere += " AND are.GRUPO='" + Filtro.getGrupo() + "'";
+                }
+            }
+            if(!(Filtro.getEmpresa().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE are.EMPRESA='" + Filtro.getEmpresa() + "'";
+                } else {
+                    xWhere += " AND are.EMPRESA='" + Filtro.getEmpresa() + "'";
+                }
+            }
+            if(!(Filtro.getLocal().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE are.LOCAL='" + Filtro.getLocal() + "'";
+                } else {
+                    xWhere += " AND are.LOCAL='" + Filtro.getLocal() + "'";
+                }
+            }
+            if(!(Filtro.getSeccion().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE are.SECCION='" + Filtro.getSeccion() + "'";
+                } else {
+                    xWhere += " AND are.SECCION='" + Filtro.getSeccion() + "'";
+                }
+            }
+            if (xWhere.equals("")) {
+                xWhere += " WHERE are.TIPO_ARE='" + params[1] + "'";
+            } else {
+                xWhere += " AND are.TIPO_ARE='" + params[1] + "'";
+            }
+
+            cSql += xWhere;
+            if(cSql.equals("")) {
+                cSql="Todos";
+            }
+            Log.i("Sql Lista",cSql);
+            InputStream inputStream = null;
+            Integer result = 0;
+            HttpURLConnection urlConnection = null;
+
+            try {
+                // forming th java.net.URL object
+                URL url = new URL(params[0]);
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                // for Get request
+                ///           urlConnection.setRequestMethod("GET");
+
+                urlConnection.setReadTimeout(10000);
+                urlConnection.setConnectTimeout(15000);
+                urlConnection.setRequestMethod("GET");
+                urlConnection.setDoInput(true);
+                urlConnection.setDoOutput(true);
+
+                ContentValues values = new ContentValues();
+                values.put("filtro", cSql);
+
+                OutputStream os = urlConnection.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+//                writer.write(getQuery(params1));
+                writer.write(getQuery(values));
+                writer.flush();
+                writer.close();
+                os.close();
+                urlConnection.connect();
+
+                int statusCode = urlConnection.getResponseCode();
+                Log.i("STATUS CODE: ", Integer.toString(urlConnection.getResponseCode()) + " - " + urlConnection.getResponseMessage());
+                // 200 represents HTTP OK
+                if (statusCode ==  200) {
+
+                    BufferedReader r = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = r.readLine()) != null) {
+                        response.append(line);
+                    }
+                    Log.i("JSON-->", response.toString());
+                    Log.i("Longitud Antes: ",Integer.toString(larticulo.size()));
+                    for (Iterator<Articulo> it = larticulo.iterator(); it.hasNext();){
+                        Articulo articulo = it.next();
+                        it.remove();
+                    }
+
+                    Log.i("Longitud Despues: ",Integer.toString(larticulo.size()));
+
+                    parseResultArticulos(response.toString());
+                    result = 1; // Successful
+                }else{
+                    result = 0; //"Failed to fetch data!";
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+//                Log.d(TAG, e.getLocalizedMessage());
+            }
+
+            return result; //"Failed to fetch data!";
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            pDialog.dismiss();
+            if (result == 1) {
+                Log.i("ARE BUFFET", "OK");
+                dialog_buffet();
+            } else {
+                Log.e(TAG, "Failed to fetch data!");
+                Toast.makeText(getApplicationContext(), getPalabras("No existe articulo BUFFET"), Toast.LENGTH_SHORT).show();
+
             }
         }
     }

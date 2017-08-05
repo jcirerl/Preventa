@@ -18,11 +18,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import tpv.cirer.com.marivent.R;
-import tpv.cirer.com.marivent.herramientas.Filtro;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import tpv.cirer.com.marivent.R;
+import tpv.cirer.com.marivent.herramientas.Filtro;
 
 /**
  * Created by JUAN on 09/11/2016.
@@ -86,7 +86,7 @@ public class FragmentoPagesFactura
 
         /// Poner Datos CABECERA
         Filtro.setCabecera(false);
-        ((ActividadPrincipal) getActivity()).setCabecera(((ActividadPrincipal) getActivity()).getPalabras("Factura")+": "+Integer.toString(nFactura)+" "+cEstado+" "+((ActividadPrincipal) getActivity()).getPalabras("Mesa")+": "+cMesa,0.00,nFactura);
+        ((ActividadPrincipal) getActivity()).setCabecera(((ActividadPrincipal) getActivity()).getPalabras("Factura")+": "+Integer.toString(nFactura)+" "+((ActividadPrincipal) getActivity()).getPalabras(cEstado)+" "+((ActividadPrincipal) getActivity()).getPalabras("Mesa")+": "+cMesa,0.00,nFactura);
 
         if (savedInstanceState != null) {
             lastPage = savedInstanceState.getInt(KEY_PAGE, 0);

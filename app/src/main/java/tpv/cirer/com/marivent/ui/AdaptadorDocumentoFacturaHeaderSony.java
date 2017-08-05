@@ -504,6 +504,11 @@ public class AdaptadorDocumentoFacturaHeaderSony extends RecyclerView.Adapter<Re
             ImpivaDocumentoFactura.setText(DocumentoFactura.getDocumentoFacturaImp_iva());
             ImptotalDocumentoFactura.setText(DocumentoFactura.getDocumentoFacturaImp_total());
             TfraDocumentoFactura.setText(DocumentoFactura.getDocumentoFacturaT_fra());
+
+            UpdateDocumentoFactura.setText(ActividadPrincipal.getPalabras("Modificar"));
+            DeleteDocumentoFactura.setText(ActividadPrincipal.getPalabras("Borrar"));
+            CobroDocumentoFactura.setText(ActividadPrincipal.getPalabras("Cobro"));
+            FacturarDocumentoFactura.setText(ActividadPrincipal.getPalabras("Facturar"));
         }
         public String padRight(String s, int n) {
             return String.format("%1$-" + n + "s", s);

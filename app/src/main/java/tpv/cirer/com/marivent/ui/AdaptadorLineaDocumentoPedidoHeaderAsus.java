@@ -431,6 +431,9 @@ public class AdaptadorLineaDocumentoPedidoHeaderAsus  extends RecyclerView.Adapt
             SwFacturaLineaDocumentoPedido.setText(Integer.toString(LineaDocumentoPedido.getLineaDocumentoPedidoSwFactura()));
             SwPedidoLineaDocumentoPedido.setText(Integer.toString(LineaDocumentoPedido.getLineaDocumentoPedidoSwPedido()));
             IndividualLineaDocumentoPedido.setText(Integer.toString(LineaDocumentoPedido.getLineaDocumentoPedidoIndividual()));
+
+            AddCantLineaDocumentoPedido.setText(ActividadPrincipal.getPalabras("Sumar"));
+            MinCantLineaDocumentoPedido.setText(ActividadPrincipal.getPalabras("Restar"));
         }
         @Override
         public void onClick(View v) {

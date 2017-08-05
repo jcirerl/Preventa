@@ -287,7 +287,7 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
                                 cMaximo = cMaximo.replace(".","");
                                 cMaximo = cMaximo.replace(",",".");
 
-                                ((ActividadPrincipal) getActivity()).setCabecera(((ActividadPrincipal) getActivity()).getPalabras("Factura")+": "+Integer.toString(nFactura)+" "+"CLOSE COBRO"+" "+((ActividadPrincipal) getActivity()).getPalabras("Mesa")+": "+Filtro.getMesa(),Double.valueOf(cMaximo),nFactura);
+                                ((ActividadPrincipal) getActivity()).setCabecera(((ActividadPrincipal) getActivity()).getPalabras("Factura")+": "+Integer.toString(nFactura)+" "+((ActividadPrincipal) getActivity()).getPalabras("CLOSE COBRO")+" "+((ActividadPrincipal) getActivity()).getPalabras("Mesa")+": "+Filtro.getMesa(),Double.valueOf(cMaximo),nFactura);
                                 btnCobro.setVisibility(View.GONE);
                             }
                         }

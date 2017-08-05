@@ -360,6 +360,9 @@ public class AdaptadorLineaDocumentoFacturaHeaderAsus extends RecyclerView.Adapt
             PreuLineaDocumentoFactura.setText(LineaDocumentoFactura.getLineaDocumentoFacturaPreu());
             ImporteLineaDocumentoFactura.setText(LineaDocumentoFactura.getLineaDocumentoFacturaImporte());
             TivaLineaDocumentoFactura.setText(Integer.toString(LineaDocumentoFactura.getLineaDocumentoFacturaTiva_id()));
+
+            AddCantLineaDocumentoFactura.setText(ActividadPrincipal.getPalabras("Sumar"));
+            MinCantLineaDocumentoFactura.setText(ActividadPrincipal.getPalabras("Restar"));
         }
         @Override
         public void onClick(View v) {

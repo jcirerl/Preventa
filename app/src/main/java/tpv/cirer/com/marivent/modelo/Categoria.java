@@ -8,6 +8,7 @@ public class Categoria {
     private String CategoriaNombre_tipoare;
     private String CategoriaTipo_are;
     private int CategoriaOrden;
+    private String CategoriaUrlimagen;
 
     public Categoria(){}
 
@@ -29,6 +30,12 @@ public class Categoria {
     }
     public void setCategoriaOrden(int categoriaorden) {
         this.CategoriaOrden = categoriaorden;
+    }
+    public String getCategoriaUrlimagen() {
+        return CategoriaUrlimagen;
+    }
+    public void setCategoriaUrlimagen(String categoriaurlimagen) {
+        this.CategoriaUrlimagen = categoriaurlimagen;
     }
 
 }

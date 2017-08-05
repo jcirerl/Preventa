@@ -553,9 +553,9 @@ public class SplashScreen extends AppCompatActivity {
                 Filtro.setDirpdfname(post.optString("DIRPDFNAME").trim());
                 Filtro.setDriver(post.optString("DRIVER").trim());
                 Filtro.setHost(post.optString("HOST").trim());
-                Filtro.setDbname(post.optString("DATABASENAME").trim());
-                Filtro.setUsername(post.optString("USER").trim());
-                Filtro.setPwdname(post.optString("PASSWORD").trim());
+                Filtro.setDbname(post.optString("DBNAME").trim());
+                Filtro.setUsername(post.optString("USERNAME").trim());
+                Filtro.setPwdname(post.optString("PWDNAME").trim());
             }
         } catch (JSONException e) {
             e.printStackTrace();
