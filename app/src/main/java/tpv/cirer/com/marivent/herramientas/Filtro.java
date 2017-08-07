@@ -2,6 +2,7 @@ package tpv.cirer.com.marivent.herramientas;
 
 public class Filtro {
     private static String seriefac;
+    private static String seriebuffet;
     private static String cod_cliente;
     private static float optipoarticulo;
     private static int optipotablet;
@@ -93,6 +94,7 @@ public class Filtro {
 
 
   	public Filtro(){
+        seriebuffet="";
         seriefac = "";
         cod_cliente = "";
         optipotablet = 0;
@@ -660,6 +662,12 @@ public class Filtro {
     }
     public static void setSerieFac(String idseriefac) {
         seriefac = idseriefac;
+    }
+    public static String getSerieBuffet() {
+        return seriebuffet;
+    }
+    public static void setSerieBuffet(String idseriebuffet) {
+        seriebuffet = idseriebuffet;
     }
 
     public static int getFactura() {
