@@ -1228,7 +1228,8 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
                 bm, 0, 0, width, height, matrix, false);
         bm.recycle();
         return resizedBitmap;
-    }   public void openPrinter() {
+    }
+    public void openPrinter() {
 
         //open
         printer = new Print(getActivity());

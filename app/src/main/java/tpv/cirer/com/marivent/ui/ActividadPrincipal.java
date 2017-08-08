@@ -127,6 +127,7 @@ import tpv.cirer.com.marivent.herramientas.Filtro;
 import tpv.cirer.com.marivent.herramientas.SerialExecutor;
 import tpv.cirer.com.marivent.herramientas.TaskHelper;
 import tpv.cirer.com.marivent.herramientas.Utils;
+import tpv.cirer.com.marivent.magstripe.MagstripeReaderActivity;
 import tpv.cirer.com.marivent.modelo.Articulo;
 import tpv.cirer.com.marivent.modelo.Articulos;
 import tpv.cirer.com.marivent.modelo.Caja;
@@ -156,6 +157,7 @@ import tpv.cirer.com.marivent.modelo.Terminal;
 import tpv.cirer.com.marivent.modelo.TipoCobro;
 import tpv.cirer.com.marivent.modelo.Turno;
 import tpv.cirer.com.marivent.modelo.Userrel;
+import tpv.cirer.com.marivent.print.PrintTicket;
 import tpv.cirer.com.marivent.servicios.ServiceMesas;
 
 import static tpv.cirer.com.marivent.ui.SplashScreen.lpalabras;
@@ -263,6 +265,8 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     String ArticuloNombreGrupo;
     String ArticuloPrecioGrupo;
     String ArticuloTivaGrupo;
+    boolean ArticuloBuffet = false;
+
     int ArticuloIdGrupo;
     int nArticuloPositionSelected;
     private List<Articulos> articulosList;
@@ -1329,7 +1333,8 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
                 break;
             case R.id.item_planning:
                 if(getCruge("action_mesas_admin")){
-                    startActivity(new Intent(this, PlanningActivity.class));
+ ////                   startActivity(new Intent(this, PlanningActivity.class));
+                    startActivity(new Intent(this, MagstripeReaderActivity.class));
                 }
                 break;
             case R.id.item_pedido:
@@ -3837,7 +3842,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             pDialog.dismiss();
 
             if (success == 1) {
-                ArticuloGrupo = true;
+                ArticuloBuffet = true;
                 control_articulos_buffet();
             } else {
                 Toast.makeText(getApplicationContext(), "ERROR NO "+ActividadPrincipal.getPalabras("Crear")+" "+ActividadPrincipal.getPalabras("Factura"), Toast.LENGTH_SHORT).show();
@@ -3859,7 +3864,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                     cantbuffet);
             nArticuloPositionSelected++;
         }else{
-            ArticuloGrupo = false;
+//            ArticuloBuffet = false;
             new CalculaCabecera().execute("ftp", "lft", "1");
 
         }
@@ -4635,7 +4640,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             pDialog.dismiss();
 
             if (success == 1) {
-                if (ArticuloGrupo){
+                if (ArticuloBuffet){
                     control_articulos_buffet();
                 } else {
 
@@ -7305,6 +7310,11 @@ ge     * */
         protected void onPostExecute(Integer success) {
             // dismiss the dialog once done
             pDialog.dismiss();
+            if (ArticuloBuffet){
+                ArticuloBuffet = false;
+                PrintTicket printticket = new PrintTicket(ActividadPrincipal.this,Filtro.getFactura(),Filtro.getSerie());
+                printticket.iniciarTicket();
+            }
         }
 
     }
@@ -8416,7 +8426,7 @@ ge     * */
             Log.i("Poblando: ",Integer.toString(x)+" "+lcategoria.get(x).getCategoriaTipo_are());
         }
     }
-    private String getQuery(ContentValues values) throws UnsupportedEncodingException
+    public static String getQuery(ContentValues values) throws UnsupportedEncodingException
     {
         StringBuilder result = new StringBuilder();
         boolean first = true;
