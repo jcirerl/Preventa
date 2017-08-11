@@ -1334,7 +1334,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
             case R.id.item_planning:
                 if(getCruge("action_mesas_admin")){
  ////                   startActivity(new Intent(this, PlanningActivity.class));
-                    startActivity(new Intent(this, MagstripeReaderActivity.class));
+                    startActivity(new Intent(this, tpv.cirer.com.marivent.emvcardreader.MainActivity.class));
                 }
                 break;
             case R.id.item_pedido:

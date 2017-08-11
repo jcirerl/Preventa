@@ -456,4 +456,17 @@
     <string name="app_name_mag">Magnetic Stripe Reader</string>
     <string name="data_default">[Swipe card now]</string>
 
+
+    <string name="app_name_emvcardreader">EMVCardReader</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="error">Error</string>
+    <string name="card_pan">PAN</string>
+    <string name="card_issuer">Issuer</string>
+    <string name="expiry_month">Expiry Month</string>
+    <string name="expiry_yr">Expiry Year</string>
+    <string name="nfc_title">NFC Sensor Turned Off</string>
+    <string name="nfc_msg">In order to use this application, the NFC sensor must be turned on. Do you wish to turn it on?</string>
+    <string name="nfc_ok_btn">Go to Settings</string>
+    <string name="nfc_cancel_btn">Do Nothing</string>
+
 </resources>
