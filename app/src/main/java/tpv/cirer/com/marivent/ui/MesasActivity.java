@@ -5,14 +5,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -26,6 +22,7 @@ import android.text.InputType;
 import android.text.method.DigitsKeyListener;
 import android.text.method.KeyListener;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.DragEvent;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -58,6 +55,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -66,6 +64,7 @@ import java.util.Map;
 import tpv.cirer.com.marivent.R;
 import tpv.cirer.com.marivent.conexion_http_post.JSONParserNew;
 import tpv.cirer.com.marivent.herramientas.BadgeView;
+import tpv.cirer.com.marivent.herramientas.CircleArea;
 import tpv.cirer.com.marivent.herramientas.DecoratedTextViewDrawable;
 import tpv.cirer.com.marivent.herramientas.Filtro;
 import tpv.cirer.com.marivent.herramientas.SerialExecutor;
@@ -85,6 +84,11 @@ import static tpv.cirer.com.marivent.ui.ActividadPrincipal.mSerialExecutorActivi
  */
 
 public class MesasActivity extends FragmentActivity {
+    // Variables para detect click circle
+    private static final String TAG_CIRCLE = "CirclesDrawingView";
+    boolean flag = false;
+    ////////////////////////////////////////////////////////////////
+
     private float mDownX;
     private float mDownY;
     private final float SCROLL_THRESHOLD = 10;
@@ -104,6 +108,11 @@ public class MesasActivity extends FragmentActivity {
 
     private static final String TAG = "MESAS PDD";
     private MySerialExecutor mSerialExecutor;
+
+    /** All available circles */
+    private static final int CIRCLES_LIMIT = 1;
+    private static final HashSet<CircleArea> mCircles = new HashSet<CircleArea>(CIRCLES_LIMIT);
+    private static final SparseArray<CircleArea> mCirclePointer = new SparseArray<CircleArea>(CIRCLES_LIMIT);
 
     boolean actionMove;
 
@@ -134,10 +143,10 @@ public class MesasActivity extends FragmentActivity {
 
     public static List<DocumentoPedido> ldocumentopedido;
     ImageView imageview;
-    Drawable dpedidos,dfacturas;
+    Drawable dpedidos,dfacturas,dMesa;
     Bitmap bimage;
     RelativeLayout layout;
-    Button image;
+    Button image ;
     Bitmap innerBitmap;
     TextView texto;
     BadgeView badge;
@@ -148,7 +157,7 @@ public class MesasActivity extends FragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mesastest);
+        setContentView(R.layout.mesas);
 
         // 1. get passed intent
         Intent intent = getIntent();
@@ -176,128 +185,83 @@ public class MesasActivity extends FragmentActivity {
 
         mSerialExecutor = new MySerialExecutor(getApplicationContext());
 
-/*        findViewById(R.id.myimage1).setOnTouchListener(new MyTouchListener());
-        findViewById(R.id.myimage2).setOnTouchListener(new MyTouchListener());
-        findViewById(R.id.myimage3).setOnTouchListener(new MyTouchListener());
-        findViewById(R.id.myimage4).setOnTouchListener(new MyTouchListener());
-        findViewById(R.id.topleft).setOnDragListener(new MyDragListener());
-        findViewById(R.id.topright).setOnDragListener(new MyDragListener());
-        findViewById(R.id.bottomleft).setOnDragListener(new MyDragListener());
-        findViewById(R.id.bottomright).setOnDragListener(new MyDragListener());
-*/
-/*        LinearLayout layout = (LinearLayout)findViewById(R.id.topleft);
-        for(int i=0;i<10;i++)
-        {
-            ImageView image = new ImageView(this);
-            image.setLayoutParams(new android.view.ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//            image.setMaxHeight(20);
-//            image.setMaxWidth(20);
-//            int id = getResources().getIdentifier("tpv.cirer.com.marivent:drawable/" + "house_green", null, null);
-            image.setImageDrawable(getResources().getDrawable(R.drawable.house_kitchen_table));
-            image.setOnTouchListener(new MyTouchListener());
-
-            // Adds the view to the layout
-            layout.addView(image);
+    }
+    /**
+     * Search and creates new (if needed) circle based on touch area
+     *
+     * @param xTouch int x of touch
+     * @param yTouch int y of touch
+     *
+     * @return obtained {@link CircleArea}
+     */
+    private CircleArea obtainTouchedCircle(final float xTouch, final float yTouch, final int colorAlpha, final String mesaTouch) {
+        String cModelo = "";
+        switch (colorAlpha){
+            case 255:
+                cModelo = "FACTURAS";
+                break;
+            case 150:
+                cModelo = "PEDIDOS";
+                break;
         }
-*/    }
-/*    private void agregarToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        final ActionBar ab = getSupportActionBar();
-        if (ab != null) {
-            ab.setDisplayHomeAsUpEnabled(true);
-        }
-    }
+        CircleArea touchedCircle = getTouchedCircle(xTouch, yTouch, cModelo, mesaTouch);
+        if (null == touchedCircle) {
+            touchedCircle = new CircleArea(xTouch, yTouch, 50/*mRadiusGenerator.nextInt(RADIUS_LIMIT) + RADIUS_LIMIT*/, cModelo, mesaTouch);
+            if(!cModelo.equals("")) {
+                mCircles.add(touchedCircle);
+            }
+/*
+                if (mCircles.size() == CIRCLES_LIMIT) {
+                }
+                if (flag == false) {
+                    mCircles.add(touchedCircle);
+                    flag = true;
+                }
 */
-/*View target = findViewById(R.id.myimage1);
-    BadgeView badge = new BadgeView(this, target);
-    badge.setText("1");
-    badge.show();
-*/
-    public Bitmap drawTextToBitmap(Context gContext,
-                                   int gResId,
-                                   String gText) {
-        Resources resources = gContext.getResources();
-        float scale = resources.getDisplayMetrics().density;
-        Bitmap bitmap =
-                BitmapFactory.decodeResource(resources, gResId);
-
-        android.graphics.Bitmap.Config bitmapConfig =
-                bitmap.getConfig();
-        // set default bitmap config if none
-        if(bitmapConfig == null) {
-            bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;
         }
-        // resource bitmaps are imutable,
-        // so we need to convert it to mutable one
-        bitmap = bitmap.copy(bitmapConfig, true);
-
-        Canvas canvas = new Canvas(bitmap);
-        // new antialised Paint
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        // text color - #3D3D3D
-        paint.setColor(Color.rgb(61, 61, 61));
-        // text size in pixels
-        paint.setTextSize((int) (14 * scale));
-        // text shadow
-        paint.setShadowLayer(1f, 0f, 1f, Color.WHITE);
-
-        // draw text to the Canvas center
-        Rect bounds = new Rect();
-        paint.getTextBounds(gText, 0, gText.length(), bounds);
-        int x = (bitmap.getWidth() - bounds.width())/2;
-        int y = (bitmap.getHeight() + bounds.height())/2;
-
-        canvas.drawText(gText, x, y, paint);
-
-        return bitmap;
+        return touchedCircle;
     }
-    private BitmapDrawable writeTextOnDrawable(int drawableId, String text) {
-        Log.i("drawable image: ",Integer.toString(drawableId)+" "+text);
- //       BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
- //       Bitmap bm = drawable.getBitmap();
-
-        Bitmap bm = BitmapFactory.decodeResource(getResources(), drawableId)
-                .copy(Bitmap.Config.ARGB_8888, true);
-
-        Typeface tf = Typeface.create("Helvetica", Typeface.BOLD);
-
-        Paint paint = new Paint();
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.WHITE);
-        paint.setTypeface(tf);
-        paint.setTextAlign(Paint.Align.CENTER);
-        paint.setTextSize(convertToPixels(getApplicationContext(), 11));
-
-        Rect textRect = new Rect();
-        paint.getTextBounds(text, 0, text.length(), textRect);
-
-        Canvas canvas = new Canvas(bm);
-
-        //If the text is bigger than the canvas , reduce the font size
-        if(textRect.width() >= (canvas.getWidth() - 4))     //the padding on either sides is considered as 4, so as to appropriately fit in the text
-            paint.setTextSize(convertToPixels(getApplicationContext(), 7));        //Scaling needs to be used for different dpi's
-
-        //Calculate the positions
-        int xPos = (canvas.getWidth() / 2) - 2;     //-2 is for regulating the x position offset
-
-        //"- ((paint.descent() + paint.ascent()) / 2)" is the distance from the baseline to the center.
-        int yPos = (int) ((canvas.getHeight() / 2) - ((paint.descent() + paint.ascent()) / 2)) ;
-
-        canvas.drawText(text, xPos, yPos, paint);
-
-        return new BitmapDrawable(getResources(), bm);
+    /**
+     * Clears all CircleArea - pointer id relations
+     */
+    private void clearCirclePointer() {
+        mCirclePointer.clear();
     }
 
+    /**
+     * Determines touched circle
+     *
+     * @param xTouch int x touch coordinate
+     * @param yTouch int y touch coordinate
+     *
+     * @return {@link CircleArea} touched circle or null if no circle has been touched
+     */
+    private CircleArea getTouchedCircle(final float xTouch, final float yTouch, final String mModelo, String mMesa) {
+        CircleArea touched = null;
+        boolean bExiste = false;
+        for (CircleArea circle : mCircles) {
+            //               Log.i("Circle Modelo", circle.getCirculo() + " - " + mModelo);
+            //               Log.i("Circle Mesa", circle.getMesacirculo() + " - " + mMesa);
+            if ((circle.getCirculo().equals(mModelo)) && (circle.getMesacirculo().equals(mMesa))) {
+                bExiste = true;
+                break;
+            }
+        }
+        if(!bExiste) {
+            Log.i("Circle Touched bExiste",String.valueOf(touched)+" Nro Circles "+String.valueOf(mCircles.size()));
+            return touched;
+        }
 
-
-    public static int convertToPixels(Context context, int nDP)
-    {
-        final float conversionScale = context.getResources().getDisplayMetrics().density;
-
-        return (int) ((nDP * conversionScale) + 0.5f) ;
-
+        for (CircleArea circle : mCircles) {
+            if (((circle.centerX - xTouch) * (circle.centerX - xTouch) + (circle.centerY - yTouch) * (circle.centerY - yTouch) <= circle.radius * circle.radius && ((circle.getCirculo().equals(mModelo))) && (circle.getMesacirculo().equals(mMesa)))) {
+                touched = circle;
+                break;
+            }
+        }
+        Log.i("Circle Touched",String.valueOf(touched)+" Nro Circles "+String.valueOf(mCircles.size()));
+        return touched;
     }
+
     private View findViewAtPosition(View parent, int x, int y) {
         if (parent instanceof ViewGroup) {
             ViewGroup viewGroup = (ViewGroup)parent;
@@ -340,7 +304,6 @@ public class MesasActivity extends FragmentActivity {
 //            if (model.getMesaYCoordenate()!=0.00000){image.setY(model.getMesaYCoordenate());}
 
 
-
 //// VERSION CARGAR CON LOADIMAGEFROMWEBOPERATIONS
             Drawable d = LoadImageFromWebOperations(model.getMesaUrlimagen());
 
@@ -356,18 +319,24 @@ public class MesasActivity extends FragmentActivity {
 ////            iv.setImageBitmap(bMapScaled);
             Drawable d1 = new BitmapDrawable(getResources(),bMapScaled); //Converting bitmap into drawable
 
+            Drawable[] layers1 = {image.getBackground()};
             Drawable[] layers2 = {image.getBackground()};
             Drawable[] layers3 = {image.getBackground()};
 
-            dpedidos = new DecoratedTextViewDrawable(image, layers2, model.getMesaPedidos(), "PEDIDOS");
-            dfacturas = new DecoratedTextViewDrawable(image, layers3, model.getMesaFacturas(), "FACTURAS");
+    //        dMesa = new DecoratedTextViewDrawable(image, layers1, 0, "MESAS",model.getMesaMesa());
+            dpedidos = new DecoratedTextViewDrawable(image, layers2, model.getMesaPedidos(), "PEDIDOS", model.getMesaMesa());
+            dfacturas = new DecoratedTextViewDrawable(image, layers3, model.getMesaFacturas(), "FACTURAS", model.getMesaMesa());
 
 
-            image.setCompoundDrawablesWithIntrinsicBounds( (model.getMesaPedidos()>0 ? dpedidos : null), (model.getMesaFacturas()>0 ? dfacturas : null), null, d1 );
-     ///       image.setCompoundDrawablesWithIntrinsicBounds( (model.getMesaApertura()>0 ? dpedidos : null), (model.getMesaApertura()>0 ? dfacturas : null), null, d1 );
-  //          image.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ok, 0, 0, 0);
+    //**        image.setCompoundDrawablesWithIntrinsicBounds( (model.getMesaPedidos()>0 ? dpedidos : null), (model.getMesaFacturas()>0 ? dfacturas : null), null, d1 );
+
+            image.setCompoundDrawablesWithIntrinsicBounds( (model.getMesaApertura()>0 ? dpedidos : null), (model.getMesaApertura()>0 ? dfacturas : null), null, d1 );
+  ///          image.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ok, 0, 0, 0);
+            // find the image map in the view
+
+
             image.setBackgroundColor(Color.TRANSPARENT);
-            image.setText(model.getMesaMesa());
+            image.setText(model.getMesaMesa().trim());
 
             image.setVisibility(View.VISIBLE);
             image.setTag(model.getMesaMesa());
@@ -379,39 +348,32 @@ public class MesasActivity extends FragmentActivity {
                 image.setAlpha(1.0f); // COLOR BRILLANTE MESA ABIERTA
             }
 
-            //////////////////////////////////////////////////////////////////
-/*                Picasso.with(getApplicationContext())
-                        .load(model.getMesaUrlimagen())
-                        .error(R.drawable.placeholder)
-                        .resize(90, 90)
-                        .centerCrop()
-                        .into(imageview, new com.squareup.picasso.Callback() {
-                            @Override
-                            public void onSuccess() {
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {//You will get your bitmap here
-                                        innerBitmap = ((BitmapDrawable) imageview.getDrawable()).getBitmap();
+/*            mImageMap = (ImageMap)findViewById(R.id.map);
+            mImageMap.setImageDrawable(image.getCompoundDrawables()[0]);
 
-                                        imageview.setImageBitmap(innerBitmap);
-                                        Drawable drawImage = imageview.getDrawable();
-//                    Drawable drawImage = new BitmapDrawable(getApplicationContext().getResources(),bitmap);
-                                        image.setCompoundDrawablesWithIntrinsicBounds( null, null, null, drawImage );
+            // add a click handler to react when areas are tapped
+            mImageMap.addOnImageMapClickedHandler(new ImageMap.OnImageMapClickedHandler()
+            {
+                @Override
+                public void onImageMapClicked(int id, ImageMap imageMap)
+                {
+                    // when the area is tapped, show the name in a
+                    // text bubble
+                    mImageMap.showBubble(id);
+                }
 
-//                                        innerBitmap = ((BitmapDrawable) icon1.getDrawable()).getBitmap();
-
-                                    }
-                                }, 100);
-                            }
-
-                            @Override
-                            public void onError() {
-
-                            }
-                        });
-*/            Log.i("instance MESA",image.getClass().getName().toString()+" - "+image.getTag()+ " y "+Float.toString(image.getY())+" x "+Float.toString(image.getX()));
+                @Override
+                public void onBubbleClicked(int id)
+                {
+                    // react to info bubble for area being tapped
+                }
+            });
+*/
+             Log.i("instance MESA",image.getClass().getName().toString()+" - "+image.getTag()+ " y "+Float.toString(image.getY())+" x "+Float.toString(image.getX()));
                 String uri = "@drawable/house_kitchen_table";
                 int icon = getResources().getIdentifier(uri, "drawable", getPackageName());
+
+
                 image.setOnTouchListener(new MyTouchListenerImage());
                 // Adds the view to the layout
                 layout.addView(image);
@@ -445,7 +407,17 @@ public class MesasActivity extends FragmentActivity {
 ////        Log.i("Button",Integer.toString(image.getWidth())+" "+Integer.toString(image.getHeight()));
         // Call here getWidth() and getHeight()
     }
-
+    public static Bitmap getBitmapFromView(View view) {
+        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(),Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(returnedBitmap);
+        Drawable bgDrawable =view.getBackground();
+        if (bgDrawable!=null)
+            bgDrawable.draw(canvas);
+        else
+            canvas.drawColor(Color.WHITE);
+        view.draw(canvas);
+        return returnedBitmap;
+    }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
@@ -464,16 +436,46 @@ public class MesasActivity extends FragmentActivity {
     }
       private final class MyTouchListenerImage implements View.OnTouchListener {
         public boolean onTouch(final View view, MotionEvent motionEvent) {
-            int rawX, rawY;
-            final int actionIndex = motionEvent.getAction() >> MotionEvent.ACTION_POINTER_ID_SHIFT;
+            // Detect touch circle  ////////////////////////////////
+            boolean handled = false;
+            CircleArea touchedCircle;
+            float xTouch;
+            float yTouch;
+            int pointerId;
+            int actionIndex = motionEvent.getActionIndex();
+            ///////////////////////////////////////////////////////
+/*            int rawX, rawY;
+            int pixelX,pixelY;
+            final int actionindex = motionEvent.getAction() >> MotionEvent.ACTION_POINTER_ID_SHIFT;
             final int location[] = { 0, 0 };
             view.getLocationOnScreen(location);
-            rawX = (int) motionEvent.getX(actionIndex) + location[0];
-            rawY = (int) motionEvent.getY(actionIndex) + location[1];
+            rawX = (int) motionEvent.getX(actionindex) + location[0];
+            rawY = (int) motionEvent.getY(actionindex) + location[1];
+
+            pixelX = (int) motionEvent.getX(actionindex);
+            pixelY = (int) motionEvent.getY(actionindex);
+
+//            int pixel = bitmap.getPixel(x,y);
+
+//            Drawable drawable = view.getBackground();
+            Bitmap bitmap =  getBitmapFromView(view);
+//            int transparency = ((bitmap.getPixel(rawX,rawY) & 0xff000000) >> 24);
+            int alpha = Color.alpha(bitmap.getPixel(pixelX,pixelY));
+            int color = bitmap.getPixel(pixelX, pixelY);
  //           Log.i("TOUCH", "View under finger: " + findViewAtPosition(view, (int)motionEvent.getRawX(), (int)motionEvent.getRawY()));
-            Log.i("Location ",view.getClass().getName().toString()+" - "+view.getTag()+ " - " + Integer.toString(rawX) + " - " + Integer.toString(rawY) );
+            Log.i("Location ",view.getClass().getName().toString()+" - " + alpha + " - "+ color + " - "+view.getTag()+ " - " + Integer.toString(rawX) + " - " + Integer.toString(rawY) );
+*/
             switch (motionEvent.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
+                    //// valores para detect circle  ///////////////////////////////
+                    if (!getMesas(view.getTag().toString(), 0)) { /* CONTROLA SI LA MESA ESTA ABIERTA*/
+
+                        clearCirclePointer();
+///                        invalidate();
+                        handled = true;
+
+                    }
+                    /////////////////////////////////////////////////////////////////
                     mDownX = motionEvent.getX();
                     mDownY = motionEvent.getY();
                     xCoOrdinate = view.getX() - motionEvent.getRawX();
@@ -487,6 +489,30 @@ public class MesasActivity extends FragmentActivity {
 ****/                    break;
                 case MotionEvent.ACTION_MOVE:
                     if (isOnClick && (Math.abs(mDownX - motionEvent.getX()) > SCROLL_THRESHOLD || Math.abs(mDownY - motionEvent.getY()) > SCROLL_THRESHOLD)) {
+                        /// PARA CONTROL CIRCLE
+                        if (!getMesas(view.getTag().toString(), 0)) { /* CONTROLA SI LA MESA ESTA ABIERTA*/
+
+                            final int pointerCount = motionEvent.getPointerCount();
+
+                            for (actionIndex = 0; actionIndex < pointerCount; actionIndex++) {
+                                // Some pointer has moved, search it by pointer id
+                                pointerId = motionEvent.getPointerId(actionIndex);
+
+                                xTouch = motionEvent.getX(actionIndex);
+                                yTouch = motionEvent.getY(actionIndex);
+
+                                touchedCircle = mCirclePointer.get(pointerId);
+
+                                if (null != touchedCircle) {
+                                    touchedCircle.centerX = xTouch;
+                                    touchedCircle.centerY = yTouch;
+                                }
+                            }
+///                        invalidate();
+                            handled = true;
+                        }
+                        ///////////////////////////////////////////////////////////////////////
+
                         Log.i("TOUCH", "movement detected");
                         isOnClick = false;
                         x =  motionEvent.getX();
@@ -518,6 +544,30 @@ public class MesasActivity extends FragmentActivity {
 ****/                    break;
                 case MotionEvent.ACTION_UP:
                     if (isOnClick) {
+                        //// PARA CONTROL CIRCLE
+                        if (!getMesas(view.getTag().toString(), 0)) { /* CONTROLA SI LA MESA ESTA ABIERTA*/
+                            // it's the first pointer, so clear all existing pointers data
+                            clearCirclePointer();
+
+                            xTouch = motionEvent.getX(0);
+                            yTouch = motionEvent.getY(0);
+
+                            Bitmap bitmap =  getBitmapFromView(view);
+                            int alpha = Color.alpha(bitmap.getPixel((int)xTouch,(int)yTouch));
+
+                            Log.i("Circle Color Touched",String.valueOf(alpha));
+
+                             // check if we've touched inside some circle
+                            touchedCircle = obtainTouchedCircle(xTouch, yTouch,alpha,view.getTag().toString());
+                            touchedCircle.centerX = xTouch;
+                            touchedCircle.centerY = yTouch;
+                            mCirclePointer.put(motionEvent.getPointerId(0), touchedCircle);
+
+///                    invalidate();
+                            handled = true;
+
+                        }
+                        ///////////////////////////////////
 
                         Log.i("TOUCH", "onClick ");
                         //TODO onClick code
@@ -1032,6 +1082,26 @@ public class MesasActivity extends FragmentActivity {
                     Log.i("instance view UP",view.getClass().getName().toString()+" - "+view.getTag()+ " y "+Float.toString(yCoordenate)+" x "+Float.toString(xCoordenate));
       //              mSerialExecutor.execute(null);
 ****/                    break;
+                //// CONTROL CIRCLE
+                case MotionEvent.ACTION_POINTER_UP:
+                    if (!getMesas(view.getTag().toString(), 0)) { /* CONTROLA SI LA MESA ESTA ABIERTA*/
+
+                        // not general pointer was up
+                        pointerId = motionEvent.getPointerId(actionIndex);
+
+                        mCirclePointer.remove(pointerId);
+///                    invalidate();
+                        handled = true;
+                    }
+                    break;
+
+                case MotionEvent.ACTION_CANCEL:
+                    if (!getMesas(view.getTag().toString(), 0)) { /* CONTROLA SI LA MESA ESTA ABIERTA*/
+
+                        handled = true;
+                    }
+                    break;
+                ////////////////////////////////////////////
                 default:
                     return false;
             }
@@ -1609,8 +1679,30 @@ public class MesasActivity extends FragmentActivity {
                             image = (Button)layout.findViewWithTag(Filtro.getMesa());
 //                            image.findViewWithTag(Filtro.getMesa());
                             if (valueapertura.equals("1")) {
+                                // ABRIR MESA
+                                for (int i = 0; i < mesaplanningList.size(); i++) {
+                                     if(mesaplanningList.get(i).getMesaMesa().equals(Filtro.getMesa())) {
+                                         model = mesaplanningList.get(i);
+                                         break;
+                                     }
+                                }
                                 setMesas(Filtro.getMesa(),1);
+                                Drawable d = LoadImageFromWebOperations(model.getMesaUrlimagen());
+
+                                Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
+                                Bitmap bMapScaled = Bitmap.createScaledBitmap(bitmap, Filtro.getOpmesas(), Filtro.getOpmesas(), true);
+                                Drawable d1 = new BitmapDrawable(getResources(),bMapScaled); //Converting bitmap into drawable
+
+                                Drawable[] layers2 = {image.getBackground()};
+                                Drawable[] layers3 = {image.getBackground()};
+
+                                dpedidos = new DecoratedTextViewDrawable(image, layers2, model.getMesaPedidos(), "PEDIDOS", model.getMesaMesa());
+                                dfacturas = new DecoratedTextViewDrawable(image, layers3, model.getMesaFacturas(), "FACTURAS", model.getMesaMesa());
+
+                                image.setCompoundDrawablesWithIntrinsicBounds( (model.getMesaApertura()>0 ? dpedidos : null), (model.getMesaApertura()>0 ? dfacturas : null), null, d1 );
+
                                 image.setAlpha(1.0f); // abro mesa
+
                                 Snackbar.make(layout, ActividadPrincipal.getPalabras("Mesa")+" "+ActividadPrincipal.getPalabras("ABIERTA"), Snackbar.LENGTH_LONG).show();
 
                                 itemmesas.setText(Integer.toString(Integer.parseInt(itemmesas.getText().toString())+1));
@@ -1621,7 +1713,29 @@ public class MesasActivity extends FragmentActivity {
                                 }
 
                             }else{
+                                // CERRAR MESA
+                                for (int i = 0; i < mesaplanningList.size(); i++) {
+                                    if(mesaplanningList.get(i).getMesaMesa().equals(Filtro.getMesa())) {
+                                        model = mesaplanningList.get(i);
+                                        break;
+                                    }
+                                }
+
                                 setMesas(Filtro.getMesa(),0);
+                                Drawable d = LoadImageFromWebOperations(model.getMesaUrlimagen());
+
+                                Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
+                                Bitmap bMapScaled = Bitmap.createScaledBitmap(bitmap, Filtro.getOpmesas(), Filtro.getOpmesas(), true);
+                                Drawable d1 = new BitmapDrawable(getResources(),bMapScaled); //Converting bitmap into drawable
+
+                                Drawable[] layers2 = {image.getBackground()};
+                                Drawable[] layers3 = {image.getBackground()};
+
+                                dpedidos = new DecoratedTextViewDrawable(image, layers2, model.getMesaPedidos(), "PEDIDOS", model.getMesaMesa());
+                                dfacturas = new DecoratedTextViewDrawable(image, layers3, model.getMesaFacturas(), "FACTURAS", model.getMesaMesa());
+
+                                image.setCompoundDrawablesWithIntrinsicBounds( (model.getMesaApertura()>0 ? dpedidos : null), (model.getMesaApertura()>0 ? dfacturas : null), null, d1 );
+
                                 image.setAlpha(0.3f); // cierro mesa
                                 Snackbar.make(layout, ActividadPrincipal.getPalabras("Mesa")+" "+ActividadPrincipal.getPalabras("CERRADA"), Snackbar.LENGTH_LONG).show();
 

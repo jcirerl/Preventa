@@ -2,6 +2,7 @@ package tpv.cirer.com.marivent.herramientas;
 
 import android.content.res.ColorStateList;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -20,11 +21,14 @@ public class DecoratedTextViewDrawable extends LayerDrawable {
     private ColorStateList mColors;
     private Rect mBounds;
     private String mModelo;
+    private String mMesa;
+    private String mTexto;
 
-    public DecoratedTextViewDrawable(Button tv, Drawable[] layers, int cnt, String modelo) {
+    public DecoratedTextViewDrawable(Button tv, Drawable[] layers, int cnt, String modelo, String mesaDecorated) {
         super(layers);
         mParent = tv;
         mModelo=modelo;
+        mMesa=mesaDecorated;
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setTextAlign(Paint.Align.CENTER);
         mPaint.setTextSize(tv.getTextSize());
@@ -64,19 +68,40 @@ public class DecoratedTextViewDrawable extends LayerDrawable {
         super.draw(canvas);
 
         float x = mPaint.getTextSize() * 1.5f;
-        float r = mPaint.getTextSize() * 0.9f;
+        float r = mPaint.getTextSize() * 1.5f; // Antes 0.9f
         int base = mParent.getBaseline();
         int[] stateSet = getState();
 //        Log.d(TAG, "draw " + StateSet.dump(stateSet));
         int color = mColors.getColorForState(stateSet, 0xff000000);
-        if (mModelo.equals("PEDIDOS")) {
+        switch (mModelo.toString()){
+            case "PEDIDOS":
+                mPaint.setColor(color);
+                mPaint.setAlpha(150);
+                canvas.drawCircle(x, base + mBounds.top + mBounds.height() / 2, r, mPaint);
+                mPaint.setColor(0xffeeeeee);
+                canvas.drawText(Integer.toString(mCnt), x, base, mPaint);
+                break;
+            case "FACTURAS":
+                mPaint.setColor(Filtro.getColorItem());
+                mPaint.setAlpha(255);
+                canvas.drawCircle(x, base + mBounds.top + mBounds.height() / 2, r, mPaint);
+                mPaint.setColor(0xffeeeeee);
+                canvas.drawText(Integer.toString(mCnt), x, base, mPaint);
+                break;
+            default:
+                mPaint.setColor(Color.BLACK);
+                break;
+        }
+/*        if (mModelo.equals("PEDIDOS")) {
             mPaint.setColor(color);
         }else{
             mPaint.setColor(Filtro.getColorItem());
         }
-
-        canvas.drawCircle(x, base + mBounds.top + mBounds.height() / 2, r, mPaint);
+*/
+/**        canvas.drawCircle(x, base + mBounds.top + mBounds.height() / 2, r, mPaint);
         mPaint.setColor(0xffeeeeee);
         canvas.drawText(Integer.toString(mCnt), x, base, mPaint);
+**/
+
     }
 }

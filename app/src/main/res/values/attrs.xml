@@ -15,5 +15,11 @@
         <attr name="calTitlesColor" format="color"/>
         <attr name="calNowTitlesColor" format="color"/>
     </declare-styleable>
+    <declare-styleable name="ImageMap">
+        <attr name="map" format="string"/>
+        <attr name="fitImageToScreen" format="boolean"/>
+        <attr name="scaleFromOriginal" format="boolean"/>
+        <attr name="maxSizeFactor" format="float"/>
+    </declare-styleable>
 
 </resources>
