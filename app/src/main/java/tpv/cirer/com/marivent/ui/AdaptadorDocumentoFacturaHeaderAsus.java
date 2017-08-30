@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -29,6 +30,8 @@ import tpv.cirer.com.marivent.herramientas.AutoResizeTextView;
 import tpv.cirer.com.marivent.herramientas.Filtro;
 import tpv.cirer.com.marivent.herramientas.IMyDocumentoFacturaViewHolderClicks;
 import tpv.cirer.com.marivent.modelo.DocumentoFactura;
+
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getPalabras;
 
 /**
  * Created by JUAN on 08/07/2017.
@@ -69,7 +72,9 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
                                      String idDocumentoFactura,
                                      String serieDocumentoFactura,
                                      String facturaDocumentoFactura,
+                                     String fechaDocumentoFactura,
                                      String mesaDocumentoFactura,
+                                     String tfraDocumentoFactura,
                                      String estadoDocumentoFactura,
                                      String empleadoDocumentoFactura,
                                      String cajaDocumentoFactura,
@@ -80,7 +85,9 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
                     final String serieFTP = serieDocumentoFactura;
                     final int idFTP = Integer.parseInt(idDocumentoFactura);
                     final int facturaFTP = Integer.parseInt(facturaDocumentoFactura);
+                    final String fechaFTP = fechaDocumentoFactura;
                     final String mesaFTP = mesaDocumentoFactura;
+                    final String tfraFTP = tfraDocumentoFactura;
                     final String estadoFTP = estadoDocumentoFactura;
                     final String empleadoFTP = empleadoDocumentoFactura;
                     final String cajaFTP = cajaDocumentoFactura;
@@ -91,11 +98,13 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
 
                     Log.d("Poh-tah-tos", facturaFTP + " " + mesaFTP + " " + iconDocumentoFactura);
                     AlertDialog.Builder dialog = new AlertDialog.Builder(caller.getContext());
-                    dialog.setTitle(ActividadPrincipal.getPalabras("Modificar")+ " "+campoFTP+" "+ActividadPrincipal.getPalabras("Factura")+": "+facturaFTP);
+                    dialog.setTitle(ActividadPrincipal.getPalabras("Modificar")+ " "+ActividadPrincipal.getPalabras(campoFTP)+" "+ActividadPrincipal.getPalabras("Factura")+": "+facturaFTP);
                     dialog.setMessage(ActividadPrincipal.getPalabras("Datos")+" "+ActividadPrincipal.getPalabras("Factura")+": "+
                             "\n"+ActividadPrincipal.getPalabras("Id")+": "+ idFTP +
                             "\n"+ActividadPrincipal.getPalabras("Serie")+": "+ serieFTP +
+                            "\n"+ActividadPrincipal.getPalabras("Fecha")+".: " + fechaFTP +
                             "\n"+ActividadPrincipal.getPalabras("Mesa")+".: " + mesaFTP +
+                            "\n"+ActividadPrincipal.getPalabras("Tipo Cobro")+".: " + tfraFTP +
                             "\n"+ActividadPrincipal.getPalabras("Estado")+": " + estadoFTP +
                             "\n"+ActividadPrincipal.getPalabras("Empleado")+".: " + empleadoFTP +
                             "\n"+ActividadPrincipal.getPalabras("Caja")+": " + cajaFTP +
@@ -120,6 +129,30 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
                                             mCallbackDocumentoFactura.onUpdateDocumentoFacturaSelected(idFTP, obsFTP, campoFTP);
                                             break;
                                     }
+                                }else{
+                                    SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+                                    SimpleDateFormat sdf2 = new SimpleDateFormat("dd-MM-yyyy");
+                                    try{
+                                        String StringRecogido = Filtro.getFechaapertura();
+                                        Date datehora = sdf1.parse(StringRecogido);
+
+                                        //System.out.println("Fecha input : "+datehora);
+                                        String myText = sdf2.format(datehora);
+                                        Log.i("compara",String.valueOf(fechaFTP.length())+' '+String.valueOf(myText.length()));
+                                        Log.i("compara",fechaFTP.substring(0,10)+' '+myText);
+                                        if(fechaFTP.substring(0,10).equals(myText)) {
+                                            switch (campoFTP) {
+                                                case "Tipo Cobro":
+                                                    mCallbackDocumentoFactura.onUpdateDocumentoFacturaSelected(idFTP, tfraFTP, campoFTP);
+                                                    break;
+                                            }
+                                        }else{
+                                            Toast.makeText(mContextDocumentoFactura, getPalabras("Fecha")+" "+getPalabras("Factura")+" "+getPalabras("distinta")+" "+getPalabras("Fecha")+" "+getPalabras("Apertura"), Toast.LENGTH_SHORT).show();
+                                        }
+                                    } catch (Exception e) {
+                                        e.getMessage();
+                                    }
+
                                 }
                             } catch (ClassCastException exception) {
                                 // do something
@@ -280,6 +313,7 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
 
                 ((VHItem) holder).IdDocumentoFactura.setText(Html.fromHtml(Integer.toString(DocumentoFactura.getDocumentoFacturaId())));
                 ((VHItem) holder).MesaDocumentoFactura.setText(Html.fromHtml(DocumentoFactura.getDocumentoFacturaMesa()));
+                ((VHItem) holder).TfraDocumentoFactura.setText(Html.fromHtml(DocumentoFactura.getDocumentoFacturaT_fra()));
 
                 myText =String.format("%1$-1s", DocumentoFactura.getDocumentoFacturaSerie());
                 ((VHItem) holder).SerieDocumentoFactura.setText(Html.fromHtml(myText.replace(" ", "&nbsp;")).toString());
@@ -305,7 +339,7 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
                 ((VHItem) holder).EmpleadoDocumentoFactura.setText(DocumentoFactura.getDocumentoFacturaEmpleado().trim()+fixString);
                 ((VHItem) holder).CajaDocumentoFactura.setText(DocumentoFactura.getDocumentoFacturaCaja().trim()+fixString);
                 ((VHItem) holder).TurnoDocumentoFactura.setText(DocumentoFactura.getDocumentoFacturaCod_turno().trim()+fixString);
-                ((VHItem) holder).TfraDocumentoFactura.setText(DocumentoFactura.getDocumentoFacturaT_fra().trim()+fixString);
+                ((VHItem) holder).NombreTftDocumentoFactura.setText(DocumentoFactura.getDocumentoFacturaNombre_tft().trim()+fixString);
 
                 ((VHItem) holder).LineasDocumentoFactura.setText(Html.fromHtml(String.format("%06d",DocumentoFactura.getDocumentoFacturaLineas())+"&nbsp;&nbsp;"));
 
@@ -346,6 +380,12 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
                 ((VHItem) holder).EmpleadoDocumentoFactura.setTextColor(Color.MAGENTA);
                 ((VHItem) holder).EstadoDocumentoFactura.setTextColor(Color.BLUE);
                 ((VHItem) holder).ObsDocumentoFactura.setTextColor(Color.MAGENTA);
+
+                if(DocumentoFactura.getDocumentoFacturaEstado().contains("CLOSE")) {
+                    ((VHItem) holder).NombreTftDocumentoFactura.setTextColor(Color.MAGENTA);
+                }else{
+                    ((VHItem) holder).NombreTftDocumentoFactura.setTextColor(Color.BLACK);
+                }
 
                 ((VHItem) holder).ObsDocumentoFactura.setBackgroundColor(Color.TRANSPARENT);
                 if (DocumentoFactura.getDocumentoFacturaObs().trim().length()==0) {
@@ -430,6 +470,7 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
         public AutoResizeTextView FechaDocumentoFactura;
         public AutoResizeTextView NombreMesaDocumentoFactura;
         public TextView MesaDocumentoFactura;
+        public TextView TfraDocumentoFactura;
         public AutoResizeTextView EstadoDocumentoFactura;
         public AutoResizeTextView EmpleadoDocumentoFactura;
         public AutoResizeTextView CajaDocumentoFactura;
@@ -440,7 +481,7 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
         public TextView ImpbaseDocumentoFactura;
         public TextView ImpivaDocumentoFactura;
         public AutoResizeTextView ImptotalDocumentoFactura;
-        public AutoResizeTextView TfraDocumentoFactura;
+        public AutoResizeTextView NombreTftDocumentoFactura;
 
         public IMyDocumentoFacturaViewHolderClicks mListenerDocumentoFactura;
 
@@ -459,6 +500,7 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
             this.FacturaDocumentoFactura = (AutoResizeTextView) itemView.findViewById(R.id.factura);
             this.FechaDocumentoFactura = (AutoResizeTextView) itemView.findViewById(R.id.fecha);
             this.MesaDocumentoFactura = (TextView) itemView.findViewById(R.id.mesa);
+            this.TfraDocumentoFactura = (TextView) itemView.findViewById(R.id.tfra);
             this.NombreMesaDocumentoFactura = (AutoResizeTextView) itemView.findViewById(R.id.nombremesa);
             this.EmpleadoDocumentoFactura = (AutoResizeTextView) itemView.findViewById(R.id.empleado);
             this.CajaDocumentoFactura = (AutoResizeTextView) itemView.findViewById(R.id.caja);
@@ -468,7 +510,7 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
             this.ImpbaseDocumentoFactura = (TextView) itemView.findViewById(R.id.impbase);
             this.ImpivaDocumentoFactura = (TextView) itemView.findViewById(R.id.impiva);
             this.ImptotalDocumentoFactura = (AutoResizeTextView) itemView.findViewById(R.id.imptotal);
-            this.TfraDocumentoFactura = (AutoResizeTextView) itemView.findViewById(R.id.tfra);
+            this.NombreTftDocumentoFactura = (AutoResizeTextView) itemView.findViewById(R.id.nombretft);
 
             this.UpdateDocumentoFactura = (Button) itemView.findViewById(R.id.btnUpdate);
             this.DeleteDocumentoFactura = (Button) itemView.findViewById(R.id.btnDelete);
@@ -483,6 +525,7 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
             this.ObsDocumentoFactura.setOnClickListener(this);
             this.NombreMesaDocumentoFactura.setOnClickListener(this);
             this.EmpleadoDocumentoFactura.setOnClickListener(this);
+            this.NombreTftDocumentoFactura.setOnClickListener(this);
 
             itemView.setOnClickListener(this);
         }
@@ -493,6 +536,7 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
             FacturaDocumentoFactura.setText(Integer.toString(DocumentoFactura.getDocumentoFacturaFactura()));
             FechaDocumentoFactura.setText(DocumentoFactura.getDocumentoFacturaFecha());
             MesaDocumentoFactura.setText(DocumentoFactura.getDocumentoFacturaMesa());
+            TfraDocumentoFactura.setText(DocumentoFactura.getDocumentoFacturaT_fra());
             NombreMesaDocumentoFactura.setText(DocumentoFactura.getDocumentoFacturaNombre_Mesa());
             EmpleadoDocumentoFactura.setText(DocumentoFactura.getDocumentoFacturaEmpleado());
             CajaDocumentoFactura.setText(DocumentoFactura.getDocumentoFacturaCaja());
@@ -502,7 +546,7 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
             ImpbaseDocumentoFactura.setText(DocumentoFactura.getDocumentoFacturaImp_base());
             ImpivaDocumentoFactura.setText(DocumentoFactura.getDocumentoFacturaImp_iva());
             ImptotalDocumentoFactura.setText(DocumentoFactura.getDocumentoFacturaImp_total());
-            TfraDocumentoFactura.setText(DocumentoFactura.getDocumentoFacturaT_fra());
+            NombreTftDocumentoFactura.setText(DocumentoFactura.getDocumentoFacturaNombre_tft());
 
             UpdateDocumentoFactura.setText(ActividadPrincipal.getPalabras("Modificar"));
             DeleteDocumentoFactura.setText(ActividadPrincipal.getPalabras("Borrar"));
@@ -581,7 +625,9 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
                                     String.valueOf(this.IdDocumentoFactura.getText()),
                                     String.valueOf(this.SerieDocumentoFactura.getText()),
                                     String.valueOf(this.FacturaDocumentoFactura.getText()),
+                                    String.valueOf(this.FechaDocumentoFactura.getText()),
                                     String.valueOf(this.MesaDocumentoFactura.getText()),
+                                    String.valueOf(this.TfraDocumentoFactura.getText()),
                                     String.valueOf(this.EstadoDocumentoFactura.getText()),
                                     String.valueOf(this.EmpleadoDocumentoFactura.getText()),
                                     String.valueOf(this.CajaDocumentoFactura.getText()),
@@ -589,6 +635,28 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
                                     String.valueOf(this.ObsDocumentoFactura.getText()),
                                     String.valueOf(this.LineasDocumentoFactura.getText())
                             );
+                            break;
+                        case R.id.nombretft:
+                            if (String.valueOf(this.EstadoDocumentoFactura.getText()).contains("CLOSE")) {
+                                mListenerDocumentoFactura.onPotato(
+                                        v,
+                                        this.iconDocumentoFactura,
+                                        "Tipo Cobro",
+                                        String.valueOf(this.iconDocumentoFactura.getTag().toString()),
+                                        String.valueOf(this.IdDocumentoFactura.getText()),
+                                        String.valueOf(this.SerieDocumentoFactura.getText()),
+                                        String.valueOf(this.FacturaDocumentoFactura.getText()),
+                                        String.valueOf(this.FechaDocumentoFactura.getText()),
+                                        String.valueOf(this.MesaDocumentoFactura.getText()),
+                                        String.valueOf(this.TfraDocumentoFactura.getText()),
+                                        String.valueOf(this.EstadoDocumentoFactura.getText()),
+                                        String.valueOf(this.EmpleadoDocumentoFactura.getText()),
+                                        String.valueOf(this.CajaDocumentoFactura.getText()),
+                                        String.valueOf(this.TurnoDocumentoFactura.getText()),
+                                        String.valueOf(this.ObsDocumentoFactura.getText()),
+                                        String.valueOf(this.LineasDocumentoFactura.getText())
+                                );
+                            }
                             break;
                         case R.id.empleado:
                             mListenerDocumentoFactura.onPotato(
@@ -599,7 +667,9 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
                                     String.valueOf(this.IdDocumentoFactura.getText()),
                                     String.valueOf(this.SerieDocumentoFactura.getText()),
                                     String.valueOf(this.FacturaDocumentoFactura.getText()),
+                                    String.valueOf(this.FechaDocumentoFactura.getText()),
                                     String.valueOf(this.MesaDocumentoFactura.getText()),
+                                    String.valueOf(this.TfraDocumentoFactura.getText()),
                                     String.valueOf(this.EstadoDocumentoFactura.getText()),
                                     String.valueOf(this.EmpleadoDocumentoFactura.getText()),
                                     String.valueOf(this.CajaDocumentoFactura.getText()),
@@ -617,7 +687,9 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
                                     String.valueOf(this.IdDocumentoFactura.getText()),
                                     String.valueOf(this.SerieDocumentoFactura.getText()),
                                     String.valueOf(this.FacturaDocumentoFactura.getText()),
+                                    String.valueOf(this.FechaDocumentoFactura.getText()),
                                     String.valueOf(this.MesaDocumentoFactura.getText()),
+                                    String.valueOf(this.TfraDocumentoFactura.getText()),
                                     String.valueOf(this.EstadoDocumentoFactura.getText()),
                                     String.valueOf(this.EmpleadoDocumentoFactura.getText()),
                                     String.valueOf(this.CajaDocumentoFactura.getText()),
@@ -640,7 +712,9 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
                              String idDocumentoFactura,
                              String serieDocumentoFactura,
                              String facturaDocumentoFactura,
+                             String fechaDocumentoFactura,
                              String mesaDocumentoFactura,
+                             String tfraDocumentoFactura,
                              String estadoDocumentoFactura,
                              String empleadoDocumentoFactura,
                              String cajaDocumentoFactura,

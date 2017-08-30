@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">"Restaurante Marivent"</string>
+    <string name="app_name">"TPV Restaurante"</string>
     <string name="titulopersonalizado">TPV Android</string>
     <string name="app_description">A sample application that allows you to navigate a simple line graph using touch gestures.</string>
     <string name="action_zoom_in">Demo zoom in</string>
@@ -96,6 +96,7 @@
     <string name="item_salir">Salir</string>
     <string name="item_cuenta">Mi Cuenta</string>
     <string name="item_categorias">Categorías</string>
+    <string name="item_cartas">Cartas</string>
     <string name="item_configuracion">Configuración</string>
     <string name="grupitem_configuracion">Configuraciones</string>
 
@@ -468,5 +469,7 @@
     <string name="nfc_msg">In order to use this application, the NFC sensor must be turned on. Do you wish to turn it on?</string>
     <string name="nfc_ok_btn">Go to Settings</string>
     <string name="nfc_cancel_btn">Do Nothing</string>
+
+    <string name="tamanyo_tipoarticulo">16.0</string>
 
 </resources>

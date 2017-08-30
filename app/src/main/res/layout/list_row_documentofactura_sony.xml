@@ -38,6 +38,16 @@
         android:visibility="gone"
         android:paddingLeft="8dp" />
     <TextView
+        android:id="@+id/tfra"
+        style="@style/RowTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/icon"
+        android:layout_toRightOf="@+id/icon"
+        android:visibility="gone"
+        android:paddingLeft="8dp" />
+    <TextView
         android:id="@+id/serie"
         style="@style/RowTitle"
         android:layout_width="wrap_content"
@@ -140,7 +150,7 @@
         android:layout_toRightOf="@+id/turno"
         android:paddingLeft="@dimen/row_padding" />
     <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
-        android:id="@+id/tfra"
+        android:id="@+id/nombretft"
         style="@style/RowTitle"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
@@ -154,8 +164,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/tfra"
-        android:layout_toRightOf="@+id/tfra"
+        android:layout_toEndOf="@+id/nombretft"
+        android:layout_toRightOf="@+id/nombretft"
         android:paddingLeft="@dimen/row_padding" />
     <TextView
         android:id="@+id/obs"

@@ -7,12 +7,21 @@ package tpv.cirer.com.marivent.modelo;
 public class TipoCobro {
     private String TipoCobroT_fra;
     private String TipoCobroNombre_tft;
+    private int TipoCobroCopia_print;
 
     public TipoCobro(){}
 
-    public TipoCobro(String t_fra, String nombre){
+    public TipoCobro(String t_fra, String nombre, int copia_print){
         this.TipoCobroT_fra = t_fra;
         this.TipoCobroNombre_tft = nombre;
+        this.TipoCobroCopia_print = copia_print;
+    }
+    public void setTipoCobroCopia_print(int tipocobrocopia_print){
+        this.TipoCobroCopia_print = tipocobrocopia_print;
+    }
+
+    public int getTipoCobroCopia_print(){
+        return this.TipoCobroCopia_print;
     }
 
     public void setTipoCobroT_fra(String tipocobrot_fra ){

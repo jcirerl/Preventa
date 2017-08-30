@@ -127,9 +127,9 @@ import tpv.cirer.com.marivent.herramientas.Filtro;
 import tpv.cirer.com.marivent.herramientas.SerialExecutor;
 import tpv.cirer.com.marivent.herramientas.TaskHelper;
 import tpv.cirer.com.marivent.herramientas.Utils;
-import tpv.cirer.com.marivent.magstripe.MagstripeReaderActivity;
 import tpv.cirer.com.marivent.modelo.Articulo;
 import tpv.cirer.com.marivent.modelo.Articulos;
+import tpv.cirer.com.marivent.modelo.CabeceraEmpr;
 import tpv.cirer.com.marivent.modelo.Caja;
 import tpv.cirer.com.marivent.modelo.Categoria;
 import tpv.cirer.com.marivent.modelo.Comida;
@@ -160,6 +160,7 @@ import tpv.cirer.com.marivent.modelo.Userrel;
 import tpv.cirer.com.marivent.print.PrintTicket;
 import tpv.cirer.com.marivent.servicios.ServiceMesas;
 
+import static tpv.cirer.com.marivent.print.PrintTicket.getResizedBitmap;
 import static tpv.cirer.com.marivent.ui.SplashScreen.lpalabras;
 
 //import android.support.v7.app.AlertDialog;
@@ -209,6 +210,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
 
     public static String URL_TFTBUFFET;
     public static ArrayList<TipoCobro> tftbuffetList;
+    public static ArrayList<TipoCobro> tftList;
 
     String TAG = "Nueva Linea";
     String TAG_GRUPO = "GRUPO: ";
@@ -325,6 +327,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     public static ArrayList<ArrayList<Popular>> populares;
     private static ArrayList<Comida> lcomida;
     public static ArrayList<Popular> lpopular;
+    public static List<CabeceraEmpr> lcabeceraempr;
 
     private static int IndiceSeccion;
 
@@ -382,6 +385,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     private static String url_updatemesa_mesa;
     private static String url_pedido_a_factura_id;
     private static String url_ticket_a_factura;
+    private static String urlCabeceraEmpr;
 
     private static ArrayList<Mesa> mesaList;
     private static String URL_MESA;
@@ -455,7 +459,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
  /*        Toolbar toolbar1 = (Toolbar) findViewById(R.id.appbar1);
         setSupportActionBar(toolbar1);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setIcon(R.drawable.logo); //also displays wide logo
+        getSupportActionBar().setIcon(R.drawable.logo_ricoparico); //also displays wide logo_ricoparico
         */
         Calendar c=Calendar.getInstance();
         mYear=c.get(Calendar.YEAR);
@@ -478,40 +482,24 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
             intent.putExtra("receiver", resultReceiver);
             startService(intent);
         }
-        // VALORES PROVISIONALES PARA PRUEBAS //
+        // VALORES DE PREFERENCIAS //
         Filtro.setInicio(true);
+
         SharedPreferences pref =
                 PreferenceManager.getDefaultSharedPreferences(
                         ActividadPrincipal.this);
-        if (!Filtro.getIdioma().equals(pref.getString("opidioma","ESP"))) {
-            Filtro.setIdioma(pref.getString("opidioma", "ESP"));
-            Thread timerThread = new Thread(){
-                @Override
-                public void run(){
-                    try{
-                         // RELLENAMOS PALABRAS IDIOMA
-                        lpalabras = new ArrayList<Palabras>();
-                        url_palabras = Filtro.getUrl() + "/RellenaListaPalabras.php";
-                        Log.i("Url Palabras", url_palabras);
-                        new GetPalabras().execute(url_palabras);
-                        sleep(10000);
-                    }catch(InterruptedException e){
-                        e.printStackTrace();
-                    }finally{
-                 }
-                }
-            };
-            timerThread.start();
-        }
         Filtro.setOpgrid(Integer.parseInt(pref.getString("opgrid", "8")));
         Filtro.setOpmesas(Integer.parseInt(pref.getString("opmesas", "128")));
         Filtro.setOptipoarticulo(Float.parseFloat(pref.getString("optipoarticulo", "16.0")));
         Filtro.setOptoolbar(Integer.parseInt(pref.getString("optoolbar", "0")));
         Filtro.setOptab(Integer.parseInt(pref.getString("optab", "0")));
         Filtro.setOppedidomesa(Boolean.parseBoolean(pref.getString("oppedidomesa","false")));
+
+        Filtro.setOppedidodirectomesa(Boolean.parseBoolean(pref.getString("oppedidodirectomesa","true")));
+        Filtro.setOpfacturadirectomesa(Boolean.parseBoolean(pref.getString("opfacturadirectomesa","true")));
+
         Filtro.setOpintervalo(Integer.parseInt(pref.getString("opintervalo", "10000")));
         Filtro.setOplog(Boolean.parseBoolean(pref.getString("oplog","true")));
-        Filtro.setOptab(Integer.parseInt(pref.getString("optab", "0")));
         Filtro.setOptipotablet(Integer.parseInt(pref.getString("optipotablet","0")));
         Filtro.setFilelog("");
         Log.i("oplog",Boolean.toString((Filtro.getOplog())));
@@ -536,6 +524,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
                 e.printStackTrace();
             }
         }
+        // VALORES PROVISIONALES PARA PRUEBAS //
 
 /*        Filtro.setPrintDeviceType(Print.DEVTYPE_TCP);
         Filtro.setPrintIp("192.168.1.100");
@@ -600,6 +589,8 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
 
         // Rellenar TIPO DE COBRO BUFFET
         tftbuffetList = new ArrayList<TipoCobro>();
+        // Rellenar string toolbar_tft
+        tftList = new ArrayList<TipoCobro>();
         URL_TFTBUFFET = Filtro.getUrl() + "/get_tiposcobro.php";
 
         //  RELACION USUARIO
@@ -618,6 +609,8 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         grupList = new ArrayList<Grupo>();
         // Rellenar string toolbar_empresa
         emprList = new ArrayList<Empresa>();
+        lcabeceraempr = new ArrayList<CabeceraEmpr>();
+
         simboloList = new ArrayList<Simbolo>();
         // Rellenar string toolbar_local
         localList = new ArrayList<Local>();
@@ -1212,7 +1205,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         }
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-  //      getSupportActionBar().setIcon(R.drawable.logo); //also displays wide logo
+  //      getSupportActionBar().setIcon(R.drawable.logo_ricoparico); //also displays wide logo_ricoparico
 
         final ActionBar ab = getSupportActionBar();
         if (ab != null) {
@@ -1333,9 +1326,8 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
                 break;
             case R.id.item_planning:
                 if(getCruge("action_mesas_admin")){
- ////                   startActivity(new Intent(this, PlanningActivity.class));
-                    startActivity(new Intent(this, tpv.cirer.com.marivent.emvcardreader.MainActivity.class));
-                }
+                    startActivity(new Intent(this, PlanningActivity.class));
+                 }
                 break;
             case R.id.item_pedido:
                 if(getCruge("action_pdd_admin")){
@@ -1631,7 +1623,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 //                            dialog_buffet(x);
                         } else {
                             Log.e(TAG, "Failed to fetch data!");
-                            Toast.makeText(getApplicationContext(), getPalabras("No existe tipo articulo BUFFET"), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getPalabras("No existe")+" "+getPalabras("Tipo")+" "+getPalabras("Articulo")+" BUFFET", Toast.LENGTH_SHORT).show();
                         }
 
 /*
@@ -3112,6 +3104,13 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
              idFactura = id;
              final AlertDialog.Builder alert = new AlertDialog.Builder(this);
              switch (campo) {
+                 case "Tipo Cobro":
+/*                     oldvaluemesa = valor;
+                     newvaluemesa = valor;
+                     mesaList = new ArrayList<Mesa>();
+                     URL_MESA = Filtro.getUrl() + "/get_mesas.php";
+                     new GetMesaFactura().execute(URL_MESA);
+*/                     break;
                  case "Mesa":
                      oldvaluemesa = valor;
                      newvaluemesa = valor;
@@ -7407,7 +7406,7 @@ ge     * */
         protected void onPreExecute() {
             super.onPreExecute();
             pDialogFac = new ProgressDialog(ActividadPrincipal.this);
-            pDialogFac.setMessage(ActividadPrincipal.getPalabras("Cargando")+" Facturas...");
+            pDialogFac.setMessage(ActividadPrincipal.getPalabras("Cargando")+" "+getPalabras("Facturas")+"...");
             pDialogFac.setIndeterminate(false);
             pDialogFac.setCancelable(true);
             pDialogFac.show();
@@ -7703,7 +7702,7 @@ ge     * */
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogFra = new ProgressDialog(ActividadPrincipal.this);
-            pDialogFra.setMessage(getPalabras("Cargando")+" Serie Factura. "+getPalabras("Espere por favor")+"...");
+            pDialogFra.setMessage(getPalabras("Cargando")+" "+getPalabras("Serie")+" "+getPalabras("Factura")+". "+getPalabras("Espere por favor")+"...");
             pDialogFra.setIndeterminate(false);
             pDialogFra.setCancelable(true);
             pDialogFra.show();
@@ -8283,7 +8282,7 @@ ge     * */
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogTipoare = new ProgressDialog(ActividadPrincipal.this);
-            pDialogTipoare.setMessage(getPalabras("Cargando")+" Categorias. "+getPalabras("Espere por favor")+"...");
+            pDialogTipoare.setMessage(getPalabras("Cargando")+" "+getPalabras("Cartas")+". "+getPalabras("Espere por favor")+"...");
             pDialogTipoare.setIndeterminate(false);
             pDialogTipoare.setCancelable(true);
             pDialogTipoare.show();
@@ -8460,7 +8459,7 @@ ge     * */
                 Categoria categoriaItem = new Categoria();
                 categoriaItem.setCategoriaOrden(post.optInt("ORDEN"));
                 categoriaItem.setCategoriaTipo_are(post.optString("TIPO_ARE"));
-                categoriaItem.setCategoriaNombre_tipoare(post.optString("NOMBRE_TIPOARE"));
+                categoriaItem.setCategoriaNombre_tipoare(getPalabras(post.optString("NOMBRE_TIPOARE").trim()));
                 categoriaItem.setCategoriaUrlimagen(Filtro.getUrl() + "/image/" + post.optString("IMAGEN").trim());
                 lcategoria.add(categoriaItem);
             }
@@ -8476,7 +8475,7 @@ ge     * */
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogUserrel = new ProgressDialog(ActividadPrincipal.this);
-            pDialogUserrel.setMessage(getPalabras("Cargando")+" User Relacion. "+getPalabras("Espere por favor")+"...");
+            pDialogUserrel.setMessage(getPalabras("Cargando")+" "+getPalabras("Usuario")+" "+getPalabras("Relacion")+". "+getPalabras("Espere por favor")+"...");
             pDialogUserrel.setIndeterminate(false);
             pDialogUserrel.setCancelable(true);
             pDialogUserrel.show();
@@ -8605,7 +8604,7 @@ ge     * */
         protected void onPreExecute() {
             super.onPreExecute();
             pDialogPlato = new ProgressDialog(ActividadPrincipal.this);
-            pDialogPlato.setMessage(ActividadPrincipal.getPalabras("Cargando")+" Platos...");
+            pDialogPlato.setMessage(ActividadPrincipal.getPalabras("Cargando")+" "+getPalabras("Platos")+"...");
             pDialogPlato.setIndeterminate(false);
             pDialogPlato.setCancelable(true);
             pDialogPlato.show();
@@ -8740,7 +8739,7 @@ ge     * */
                 JSONObject post = posts.optJSONObject(ii);
                 Log.i("POST: ",post.optString("TIPOPLATO")+ post.optString("NOMBRE"));
                 Plato cat = new Plato(post.optString("TIPOPLATO"),
-                        post.optString("NOMBRE"));
+                        getPalabras(post.optString("NOMBRE").trim()));
                 lplato.add(cat);
                 Log.i("POST Longitud: ",Integer.toString(lplato.size()));
 
@@ -8900,7 +8899,7 @@ ge     * */
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogGrup = new ProgressDialog(ActividadPrincipal.this);
-            pDialogGrup.setMessage(getPalabras("Cargando")+" Grupos. "+getPalabras("Espere por favor")+"...");
+            pDialogGrup.setMessage(getPalabras("Cargando")+" "+getPalabras("Grupo")+". "+getPalabras("Espere por favor")+"...");
             pDialogGrup.setIndeterminate(false);
             pDialogGrup.setCancelable(true);
             pDialogGrup.show();
@@ -9015,7 +9014,7 @@ ge     * */
                         }
                         if (found==0) {
                             Grupo cat = new Grupo(post.optString("GRUPO"),
-                                    post.optString("NOMBRE"));
+                                    getPalabras(post.optString("NOMBRE").trim()));
                             grupList.add(cat);
                         }
                     }
@@ -9036,7 +9035,7 @@ ge     * */
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogEmpr = new ProgressDialog(ActividadPrincipal.this);
-            pDialogEmpr.setMessage(getPalabras("Cargando")+" Empresas. "+getPalabras("Espere por favor")+"...");
+            pDialogEmpr.setMessage(getPalabras("Cargando")+" "+getPalabras("Empresa")+". "+getPalabras("Espere por favor")+"...");
             pDialogEmpr.setIndeterminate(false);
             pDialogEmpr.setCancelable(true);
             pDialogEmpr.show();
@@ -9136,6 +9135,9 @@ ge     * */
             if (result == 1) {
                 Log.e(TAG_EMPRESA, "OK EMPRESA");
                 populateSpinnerEmpr();
+                urlCabeceraEmpr = Filtro.getUrl() + "/CabeceraEMPR.php";
+                new LeerCabeceraEmpr().execute(urlCabeceraEmpr);
+
             } else {
                 Log.e(TAG_EMPRESA, "Failed to fetch data!");
             }
@@ -9163,7 +9165,7 @@ ge     * */
                             simboloList.add(sim);
 
                             Empresa cat = new Empresa(post.optString("EMPRESA"),
-                                    post.optString("NOMBRE"));
+                                    getPalabras(post.optString("NOMBRE").trim()));
                             emprList.add(cat);
                         }
                     }
@@ -9173,6 +9175,152 @@ ge     * */
             e.printStackTrace();
         }
     }
+    public class LeerCabeceraEmpr extends AsyncTask<String, Void, Integer> {
+
+        @Override
+        protected void onPreExecute() {
+            //setProgressBarIndeterminateVisibility(true);
+            super.onPreExecute();
+            pDialogEmpr = new ProgressDialog(ActividadPrincipal.this);
+            pDialogEmpr.setMessage(ActividadPrincipal.getPalabras("Leyendo")+" "+ActividadPrincipal.getPalabras("Cabecera")+" "+ActividadPrincipal.getPalabras("Empresa")+"..");
+            pDialogEmpr.setIndeterminate(false);
+            pDialogEmpr.setCancelable(true);
+            pDialogEmpr.show();
+
+        }
+
+        @Override
+        protected Integer doInBackground(String... params) {
+//            Integer result = 0;
+            String cSql = "";
+            String xWhere = "";
+            if(!(Filtro.getGrupo().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE empr.GRUPO='" + Filtro.getGrupo() + "'";
+                } else {
+                    xWhere += " AND empr.GRUPO='" + Filtro.getGrupo() + "'";
+                }
+            }
+            if(!(Filtro.getEmpresa().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE empr.EMPRESA='" + Filtro.getEmpresa() + "'";
+                } else {
+                    xWhere += " AND empr.EMPRESA='" + Filtro.getEmpresa() + "'";
+                }
+            }
+
+            cSql += xWhere;
+            if(cSql.equals("")) {
+                cSql="Todos";
+            }
+            Log.i("Sql Lista",cSql);
+            InputStream inputStream = null;
+            Integer result = 0;
+            HttpURLConnection urlConnection = null;
+
+            try {
+                // forming th java.net.URL object
+                URL url = new URL(params[0]);
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                urlConnection.setReadTimeout(10000);
+                urlConnection.setConnectTimeout(15000);
+                urlConnection.setRequestMethod("GET");
+                urlConnection.setDoInput(true);
+                urlConnection.setDoOutput(true);
+
+                ContentValues values = new ContentValues();
+                values.put("filtro", cSql);
+
+                OutputStream os = urlConnection.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+//                writer.write(getQuery(params1));
+                writer.write(getQuery(values));
+                writer.flush();
+                writer.close();
+                os.close();
+                urlConnection.connect();
+
+                int statusCode = urlConnection.getResponseCode();
+                Log.i("STATUS CODE: ", Integer.toString(urlConnection.getResponseCode()) + " - " + urlConnection.getResponseMessage());
+                // 200 represents HTTP OK
+                if (statusCode ==  200) {
+
+                    BufferedReader r = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = r.readLine()) != null) {
+                        response.append(line);
+                    }
+                    Log.i("JSON-->", response.toString());
+                    Log.i("Longitud Antes: ",Integer.toString(lcabeceraempr.size()));
+                    for (Iterator<CabeceraEmpr> it = lcabeceraempr.iterator(); it.hasNext();){
+                        CabeceraEmpr cabeceraEmpr = it.next();
+                        it.remove();
+                    }
+
+                    Log.i("Longitud Despues: ",Integer.toString(lcabeceraempr.size()));
+
+                    parseResultCabeceraEmpr(response.toString());
+                    result = 1; // Successful
+                }else{
+                    result = 0; //"Failed to fetch data!";
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+//                Log.d(TAG, e.getLocalizedMessage());
+            }
+
+            return result; //"Failed to fetch data!";
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            if (pDialogEmpr.isShowing()) {
+                pDialogEmpr.dismiss();
+
+                if (result == 1) {
+                    Log.i("Cabecera Empr", Integer.toString(lcabeceraempr.size()));
+                } else {
+                    Log.e("Cabecera Empr", "Failed to fetch data!");
+                }
+            }
+        }
+    }
+
+    private void parseResultCabeceraEmpr(String result) {
+        try {
+            JSONObject response = new JSONObject(result);
+            JSONArray posts = response.optJSONArray("posts");
+            Log.i("Longitud Datos: ",Integer.toString(posts.length()));
+            for (int ii = 0; ii < posts.length(); ii++) {
+                JSONObject post = posts.optJSONObject(ii);
+
+                CabeceraEmpr cabeceraEmprItem = new CabeceraEmpr();
+                cabeceraEmprItem.setCabeceraRazon(post.optString("RAZON").trim());
+                cabeceraEmprItem.setCabeceraCif(post.optString("CIF").trim());
+                cabeceraEmprItem.setCabeceraNumero(post.optString("NUMERO").trim());
+                cabeceraEmprItem.setCabeceraBloque(post.optString("BLOQUE").trim());
+                cabeceraEmprItem.setCabeceraEscalera(post.optString("ESCALERA").trim());
+                cabeceraEmprItem.setCabeceraPiso(post.optString("PISO").trim());
+                cabeceraEmprItem.setCabeceraPuerta(post.optString("PUERTA").trim());
+                cabeceraEmprItem.setCabeceraAmpliacion(post.optString("AMPLIACION").trim());
+                cabeceraEmprItem.setCabeceraNombre_calle(post.optString("NOMBRE_CALLE"));
+                cabeceraEmprItem.setCabeceraCod_poblacion(post.optString("COD_POBLACION").trim());
+                cabeceraEmprItem.setCabeceraNombre_poblacion(post.optString("NOMBRE_POBLACION").trim());
+                cabeceraEmprItem.setCabeceraNombre_provincia(post.optString("NOMBRE_PROVINCIA").trim());
+                cabeceraEmprItem.setCabeceraNombre_pais(post.optString("NOMBRE_PAIS").trim());
+                lcabeceraempr.add(cabeceraEmprItem);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Async task to get all food locales
      */
@@ -9183,7 +9331,7 @@ ge     * */
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogLocal = new ProgressDialog(ActividadPrincipal.this);
-            pDialogLocal.setMessage(getPalabras("Cargando")+" Locales. "+getPalabras("Espere por favor")+"...");
+            pDialogLocal.setMessage(getPalabras("Cargando")+" "+getPalabras("Local")+". "+getPalabras("Espere por favor")+"...");
             pDialogLocal.setIndeterminate(false);
             pDialogLocal.setCancelable(true);
             pDialogLocal.show();
@@ -9318,8 +9466,12 @@ ge     * */
                         }
                         if (found==0) {
                             Local cat = new Local(post.optString("LOCAL"),
-                                                  post.optString("NOMBRE"),
-                                                  Filtro.getUrl() + "/image/" + post.optString("IMAGEN").trim()
+                                                  getPalabras(post.optString("NOMBRE").trim()),
+                                                  Filtro.getUrl() + "/image/" + post.optString("IMAGEN").trim(),
+                                                  post.optInt("RESIZE_LOGO_SCREEN_WIDTH") ,
+                                                  post.optInt("RESIZE_LOGO_SCREEN_HEIGHT"),
+                                                  post.optInt("RESIZE_LOGO_PRINT_WIDTH"),
+                                                  post.optInt("RESIZE_LOGO_PRINT_HEIGHT")
                                     );
                             localList.add(cat);
                         }
@@ -9340,7 +9492,7 @@ ge     * */
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogSec = new ProgressDialog(ActividadPrincipal.this);
-            pDialogSec.setMessage(getPalabras("Cargando")+" Secciones. "+getPalabras("Espere por favor")+"...");
+            pDialogSec.setMessage(getPalabras("Cargando")+" "+getPalabras("Seccion")+". "+getPalabras("Espere por favor")+"...");
             pDialogSec.setIndeterminate(false);
             pDialogSec.setCancelable(true);
             pDialogSec.show();
@@ -9485,7 +9637,7 @@ ge     * */
                         }
                         if (found==0) {
                             Seccion cat = new Seccion(post.optString("SECCION"),
-                                    post.optString("NOMBRE"),
+                                    getPalabras(post.optString("NOMBRE").trim()),
                                     post.optInt("IVAINCLUIDO"));
                             secList.add(cat);
                         }
@@ -9505,7 +9657,7 @@ ge     * */
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogSecFechas = new ProgressDialog(ActividadPrincipal.this);
-            pDialogSecFechas.setMessage(getPalabras("Cargando")+" Seccion Fechas. "+getPalabras("Espere por favor")+"...");
+            pDialogSecFechas.setMessage(getPalabras("Cargando")+" "+getPalabras("Seccion")+" "+getPalabras("Fecha")+". "+getPalabras("Espere por favor")+"...");
             pDialogSecFechas.setIndeterminate(false);
             pDialogSecFechas.setCancelable(true);
             pDialogSecFechas.show();
@@ -9653,7 +9805,7 @@ ge     * */
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogCaja = new ProgressDialog(ActividadPrincipal.this);
-            pDialogCaja.setMessage(getPalabras("Cargando")+" Cajas. "+getPalabras("Espere por favor")+"...");
+            pDialogCaja.setMessage(getPalabras("Cargando")+" "+getPalabras("Caja")+". "+getPalabras("Espere por favor")+"...");
             pDialogCaja.setIndeterminate(false);
             pDialogCaja.setCancelable(true);
             pDialogCaja.show();
@@ -9809,7 +9961,7 @@ ge     * */
                         }
                         if (found==0) {
                             Caja cat = new Caja(post.optString("CAJA"),
-                                    post.optString("NOMBRE"));
+                                    getPalabras(post.optString("NOMBRE").trim()));
                             cajaList.add(cat);
                         }
                     }
@@ -9831,7 +9983,7 @@ ge     * */
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogRango = new ProgressDialog(ActividadPrincipal.this);
-            pDialogRango.setMessage(getPalabras("Cargando")+" Rangos. "+getPalabras("Espere por favor")+"...");
+            pDialogRango.setMessage(getPalabras("Cargando")+" "+getPalabras("Rangos")+". "+getPalabras("Espere por favor")+"...");
             pDialogRango.setIndeterminate(false);
             pDialogRango.setCancelable(true);
             pDialogRango.show();
@@ -9974,7 +10126,7 @@ ge     * */
             for (int ii = 0; ii < posts.length(); ii++) {
                 JSONObject post = posts.optJSONObject(ii);
                 Rango cat = new Rango(post.optString("RANGO"),
-                        post.optString("NOMBRE"));
+                        getPalabras(post.optString("NOMBRE").trim()));
                 rangosList.add(cat);
 
             }
@@ -9992,7 +10144,7 @@ ge     * */
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogTurno = new ProgressDialog(ActividadPrincipal.this);
-            pDialogTurno.setMessage(getPalabras("Cargando")+" Turnos. "+getPalabras("Espere por favor")+"...");
+            pDialogTurno.setMessage(getPalabras("Cargando")+" "+getPalabras("Turnos")+". "+getPalabras("Espere por favor")+"...");
             pDialogTurno.setIndeterminate(false);
             pDialogTurno.setCancelable(true);
             pDialogTurno.show();
@@ -10149,7 +10301,7 @@ ge     * */
                         }
                         if (found==0) {
                             Turno cat = new Turno(post.optString("COD_TURNO"),
-                                    post.optString("NOMBRE"));
+                                    getPalabras(post.optString("NOMBRE").trim()));
                             turnoList.add(cat);
                         }
                     }
@@ -10171,7 +10323,7 @@ ge     * */
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogFra = new ProgressDialog(ActividadPrincipal.this);
-            pDialogFra.setMessage(getPalabras("Cargando")+" Series "+getPalabras("Espere por favor")+"...");
+            pDialogFra.setMessage(getPalabras("Cargando")+" "+getPalabras("Serie")+". "+getPalabras("Espere por favor")+"...");
             pDialogFra.setIndeterminate(false);
             pDialogFra.setCancelable(true);
             pDialogFra.show();
@@ -10346,7 +10498,7 @@ ge     * */
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogMesa = new ProgressDialog(ActividadPrincipal.this);
-            pDialogMesa.setMessage(getPalabras("Cargando")+" Mesas. "+getPalabras("Espere por favor")+"...");
+            pDialogMesa.setMessage(getPalabras("Cargando")+" "+getPalabras("Mesas")+". "+getPalabras("Espere por favor")+"...");
             pDialogMesa.setIndeterminate(false);
             pDialogMesa.setCancelable(true);
             pDialogMesa.show();
@@ -10496,7 +10648,7 @@ ge     * */
             for (int ii = 0; ii < posts.length(); ii++) {
                 JSONObject post = posts.optJSONObject(ii);
                 Mesa cat = new Mesa(post.optString("MESA"),
-                        post.optString("NOMBRE"));
+                        getPalabras(post.optString("NOMBRE").trim()));
                 mesasList.add(cat);
 
             }
@@ -10514,7 +10666,7 @@ ge     * */
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogMesa = new ProgressDialog(ActividadPrincipal.this);
-            pDialogMesa.setMessage(getPalabras("Cargando")+" Mesa Pedido. "+getPalabras("Espere por favor")+"...");
+            pDialogMesa.setMessage(getPalabras("Cargando")+" "+getPalabras("Mesa")+" "+getPalabras("Pedido")+". "+getPalabras("Espere por favor")+"...");
             pDialogMesa.setIndeterminate(false);
             pDialogMesa.setCancelable(true);
             pDialogMesa.show();
@@ -10665,7 +10817,7 @@ ge     * */
             for (int ii = 0; ii < posts.length(); ii++) {
                 JSONObject post = posts.optJSONObject(ii);
                 Mesa cat = new Mesa(post.optString("MESA"),
-                        post.optString("NOMBRE"),
+                        getPalabras(post.optString("NOMBRE").trim()),
                         post.optInt("COMENSALES"));
                 mesaList.add(cat);
 
@@ -10684,7 +10836,7 @@ ge     * */
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogMesa = new ProgressDialog(ActividadPrincipal.this);
-            pDialogMesa.setMessage(getPalabras("Cargando")+" Mesa Buffet. "+getPalabras("Espere por favor")+"...");
+            pDialogMesa.setMessage(getPalabras("Cargando")+" "+getPalabras("Mesa")+" "+getPalabras("Buffet")+". "+getPalabras("Espere por favor")+"...");
             pDialogMesa.setIndeterminate(false);
             pDialogMesa.setCancelable(true);
             pDialogMesa.show();
@@ -10832,7 +10984,7 @@ ge     * */
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogMesa = new ProgressDialog(ActividadPrincipal.this);
-            pDialogMesa.setMessage(getPalabras("Cargando")+" Mesa Factura. "+getPalabras("Espere por favor")+"...");
+            pDialogMesa.setMessage(getPalabras("Cargando")+" "+getPalabras("Mesa")+" "+getPalabras("Factura")+". "+getPalabras("Espere por favor")+"...");
             pDialogMesa.setIndeterminate(false);
             pDialogMesa.setCancelable(true);
             pDialogMesa.show();
@@ -10983,7 +11135,7 @@ ge     * */
             for (int ii = 0; ii < posts.length(); ii++) {
                 JSONObject post = posts.optJSONObject(ii);
                 Mesa cat = new Mesa(post.optString("MESA"),
-                        post.optString("NOMBRE"),
+                        getPalabras(post.optString("NOMBRE").trim()),
                         post.optInt("COMENSALES"));
                 mesaList.add(cat);
 
@@ -11002,7 +11154,7 @@ ge     * */
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogEmpleado = new ProgressDialog(ActividadPrincipal.this);
-            pDialogEmpleado.setMessage(getPalabras("Cargando")+" Empleado Factura. "+getPalabras("Espere por favor")+"...");
+            pDialogEmpleado.setMessage(getPalabras("Cargando")+" "+getPalabras("Empleado")+" "+getPalabras("Factura")+". "+getPalabras("Espere por favor")+"...");
             pDialogEmpleado.setIndeterminate(false);
             pDialogEmpleado.setCancelable(true);
             pDialogEmpleado.show();
@@ -11157,7 +11309,7 @@ ge     * */
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogEmpleado = new ProgressDialog(ActividadPrincipal.this);
-            pDialogEmpleado.setMessage(getPalabras("Cargando")+" Empleado Pedido. "+getPalabras("Espere por favor")+"...");
+            pDialogEmpleado.setMessage(getPalabras("Cargando")+" "+getPalabras("Empleado")+" "+getPalabras("Pedido")+". "+getPalabras("Espere por favor")+"...");
             pDialogEmpleado.setIndeterminate(false);
             pDialogEmpleado.setCancelable(true);
             pDialogEmpleado.show();
@@ -11313,7 +11465,7 @@ ge     * */
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogEmpleado = new ProgressDialog(ActividadPrincipal.this);
-            pDialogEmpleado.setMessage(getPalabras("Cargando")+" Empleados. "+getPalabras("Espere por favor")+"...");
+            pDialogEmpleado.setMessage(getPalabras("Cargando")+" "+getPalabras("Empleados")+". "+getPalabras("Espere por favor")+"...");
             pDialogEmpleado.setIndeterminate(false);
             pDialogEmpleado.setCancelable(true);
             pDialogEmpleado.show();
@@ -11459,7 +11611,7 @@ ge     * */
             for (int ii = 0; ii < posts.length(); ii++) {
                 JSONObject post = posts.optJSONObject(ii);
                 Empleado cat = new Empleado(post.optString("EMPLEADO"),
-                                            post.optString("NOMBRE"),
+                                            getPalabras(post.optString("NOMBRE").trim()),
                                             post.optString("username"));
                 empleadosList.add(cat);
 
@@ -11479,7 +11631,7 @@ ge     * */
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogMoneda = new ProgressDialog(ActividadPrincipal.this);
-            pDialogMoneda.setMessage(getPalabras("Cargando")+" Monedas. "+getPalabras("Espere por favor")+"...");
+            pDialogMoneda.setMessage(getPalabras("Cargando")+" "+getPalabras("Moneda")+". "+getPalabras("Espere por favor")+"...");
             pDialogMoneda.setIndeterminate(false);
             pDialogMoneda.setCancelable(true);
             pDialogMoneda.show();
@@ -11582,7 +11734,7 @@ ge     * */
             for (int ii = 0; ii < posts.length(); ii++) {
                 JSONObject post = posts.optJSONObject(ii);
                 Moneda cat = new Moneda(post.optString("MONEDA"),
-                        post.optString("NOMBRE"));
+                        getPalabras(post.optString("NOMBRE").trim()));
                 monedaList.add(cat);
 
             }
@@ -11600,7 +11752,7 @@ ge     * */
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogTerminal = new ProgressDialog(ActividadPrincipal.this);
-            pDialogTerminal.setMessage(getPalabras("Cargando")+" Terminales. "+getPalabras("Espere por favor")+"...");
+            pDialogTerminal.setMessage(getPalabras("Cargando")+" "+getPalabras("Terminal")+". "+getPalabras("Espere por favor")+"...");
             pDialogTerminal.setIndeterminate(false);
             pDialogTerminal.setCancelable(true);
             pDialogTerminal.show();
@@ -11727,7 +11879,7 @@ ge     * */
         protected void onPreExecute() {
             super.onPreExecute();
             pDialogCaja = new ProgressDialog(ActividadPrincipal.this);
-            pDialogCaja.setMessage(getPalabras("Cargando")+" Cajas Close. "+getPalabras("Espere por favor")+"...");
+            pDialogCaja.setMessage(getPalabras("Cargando")+" "+getPalabras("Cajas")+" "+getPalabras("Cerrada")+". "+getPalabras("Espere por favor")+"...");
             pDialogCaja.setIndeterminate(false);
             pDialogCaja.setCancelable(true);
             pDialogCaja.show();
@@ -11801,7 +11953,7 @@ ge     * */
         protected void onPreExecute() {
             super.onPreExecute();
             pDialogTurno = new ProgressDialog(ActividadPrincipal.this);
-            pDialogTurno.setMessage(getPalabras("Cargando")+" Turnos Close. "+getPalabras("Espere por favor")+"...");
+            pDialogTurno.setMessage(getPalabras("Cargando")+" "+getPalabras("Turnos")+" "+getPalabras("Cerrado")+". "+getPalabras("Espere por favor")+"...");
             pDialogTurno.setIndeterminate(false);
             pDialogTurno.setCancelable(true);
             pDialogTurno.show();
@@ -11870,7 +12022,7 @@ ge     * */
         protected void onPreExecute() {
             super.onPreExecute();
             pDialogtft = new ProgressDialog(ActividadPrincipal.this);
-            pDialogtft.setMessage(ActividadPrincipal.getPalabras("Cargando")+" Tipos Cobro...");
+            pDialogtft.setMessage(ActividadPrincipal.getPalabras("Cargando")+" "+ActividadPrincipal.getPalabras("Tipo Cobro")+"...");
             pDialogtft.setIndeterminate(false);
             pDialogtft.setCancelable(true);
             pDialogtft.show();
@@ -11975,6 +12127,10 @@ ge     * */
                         TipoCobro tipoCobro = it.next();
                         it.remove();
                     }
+                    for (Iterator<TipoCobro> itbis = tftList.iterator(); itbis.hasNext();){
+                        TipoCobro tipoCobro = itbis.next();
+                        itbis.remove();
+                    }
 
                     parseResultTiposCobro(response.toString());
                     result = 1; // Successful
@@ -12012,8 +12168,10 @@ ge     * */
                 JSONObject post = posts.optJSONObject(ii);
                 Log.i("POST: ",post.optString("T_FRA")+ post.optString("NOMBRE"));
                 TipoCobro cat = new TipoCobro(post.optString("T_FRA"),
-                        post.optString("NOMBRE"));
+                        getPalabras(post.optString("NOMBRE").trim()),
+                        post.optInt("COPIA_PRINT"));
                 tftbuffetList.add(cat);
+                tftList.add(cat);
                 Log.i("POST Longitud: ",Integer.toString(tftbuffetList.size()));
 
             }
@@ -12067,18 +12225,24 @@ ge     * */
 */
                 Filtro.setLocal(localList.get(position).getLocalLocal());
 
-                /// Leemos i cargamos la imagen
+                /// Leemos i cargamos la imagen para LOGO SCREEN
                 Drawable d = LoadImageFromWebOperations(localList.get(position).getLocalUrlimagen());
                 Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
-                Bitmap new_icon = resizeBitmapImageFn(bitmap, 75); //resizing the bitmap 500: ricoparico
-                Drawable d1 = new BitmapDrawable(getResources(),new_icon); //Converting bitmap into drawable
-                getSupportActionBar().setIcon(d1); //also displays wide logo
+//*                Bitmap new_iconscreen = resizeBitmapImageFn(bitmap, localList.get(position).getLocalResize_logo_screen()); //resizing the bitmap 500: ricoparico 75 Marivent
+                Bitmap new_iconscreen = getResizedBitmap(bitmap,localList.get(position).getLocalResize_logo_screen_width(),localList.get(position).getLocalResize_logo_screen_height());
+                Drawable d1screen = new BitmapDrawable(getResources(),new_iconscreen); //Converting bitmap into drawable
+                getSupportActionBar().setIcon(d1screen); //also displays wide logo_ricoparico
+                imagelogo = new_iconscreen; // GUARDAMOS EL ICONO MODIFICADO .
 
-                imagelogo = new_icon; // GUARDAMOS EL ICONO MODIFICADO .
-                imagelogoprint = codec(bitmap, Bitmap.CompressFormat.JPEG, 0);// PASAMOS EL ICONO LEIDO AL BITMAP PARA IMPRIMIR.
+                /// Leemos i cargamos la imagen para LOGO PRINT
+                Drawable dprint = LoadImageFromWebOperations(localList.get(position).getLocalUrlimagen());
+                Bitmap bitmapprint = ((BitmapDrawable)dprint).getBitmap();
+                Bitmap bitmaplogo = getResizedBitmap(bitmapprint,localList.get(position).getLocalResize_logo_print_width(),localList.get(position).getLocalResize_logo_print_height());
+
+                imagelogoprint = codec(bitmaplogo, Bitmap.CompressFormat.JPEG, 0);// PASAMOS EL ICONO LEIDO AL BITMAP PARA IMPRIMIR.
 
 
-                /// Modificar logo menudrawer
+                /// Modificar logo_ricoparico menudrawer
                 int imageViewID = getResources().getIdentifier("imageLogoDrawer", "id", getPackageName());
                 ImageView imgLogo = (ImageView) findViewById(imageViewID);
                 imgLogo.setImageBitmap(imagelogo);
@@ -13250,7 +13414,7 @@ ge     * */
 
                                 Popular popularItem = new Popular();
                                 popularItem.setPrecio(Float.parseFloat(String.valueOf(post.optDouble("PREU_VTA1"))));
-                                popularItem.setNombre(post.optString("NOMBRE_ARE"));
+                                popularItem.setNombre(getPalabras(post.optString("NOMBRE_ARE").trim()));
                                 popularItem.setArticulo(post.optString("ARTICULO"));
                                 popularItem.setTipo_are(post.optString("TIPO_ARE"));
                                 popularItem.setUrlimagen(Filtro.getUrl() + "/image/" + post.optString("IMAGEN").trim());
@@ -13268,19 +13432,18 @@ ge     * */
                                 Comida comida = it.next();
                                 it.remove();
                             }
-
                             for (int ii = 0; ii < posts.length(); ii++) {
                                 JSONObject post = posts.optJSONObject(ii);
                                 Comida comidaItem = new Comida();
                                 comidaItem.setPrecio(Float.parseFloat(String.valueOf(post.optDouble("PREU_VTA1"))));
-                                comidaItem.setNombre(post.optString("NOMBRE_ARE"));
+                                comidaItem.setNombre(getPalabras(post.optString("NOMBRE_ARE").trim()));
                                 comidaItem.setArticulo(post.optString("ARTICULO"));
                                 comidaItem.setTipo_are(post.optString("TIPO_ARE"));
                                 comidaItem.setTiva_id(post.optInt("TIVA_ID"));
-                                comidaItem.setUrlimagen(Filtro.getUrl() + "/image/" + post.optString("IMAGEN").trim() );
+                                comidaItem.setUrlimagen(Filtro.getUrl() + "/image/" + post.optString("IMAGEN").trim());
                                 comidaItem.setIndividual(post.optInt("INDIVIDUAL"));
                                 lcomida.add(comidaItem);
-                                Log.i("ImagenUrl",comidaItem.getUrlimagen());
+                                Log.i("ImagenUrl", comidaItem.getUrlimagen());
                                 Glide.with(mContext).load(comidaItem.getUrlimagen()).thumbnail(0.1f).diskCacheStrategy(DiskCacheStrategy.ALL).preload();
                             }
 
@@ -13398,7 +13561,31 @@ ge     * */
                     }
 
                 } else {
-                    // LineaDocumentoFactura with pid not found
+                    // NO HAY ARTICULOS DE LA CATEGORIA success = 0
+                    switch(xTabla) {
+                        case "are":
+                            for (Iterator<Comida> it = lcomida.iterator(); it.hasNext(); ) {
+                                Comida comida = it.next();
+                                it.remove();
+                            }
+                            Comida comidaItem = new Comida();
+                            comidaItem.setPrecio(Float.parseFloat(String.valueOf("0.00")));
+                            comidaItem.setNombre(getPalabras("No hay")+" "+getPalabras("Articulo"));
+                            comidaItem.setArticulo("000");
+                            comidaItem.setTipo_are(Filtro.getTipo_are());
+                            comidaItem.setTiva_id(2);
+                            comidaItem.setUrlimagen(Filtro.getUrl() + "/image/" + "placeholder.png");
+                            comidaItem.setIndividual(0);
+                            lcomida.add(comidaItem);
+                            Log.i("ImagenUrl", comidaItem.getUrlimagen());
+                            Glide.with(mContext).load(comidaItem.getUrlimagen()).thumbnail(0.1f).diskCacheStrategy(DiskCacheStrategy.ALL).preload();
+
+                            // AÑADIMOS LA CATEGORIA DE COMIDA AL ARRAY DE COMIDAS
+                            comidas.add(lcomida);
+                            break;
+                        default:
+                            break;
+                    }
                 }
 
             } catch (JSONException e) {
@@ -13699,9 +13886,9 @@ ge     * */
                 JSONObject post = posts.optJSONObject(ii);
                 Articulo articuloItem = new Articulo(post.optInt("ID"),
                                                      post.optString("ARTICULO"),
-                                                     post.optString("NOMBRE"),
+                                                     getPalabras(post.optString("NOMBRE").trim()),
                                                      post.optString("TIPOPLATO"),
-                                                     post.optString("NOMBRE_PLATO"),
+                                                     getPalabras(post.optString("NOMBRE_PLATO").trim()),
                                                      Float.parseFloat(post.optString("PRECIO")),
                                                      post.optString("CANTIDAD"),
                                                      Filtro.getUrl() + "/image/" + post.optString("IMAGEN").trim(),

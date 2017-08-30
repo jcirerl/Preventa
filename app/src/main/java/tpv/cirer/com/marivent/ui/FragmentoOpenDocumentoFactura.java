@@ -178,10 +178,10 @@ public class FragmentoOpenDocumentoFactura extends Fragment {
                             Snackbar.make(view, ActividadPrincipal.getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_LONG).show();
                         }else {
                             new CreaDocumentoFactura().execute();
-                            Snackbar.make(view, "Creando Documento Factura", Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(view, ActividadPrincipal.getPalabras("Creando")+" "+ActividadPrincipal.getPalabras("Documento")+" "+ActividadPrincipal.getPalabras("Factura"), Snackbar.LENGTH_LONG).show();
                         }
                     } else {
-                        Snackbar.make(view, "No Hay Diario Caja Abierto", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(view, ActividadPrincipal.getPalabras("Diario Caja No Existe o No Abierto"), Snackbar.LENGTH_LONG).show();
                     }
                 }
             });
@@ -231,7 +231,7 @@ public class FragmentoOpenDocumentoFactura extends Fragment {
             if (mContext !=null) {
                 super.onPreExecute();
                 pDialog = new ProgressDialog(mContext);
-                pDialog.setMessage("Leyendo Facturas..");
+                pDialog.setMessage(ActividadPrincipal.getPalabras("Leyendo")+" "+ActividadPrincipal.getPalabras("Facturas")+"..");
                 pDialog.setIndeterminate(false);
                 pDialog.setCancelable(true);
                 pDialog.show();
@@ -485,6 +485,7 @@ public class FragmentoOpenDocumentoFactura extends Fragment {
                 documentofacturaItem.setDocumentoFacturaCaja(post.optString("CAJA"));
                 documentofacturaItem.setDocumentoFacturaCod_turno(post.optString("COD_TURNO"));
                 documentofacturaItem.setDocumentoFacturaObs(post.optString("OBS"));
+                documentofacturaItem.setDocumentoFacturaNombre_tft(post.optString("NOMBRE_TFT"));
                 documentofacturaItem.setDocumentoFacturaT_fra(post.optString("T_FRA"));
                 documentofacturaItem.setDocumentoFacturaImp_base(post.optString("IMP_BASE"));
                 documentofacturaItem.setDocumentoFacturaImp_iva(post.optString("IMP_IVA"));
@@ -510,7 +511,7 @@ public class FragmentoOpenDocumentoFactura extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             pDialogcreaftp = new ProgressDialog(getActivity());
-            pDialogcreaftp.setMessage("Creando Factura..");
+            pDialogcreaftp.setMessage(ActividadPrincipal.getPalabras("Creando")+" "+ActividadPrincipal.getPalabras("Factura")+"..");
             pDialogcreaftp.setIndeterminate(false);
             pDialogcreaftp.setCancelable(true);
             pDialogcreaftp.show();
@@ -585,7 +586,7 @@ public class FragmentoOpenDocumentoFactura extends Fragment {
                 new AsyncHttpTaskDocumentoFactura(cont).execute(url);
 //                FragmentoOpenDocumentoFactura.getInstance().onResume();
             } else {
-                Toast.makeText(getActivity(), "ERROR NO Creado Factura ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "ERROR NO "+ActividadPrincipal.getPalabras("Creado")+" "+ActividadPrincipal.getPalabras("Factura"), Toast.LENGTH_SHORT).show();
                 // failed to create product
             }
         }

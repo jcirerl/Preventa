@@ -149,5 +149,21 @@
         <item>FIJO</item>
         <item>SCROLL</item>
     </string-array>
+    <string-array name="tabpedidomesa">
+        <item>Activo</item>
+        <item>Inactivo</item>
+    </string-array>
+    <string-array name="ctrltabpedidomesa">
+        <item>true</item>
+        <item>false</item>
+    </string-array>
+    <string-array name="tabfacturamesa">
+        <item>Activo</item>
+        <item>Inactivo</item>
+    </string-array>
+    <string-array name="ctrltabfacturamesa">
+        <item>true</item>
+        <item>false</item>
+    </string-array>
 
 </resources>

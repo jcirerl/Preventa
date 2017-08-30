@@ -187,7 +187,7 @@ public class EditLineaDocumentoFacturaFragment extends Fragment implements View.
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage(ActividadPrincipal.getPalabras("Cargando")+" Detalles LineaDocumentoFactura. "+ActividadPrincipal.getPalabras("Espere por favor")+"...");
+            pDialog.setMessage(ActividadPrincipal.getPalabras("Cargando")+" "+ActividadPrincipal.getPalabras("Linea")+" "+ActividadPrincipal.getPalabras("Documento")+" "+ActividadPrincipal.getPalabras("Factura")+". "+ActividadPrincipal.getPalabras("Espere por favor")+"...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
             pDialog.show();
@@ -286,7 +286,7 @@ public class EditLineaDocumentoFacturaFragment extends Fragment implements View.
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Guardando LineaDocumentoFactura ...");
+            pDialog.setMessage(ActividadPrincipal.getPalabras("Guardar")+" "+ActividadPrincipal.getPalabras("Linea")+" "+ActividadPrincipal.getPalabras("Documento")+" "+ActividadPrincipal.getPalabras("Factura")+" ...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
             pDialog.show();
@@ -385,7 +385,7 @@ public class EditLineaDocumentoFacturaFragment extends Fragment implements View.
                 if (id == R.id.Cant) {
                     cValor = myEditText.getText().toString();
                     if (cValor.matches("")) {
-                        Toast.makeText(getActivity(), "Valor Vacio Cantidad", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), ActividadPrincipal.getPalabras("Valor")+" "+ActividadPrincipal.getPalabras("Vacio")+" "+ActividadPrincipal.getPalabras("Cantidad"), Toast.LENGTH_SHORT).show();
                         //            this.btnGuardar.setEnabled(false);
                         this.btnGuardar1.setEnabled(false);
                         this.btnGuardar1.setChecked(false);
@@ -403,7 +403,7 @@ public class EditLineaDocumentoFacturaFragment extends Fragment implements View.
                 }else if (id == R.id.Preu) {
                     cValor = myEditText.getText().toString();
                     if (cValor.matches("")) {
-                        Toast.makeText(getActivity(), "Valor Vacio Precio", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), ActividadPrincipal.getPalabras("Valor")+" "+ActividadPrincipal.getPalabras("Vacio")+" "+ActividadPrincipal.getPalabras("Precio"), Toast.LENGTH_SHORT).show();
                         //            this.btnGuardar.setEnabled(false);
                         this.btnGuardar1.setEnabled(false);
                         this.btnGuardar1.setChecked(false);
@@ -422,7 +422,7 @@ public class EditLineaDocumentoFacturaFragment extends Fragment implements View.
                 }else if (id == R.id.Importe) {
                     cValor = myEditText.getText().toString();
                     if (cValor.matches("")) {
-                        Toast.makeText(getActivity(), "Valor Vacio Importe", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), ActividadPrincipal.getPalabras("Valor")+" "+ActividadPrincipal.getPalabras("Vacio")+" "+ActividadPrincipal.getPalabras("Importe"), Toast.LENGTH_SHORT).show();
                         //            this.btnGuardar.setEnabled(false);
                         this.btnGuardar1.setEnabled(false);
                         this.btnGuardar1.setChecked(false);

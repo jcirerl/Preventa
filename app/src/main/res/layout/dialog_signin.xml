@@ -3,7 +3,7 @@ android:orientation="vertical"
 android:layout_width="wrap_content"
 android:layout_height="wrap_content">
 <ImageView
-    android:src="@drawable/logo"
+    android:src="@drawable/logo_ricoparico"
     android:layout_width="match_parent"
     android:layout_height="64dp"
     android:scaleType="center"

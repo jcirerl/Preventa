@@ -41,12 +41,14 @@ import tpv.cirer.com.marivent.modelo.CabeceraEmpr;
 import tpv.cirer.com.marivent.modelo.CabeceraFtp;
 import tpv.cirer.com.marivent.modelo.DocumentoFacturaIva;
 import tpv.cirer.com.marivent.modelo.LineaDocumentoFactura;
+import tpv.cirer.com.marivent.ui.ActividadPrincipal;
 
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.LoadImageFromWebOperations;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.codec;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getLocalIpAddress;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getQuery;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.imagelogoprint;
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lcabeceraempr;
 
 /**
  * Created by JUAN on 08/08/2017.
@@ -65,7 +67,7 @@ public class PrintTicket {
     // JSON parser class
     JSONParserNew jsonParserNew = new JSONParserNew();
     // url to update Factura
-    private static final String url_update_Factura = Filtro.getUrl()+"/modifica_estado_factura.php";
+    private static final String url_update_Factura = Filtro.getUrl()+"/modifica_estado_factura_filtro.php";
 
     private String pid;
     ProgressDialog pDialog;
@@ -79,7 +81,7 @@ public class PrintTicket {
     static final int SEND_TIMEOUT = 10 * 1000;
     static Print printer = null;
     static Builder builder = null;
-    public static List<CabeceraEmpr> lcabeceraempr;
+//**    public static List<CabeceraEmpr> lcabeceraempr;
     public static List<CabeceraFtp> lcabeceraftp;
     public static List<LineaDocumentoFactura> llineadocumentofacturaprint;
     public static List<DocumentoFacturaIva> ldocumentofacturaiva;
@@ -92,14 +94,16 @@ public class PrintTicket {
     }
 
     public void iniciarTicket(){
-        lcabeceraempr = new ArrayList<CabeceraEmpr>();
+  //**      lcabeceraempr = new ArrayList<CabeceraEmpr>();
         lcabeceraftp = new ArrayList<CabeceraFtp>();
         llineadocumentofacturaprint = new ArrayList<LineaDocumentoFactura>();
         ldocumentofacturaiva = new ArrayList<DocumentoFacturaIva>();
 
-        urlPrint = Filtro.getUrl() + "/CabeceraEMPR.php";
+        urlPrint = Filtro.getUrl()+"/CabeceraFTP.php";
+        new LeerCabeceraFtp().execute(urlPrint);
+/*        urlPrint = Filtro.getUrl() + "/CabeceraEMPR.php";
         new LeerCabeceraEmpr().execute(urlPrint);
-
+*/
     }
     public class LeerCabeceraEmpr extends AsyncTask<String, Void, Integer> {
 
@@ -108,7 +112,7 @@ public class PrintTicket {
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogEmpr = new ProgressDialog(context);
-            pDialogEmpr.setMessage("Leyendo Cabecera Empresa..");
+            pDialogEmpr.setMessage(ActividadPrincipal.getPalabras("Leyendo")+" "+ActividadPrincipal.getPalabras("Cabecera")+" "+ActividadPrincipal.getPalabras("Empresa")+"..");
             pDialogEmpr.setIndeterminate(false);
             pDialogEmpr.setCancelable(true);
             pDialogEmpr.show();
@@ -256,12 +260,14 @@ public class PrintTicket {
         protected void onPreExecute() {
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
-            pDialogFtp = new ProgressDialog(context);
-            pDialogFtp.setMessage("Leyendo Cabecera Factura..");
-            pDialogFtp.setIndeterminate(false);
-            pDialogFtp.setCancelable(true);
-            pDialogFtp.show();
-
+            if (null==context) {
+            }else{
+                pDialogFtp = new ProgressDialog(context);
+                pDialogFtp.setMessage(ActividadPrincipal.getPalabras("Leyendo") + " " + ActividadPrincipal.getPalabras("Cabecera") + " " + ActividadPrincipal.getPalabras("Factura") + "..");
+                pDialogFtp.setIndeterminate(false);
+                pDialogFtp.setCancelable(true);
+                pDialogFtp.show();
+            }
         }
 
         @Override
@@ -393,7 +399,10 @@ public class PrintTicket {
         protected void onPostExecute(Integer result) {
 
             //    setProgressBarIndeterminateVisibility(false);
-            pDialogFtp.dismiss();
+            if(null==context){
+            }else {
+                pDialogFtp.dismiss();
+            }
 
             if (result == 1) {
                 Log.i("Cabecera Ftp", Integer.toString(lcabeceraftp.size()));
@@ -448,11 +457,14 @@ public class PrintTicket {
         protected void onPreExecute() {
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
-            pDialogLft = new ProgressDialog(context);
-            pDialogLft.setMessage("Leyendo Lineas Factura..");
-            pDialogLft.setIndeterminate(false);
-            pDialogLft.setCancelable(true);
-            pDialogLft.show();
+            if (null==context) {
+            }else {
+                pDialogLft = new ProgressDialog(context);
+                pDialogLft.setMessage(ActividadPrincipal.getPalabras("Leyendo") + " " + ActividadPrincipal.getPalabras("Lineas") + " " + ActividadPrincipal.getPalabras("Factura") + "..");
+                pDialogLft.setIndeterminate(false);
+                pDialogLft.setCancelable(true);
+                pDialogLft.show();
+            }
         }
 
         @Override
@@ -584,7 +596,10 @@ public class PrintTicket {
         protected void onPostExecute(Integer result) {
 
             //    setProgressBarIndeterminateVisibility(false);
-            pDialogLft.dismiss();
+            if (null==context) {
+            }else {
+                pDialogLft.dismiss();
+            }
             /* Download complete. Lets update UI */
             if (result == 1) {
                 Log.i("Lineas LFT", Integer.toString(llineadocumentofacturaprint.size()));
@@ -629,11 +644,14 @@ public class PrintTicket {
         protected void onPreExecute() {
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
-            pDialogFtpiva = new ProgressDialog(context);
-            pDialogFtpiva.setMessage("Leyendo Lineas Iva..");
-            pDialogFtpiva.setIndeterminate(false);
-            pDialogFtpiva.setCancelable(true);
-            pDialogFtpiva.show();
+            if (null==context) {
+            }else {
+                pDialogFtpiva = new ProgressDialog(context);
+                pDialogFtpiva.setMessage(ActividadPrincipal.getPalabras("Leyendo") + " " + ActividadPrincipal.getPalabras("Lineas") + " " + ActividadPrincipal.getPalabras("Iva") + "..");
+                pDialogFtpiva.setIndeterminate(false);
+                pDialogFtpiva.setCancelable(true);
+                pDialogFtpiva.show();
+            }
         }
 
         @Override
@@ -765,7 +783,10 @@ public class PrintTicket {
         protected void onPostExecute(Integer result) {
 
             //    setProgressBarIndeterminateVisibility(false);
-            pDialogFtpiva.dismiss();
+            if (null==context) {
+            }else {
+                pDialogFtpiva.dismiss();
+            }
             /* Download complete. Lets update UI */
             if (result == 1) {
                 Log.i("Lineas FTPIVA", Integer.toString(ldocumentofacturaiva.size()));
@@ -804,11 +825,14 @@ public class PrintTicket {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialogFtp = new ProgressDialog(context);
-            pDialogFtp.setMessage("Guardando Estado ...");
-            pDialogFtp.setIndeterminate(false);
-            pDialogFtp.setCancelable(true);
-            pDialogFtp.show();
+            if (null==context) {
+            }else {
+                pDialogFtp = new ProgressDialog(context);
+                pDialogFtp.setMessage(ActividadPrincipal.getPalabras("Guardar") + " " + ActividadPrincipal.getPalabras("Estado") + " ...");
+                pDialogFtp.setIndeterminate(false);
+                pDialogFtp.setCancelable(true);
+                pDialogFtp.show();
+            }
         }
 
         /**
@@ -817,6 +841,60 @@ public class PrintTicket {
         @Override
         protected Integer doInBackground(String... args) {
             // getting updated data from EditTexts
+            String cSql = "";
+            String xWhere = "";
+            if(!(Filtro.getGrupo().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE ftp.GRUPO='" + Filtro.getGrupo() + "'";
+                } else {
+                    xWhere += " AND ftp.GRUPO='" + Filtro.getGrupo() + "'";
+                }
+            }
+            if(!(Filtro.getEmpresa().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE ftp.EMPRESA='" + Filtro.getEmpresa() + "'";
+                } else {
+                    xWhere += " AND ftp.EMPRESA='" + Filtro.getEmpresa() + "'";
+                }
+            }
+            if(!(Filtro.getLocal().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE ftp.LOCAL='" + Filtro.getLocal() + "'";
+                } else {
+                    xWhere += " AND ftp.LOCAL='" + Filtro.getLocal() + "'";
+                }
+            }
+            if(!(Filtro.getSeccion().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE ftp.SECCION='" + Filtro.getSeccion() + "'";
+                } else {
+                    xWhere += " AND ftp.SECCION='" + Filtro.getSeccion() + "'";
+                }
+            }
+            if(!(Filtro.getCaja().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE ftp.CAJA='" + Filtro.getCaja() + "'";
+                } else {
+                    xWhere += " AND ftp.CAJA='" + Filtro.getCaja() + "'";
+                }
+            }
+            if(!(Filtro.getSerie().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE ftp.SERIE='" + sSerie + "'";
+                } else {
+                    xWhere += " AND ftp.SERIE='" + sSerie + "'";
+                }
+            }
+
+            if(!(Filtro.getFactura()==0)) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE ftp.FACTURA=" + nFactura;
+                } else {
+                    xWhere += " AND ftp.FACTURA=" + nFactura;
+                }
+            }
+            cSql += xWhere;
+
             Integer result = 0;
             // Building Parameters
             ContentValues values = new ContentValues();
@@ -828,7 +906,7 @@ public class PrintTicket {
                 SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); //format it as per your requirement
                 String dateNow = formatter.format(currentDate.getTime());
 
-                values.put(TAG_PID, pid);
+                values.put("filtro", cSql);
                 values.put(TAG_ESTADO,String.valueOf(lcabeceraftp.get(i).getCabeceraEstado()));
                 values.put("updated", dateNow);
                 values.put("usuario", Filtro.getUsuario());
@@ -863,8 +941,10 @@ public class PrintTicket {
         @Override
         protected void onPostExecute(Integer result) {
             // dismiss the dialog once Factura updated
-            pDialogFtp.dismiss();
-
+            if (null==context) {
+            }else {
+                pDialogFtp.dismiss();
+            }
         }
     }
 
@@ -1215,7 +1295,7 @@ public class PrintTicket {
     private String getBuilderText() {
         return ticket;
     }
-    public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
+    public static Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
         int width = bm.getWidth();
         int height = bm.getHeight();
         float scaleWidth = ((float) newWidth) / width;

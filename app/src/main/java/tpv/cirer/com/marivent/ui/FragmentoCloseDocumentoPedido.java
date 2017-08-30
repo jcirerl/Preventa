@@ -160,7 +160,7 @@ public class FragmentoCloseDocumentoPedido extends Fragment {
                 @Override
                 public void onClick(View view) {
 //                    new CreaDocumentoPedido().execute();
-                    Snackbar.make(view, "No se puede crear Documento Pedido", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(view, ActividadPrincipal.getPalabras("No se puede crear")+" "+ActividadPrincipal.getPalabras("Documento")+" "+ActividadPrincipal.getPalabras("Pedido"), Snackbar.LENGTH_LONG).show();
                 }
             });
             setUserVisibleHint(true);
@@ -209,7 +209,7 @@ public class FragmentoCloseDocumentoPedido extends Fragment {
             if(mContext!=null) {
                 super.onPreExecute();
                 pDialog = new ProgressDialog(getActivity());
-                pDialog.setMessage("Leyendo Pedidos..");
+                pDialog.setMessage(ActividadPrincipal.getPalabras("Leyendo")+" "+ActividadPrincipal.getPalabras("Pedidos")+"..");
                 pDialog.setIndeterminate(false);
                 pDialog.setCancelable(true);
                 pDialog.show();

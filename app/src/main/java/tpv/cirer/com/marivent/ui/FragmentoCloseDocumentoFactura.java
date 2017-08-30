@@ -167,7 +167,7 @@ public class FragmentoCloseDocumentoFactura extends Fragment {
                 @Override
                 public void onClick(View view) {
 //                    new CreaDocumentoFactura().execute();
-                    Snackbar.make(view, "No se puede crear Documento Factura", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(view, ActividadPrincipal.getPalabras("No se puede crear")+ActividadPrincipal.getPalabras("Documento")+" "+ActividadPrincipal.getPalabras("Factura"), Snackbar.LENGTH_LONG).show();
                 }
             });
             setUserVisibleHint(true);
@@ -216,7 +216,7 @@ public class FragmentoCloseDocumentoFactura extends Fragment {
             if(mContext!=null) {
                 super.onPreExecute();
                 pDialog = new ProgressDialog(getActivity());
-                pDialog.setMessage("Leyendo Facturas..");
+                pDialog.setMessage(ActividadPrincipal.getPalabras("Leyendo")+" "+ActividadPrincipal.getPalabras("Facturas")+"..");
                 pDialog.setIndeterminate(false);
                 pDialog.setCancelable(true);
                 pDialog.show();
@@ -461,6 +461,7 @@ public class FragmentoCloseDocumentoFactura extends Fragment {
                 documentofacturaItem.setDocumentoFacturaCaja(post.optString("CAJA"));
                 documentofacturaItem.setDocumentoFacturaCod_turno(post.optString("COD_TURNO"));
                 documentofacturaItem.setDocumentoFacturaObs(post.optString("OBS"));
+                documentofacturaItem.setDocumentoFacturaNombre_tft(post.optString("NOMBRE_TFT"));
                 documentofacturaItem.setDocumentoFacturaT_fra(post.optString("T_FRA"));
                 documentofacturaItem.setDocumentoFacturaImp_base(post.optString("IMP_BASE"));
                 documentofacturaItem.setDocumentoFacturaImp_iva(post.optString("IMP_IVA"));

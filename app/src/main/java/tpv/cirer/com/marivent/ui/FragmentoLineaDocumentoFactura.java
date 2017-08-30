@@ -77,6 +77,7 @@ import tpv.cirer.com.marivent.modelo.CabeceraEmpr;
 import tpv.cirer.com.marivent.modelo.CabeceraFtp;
 import tpv.cirer.com.marivent.modelo.DocumentoFacturaIva;
 import tpv.cirer.com.marivent.modelo.LineaDocumentoFactura;
+import tpv.cirer.com.marivent.print.PrintTicket;
 import tpv.cirer.com.marivent.print.ShowMsg;
 
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.LoadImageFromWebOperations;
@@ -84,6 +85,7 @@ import static tpv.cirer.com.marivent.ui.ActividadPrincipal.codec;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getLocalIpAddress;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.iconCarrito;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.imagelogoprint;
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lcabeceraempr;
 
 /**
  * Created by JUAN on 09/11/2016.
@@ -94,7 +96,7 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
     static final int SEND_TIMEOUT = 10 * 1000;
     static Print printer = null;
     static Builder builder = null;
-    public static List<CabeceraEmpr> lcabeceraempr;
+//***    public static List<CabeceraEmpr> lcabeceraempr; // LEEMOS DESDE ACTIVIDAD PRINCIPAL
     public static List<CabeceraFtp> lcabeceraftp;
     public static List<LineaDocumentoFactura> llineadocumentofacturaprint;
     public static List<DocumentoFacturaIva> ldocumentofacturaiva;
@@ -183,7 +185,7 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
         Filtro.setTag_fragment("FragmentoLineaDocumentoFactura");
         llineadocumentofactura = new ArrayList<LineaDocumentoFactura>();
 
-        lcabeceraempr = new ArrayList<CabeceraEmpr>();
+//***        lcabeceraempr = new ArrayList<CabeceraEmpr>(); // Leemos desde ACTIVIDAD PRINCIPAL
         lcabeceraftp = new ArrayList<CabeceraFtp>();
         llineadocumentofacturaprint = new ArrayList<LineaDocumentoFactura>();
         ldocumentofacturaiva = new ArrayList<DocumentoFacturaIva>();
@@ -305,29 +307,14 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
                         Snackbar.make(view, ActividadPrincipal.getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_LONG).show();
                     }else {
 
-                        Snackbar.make(view, "Imprimir Ticket", Snackbar.LENGTH_LONG).show();
-                        // IMPRIMIR CON FRAGMENT
-/*                    Fragment printticketfragment = null;
-                    printticketfragment = PrintTicketFragment.newInstance(nId,sSerie,nFactura);
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.left_pane, printticketfragment, printticketfragment.getClass().getName());
-                    ft.addToBackStack(null);
-                    ft.commit();
-*/
-/*
- //                 IMPRIMIR MEDIANTE ACTIVIDAD
-                    Intent intent = new Intent(getActivity(), ActivityImprimirVentas.class);
-                    intent.putExtra("id", nId);
-                    intent.putExtra("serie",sSerie);
-                    intent.putExtra("factura",nFactura);
-                    ((ActividadPrincipal) getActivity()).startActivity(intent);
-*/
+                        Snackbar.make(view, ActividadPrincipal.getPalabras("Imprimir")+" "+ActividadPrincipal.getPalabras("Ticket"), Snackbar.LENGTH_LONG).show();
 
-                        //                IMPRIMIR MEDIANTE WEBSERVICE SOAP
-                        //                  new WSFactura().execute();
-
+/***   LEEMOS DESDE ACTIVIDAD PRINCIPAL
                         urlPrint = Filtro.getUrl() + "/CabeceraEMPR.php";
                         new LeerCabeceraEmpr().execute(urlPrint);
+*/
+                        PrintTicket printticket = new PrintTicket(getActivity(),nFactura,sSerie);
+                        printticket.iniciarTicket();
                     }
 
                 }
@@ -616,7 +603,7 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Calcula Cabecera..");
+            pDialog.setMessage(ActividadPrincipal.getPalabras("Calcula")+" "+ActividadPrincipal.getPalabras("Cabecera")+"..");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
             pDialog.show();
@@ -755,7 +742,7 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
 
                             Utils.setBadgeCount(getActivity(), iconCarrito, Filtro.getFactura());
                         } else {
-                            Toast.makeText(getActivity(), "ERROR NO UPDATE CABECERA ", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "ERROR NO "+ActividadPrincipal.getPalabras("Modificar")+" "+ActividadPrincipal.getPalabras("Cabecera"), Toast.LENGTH_SHORT).show();
                             // failed to create product
                         }
 
@@ -1422,7 +1409,7 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
                         builder.addFeedUnit(getBuilderFeedUnit());
 
 */
-///            Bitmap bmp = BitmapFactory.decodeResource(getResources(),R.drawable.logo);
+///            Bitmap bmp = BitmapFactory.decodeResource(getResources(),R.drawable.logo_ricoparico);
 
             //     Bitmap bJPGcompress = codec(bmp, Bitmap.CompressFormat.JPEG, 3);
 

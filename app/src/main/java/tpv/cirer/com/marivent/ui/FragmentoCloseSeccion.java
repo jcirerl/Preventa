@@ -17,12 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import tpv.cirer.com.marivent.R;
-import tpv.cirer.com.marivent.herramientas.DividerItemDecoration;
-import tpv.cirer.com.marivent.herramientas.Filtro;
-import tpv.cirer.com.marivent.herramientas.WrapContentLinearLayoutManager;
-import tpv.cirer.com.marivent.modelo.Seccion;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,6 +35,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import tpv.cirer.com.marivent.R;
+import tpv.cirer.com.marivent.herramientas.DividerItemDecoration;
+import tpv.cirer.com.marivent.herramientas.Filtro;
+import tpv.cirer.com.marivent.herramientas.WrapContentLinearLayoutManager;
+import tpv.cirer.com.marivent.modelo.Seccion;
 
 /**
  * Created by JUAN on 13/09/2016.
@@ -177,7 +177,7 @@ public class FragmentoCloseSeccion  extends Fragment    {
             if(mContext!=null) {
                 super.onPreExecute();
                 pDialog = new ProgressDialog(mContext);
-                pDialog.setMessage("Leyendo Secciones..");
+                pDialog.setMessage(ActividadPrincipal.getPalabras("Leyendo")+" "+ActividadPrincipal.getPalabras("Secciones")+"..");
                 pDialog.setIndeterminate(false);
                 pDialog.setCancelable(true);
                 pDialog.show();

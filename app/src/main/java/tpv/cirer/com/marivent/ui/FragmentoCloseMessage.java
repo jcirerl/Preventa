@@ -131,7 +131,7 @@ public class FragmentoCloseMessage extends Fragment {
             btnFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Snackbar.make(view, "No puede crear mensajes", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(view, ActividadPrincipal.getPalabras("No se puede crear")+" "+ActividadPrincipal.getPalabras("Mensajes"), Snackbar.LENGTH_LONG).show();
                 }
             });
             setUserVisibleHint(true);
@@ -178,7 +178,7 @@ public class FragmentoCloseMessage extends Fragment {
             if (mContext !=null) {
                 super.onPreExecute();
                 pDialog = new ProgressDialog(mContext);
-                pDialog.setMessage("Leyendo Mensajes..");
+                pDialog.setMessage(ActividadPrincipal.getPalabras("Leyendo")+" "+ActividadPrincipal.getPalabras("Mensajes")+"..");
                 pDialog.setIndeterminate(false);
                 pDialog.setCancelable(true);
                 pDialog.show();

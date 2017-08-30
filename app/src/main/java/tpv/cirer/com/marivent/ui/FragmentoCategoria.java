@@ -147,6 +147,7 @@ public class FragmentoCategoria extends Fragment implements  UpdateableFragment 
             // 3. create an adapter
             indiceSeccion = getArguments().getInt(INDICE_SECCION);
             Log.i("lcomida: ", Integer.toString(indiceSeccion) + " " + lcomida.size() + " _ " + cEstado);
+
             adaptador = new AdaptadorCategorias(getActivity(), comidas.get(indiceSeccion), indiceSeccion, cEstado);
 
             adaptadorcategorias.add(adaptador);

@@ -83,6 +83,7 @@ import tpv.cirer.com.marivent.print.ShowMsg;
 
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getLocalIpAddress;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.iconCarrito;
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lcabeceraempr;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lplato;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.terminalList;
 
@@ -103,7 +104,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
     String TAG_PLATO = "PLATO: ";
 
     static Print printer = null;
-    public static List<CabeceraEmpr> lcabeceraempr;
+//***    public static List<CabeceraEmpr> lcabeceraempr; // LO CARGAMOS DESDE ACTIVIDAD PRINCIPAL
     public static List<CabeceraPdd> lcabecerapdd;
     public static List<LineaDocumentoPedido> llineadocumentopedidoprint;
     public static List<DocumentoPedidoIva> ldocumentopedidoiva;
@@ -189,7 +190,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
         llineadocumentopedido = new ArrayList<LineaDocumentoPedido>();
         url_update_cabecera = Filtro.getUrl()+"/update_cabecera.php";
 
-        lcabeceraempr = new ArrayList<CabeceraEmpr>();
+//***        lcabeceraempr = new ArrayList<CabeceraEmpr>(); // LO CARGAMOS DESDE ACTIVIDAD PRINCIPAL
         lcabecerapdd = new ArrayList<CabeceraPdd>();
         llineadocumentopedidoprint = new ArrayList<LineaDocumentoPedido>();
         ldocumentopedidoiva = new ArrayList<DocumentoPedidoIva>();
@@ -276,7 +277,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
                     if (!((ActividadPrincipal)getActivity()).getCruge("action_pdd_printg")){
                         Snackbar.make(view, ActividadPrincipal.getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_LONG).show();
                     }else {
-                        Snackbar.make(view, "Enviar Pedido Secciones", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(view, ActividadPrincipal.getPalabras("Enviar")+" "+ActividadPrincipal.getPalabras("Pedido")+" "+ActividadPrincipal.getPalabras("Secciones"), Snackbar.LENGTH_LONG).show();
                         optionprint = false;
 /*
 
@@ -335,11 +336,16 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
                     if (!((ActividadPrincipal)getActivity()).getCruge("action_pdd_printg")){
                         Snackbar.make(view, ActividadPrincipal.getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_LONG).show();
                     }else {
-                        Snackbar.make(view, "Imprimir Pedido", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(view, ActividadPrincipal.getPalabras("Imprimir")+" "+ActividadPrincipal.getPalabras("Pedido"), Snackbar.LENGTH_LONG).show();
 //                    new WSPedido().execute();
                         optionprint = true;
+/**** Anulado lo carga desde ACTIVIDAD PRINCIPAL
                         urlPrint = Filtro.getUrl() + "/CabeceraEMPR.php";
                         new LeerCabeceraEmpr().execute(urlPrint);
+*/
+                        urlPrint = Filtro.getUrl() + "/CabeceraPDD.php";
+                        new LeerCabeceraPdd().execute(urlPrint);
+
                     }
                 }
             });
@@ -858,7 +864,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Calcula Cabecera..");
+            pDialog.setMessage(ActividadPrincipal.getPalabras("Calcula")+" "+ActividadPrincipal.getPalabras("Cabecera")+"..");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
             pDialog.show();
@@ -1000,7 +1006,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
 
                             Utils.setBadgeCount(getActivity(), iconCarrito, Filtro.getPedido());
                         } else {
-                            Toast.makeText(getActivity(), "ERROR NO UPDATE CABECERA ", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "ERROR NO "+ActividadPrincipal.getPalabras("Modificar")+" "+ActividadPrincipal.getPalabras("Cabecera"), Toast.LENGTH_SHORT).show();
                             // failed to create product
                         }
 
@@ -1282,7 +1288,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
 
         pedido = pedido + separador + "\n\n\n\n\n\n";
         ImprimirPedido();
-        Toast.makeText(getActivity(), "ERROR NO UPDATE CABECERA ", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "ERROR NO "+ActividadPrincipal.getPalabras("Modificar")+" "+ActividadPrincipal.getPalabras("Cabecera"), Toast.LENGTH_SHORT).show();
         if (!optionprint) {
             comprobar_terminales();
 /*            nPosition += 1;
@@ -1482,7 +1488,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
                         builder.addFeedUnit(getBuilderFeedUnit());
 
 */
-            Bitmap bmp = BitmapFactory.decodeResource(getResources(),R.drawable.logo);
+            Bitmap bmp = BitmapFactory.decodeResource(getResources(),R.drawable.logo_ricoparico);
             builder.addImage(bmp, 0, 0, 48, 48, Builder.PARAM_DEFAULT);
             method = "addText";
             builder.addTextDouble(0,0);
@@ -1563,7 +1569,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogEmpr = new ProgressDialog(getActivity());
-            pDialogEmpr.setMessage("Leyendo Cabecera Empresa..");
+            pDialogEmpr.setMessage(ActividadPrincipal.getPalabras("Leyendo")+" "+ActividadPrincipal.getPalabras("Cabecera")+" "+ActividadPrincipal.getPalabras("Empresa")+"..");
             pDialogEmpr.setIndeterminate(false);
             pDialogEmpr.setCancelable(true);
             pDialogEmpr.show();
@@ -1712,7 +1718,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogPdd = new ProgressDialog(getActivity());
-            pDialogPdd.setMessage("Leyendo Cabecera Pedido..");
+            pDialogPdd.setMessage(ActividadPrincipal.getPalabras("Leyendo")+" "+ActividadPrincipal.getPalabras("Cabecera")+" "+ActividadPrincipal.getPalabras("Pedido")+"..");
             pDialogPdd.setIndeterminate(false);
             pDialogPdd.setCancelable(true);
             pDialogPdd.show();
@@ -1854,7 +1860,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogLpd = new ProgressDialog(getActivity());
-            pDialogLpd.setMessage("Leyendo Lineas Pedido..");
+            pDialogLpd.setMessage(ActividadPrincipal.getPalabras("Leyendo")+" "+ActividadPrincipal.getPalabras("Lineas")+" "+ActividadPrincipal.getPalabras("Pedido")+"..");
             pDialogLpd.setIndeterminate(false);
             pDialogLpd.setCancelable(true);
             pDialogLpd.show();
@@ -2007,8 +2013,12 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
                     }else{
 
                         if (llineadocumentopedidoprint.size()>0){
-                            urlPrint = Filtro.getUrl() + "/CabeceraEMPR.php";
+/***                            urlPrint = Filtro.getUrl() + "/CabeceraEMPR.php";
                             new LeerCabeceraEmpr().execute(urlPrint);
+*/
+                            urlPrint = Filtro.getUrl() + "/CabeceraPDD.php";
+                            new LeerCabeceraPdd().execute(urlPrint);
+
                         }else{
                             comprobar_terminales();
                         }
@@ -2070,7 +2080,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogPddiva = new ProgressDialog(getActivity());
-            pDialogPddiva.setMessage("Leyendo Lineas Iva..");
+            pDialogPddiva.setMessage(ActividadPrincipal.getPalabras("Leyendo")+" "+ActividadPrincipal.getPalabras("Lineas")+" "+ActividadPrincipal.getPalabras("Iva")+"..");
             pDialogPddiva.setIndeterminate(false);
             pDialogPddiva.setCancelable(true);
             pDialogPddiva.show();

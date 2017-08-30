@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:id="@+id/imagen"
-        android:src="@drawable/logo"
+        android:src="@drawable/logo_ricoparico"
         android:scaleType="centerInside"
         android:layout_marginRight="8dp"
         android:layout_marginLeft="4dp" />

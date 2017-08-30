@@ -34,7 +34,7 @@
         android:layout_marginBottom="32dp"
         android:paddingLeft="@dimen/espacio_norma_1"
         android:text="Large Text"
-        android:textColor="@android:color/background_dark"
+        android:textColor="@android:color/background_light"
         android:textSize="48sp"
         android:textStyle="italic" />
 
@@ -47,5 +47,5 @@
         android:paddingLeft="16dp"
         android:text="Medium Text"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        android:textColor="@android:color/background_dark" />
+        android:textColor="@android:color/background_light" />
 </FrameLayout>

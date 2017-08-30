@@ -67,7 +67,7 @@
             android:entries="@array/tipotab"
             android:entryValues="@array/modotab" />
         <ListPreference
-            android:defaultValue="21"
+            android:defaultValue="@string/tamanyo_tipoarticulo"
             android:key="optipoarticulo"
             android:title="Tipo Articulo"
             android:summary="Asignacion Tamaño Descripcion Tipo Articulo"
@@ -82,6 +82,22 @@
             android:dialogTitle="Control Tab Todos Tipos Articulos"
             android:entries="@array/tabtodos"
             android:entryValues="@array/ctrltabtodos" />
+        <ListPreference
+            android:defaultValue="true"
+            android:key="oppedidodirecto"
+            android:title="Pedido Directo Mesa"
+            android:summary="Realizar pedido pulsando circulo pedidos en Mesa"
+            android:dialogTitle="Control Pedido Directo Mesa"
+            android:entries="@array/tabpedidomesa"
+            android:entryValues="@array/ctrltabpedidomesa" />
+        <ListPreference
+            android:defaultValue="true"
+            android:key="opfacturadirecto"
+            android:title="Factura Directo Mesa"
+            android:summary="Realizar factura pulsando circulo facturas en Mesa"
+            android:dialogTitle="Control Factura Directo Mesa"
+            android:entries="@array/tabfacturamesa"
+            android:entryValues="@array/ctrltabfacturamesa" />
 
     </PreferenceCategory>
     <PreferenceCategory

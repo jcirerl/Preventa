@@ -395,7 +395,7 @@ public class EditCloseSeccionFragment  extends Fragment implements View.OnKeyLis
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage(ActividadPrincipal.getPalabras("Cargando")+" Detalles Seccion. "+ActividadPrincipal.getPalabras("Espere por favor")+"...");
+            pDialog.setMessage(ActividadPrincipal.getPalabras("Cargando")+" "+ActividadPrincipal.getPalabras("Seccion")+" "+ActividadPrincipal.getPalabras("Espere por favor")+"...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
             pDialog.show();
@@ -521,7 +521,7 @@ public class EditCloseSeccionFragment  extends Fragment implements View.OnKeyLis
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Guardando Seccion ...");
+            pDialog.setMessage(ActividadPrincipal.getPalabras("Guardar")+" "+ActividadPrincipal.getPalabras("Seccion")+" ...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
             pDialog.show();
@@ -634,7 +634,7 @@ public class EditCloseSeccionFragment  extends Fragment implements View.OnKeyLis
                 if (id == R.id.MaximoCaja) {
                     String cMaximo = myEditText.getText().toString();
                     if (cMaximo.matches("")) {
-                        Toast.makeText(getActivity(), "Valor Vacio", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), ActividadPrincipal.getPalabras("Valor")+" "+ActividadPrincipal.getPalabras("Vacio"), Toast.LENGTH_SHORT).show();
                         //            this.btnGuardar.setEnabled(false);
                         this.btnGuardar1.setEnabled(false);
                         this.btnGuardar1.setChecked(false);

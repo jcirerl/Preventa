@@ -25,13 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import tpv.cirer.com.marivent.R;
-import tpv.cirer.com.marivent.conexion_http_post.JSONParser;
-import tpv.cirer.com.marivent.conexion_http_post.JSONParserNew;
-import tpv.cirer.com.marivent.herramientas.DatePickerFragment;
-import tpv.cirer.com.marivent.herramientas.Filtro;
-import tpv.cirer.com.marivent.modelo.Dcj;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,6 +37,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import tpv.cirer.com.marivent.R;
+import tpv.cirer.com.marivent.conexion_http_post.JSONParser;
+import tpv.cirer.com.marivent.conexion_http_post.JSONParserNew;
+import tpv.cirer.com.marivent.herramientas.DatePickerFragment;
+import tpv.cirer.com.marivent.herramientas.Filtro;
+import tpv.cirer.com.marivent.modelo.Dcj;
 
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getLocalIpAddress;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getPalabras;
@@ -392,7 +392,7 @@ public class EditCloseDcjFragment extends Fragment implements View.OnKeyListener
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage(getPalabras("Cargando")+" Detalles Dcj. "+ getPalabras("Espere por favor")+"...");
+            pDialog.setMessage(getPalabras("Cargando")+" "+getPalabras("Diario Caja")+". "+ getPalabras("Espere por favor")+"...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
             pDialog.show();
@@ -518,7 +518,7 @@ public class EditCloseDcjFragment extends Fragment implements View.OnKeyListener
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Guardando Dcj ...");
+            pDialog.setMessage(getPalabras("Guardar")+" "+getPalabras("Diario Caja")+" ...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
             pDialog.show();
@@ -628,7 +628,7 @@ public class EditCloseDcjFragment extends Fragment implements View.OnKeyListener
                 if (id == R.id.SaldoInicio) {
                     String cMaximo = myEditText.getText().toString();
                     if (cMaximo.matches("")) {
-                        Toast.makeText(getActivity(), "Valor Vacio", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), ActividadPrincipal.getPalabras("Valor")+" "+ActividadPrincipal.getPalabras("Vacio"), Toast.LENGTH_SHORT).show();
                         //            this.btnGuardar.setEnabled(false);
                         this.btnGuardar1.setEnabled(false);
                         this.btnGuardar1.setChecked(false);

@@ -19,15 +19,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import tpv.cirer.com.marivent.R;
-import tpv.cirer.com.marivent.herramientas.Filtro;
-import tpv.cirer.com.marivent.herramientas.ImageAndTextContainer;
-import tpv.cirer.com.marivent.herramientas.StringUtil;
-import tpv.cirer.com.marivent.modelo.CabeceraEmpr;
-import tpv.cirer.com.marivent.modelo.CabeceraFtp;
-import tpv.cirer.com.marivent.modelo.DocumentoFacturaIva;
-import tpv.cirer.com.marivent.modelo.LineaDocumentoFactura;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,6 +41,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import tpv.cirer.com.marivent.R;
+import tpv.cirer.com.marivent.herramientas.Filtro;
+import tpv.cirer.com.marivent.herramientas.ImageAndTextContainer;
+import tpv.cirer.com.marivent.herramientas.StringUtil;
+import tpv.cirer.com.marivent.modelo.CabeceraEmpr;
+import tpv.cirer.com.marivent.modelo.CabeceraFtp;
+import tpv.cirer.com.marivent.modelo.DocumentoFacturaIva;
+import tpv.cirer.com.marivent.modelo.LineaDocumentoFactura;
 
 /**
  * Created by JUAN on 06/12/2016.
@@ -178,7 +178,7 @@ public class PrintTicketFragment extends Fragment implements ImageAndTextContain
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogEmpr = new ProgressDialog(getActivity());
-            pDialogEmpr.setMessage("Leyendo Cabecera Empresa..");
+            pDialogEmpr.setMessage(ActividadPrincipal.getPalabras("Leyendo")+" "+ActividadPrincipal.getPalabras("Empresa")+"..");
             pDialogEmpr.setIndeterminate(false);
             pDialogEmpr.setCancelable(true);
             pDialogEmpr.show();
@@ -325,7 +325,7 @@ public class PrintTicketFragment extends Fragment implements ImageAndTextContain
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogFtp = new ProgressDialog(getActivity());
-            pDialogFtp.setMessage("Leyendo Cabecera Factura..");
+            pDialogFtp.setMessage(ActividadPrincipal.getPalabras("Leyendo")+" "+ActividadPrincipal.getPalabras("Factura")+"..");
             pDialogFtp.setIndeterminate(false);
             pDialogFtp.setCancelable(true);
             pDialogFtp.show();
@@ -464,7 +464,7 @@ public class PrintTicketFragment extends Fragment implements ImageAndTextContain
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogLft = new ProgressDialog(getActivity());
-            pDialogLft.setMessage("Leyendo Lineas Factura..");
+            pDialogLft.setMessage(ActividadPrincipal.getPalabras("Leyendo")+" "+ActividadPrincipal.getPalabras("Lineas")+" "+ActividadPrincipal.getPalabras("Factura")+"..");
             pDialogLft.setIndeterminate(false);
             pDialogLft.setCancelable(true);
             pDialogLft.show();
@@ -643,7 +643,7 @@ public class PrintTicketFragment extends Fragment implements ImageAndTextContain
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
             pDialogFtpiva = new ProgressDialog(getActivity());
-            pDialogFtpiva.setMessage("Leyendo Lineas Iva..");
+            pDialogFtpiva.setMessage(ActividadPrincipal.getPalabras("Leyendo")+" "+ActividadPrincipal.getPalabras("Lineas")+" "+ActividadPrincipal.getPalabras("Iva")+"..");
             pDialogFtpiva.setIndeterminate(false);
             pDialogFtpiva.setCancelable(true);
             pDialogFtpiva.show();

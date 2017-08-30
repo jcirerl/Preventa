@@ -75,7 +75,7 @@
                 <item
                     android:id="@+id/item_categorias"
                     android:icon="@drawable/categorias"
-                    android:title="@string/item_categorias" />
+                    android:title="@string/item_cartas" />
 <!--                <item
                     android:id="@+id/item_print"
                     android:icon="@android:drawable/ic_menu_gallery"

@@ -472,7 +472,7 @@ public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
       //   Filtro.setTag_fragment("FragmentoInicio");
          /// Poner Datos CABECERA
          ///    ((ActividadPrincipal) getActivity()).setCabecera("Inicio",0.00,1);
-         ((ActividadPrincipal) getActivity()).setTitle(((ActividadPrincipal) getActivity()).getPalabras("Categorias"));
+         ((ActividadPrincipal) getActivity()).setTitle(((ActividadPrincipal) getActivity()).getPalabras("Cartas"));
          Spannable text = new SpannableString(((ActividadPrincipal) getActivity()).getTitle());
          text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(((ActividadPrincipal) getActivity()), R.color.light_blue_500)), 0, text.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
          ((ActividadPrincipal) getActivity()).setTitle(text);

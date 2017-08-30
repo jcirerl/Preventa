@@ -65,8 +65,10 @@ import tpv.cirer.com.marivent.herramientas.Filtro;
 import tpv.cirer.com.marivent.herramientas.GetAlImages;
 import tpv.cirer.com.marivent.modelo.DocumentoFactura;
 import tpv.cirer.com.marivent.modelo.TipoCobro;
+import tpv.cirer.com.marivent.print.PrintTicket;
 
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getLocalIpAddress;
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.tftList;
 
 //import static com.google.android.gms.internal.zzir.runOnUiThread;
 
@@ -103,7 +105,7 @@ public class EditCobroFacturaFragment  extends Fragment implements View.OnKeyLis
     TextView lblObs;
 
     public static String URL_TFT;
-    public static ArrayList<TipoCobro> tftList;
+    ///*** public static ArrayList<TipoCobro> tftList;
     Spinner cmbToolbarTft;
     LinearLayout rootView;
     ToggleButton btnGuardarCobro;
@@ -116,6 +118,7 @@ public class EditCobroFacturaFragment  extends Fragment implements View.OnKeyLis
     private String serie;
     private String factura;
     private String origen;
+    private int positiontft;
 
     // Progress Dialog
     private ProgressDialog pDialogftp,pDialogtft;
@@ -187,7 +190,7 @@ public class EditCobroFacturaFragment  extends Fragment implements View.OnKeyLis
 
         documentofacturalist = new ArrayList<DocumentoFactura>();
         // Rellenar string toolbar_tft
-        tftList = new ArrayList<TipoCobro>();
+////***        tftList = new ArrayList<TipoCobro>();
 
     }
     @Override
@@ -236,7 +239,8 @@ public class EditCobroFacturaFragment  extends Fragment implements View.OnKeyLis
         cmbToolbarTft.setOnItemSelectedListener(this);
         // Appbar page filter grupos
         URL_TFT = Filtro.getUrl() + "/get_tiposcobro.php";
-        new GetTiposCobro().execute(URL_TFT);
+////***        new GetTiposCobro().execute(URL_TFT);  AHORA SE CARGA EN LA ACTIVIDAD PRINCIPAL
+        populateSpinnerTft();
 
  //       TaskHelper.execute(new GetTiposCobro(), URL_TFT);
  //       new GetTiposCobro().execute(URL_TFT);
@@ -351,6 +355,9 @@ public class EditCobroFacturaFragment  extends Fragment implements View.OnKeyLis
         {
             if (tftList.size()>0) {
                 Filtro.setT_fra(tftList.get(position).getTipoCobroT_fra());
+                // GUARDAMOS POSICION SPINNER PARA SABER SI TENEMOS QUE HACER COPIA DE TICKET
+                positiontft = position;
+                /////////////////////////////////////////////////////////////////////////////
                 switch (Filtro.getT_fra()) {
                     case "CR":
 //                        if (imagefirma.getVisibility()==View.GONE && origen.equals("lista")) {
@@ -478,7 +485,7 @@ public class EditCobroFacturaFragment  extends Fragment implements View.OnKeyLis
         protected void onPreExecute() {
             super.onPreExecute();
             pDialogtft = new ProgressDialog(getActivity());
-            pDialogtft.setMessage(ActividadPrincipal.getPalabras("Cargando")+" Tipos Cobro...");
+            pDialogtft.setMessage(ActividadPrincipal.getPalabras("Cargando")+" "+ActividadPrincipal.getPalabras("Tipo Cobro")+"...");
             pDialogtft.setIndeterminate(false);
             pDialogtft.setCancelable(true);
             pDialogtft.show();
@@ -621,7 +628,8 @@ public class EditCobroFacturaFragment  extends Fragment implements View.OnKeyLis
                 JSONObject post = posts.optJSONObject(ii);
                 Log.i("POST: ",post.optString("T_FRA")+ post.optString("NOMBRE"));
                 TipoCobro cat = new TipoCobro(post.optString("T_FRA"),
-                        post.optString("NOMBRE"));
+                        post.optString("NOMBRE"),
+                        post.optInt("COPIA_PRINT"));
                 tftList.add(cat);
                 Log.i("POST Longitud: ",Integer.toString(tftList.size()));
 
@@ -665,7 +673,7 @@ public class EditCobroFacturaFragment  extends Fragment implements View.OnKeyLis
         protected void onPreExecute() {
             super.onPreExecute();
             pDialogftp = new ProgressDialog(getActivity());
-            pDialogftp.setMessage(ActividadPrincipal.getPalabras("Cargando")+" Detalles Factura. "+ActividadPrincipal.getPalabras("Espere por favor")+"...");
+            pDialogftp.setMessage(ActividadPrincipal.getPalabras("Cargando")+" "+ActividadPrincipal.getPalabras("Factura")+". "+ActividadPrincipal.getPalabras("Espere por favor")+"...");
             pDialogftp.setIndeterminate(false);
             pDialogftp.setCancelable(true);
             pDialogftp.show();
@@ -821,7 +829,7 @@ public class EditCobroFacturaFragment  extends Fragment implements View.OnKeyLis
         protected void onPreExecute() {
             super.onPreExecute();
             pDialogftp = new ProgressDialog(getActivity());
-            pDialogftp.setMessage("Guardando Cobro ...");
+            pDialogftp.setMessage(ActividadPrincipal.getPalabras("Guardar")+" "+ActividadPrincipal.getPalabras("Cobro")+" ...");
             pDialogftp.setIndeterminate(false);
             pDialogftp.setCancelable(true);
             pDialogftp.show();
@@ -866,13 +874,6 @@ public class EditCobroFacturaFragment  extends Fragment implements View.OnKeyLis
 
                 if (success == 1) {
                     result = 1;
-                    if (origen.equals("lista")) {
-                        getActivity().onBackPressed();
-                    }
-                    if (origen.equals("factura")) {
-                        Filtro.setCobroDesdeFactura(1);
-                        getActivity().getSupportFragmentManager().popBackStack();
-                    }
                 } else {
                     result = 0;
                     // failed to update Factura
@@ -891,6 +892,23 @@ public class EditCobroFacturaFragment  extends Fragment implements View.OnKeyLis
         protected void onPostExecute(Integer result) {
             // dismiss the dialog once Factura updated
             pDialogftp.dismiss();
+            if (result==1){
+                if(tftList.get(positiontft).getTipoCobroCopia_print()>0) {
+                    for (int i = 0; i < tftList.get(positiontft).getTipoCobroCopia_print(); i++) {
+
+                        PrintTicket printticket = new PrintTicket(getActivity(), Integer.parseInt(factura), serie);
+                        printticket.iniciarTicket();
+
+                    }
+                }
+                if (origen.equals("lista")) {
+                    getActivity().onBackPressed();
+                }
+                if (origen.equals("factura")) {
+                    Filtro.setCobroDesdeFactura(1);
+                    getActivity().getSupportFragmentManager().popBackStack();
+                }
+            }
 
         }
     }
@@ -925,7 +943,7 @@ public class EditCobroFacturaFragment  extends Fragment implements View.OnKeyLis
 
                         String cTotalcobro = myEditText.getText().toString();
                         if (cTotalcobro.matches("")) {
-                            Toast.makeText(getActivity(), "Valor Vacio", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), ActividadPrincipal.getPalabras("Valor")+" "+ActividadPrincipal.getPalabras("Vacio"), Toast.LENGTH_SHORT).show();
                             //            this.btnGuardar.setEnabled(false);
                             this.btnGuardarCobro.setEnabled(false);
                             this.btnGuardarCobro.setChecked(false);
@@ -967,7 +985,7 @@ public class EditCobroFacturaFragment  extends Fragment implements View.OnKeyLis
                         myEditText.setSelection(pos);
                         String cTipoDto = myEditText.getText().toString();
                         if (cTipoDto.matches("")) {
-                            Toast.makeText(getActivity(), "Valor Vacio", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), ActividadPrincipal.getPalabras("Valor")+" "+ActividadPrincipal.getPalabras("Vacio"), Toast.LENGTH_SHORT).show();
                             //            this.btnGuardar.setEnabled(false);
                             this.btnGuardarCobro.setEnabled(false);
                             this.btnGuardarCobro.setChecked(false);

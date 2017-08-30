@@ -42,7 +42,7 @@
     <application
         android:allowBackup="true"
         android:largeHeap="true"
-        android:icon="@drawable/marivent"
+        android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:theme="@style/Theme.RicoPaRico" >
              <receiver

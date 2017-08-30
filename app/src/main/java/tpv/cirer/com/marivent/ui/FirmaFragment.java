@@ -634,7 +634,7 @@ public class FirmaFragment extends Fragment {
 
             // getting FIRMA GRABADA Y CONVERTIRLA PARA ALMACENAR EN BBDD
             try {
-//                Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.logo);
+//                Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.logo_ricoparico);
                 Bitmap bitmap = BitmapFactory.decodeFile(args[0]);
 
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();

@@ -210,7 +210,7 @@ public class FragmentoOpenDocumentoPedido extends Fragment    {
                                                         new CreaDocumentoPedido().execute(value);
 
             //                                               Snackbar.make(view, "Creando Documento Pedido", Snackbar.LENGTH_LONG).show();
-                                                        Toast.makeText(getActivity(), "Creando Documento Pedido".toString(),
+                                                        Toast.makeText(getActivity(),  ActividadPrincipal.getPalabras("Creando")+" "+ActividadPrincipal.getPalabras("Documento")+" "+ActividadPrincipal.getPalabras("Pedido").toString(),
                                                                 Toast.LENGTH_SHORT).show();
                                                     }
                                                 }
@@ -224,7 +224,7 @@ public class FragmentoOpenDocumentoPedido extends Fragment    {
                                             alert.show();
                                         }
                                     } else {
-                                        Snackbar.make(view, "No Hay Diario Caja Abierto", Snackbar.LENGTH_LONG).show();
+                                        Snackbar.make(view, ActividadPrincipal.getPalabras("Diario Caja No Existe o No Abierto"), Snackbar.LENGTH_LONG).show();
                                     }
                                 }
                         });
@@ -276,7 +276,7 @@ public class FragmentoOpenDocumentoPedido extends Fragment    {
                     if(mContext!=null) {
                         super.onPreExecute();
                         pDialogPdd = new ProgressDialog(mContext);
-                        pDialogPdd.setMessage("Leyendo Pedidos..");
+                        pDialogPdd.setMessage(ActividadPrincipal.getPalabras("Leyendo")+" "+ActividadPrincipal.getPalabras("Pedidos")+"..");
                         pDialogPdd.setIndeterminate(false);
                         pDialogPdd.setCancelable(true);
                         pDialogPdd.show();
@@ -577,7 +577,7 @@ public class FragmentoOpenDocumentoPedido extends Fragment    {
         protected void onPreExecute() {
             super.onPreExecute();
             pDialogPdd = new ProgressDialog(cont);
-            pDialogPdd.setMessage("Creando Pedido..");
+            pDialogPdd.setMessage(ActividadPrincipal.getPalabras("Creando")+" "+ActividadPrincipal.getPalabras("Pedido")+"..");
             pDialogPdd.setIndeterminate(false);
             pDialogPdd.setCancelable(true);
             pDialogPdd.show();
@@ -650,7 +650,7 @@ public class FragmentoOpenDocumentoPedido extends Fragment    {
                 // find your fragment
                 new AsyncHttpTaskDocumentoPedido(cont).execute(url);
             } else {
-                Toast.makeText(getActivity(), "ERROR NO Creado Pedido ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "ERROR NO "+ActividadPrincipal.getPalabras("Creado")+" "+ActividadPrincipal.getPalabras("Pedido"), Toast.LENGTH_SHORT).show();
                 // failed to create product
             }
         }

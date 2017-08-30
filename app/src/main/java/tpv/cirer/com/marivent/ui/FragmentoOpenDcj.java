@@ -148,10 +148,10 @@ public class FragmentoOpenDcj  extends Fragment {
                             Snackbar.make(view, ActividadPrincipal.getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_LONG).show();
                         }else {
                             new CreaDcj().execute();
-                            Snackbar.make(view, "Generando Diario Caja", Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(view, ActividadPrincipal.getPalabras("Creando")+" "+ActividadPrincipal.getPalabras("Diario Caja"), Snackbar.LENGTH_LONG).show();
                         }
                     } else {
-                        Snackbar.make(view, "No Hay Turno Abierto", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(view, ActividadPrincipal.getPalabras("No Hay")+" "+ActividadPrincipal.getPalabras("Turno")+" "+ActividadPrincipal.getPalabras("Abierto"), Snackbar.LENGTH_LONG).show();
                     }
                 }
             });
@@ -201,7 +201,7 @@ public class FragmentoOpenDcj  extends Fragment {
             if(mContext!=null) {
                 super.onPreExecute();
                 pDialogOpen = new ProgressDialog(mContext);
-                pDialogOpen.setMessage("Leyendo Diario Caja..");
+                pDialogOpen.setMessage(ActividadPrincipal.getPalabras("Leyendo")+" "+ActividadPrincipal.getPalabras("Diario Caja")+"..");
                 pDialogOpen.setIndeterminate(false);
                 pDialogOpen.setCancelable(true);
                 pDialogOpen.show();
@@ -435,7 +435,7 @@ public class FragmentoOpenDcj  extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             pDialogcreadcj = new ProgressDialog(getActivity());
-            pDialogcreadcj.setMessage("Creando Diario Caja..");
+            pDialogcreadcj.setMessage(ActividadPrincipal.getPalabras("Creando")+" "+ActividadPrincipal.getPalabras("Diario Caja")+"..");
             pDialogcreadcj.setIndeterminate(false);
             pDialogcreadcj.setCancelable(true);
             pDialogcreadcj.show();

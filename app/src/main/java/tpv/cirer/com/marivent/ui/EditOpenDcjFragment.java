@@ -394,7 +394,7 @@ public class EditOpenDcjFragment extends Fragment implements View.OnKeyListener 
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage(ActividadPrincipal.getPalabras("Cargando")+" Detalles Dcj. "+ActividadPrincipal.getPalabras("Espere por favor")+"...");
+            pDialog.setMessage(ActividadPrincipal.getPalabras("Cargando")+" "+ActividadPrincipal.getPalabras("Diario Caja")+". "+ActividadPrincipal.getPalabras("Espere por favor")+"...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
             pDialog.show();
@@ -520,7 +520,7 @@ public class EditOpenDcjFragment extends Fragment implements View.OnKeyListener 
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Guardando Dcj ...");
+            pDialog.setMessage(ActividadPrincipal.getPalabras("Guardar")+" "+ActividadPrincipal.getPalabras("Diario Caja")+" ...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
             pDialog.show();
@@ -630,7 +630,7 @@ public class EditOpenDcjFragment extends Fragment implements View.OnKeyListener 
                 if (id == R.id.SaldoInicio) {
                     String cMaximo = myEditText.getText().toString();
                     if (cMaximo.matches("")) {
-                        Toast.makeText(getActivity(), "Valor Vacio", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), ActividadPrincipal.getPalabras("Valor")+" "+ActividadPrincipal.getPalabras("Vacio"), Toast.LENGTH_SHORT).show();
                         //            this.btnGuardar.setEnabled(false);
                         this.btnGuardar1.setEnabled(false);
                         this.btnGuardar1.setChecked(false);

@@ -991,7 +991,7 @@ public class PrintDcjFragment extends Fragment {
                         builder.addFeedUnit(getBuilderFeedUnit());
 
 */
-            Bitmap bmp = BitmapFactory.decodeResource(getResources(),R.drawable.logo);
+            Bitmap bmp = BitmapFactory.decodeResource(getResources(),R.drawable.logo_ricoparico);
             builder.addImage(bmp, 0, 0, 48, 48, Builder.PARAM_DEFAULT);
             method = "addText";
             builder.addText(getBuilderText());

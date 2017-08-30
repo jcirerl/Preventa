@@ -17,6 +17,7 @@ public class DocumentoFactura {
     private String DocumentoFacturaFecha;
     private String DocumentoFacturaEstado;
     private String DocumentoFacturaTabla;
+    private String DocumentoFacturaNombre_tft;
 
     private String DocumentoFacturaT_fra;
     private String DocumentoFacturaSerie;
@@ -162,6 +163,12 @@ public class DocumentoFactura {
 
     public void setDocumentoFacturaUrlimagen(String documentofacturaurlimagen) {
         this.DocumentoFacturaUrlimagen = documentofacturaurlimagen;
+    }
+    public String getDocumentoFacturaNombre_tft() {
+        return DocumentoFacturaNombre_tft;
+    }
+    public void setDocumentoFacturaNombre_tft(String documentofacturanombre_tft) {
+        this.DocumentoFacturaNombre_tft = documentofacturanombre_tft;
     }
     public String getDocumentoFacturaT_fra() {
         return DocumentoFacturaT_fra;

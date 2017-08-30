@@ -14,7 +14,7 @@
         android:id="@+id/imageLogoDrawer"
         android:layout_width="@dimen/ancho_logo"
         android:layout_height="wrap_content"
-        android:src="@drawable/logo" />
+        android:src="@drawable/logo_ricoparico" />
 
     <TableLayout
         android:layout_width="match_parent"

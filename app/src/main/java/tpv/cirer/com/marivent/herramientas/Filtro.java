@@ -1,6 +1,10 @@
 package tpv.cirer.com.marivent.herramientas;
 
 public class Filtro {
+    private static boolean oppedidodirectomesa;
+    private static boolean opfacturadirectomesa;
+    private static int resize_logo_print;
+    private static int resize_logo_screen;
     private static String seriefac;
     private static String seriebuffet;
     private static String cod_cliente;
@@ -94,6 +98,10 @@ public class Filtro {
 
 
   	public Filtro(){
+        oppedidodirectomesa=false;
+        opfacturadirectomesa=false;
+        resize_logo_print=0;
+        resize_logo_screen=0;
         seriebuffet="";
         seriefac = "";
         cod_cliente = "";
@@ -196,6 +204,19 @@ public class Filtro {
     public static void setTipoPlato(String idtipoplato) {
         tipoplato = idtipoplato;
     }
+    public static boolean getOppedidodirectomesa() {
+        return oppedidodirectomesa;
+    }
+    public static void setOppedidodirectomesa(boolean idoppedidodirectomesa) {
+        oppedidodirectomesa = idoppedidodirectomesa;
+    }
+    public static boolean getOpfacturadirectomesa() {
+        return opfacturadirectomesa;
+    }
+    public static void setOpfacturadirectomesa(boolean idopfacturadirectomesa) {
+        opfacturadirectomesa = idopfacturadirectomesa;
+    }
+
 
     public static boolean getOplog() {
         return oplog;
@@ -231,6 +252,17 @@ public class Filtro {
     }
     public static int getOptab() { return optab;
     }
+    public static void setResize_logo_print(int idresize_logo_print) {
+        resize_logo_print = idresize_logo_print;
+    }
+    public static int getResize_logo_print() { return resize_logo_print;
+    }
+    public static void setResize_logo_screen(int idresize_logo_screen) {
+        resize_logo_screen = idresize_logo_screen;
+    }
+    public static int getResize_logo_screen() { return resize_logo_screen;
+    }
+
     public static void setOpintervalo(int idopintervalo) {
         opintervalo = idopintervalo;
     }
