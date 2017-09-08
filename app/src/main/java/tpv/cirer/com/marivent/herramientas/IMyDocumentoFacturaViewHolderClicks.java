@@ -23,6 +23,7 @@ public interface IMyDocumentoFacturaViewHolderClicks {
                   String empleadoDocumentoFactura,
                   String cajaDocumentoFactura,
                   String turnoDocumentoFactura,
+                  String impcobroDocumentoFactura,
                   String obsDocumentoFactura,
                   String lineasDocumentoFactura);
 
@@ -47,6 +48,13 @@ public interface IMyDocumentoFacturaViewHolderClicks {
                   String estadoDocumentoFactura,
                   String serieDocumentoFactura,
                   String facturaDocumentoFactura);
+    void onDivision(Button callerButton,
+                  ImageView imageDocumentoFactura,
+                  String idDocumentoFactura,
+                  String estadoDocumentoFactura,
+                  String mesaDocumentoFactura,
+                  String serieDocumentoFactura,
+                  String facturaDocumentoFactura );
     void onFactura (Button callerButton,
                   ImageView imageDocumentoFactura,
                   String idDocumentoFactura,

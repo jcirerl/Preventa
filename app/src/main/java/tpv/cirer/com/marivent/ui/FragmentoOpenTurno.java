@@ -41,6 +41,8 @@ import tpv.cirer.com.marivent.herramientas.Filtro;
 import tpv.cirer.com.marivent.herramientas.WrapContentLinearLayoutManager;
 import tpv.cirer.com.marivent.modelo.Turno;
 
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lparam;
+
 /**
  * Created by JUAN on 08/11/2016.
  */
@@ -195,51 +197,51 @@ public class FragmentoOpenTurno  extends Fragment {
 //            Integer result = 0;
             String cSql = "";
             String xWhere = "";
-            if(!(Filtro.getGrupo().equals("00"))) {
+            if(!(Filtro.getGrupo().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_GRUPO().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE turno.GRUPO='" + Filtro.getGrupo() + "'";
                 } else {
                     xWhere += " AND turno.GRUPO='" + Filtro.getGrupo() + "'";
                 }
             }
-            if(!(Filtro.getEmpresa().equals("00"))) {
+            if(!(Filtro.getEmpresa().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_EMPRESA().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE turno.EMPRESA='" + Filtro.getEmpresa() + "'";
                 } else {
                     xWhere += " AND turno.EMPRESA='" + Filtro.getEmpresa() + "'";
                 }
             }
-            if(!(Filtro.getLocal().equals("00"))) {
+            if(!(Filtro.getLocal().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_LOCAL().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE turno.LOCAL='" + Filtro.getLocal() + "'";
                 } else {
                     xWhere += " AND turno.LOCAL='" + Filtro.getLocal() + "'";
                 }
             }
-            if(!(Filtro.getSeccion().equals("00"))) {
+            if(!(Filtro.getSeccion().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_SECCION().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE turno.SECCION='" + Filtro.getSeccion() + "'";
                 } else {
                     xWhere += " AND turno.SECCION='" + Filtro.getSeccion() + "'";
                 }
             }
-            if(!(Filtro.getCaja().equals("00"))) {
+            if(!(Filtro.getCaja().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_CAJA().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE turno.CAJA='" + Filtro.getCaja() + "'";
                 } else {
                     xWhere += " AND turno.CAJA='" + Filtro.getCaja() + "'";
                 }
             }
-            if(!(Filtro.getTurno().equals("00"))) {
+            if(!(Filtro.getTurno().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_TURNO().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE turno.COD_TURNO='" + Filtro.getTurno() + "'";
                 } else {
                     xWhere += " AND turno.COD_TURNO='" + Filtro.getTurno() + "'";
                 }
             }
-            xWhere += " AND turno.ACTIVO=1";
-            xWhere += " AND turno.APERTURA=1";
-            xWhere += " AND turno.COD_TURNO<>'00'"; // CAJA 00 NO DEBE TENERLA EN CUENTA
+            xWhere += " AND turno.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
+            xWhere += " AND turno.APERTURA="+lparam.get(0).getDEFAULT_VALOR_ON_APERTURA();
+            xWhere += " AND turno.COD_TURNO<>'"+lparam.get(0).getDEFAULT_ESTADO_TODOS_TURNO().trim() +"'"; // CAJA 00 NO DEBE TENERLA EN CUENTA
 
             cSql += xWhere;
             if(cSql.equals("")) {

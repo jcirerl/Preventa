@@ -83,9 +83,11 @@ import tpv.cirer.com.marivent.print.ShowMsg;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.LoadImageFromWebOperations;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.codec;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getLocalIpAddress;
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getPalabras;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.iconCarrito;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.imagelogoprint;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lcabeceraempr;
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lparam;
 
 /**
  * Created by JUAN on 09/11/2016.
@@ -93,6 +95,7 @@ import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lcabeceraempr;
 
 public class FragmentoLineaDocumentoFactura extends Fragment {
     public static final String TAG = "Lista LFT";
+    private String cadenaZero;
     static final int SEND_TIMEOUT = 10 * 1000;
     static Print printer = null;
     static Builder builder = null;
@@ -181,7 +184,7 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
             StrictMode.setThreadPolicy(policy);
         }
         mIsRestoredFromBackstack = false;
-
+        cadenaZero="";
         Filtro.setTag_fragment("FragmentoLineaDocumentoFactura");
         llineadocumentofactura = new ArrayList<LineaDocumentoFactura>();
 
@@ -263,7 +266,7 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
                     public void onClick(View view) {
 
                         if (!((ActividadPrincipal) getActivity()).getCruge("action_ftp_update")) {
-                            Snackbar.make(view, ActividadPrincipal.getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(view, getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_LONG).show();
                         } else {
 /*                            CargaFragment cargafragment = null;
                             cargafragment = new CargaFragment(EditCobroFacturaFragment.newInstance(Integer.toString(nId), sSerie, Integer.toString(nFactura),"factura"), getFragmentManager());
@@ -304,10 +307,10 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
                 @Override
                 public void onClick(View view) {
                     if (!((ActividadPrincipal)getActivity()).getCruge("action_ftp_printg")){
-                        Snackbar.make(view, ActividadPrincipal.getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(view, getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_LONG).show();
                     }else {
 
-                        Snackbar.make(view, ActividadPrincipal.getPalabras("Imprimir")+" "+ActividadPrincipal.getPalabras("Ticket"), Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(view, getPalabras("Imprimir")+" "+ getPalabras("Ticket"), Snackbar.LENGTH_LONG).show();
 
 /***   LEEMOS DESDE ACTIVIDAD PRINCIPAL
                         urlPrint = Filtro.getUrl() + "/CabeceraEMPR.php";
@@ -337,6 +340,7 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        cadenaZero="";
         new AsyncHttpTaskLineaDocumentoFactura().execute(url);
         ///      TaskHelper.execute(new AsyncHttpTaskLineaDocumentoFactura(),url);
     }
@@ -517,7 +521,9 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
                         adaptadorlineadocumentofacturasony.notifyDataSetChanged();
                         break;
                 }
-                
+                if (null!=getActivity()) {
+                    Toast.makeText(getActivity(), cadenaZero, Toast.LENGTH_SHORT).show();
+                }
                 if (!Filtro.getCabecera()) {
                     TaskHelper.execute(new CalculaCabecera(), "ftp", "lft", "0");
                     Filtro.setCabecera(true);
@@ -588,6 +594,14 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
                 lineadocumentofacturaItem.setLineaDocumentoFacturaImporte(post.optString("IMPORTE"));
                 lineadocumentofacturaItem.setLineaDocumentoFacturaUrlimagen(Filtro.getUrl() + "/image/" + post.optString("IMAGEN").trim());
                 llineadocumentofactura.add(lineadocumentofacturaItem);
+                if(Float.parseFloat(lineadocumentofacturaItem.getLineaDocumentoFacturaPreu())==0.00){
+                    cadenaZero += getPalabras("Precio")+" "+getPalabras("Cero")+"\n"+
+                            getPalabras("Articulo")+": "+lineadocumentofacturaItem.getLineaDocumentoFacturaArticulo()+"\n"+
+                            getPalabras("Nombre")+": "+lineadocumentofacturaItem.getLineaDocumentoFacturaNombre()+"\n"+
+                            getPalabras("Cantidad")+": "+lineadocumentofacturaItem.getLineaDocumentoFacturaCant()+"\n"+
+                            "\n" ;
+                }
+
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -603,7 +617,7 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage(ActividadPrincipal.getPalabras("Calcula")+" "+ActividadPrincipal.getPalabras("Cabecera")+"..");
+            pDialog.setMessage(getPalabras("Calcula")+" "+ getPalabras("Cabecera")+"..");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
             pDialog.show();
@@ -735,14 +749,14 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
                             int txtViewID = getResources().getIdentifier("total_carrito", "id", BuildConfig.APPLICATION_ID);
                             TextView txtSaldo = (TextView) rootView.findViewById(txtViewID);
                             txtSaldo.setText(String.format("%1$,.2f", saldo)+" "+Filtro.getSimbolo());
-                            txtSaldo.setTextSize(16);
+                            txtSaldo.setTextSize(30);
 
 //                            Log.i("Saldo Dentro ","txtViewID:"+Integer.toString(txtViewID)+" Total Drawer: "+textSaldo.getText().toString()+" Total Appbar: "+txtSaldo.getText().toString());
 
 
                             Utils.setBadgeCount(getActivity(), iconCarrito, Filtro.getFactura());
                         } else {
-                            Toast.makeText(getActivity(), "ERROR NO "+ActividadPrincipal.getPalabras("Modificar")+" "+ActividadPrincipal.getPalabras("Cabecera"), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "ERROR NO "+ getPalabras("Modificar")+" "+ getPalabras("Cabecera"), Toast.LENGTH_SHORT).show();
                             // failed to create product
                         }
 
@@ -998,7 +1012,7 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
             //////////////////////////////////////////////////////////
             //ESTADO TICKET
             ///////////////////////////////////////////////////////////
-            if (!lcabeceraftp.get(i).getCabeceraEstado().equals("01")) {
+            if (!lcabeceraftp.get(i).getCabeceraEstado().equals(lparam.get(0).getDEFAULT_ESTADO_OPEN_FACTURA())) {
 
                 ticket = ticket + String.format("%-48s", "C O P I A") + "\n";
                 ticket = ticket + separador;
@@ -1343,7 +1357,7 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
             printer.sendData(builder, SEND_TIMEOUT, status, battery);
             ShowMsg.showStatus(EposException.SUCCESS, status[0], battery[0], getActivity());
             // Comprobar estado ticket si = "01" modificar "02"
-            if (lcabeceraftp.get(0).getCabeceraEstado().contains("01")){
+            if (lcabeceraftp.get(0).getCabeceraEstado().contains(lparam.get(0).getDEFAULT_ESTADO_OPEN_FACTURA())){
                 new SaveEstadoFactura().execute(url_update_Factura);
             }
 
@@ -1427,7 +1441,7 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
                 printer.sendData(builder, SEND_TIMEOUT, status, battery);
                 ShowMsg.showStatus(EposException.SUCCESS, status[0], battery[0], getActivity());
                 // Comprobar estado ticket si = "01" modificar "02"
-                if (lcabeceraftp.get(0).getCabeceraEstado().contains("01")){
+                if (lcabeceraftp.get(0).getCabeceraEstado().contains(lparam.get(0).getDEFAULT_ESTADO_OPEN_FACTURA())){
                     new SaveEstadoFactura().execute(url_update_Factura);
                 }
 

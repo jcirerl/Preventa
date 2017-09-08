@@ -43,7 +43,8 @@ import tpv.cirer.com.marivent.herramientas.WrapContentLinearLayoutManager;
 import tpv.cirer.com.marivent.modelo.Message;
 
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.CountTable;
-import static tpv.cirer.com.marivent.ui.ActividadPrincipal.mSerialExecutorActivity;
+        import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lparam;
+        import static tpv.cirer.com.marivent.ui.ActividadPrincipal.mSerialExecutorActivity;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.url_count;
 
 /**
@@ -195,35 +196,35 @@ public class FragmentoOpenMessage extends Fragment {
             String cSql = "";
             String xWhere = "";
 
-            if(!(Filtro.getGrupo().equals("00"))) {
+            if(!(Filtro.getGrupo().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_GRUPO().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE message.GRUPO='" + Filtro.getGrupo() + "'";
                 } else {
                     xWhere += " AND message.GRUPO='" + Filtro.getGrupo() + "'";
                 }
             }
-            if(!(Filtro.getEmpresa().equals("00"))) {
+            if(!(Filtro.getEmpresa().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_EMPRESA().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE message.EMPRESA='" + Filtro.getEmpresa() + "'";
                 } else {
                     xWhere += " AND message.EMPRESA='" + Filtro.getEmpresa() + "'";
                 }
             }
-            if(!(Filtro.getLocal().equals("00"))) {
+            if(!(Filtro.getLocal().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_LOCAL().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE message.LOCAL='" + Filtro.getLocal() + "'";
                 } else {
                     xWhere += " AND message.LOCAL='" + Filtro.getLocal() + "'";
                 }
             }
-            if(!(Filtro.getSeccion().equals("00"))) {
+            if(!(Filtro.getSeccion().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_SECCION().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE message.SECCION='" + Filtro.getSeccion() + "'";
                 } else {
                     xWhere += " AND message.SECCION='" + Filtro.getSeccion() + "'";
                 }
             }
-            if(!(Filtro.getCaja().equals("00"))) {
+            if(!(Filtro.getCaja().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_CAJA().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE message.CAJA='" + Filtro.getCaja() + "'";
                 } else {
@@ -239,9 +240,9 @@ public class FragmentoOpenMessage extends Fragment {
             }
 
             if (xWhere.equals("")) {
-                xWhere += " WHERE message.ACTIVO=1";
+                xWhere += " WHERE message.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
             } else {
-                xWhere += " AND message.ACTIVO=1";
+                xWhere += " AND message.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
             }
 
             cSql += xWhere;

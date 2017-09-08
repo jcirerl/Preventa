@@ -83,16 +83,16 @@
             android:entries="@array/tabtodos"
             android:entryValues="@array/ctrltabtodos" />
         <ListPreference
-            android:defaultValue="true"
-            android:key="oppedidodirecto"
+            android:defaultValue="false"
+            android:key="oppedidodirectomesa"
             android:title="Pedido Directo Mesa"
             android:summary="Realizar pedido pulsando circulo pedidos en Mesa"
             android:dialogTitle="Control Pedido Directo Mesa"
             android:entries="@array/tabpedidomesa"
             android:entryValues="@array/ctrltabpedidomesa" />
         <ListPreference
-            android:defaultValue="true"
-            android:key="opfacturadirecto"
+            android:defaultValue="false"
+            android:key="opfacturadirectomesa"
             android:title="Factura Directo Mesa"
             android:summary="Realizar factura pulsando circulo facturas en Mesa"
             android:dialogTitle="Control Factura Directo Mesa"

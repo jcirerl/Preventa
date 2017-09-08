@@ -29,13 +29,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import tpv.cirer.com.marivent.R;
-import tpv.cirer.com.marivent.conexion_http_post.JSONParserNew;
-import tpv.cirer.com.marivent.herramientas.BadgeView;
-import tpv.cirer.com.marivent.herramientas.Filtro;
-import tpv.cirer.com.marivent.herramientas.SerialExecutor;
-import tpv.cirer.com.marivent.modelo.DocumentoPedido;
-import tpv.cirer.com.marivent.modelo.Mesa;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -62,7 +55,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import tpv.cirer.com.marivent.R;
+import tpv.cirer.com.marivent.conexion_http_post.JSONParserNew;
+import tpv.cirer.com.marivent.herramientas.BadgeView;
+import tpv.cirer.com.marivent.herramientas.Filtro;
+import tpv.cirer.com.marivent.herramientas.SerialExecutor;
+import tpv.cirer.com.marivent.modelo.DocumentoPedido;
+import tpv.cirer.com.marivent.modelo.Mesa;
+
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getLocalIpAddress;
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lparam;
 
 public class Test extends Activity implements OnTouchListener {
 
@@ -386,7 +388,7 @@ public class Test extends Activity implements OnTouchListener {
             }
 
             xWhere += " AND mesas.MESA<>'00'"; // MESA 00 NO DEBE TENERLA EN CUENTA
-            xWhere += " AND mesas.ACTIVO=1";
+            xWhere += " AND mesas.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
 
             cSql += xWhere;
             if(cSql.equals("")) {
@@ -760,11 +762,11 @@ public class Test extends Activity implements OnTouchListener {
             values.put("factura", Long.toString(maxDate));
 //            values.put("factura", Integer.toString(Filtro.getFactura()));
             values.put("mesa", Filtro.getMesa());
-            values.put("estado", "01");
+            values.put("estado", lparam.get(0).getDEFAULT_ESTADO_OPEN_FACTURA());
             values.put("fecha", Filtro.getFechaapertura());
             values.put("empleado", Filtro.getEmpleado());
-            values.put("t_fra", "CO");
-            values.put("tabla", "ftp");
+            values.put("t_fra", lparam.get(0).getDEFAULT_TIPO_COBRO_OPEN_FACTURA());
+            values.put("tabla", lparam.get(0).getDEFAULT_TABLA_OPEN_FACTURA());
             values.put("obs", "");
             values.put("updated", dateNow);
             values.put("creado", dateNow);
@@ -860,10 +862,10 @@ public class Test extends Activity implements OnTouchListener {
             values.put("cod_turno", Filtro.getTurno());
             values.put("pedido", Long.toString(maxDate));
             values.put("mesa", Filtro.getMesa());
-            values.put("estado", "01");
+            values.put("estado", lparam.get(0).getDEFAULT_ESTADO_OPEN_PEDIDO());
             values.put("fecha", Filtro.getFechaapertura());
             values.put("empleado", Filtro.getEmpleado());
-            values.put("tabla", "pdd");
+            values.put("tabla", lparam.get(0).getDEFAULT_TABLA_OPEN_PEDIDO());
             values.put("obs", "");
             values.put("updated", dateNow);
             values.put("creado", dateNow);
@@ -1541,10 +1543,10 @@ public class Test extends Activity implements OnTouchListener {
                         ContentValues values = new ContentValues();
                         values.put("pid", pid);
                         values.put("filtro",filtro);
-                        values.put("estado","01");
+                        values.put("estado",lparam.get(0).getDEFAULT_ESTADO_OPEN_FACTURA());
                         values.put("serie",Filtro.getSerie());
                         values.put("factura",Long.toString(maxDate));
-                        values.put("t_fra","CO");
+                        values.put("t_fra",lparam.get(0).getDEFAULT_TIPO_COBRO_OPEN_FACTURA());
                         values.put("updated", dateNow);
                         values.put("creado", dateNow);
                         values.put("usuario", Filtro.getUsuario());

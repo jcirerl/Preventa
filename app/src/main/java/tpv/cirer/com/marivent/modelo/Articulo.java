@@ -20,6 +20,12 @@ public class Articulo {
     private String ArticuloTipo_iva;
     private String ArticuloTipoPlato;
     private String ArticuloNombre_Plato;
+    private int ArticuloDependientetipoplatomaestro;
+    private int ArticuloExcluyentebuffet;
+    private int ArticuloActivobuffet;
+    private String ArticuloDescripcion;
+    private String ArticuloIngredientes;
+    private String ArticuloAutor;
 
     public Articulo(int id,
                     String articulo,
@@ -43,6 +49,35 @@ public class Articulo {
         this.ArticuloTipo_are = tipo_are;
         this.ArticuloTipo_iva = tipo_iva;
         this.ArticuloTiva_id = tiva_id;
+    }
+    public Articulo(int id,
+                    String articulo,
+                    String nombre,
+                    String tipoplato,
+                    String nombre_plato,
+                    float precio,
+                    String cantidad,
+                    String urlimagen,
+                    String tipo_are,
+                    String tipo_iva,
+                    int tiva_id,
+                    int dependientetipoplatomaestro,
+                    int excluyentebuffet,
+                    int activobuffet) {
+        this.ArticuloId = id;
+        this.ArticuloArticulo = articulo;
+        this.ArticuloNombre = nombre;
+        this.ArticuloTipoPlato = tipoplato;
+        this.ArticuloNombre_Plato = nombre_plato;
+        this.ArticuloPrecio = precio;
+        this.ArticuloCantidad = cantidad;
+        this.ArticuloUrlimagen = urlimagen;
+        this.ArticuloTipo_are = tipo_are;
+        this.ArticuloTipo_iva = tipo_iva;
+        this.ArticuloTiva_id = tiva_id;
+        this.ArticuloDependientetipoplatomaestro = dependientetipoplatomaestro;
+        this.ArticuloExcluyentebuffet = excluyentebuffet;
+        this.ArticuloActivobuffet = activobuffet;
     }
     public Articulo() {
     }
@@ -149,5 +184,41 @@ public class Articulo {
     public void setArticuloTiva_id(int lineadocumentopedidoTiva_id) {
         this.ArticuloTiva_id = lineadocumentopedidoTiva_id;
     }
-    
+     public int getArticuloDependientetipoplatomaestro() {
+        return ArticuloDependientetipoplatomaestro;
+    }
+    public void setArticuloDependientetipoplatomaestro(int lineadocumentopedidoDependientetipoplatomaestro) {
+        this.ArticuloDependientetipoplatomaestro = lineadocumentopedidoDependientetipoplatomaestro;
+    }
+    public int getArticuloExcluyentebuffet() {
+        return ArticuloExcluyentebuffet;
+    }
+    public void setArticuloExcluyentebuffet(int lineadocumentopedidoExcluyentebuffet) {
+        this.ArticuloExcluyentebuffet = lineadocumentopedidoExcluyentebuffet;
+    }
+    public int getArticuloActivobuffet() {
+        return ArticuloActivobuffet;
+    }
+    public void setArticuloActivobuffet(int lineadocumentopedidoActivobuffet) {
+        this.ArticuloActivobuffet = lineadocumentopedidoActivobuffet;
+    }
+     public String getArticuloDescripcion() {
+        return ArticuloDescripcion;
+    }
+    public void setArticuloDescripcion(String articuloDescripcion) {
+        this.ArticuloDescripcion = articuloDescripcion;
+    }
+    public String getArticuloIngredientes() {
+        return ArticuloIngredientes;
+    }
+    public void setArticuloIngredientes(String articuloIngredientes) {
+        this.ArticuloIngredientes = articuloIngredientes;
+    }
+    public String getArticuloAutor() {
+        return ArticuloAutor;
+    }
+    public void setArticuloAutor(String articuloAutor) {
+        this.ArticuloAutor = articuloAutor;
+    }
+
 }

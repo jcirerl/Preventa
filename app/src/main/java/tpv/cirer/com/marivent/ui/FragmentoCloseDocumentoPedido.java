@@ -42,6 +42,8 @@ import tpv.cirer.com.marivent.herramientas.Filtro;
 import tpv.cirer.com.marivent.herramientas.WrapContentLinearLayoutManager;
 import tpv.cirer.com.marivent.modelo.DocumentoPedido;
 
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lparam;
+
 /**
  * Created by JUAN on 16/11/2016.
  */
@@ -222,56 +224,56 @@ public class FragmentoCloseDocumentoPedido extends Fragment {
             String cSql = "";
             String xWhere = "";
 
-            if(!(Filtro.getGrupo().equals("00"))) {
+            if(!(Filtro.getGrupo().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_GRUPO().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE pdd.GRUPO='" + Filtro.getGrupo() + "'";
                 } else {
                     xWhere += " AND pdd.GRUPO='" + Filtro.getGrupo() + "'";
                 }
             }
-            if(!(Filtro.getEmpresa().equals("00"))) {
+            if(!(Filtro.getEmpresa().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_EMPRESA().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE pdd.EMPRESA='" + Filtro.getEmpresa() + "'";
                 } else {
                     xWhere += " AND pdd.EMPRESA='" + Filtro.getEmpresa() + "'";
                 }
             }
-            if(!(Filtro.getLocal().equals("00"))) {
+            if(!(Filtro.getLocal().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_LOCAL().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE pdd.LOCAL='" + Filtro.getLocal() + "'";
                 } else {
                     xWhere += " AND pdd.LOCAL='" + Filtro.getLocal() + "'";
                 }
             }
-            if(!(Filtro.getSeccion().equals("00"))) {
+            if(!(Filtro.getSeccion().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_SECCION().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE pdd.SECCION='" + Filtro.getSeccion() + "'";
                 } else {
                     xWhere += " AND pdd.SECCION='" + Filtro.getSeccion() + "'";
                 }
             }
-            if(!(Filtro.getCaja().equals("00"))) {
+            if(!(Filtro.getCaja().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_CAJA().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE pdd.CAJA='" + Filtro.getCaja() + "'";
                 } else {
                     xWhere += " AND pdd.CAJA='" + Filtro.getCaja() + "'";
                 }
             }
-            if(!(Filtro.getTurno().equals("00"))) {
+            if(!(Filtro.getTurno().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_TURNO().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE pdd.COD_TURNO='" + Filtro.getTurno() + "'";
                 } else {
                     xWhere += " AND pdd.COD_TURNO='" + Filtro.getTurno() + "'";
                 }
             }
-            if(!(Filtro.getEmpleado().equals("00"))) {
+            if(!(Filtro.getEmpleado().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_EMPLEADO().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE pdd.EMPLEADO='" + Filtro.getEmpleado() + "'";
                 } else {
                     xWhere += " AND pdd.EMPLEADO='" + Filtro.getEmpleado() + "'";
                 }
             }
-            if(!(Filtro.getMesa().equals("00"))) {
+            if(!(Filtro.getMesa().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_MESA().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE pdd.MESA='" + Filtro.getMesa() + "'";
                 } else {

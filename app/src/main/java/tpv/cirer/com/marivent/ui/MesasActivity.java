@@ -77,6 +77,7 @@ import static tpv.cirer.com.marivent.ui.ActividadPrincipal.LoadImageFromWebOpera
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getLocalIpAddress;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getPalabras;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.itemmesas;
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lparam;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.mSerialExecutorActivity;
 
 /**
@@ -1401,8 +1402,8 @@ public class MesasActivity extends FragmentActivity {
                 }
             }
 
-            xWhere += " AND mesas.MESA<>'00'"; // MESA 00 NO DEBE TENERLA EN CUENTA
-            xWhere += " AND mesas.ACTIVO=1";
+            xWhere += " AND mesas.MESA<>'"+lparam.get(0).getDEFAULT_ESTADO_TODOS_MESA().trim() +"'"; // MESA 00 NO DEBE TENERLA EN CUENTA
+            xWhere += " AND mesas.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
 
             cSql += xWhere;
             if(cSql.equals("")) {
@@ -1841,11 +1842,11 @@ public class MesasActivity extends FragmentActivity {
             values.put("factura", Long.toString(maxDate));
 //            values.put("factura", Integer.toString(Filtro.getFactura()));
             values.put("mesa", Filtro.getMesa());
-            values.put("estado", "01");
+            values.put("estado", lparam.get(0).getDEFAULT_ESTADO_OPEN_FACTURA());
             values.put("fecha", Filtro.getFechaapertura());
             values.put("empleado", Filtro.getEmpleado());
-            values.put("t_fra", "CO");
-            values.put("tabla", "ftp");
+            values.put("t_fra", lparam.get(0).getDEFAULT_TIPO_COBRO_OPEN_FACTURA());
+            values.put("tabla", lparam.get(0).getDEFAULT_TABLA_OPEN_FACTURA());
             values.put("obs", "");
             values.put("updated", dateNow);
             values.put("creado", dateNow);
@@ -1942,10 +1943,10 @@ public class MesasActivity extends FragmentActivity {
             values.put("pedido", Long.toString(maxDate));
             values.put("mesa", Filtro.getMesa());
             values.put("comensales", args[0]);
-            values.put("estado", "01");
+            values.put("estado", lparam.get(0).getDEFAULT_ESTADO_OPEN_PEDIDO());
             values.put("fecha", Filtro.getFechaapertura());
             values.put("empleado", Filtro.getEmpleado());
-            values.put("tabla", "pdd");
+            values.put("tabla", lparam.get(0).getDEFAULT_TABLA_OPEN_PEDIDO());
             values.put("obs", "");
             values.put("updated", dateNow);
             values.put("creado", dateNow);
@@ -2649,10 +2650,10 @@ public class MesasActivity extends FragmentActivity {
                         ContentValues values = new ContentValues();
                         values.put("pid", pid);
                         values.put("filtro",filtro);
-                        values.put("estado","01");
+                        values.put("estado",lparam.get(0).getDEFAULT_ESTADO_OPEN_FACTURA());
                         values.put("serie",Filtro.getSerie());
                         values.put("factura",Long.toString(maxDate));
-                        values.put("t_fra","CO");
+                        values.put("t_fra",lparam.get(0).getDEFAULT_TIPO_COBRO_OPEN_FACTURA());
                         values.put("updated", dateNow);
                         values.put("creado", dateNow);
                         values.put("usuario", Filtro.getUsuario());

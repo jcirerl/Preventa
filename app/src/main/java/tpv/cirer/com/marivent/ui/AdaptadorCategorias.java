@@ -67,12 +67,13 @@ public class AdaptadorCategorias extends RecyclerView.Adapter<ComidaRowHolder> i
                                      final String nombreComida,
                                      final String precioComida,
                                      final String tivaComida,
-                                     final String individualComida ) {
+                                     final String individualComida,
+                                     final String urlimagen) {
 
 
                     Log.d("Poh-tah-tos", nombreComida + " " + precioComida );
                     try {
-                        mCallback.onComidaSelected(imagenComida, articuloComida, nombreComida, precioComida, tivaComida, mEstado, individualComida);
+                        mCallback.onComidaSelected(imagenComida, articuloComida, nombreComida, precioComida, tivaComida, mEstado, individualComida, urlimagen);
                     } catch (ClassCastException exception) {
                         // do something
                     }
@@ -89,7 +90,7 @@ public class AdaptadorCategorias extends RecyclerView.Adapter<ComidaRowHolder> i
         }
 
         @Override
-        public void onBindViewHolder(ComidaRowHolder ComidaRowHolder, int i) {
+        public void onBindViewHolder(final ComidaRowHolder ComidaRowHolder, int i) {
             String myText;
 /*            final DrawableRequestBuilder<String> req = Glide
                     .with(mContext)
@@ -105,22 +106,27 @@ public class AdaptadorCategorias extends RecyclerView.Adapter<ComidaRowHolder> i
                 ComidaRowHolder.bind(item);
                 Comida Comida = mComida.get(i);
                 Log.i("recview seleccionado", Comida.getNombre());
-
-/*            Glide.with(ComidaRowHolder.itemView.getContext())
-                    .load(item.getIdDrawable())
+/*
+                Glide.with(mContext).load(Comida.getUrlimagen()).asBitmap().into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        ComidaRowHolder.imagen.setImageBitmap(resource);
+                    }
+                });
+                /*            Glide.with(mContext)
+                    .load(Comida.getUrlimagen())
+                    .asBitmap()
                     .centerCrop()
-                    .into(ComidaRowHolder.imagen);
-*/
+                    .into(ComidaRowHolder.imagen);*/
                 Glide.with(mContext)
                         .load(Comida.getUrlimagen())
                         .thumbnail(0.1f)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(ComidaRowHolder.imagen);
-/*                Glide.with(mContext)
+       /*                Glide.with(mContext)
                         .load(Comida.getUrlimagen())
-                        .override(640,426) //640,426
                         .centerCrop()
-                        .into(ComidaRowHolder.imagen);*/
+                        .into(ComidaRowHolder.imagen);
 /*                Picasso.with(mContext)
                         .load(Comida.getUrlimagen())
                         .error(R.drawable.placeholder)
@@ -194,7 +200,7 @@ public class AdaptadorCategorias extends RecyclerView.Adapter<ComidaRowHolder> i
     ///////////////////////////////////////////
 // La actividad contenedora debe implementar esta interfaz
     public interface OnHeadlineSelectedListener {
-        void onComidaSelected(ImageView imagen, String articulo, String nombre, String precio, String tiva, String estado, String individual);
+        void onComidaSelected(ImageView imagen, String articulo, String nombre, String precio, String tiva, String estado, String individual, String urlimagen);
 
     }
 

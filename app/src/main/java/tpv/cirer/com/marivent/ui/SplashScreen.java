@@ -109,8 +109,8 @@ public class SplashScreen extends AppCompatActivity {
 
                     Filtro.setOppedidomesa(Boolean.parseBoolean(pref.getString("oppedidomesa","false"))); // CONTROL PEDIDOS DESDE MESA
 
-                    Filtro.setOppedidodirectomesa(Boolean.parseBoolean(pref.getString("oppedidodirectomesa","true")));
-                    Filtro.setOpfacturadirectomesa(Boolean.parseBoolean(pref.getString("opfacturadirectomesa","true")));
+                    Filtro.setOppedidodirectomesa(Boolean.parseBoolean(pref.getString("oppedidodirectomesa","false")));
+                    Filtro.setOpfacturadirectomesa(Boolean.parseBoolean(pref.getString("opfacturadirectomesa","false")));
 
                     Filtro.setOpintervalo(Integer.parseInt(pref.getString("opintervalo", "10000")));
                     Filtro.setOplog(Boolean.parseBoolean(pref.getString("oplog","true")));

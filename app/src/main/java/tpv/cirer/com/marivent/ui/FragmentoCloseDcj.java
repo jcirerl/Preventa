@@ -42,6 +42,8 @@ import tpv.cirer.com.marivent.herramientas.Filtro;
 import tpv.cirer.com.marivent.herramientas.WrapContentLinearLayoutManager;
 import tpv.cirer.com.marivent.modelo.Dcj;
 
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lparam;
+
 /**
  * Created by JUAN on 22/11/2016.
  */
@@ -196,42 +198,42 @@ public class FragmentoCloseDcj extends Fragment {
 //            Integer result = 0;
             String cSql = "";
             String xWhere = "";
-            if(!(Filtro.getGrupo().equals("00"))) {
+            if(!(Filtro.getGrupo().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_GRUPO().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE dcj.GRUPO='" + Filtro.getGrupo() + "'";
                 } else {
                     xWhere += " AND dcj.GRUPO='" + Filtro.getGrupo() + "'";
                 }
             }
-            if(!(Filtro.getEmpresa().equals("00"))) {
+            if(!(Filtro.getEmpresa().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_EMPRESA().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE dcj.EMPRESA='" + Filtro.getEmpresa() + "'";
                 } else {
                     xWhere += " AND dcj.EMPRESA='" + Filtro.getEmpresa() + "'";
                 }
             }
-            if(!(Filtro.getLocal().equals("00"))) {
+            if(!(Filtro.getLocal().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_LOCAL().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE dcj.LOCAL='" + Filtro.getLocal() + "'";
                 } else {
                     xWhere += " AND dcj.LOCAL='" + Filtro.getLocal() + "'";
                 }
             }
-            if(!(Filtro.getSeccion().equals("00"))) {
+            if(!(Filtro.getSeccion().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_SECCION().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE dcj.SECCION='" + Filtro.getSeccion() + "'";
                 } else {
                     xWhere += " AND dcj.SECCION='" + Filtro.getSeccion() + "'";
                 }
             }
-            if(!(Filtro.getCaja().equals("00"))) {
+            if(!(Filtro.getCaja().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_CAJA().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE dcj.CAJA='" + Filtro.getCaja() + "'";
                 } else {
                     xWhere += " AND dcj.CAJA='" + Filtro.getCaja() + "'";
                 }
             }
-            if(!(Filtro.getTurno().equals("00"))) {
+            if(!(Filtro.getTurno().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_TURNO().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE dcj.COD_TURNO='" + Filtro.getTurno() + "'";
                 } else {
@@ -253,7 +255,7 @@ public class FragmentoCloseDcj extends Fragment {
                     }
                 }
             }
-            xWhere += " AND dcj.APERTURA=0";
+            xWhere += " AND dcj.APERTURA="+lparam.get(0).getDEFAULT_VALOR_OFF_APERTURA();
 
             cSql += xWhere;
             if(cSql.equals("")) {

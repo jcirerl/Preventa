@@ -98,8 +98,10 @@ public class AdaptadorLineaDocumentoPedidoHeaderAsus  extends RecyclerView.Adapt
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if (!mEstado.contains("CLOSE")) {
+                                String cArticulo = articuloLPD.toString();
+                                cArticulo = cArticulo.replace(Html.fromHtml("&nbsp;"),"");
                                 try {
-                                    mCallbackLineaDocumentoPedido.onUpdateLineaDocumentoPedidoSelected(idLPD, obsLPD);
+                                    mCallbackLineaDocumentoPedido.onUpdateLineaDocumentoPedidoSelected(idLPD, obsLPD, cArticulo);
                                 } catch (ClassCastException exception) {
                                     // do something
                                 }
@@ -532,7 +534,7 @@ public class AdaptadorLineaDocumentoPedidoHeaderAsus  extends RecyclerView.Adapt
     // La actividad contenedora debe implementar esta interfaz
     public interface OnHeadlineSelectedListenerLineaDocumentoPedidoHeader {
         void onDeleteLineaDocumentoPedidoSelected(int id, int individual);
-        void onUpdateLineaDocumentoPedidoSelected(int id, String observa);
+        void onUpdateLineaDocumentoPedidoSelected(int id, String observa, String articulo);
         void onArticulosLineaDocumentoPedidoSelected(ImageView imagelinea, String articulo, String cNombre);
         void onAddCantLineaDocumentoPedidoSelected(int id, int individual);
         void onMinusCantLineaDocumentoPedidoSelected(int id, int individual);

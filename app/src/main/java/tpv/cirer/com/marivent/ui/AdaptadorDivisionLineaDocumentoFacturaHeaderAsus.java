@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,10 +27,10 @@ import tpv.cirer.com.marivent.herramientas.IMyLineaDocumentoFacturaViewHolderCli
 import tpv.cirer.com.marivent.modelo.LineaDocumentoFactura;
 
 /**
- * Created by JUAN on 09/11/2016.
+ * Created by JUAN on 08/07/2017.
  */
 
-public class AdaptadorLineaDocumentoFacturaHeader extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class AdaptadorDivisionLineaDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
     //    String[] data;
@@ -40,7 +42,7 @@ public class AdaptadorLineaDocumentoFacturaHeader extends RecyclerView.Adapter<R
     /*   public AdaptadorLineaDocumentoFacturaHeader(String[] data) {
            this.data = data;
        }
-    */   public AdaptadorLineaDocumentoFacturaHeader(Context context, List<LineaDocumentoFactura> LineaDocumentoFactura, String estado) {
+    */   public AdaptadorDivisionLineaDocumentoFacturaHeaderAsus(Context context, List<LineaDocumentoFactura> LineaDocumentoFactura, String estado) {
         this.mLineaDocumentoFactura = LineaDocumentoFactura;
         this.mContextLineaDocumentoFactura = context;
         this.mEstado = estado;
@@ -54,10 +56,21 @@ public class AdaptadorLineaDocumentoFacturaHeader extends RecyclerView.Adapter<R
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_ITEM) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_row_lineadocumentofactura, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_row_divisionlineadocumentofactura, parent, false);
             return new VHItem(v, new IMyLineaDocumentoFacturaViewHolderClicks() {
                 //    public void onPotato(View caller) { Log.d("VEGETABLES", "Poh-tah-tos"); };
-                public void onPotato(View caller, ImageView imageLineaDocumentoFactura,String idLineaDocumentoFactura, String nombreLineaDocumentoFactura, String articuloLineaDocumentoFactura, String iconLineaDocumentoFactura, String cantLineaDocumentoFactura, String preuLineaDocumentoFactura, String importeLineaDocumentoFactura, String tiva_idLineaDocumentoFactura) {
+                public void onPotato(View caller,
+                                     ImageView imageLineaDocumentoFactura,
+                                     String campoLineaDocumentoFactura,
+                                     String idLineaDocumentoFactura,
+                                     String nombreLineaDocumentoFactura,
+                                     String articuloLineaDocumentoFactura,
+                                     String iconLineaDocumentoFactura,
+                                     String cantLineaDocumentoFactura,
+                                     String preuLineaDocumentoFactura,
+                                     String importeLineaDocumentoFactura,
+                                     String tiva_idLineaDocumentoFactura) {
+                    final String campoLFT = campoLineaDocumentoFactura;
                     final String nombreLFT = nombreLineaDocumentoFactura.toString();
                     final String articuloLFT = articuloLineaDocumentoFactura.toString();
                     final String cantLFT = cantLineaDocumentoFactura.toString();
@@ -83,7 +96,14 @@ public class AdaptadorLineaDocumentoFacturaHeader extends RecyclerView.Adapter<R
 
                             try {
                                 if (!mEstado.contains("CLOSE")) {
-                                    mCallbackLineaDocumentoFactura.onUpdateLineaDocumentoFacturaSelected(idLFT, preuLFT);
+                                    switch (campoLFT) {
+                                        case "Preu":
+                                            mCallbackLineaDocumentoFactura.onUpdateLineaDocumentoFacturaSelected(idLFT, preuLFT, campoLFT);
+                                            break;
+                                        case "Nombre":
+                                            mCallbackLineaDocumentoFactura.onUpdateLineaDocumentoFacturaSelected(idLFT, nombreLFT, campoLFT);
+                                            break;
+                                    }
                                 }
                             } catch (ClassCastException exception) {
                                 // do something
@@ -109,12 +129,20 @@ public class AdaptadorLineaDocumentoFacturaHeader extends RecyclerView.Adapter<R
                     dialog.show();
 
                 };
-                public void onAdd(Button callerButton, String idLineaDocumentoFactura ) {
+
+                public void onAdd(Button callerButton, String idLineaDocumentoFactura, String cantLineaDocumentoFactura ) {
                     Log.d("ADD BUTTON", "+");
+                    String cValor = cantLineaDocumentoFactura.toString();
+                    cValor = cValor.replace(Html.fromHtml("&nbsp;"),"");
+                    cValor = cValor.replace(".","");
+                    cValor = cValor.replace(",",".");
                     final int idLFT = Integer.parseInt(idLineaDocumentoFactura);
+                    final double cantLFT = Double.parseDouble(cValor.toString().trim());
                     try {
                         if (!mEstado.contains("CLOSE")) {
-                            mCallbackLineaDocumentoFactura.onAddCantLineaDocumentoFacturaSelected(idLFT);
+                            if (cantLFT > 0) {
+                                mCallbackLineaDocumentoFactura.onAddCantDivisionLineaDocumentoFacturaSelected(idLFT);
+                            }
                         }
                     } catch (ClassCastException exception) {
                         // do something
@@ -131,10 +159,10 @@ public class AdaptadorLineaDocumentoFacturaHeader extends RecyclerView.Adapter<R
                     final double cantLFT = Double.parseDouble(cValor.toString().trim());
                     try {
                         if (!mEstado.contains("CLOSE")) {
-                            if (cantLFT > 1) {
-                                mCallbackLineaDocumentoFactura.onMinusCantLineaDocumentoFacturaSelected(idLFT);
+                            if (cantLFT > 0) {
+                                mCallbackLineaDocumentoFactura.onMinusCantDivisionLineaDocumentoFacturaSelected(idLFT);
                             } else {
-                                mCallbackLineaDocumentoFactura.onDeleteLineaDocumentoFacturaSelected(idLFT);
+///                                mCallbackLineaDocumentoFactura.onDeleteLineaDocumentoFacturaSelected(idLFT);
 
                             }
                         }
@@ -211,11 +239,22 @@ public class AdaptadorLineaDocumentoFacturaHeader extends RecyclerView.Adapter<R
                 myText = myText.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
                 myText = myText.replaceAll("\\s+$", ""); // Quitamos espacios derecha
                 newText="";
-                for (int ii = 0; ii < (6-myText.length()); ii++) {
+                for (int ii = 0; ii < (8-myText.length()); ii++) {
                     newText+=space01;
                 }
                 newText +=myText;
                 ((VHItem) holder).CantLineaDocumentoFactura.setText(Html.fromHtml(newText.replace(" ", "&nbsp;&nbsp;")).toString());
+                myText = String.format("%1$,.2f", Float.parseFloat(LineaDocumentoFactura.getLineaDocumentoFacturaCantRestar()));
+                Log.i("lMytextCantRestar",Integer.toString(myText.length()));
+//                myText = String.format("%1$5s",myText);
+                myText = myText.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+                myText = myText.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+                newText="";
+                for (int ii = 0; ii < (8-myText.length()); ii++) {
+                    newText+=space01;
+                }
+                newText +=myText;
+                ((VHItem) holder).NewCantLineaDocumentoFactura.setText(Html.fromHtml(newText.replace(" ", "&nbsp;&nbsp;")).toString());
 
                 myText = String.format("%1$,.2f", Float.parseFloat(LineaDocumentoFactura.getLineaDocumentoFacturaPreu()));
                 Log.i("lMytextPreu",Integer.toString(myText.length())+" "+myText);
@@ -226,7 +265,7 @@ public class AdaptadorLineaDocumentoFacturaHeader extends RecyclerView.Adapter<R
                 for (int ii = 0; ii < (6-myText.length()); ii++) {
                     newText+=space01;
                 }
-             ///       String spacePreu = new String(new char[6-myText.length()]).replace('\0', ' '); //Añadimos espacios
+                ///       String spacePreu = new String(new char[6-myText.length()]).replace('\0', ' '); //Añadimos espacios
                 newText +=myText;
                 Log.i("lMytextPNew",Integer.toString(newText.length())+" "+newText);
                 ((VHItem) holder).PreuLineaDocumentoFactura.setText(Html.fromHtml(newText.replace(" ", "&nbsp;&nbsp;")).toString()+" "+ Filtro.getSimbolo());
@@ -250,6 +289,13 @@ public class AdaptadorLineaDocumentoFacturaHeader extends RecyclerView.Adapter<R
 
                 ((VHItem) holder).NombreLineaDocumentoFactura.setTextColor(Color.BLUE);
                 ((VHItem) holder).PreuLineaDocumentoFactura.setTextColor(Color.MAGENTA);
+                ((VHItem) holder).NewCantLineaDocumentoFactura.setTextColor(Filtro.getColorItemZero());
+
+                if (Float.parseFloat(LineaDocumentoFactura.getLineaDocumentoFacturaPreu())==0.00) {
+                    ((VHItem) holder).PreuLineaDocumentoFactura.setBackgroundColor(Color.parseColor("#bdbdbd"));
+                }else{
+                    ((VHItem) holder).PreuLineaDocumentoFactura.setBackgroundColor(Color.TRANSPARENT);
+                }
 
                 /// TAMANYO LETRA PARA MARIVENT
                 ((VHItem) holder).CantLineaDocumentoFactura.setTextSize(20);
@@ -257,7 +303,7 @@ public class AdaptadorLineaDocumentoFacturaHeader extends RecyclerView.Adapter<R
                 ((VHItem) holder).ImporteLineaDocumentoFactura.setTextSize(20);
                 ((VHItem) holder).NombreLineaDocumentoFactura.setTextSize(20);;
 
-                 //       LineaDocumentoFacturaRowHolder.NombreLineaDocumentoFactura.setTextSize(16);
+                //       LineaDocumentoFacturaRowHolder.NombreLineaDocumentoFactura.setTextSize(16);
                 //        LineaDocumentoFacturaRowHolder.ArticuloLineaDocumentoFactura.setTextSize(16);
 
             } catch (Exception e) {
@@ -268,10 +314,13 @@ public class AdaptadorLineaDocumentoFacturaHeader extends RecyclerView.Adapter<R
         } else if (holder instanceof VHHeader) {
 
             //cast holder to VHHeader and set data for header.
-            myText = ActividadPrincipal.getPalabras("Cantidad")+"     "+
-                     ActividadPrincipal.getPalabras("Precio")+ "    "+
-                     ActividadPrincipal.getPalabras("Importe")+"   "+
-                     ActividadPrincipal.getPalabras("Articulo");
+            myText = ActividadPrincipal.getPalabras("Cantidad")+ StringUtils.repeat(space01, 9)+
+                    ActividadPrincipal.getPalabras("Dividir")+StringUtils.repeat(space01, 5)+
+                    ActividadPrincipal.getPalabras("Precio")+StringUtils.repeat(space01, 4)+
+                    ActividadPrincipal.getPalabras("Importe")+StringUtils.repeat(space01, 4)+
+                    ActividadPrincipal.getPalabras("Articulo")+StringUtils.repeat(space01, 20)+
+                    ActividadPrincipal.getPalabras("TOTAL DIVISION")+": "+
+                    Filtro.getTotaldivision()+" "+Filtro.getSimbolo() ;
             //    Html.fromHtml(myText.replace(" ", "&nbsp;")).toString()
             //cast holder to VHHeader and set data for header_facturas.
             ((VHHeader) holder).headerLineaDocumentoFactura.setText(Html.fromHtml(myText.replace(" ", "&nbsp;")).toString());
@@ -323,6 +372,7 @@ public class AdaptadorLineaDocumentoFacturaHeader extends RecyclerView.Adapter<R
         public TextView PreuLineaDocumentoFactura;
         public TextView ImporteLineaDocumentoFactura;
         public TextView TivaLineaDocumentoFactura;
+        public TextView NewCantLineaDocumentoFactura;
 
 
         public IMyLineaDocumentoFacturaViewHolderClicks mListenerLineaDocumentoFactura;
@@ -340,6 +390,7 @@ public class AdaptadorLineaDocumentoFacturaHeader extends RecyclerView.Adapter<R
             this.PreuLineaDocumentoFactura = (TextView) itemView.findViewById(R.id.preu);
             this.ImporteLineaDocumentoFactura = (TextView) itemView.findViewById(R.id.importe);
             this.TivaLineaDocumentoFactura = (TextView) itemView.findViewById(R.id.tipoiva);
+            this.NewCantLineaDocumentoFactura = (TextView) itemView.findViewById(R.id.newcant);
 
 
             this.AddCantLineaDocumentoFactura = (Button) itemView.findViewById(R.id.btnAdd);
@@ -348,6 +399,9 @@ public class AdaptadorLineaDocumentoFacturaHeader extends RecyclerView.Adapter<R
             this.AddCantLineaDocumentoFactura.setOnClickListener(this);
             this.MinCantLineaDocumentoFactura.setOnClickListener(this);
 
+            this.PreuLineaDocumentoFactura.setOnClickListener(this);
+            this.NombreLineaDocumentoFactura.setOnClickListener(this);
+            this.iconLineaDocumentoFactura.setOnClickListener(this);
             //       this.MinCant.setOnClickListener(this);
 
             itemView.setOnClickListener(this);
@@ -360,35 +414,76 @@ public class AdaptadorLineaDocumentoFacturaHeader extends RecyclerView.Adapter<R
             PreuLineaDocumentoFactura.setText(LineaDocumentoFactura.getLineaDocumentoFacturaPreu());
             ImporteLineaDocumentoFactura.setText(LineaDocumentoFactura.getLineaDocumentoFacturaImporte());
             TivaLineaDocumentoFactura.setText(Integer.toString(LineaDocumentoFactura.getLineaDocumentoFacturaTiva_id()));
+            NewCantLineaDocumentoFactura.setText(LineaDocumentoFactura.getLineaDocumentoFacturaCantRestar());
+
+            AddCantLineaDocumentoFactura.setText(ActividadPrincipal.getPalabras("Sumar"));
+            MinCantLineaDocumentoFactura.setText(ActividadPrincipal.getPalabras("Restar"));
         }
         @Override
         public void onClick(View v) {
             Log.i("instance v",v.getClass().getName().toString());
-
             if (v instanceof Button){
                 Log.i("instance v dentro",v.getClass().getName().toString());
                 switch (v.getId()) {
                     case R.id.btnAdd:
                         mListenerLineaDocumentoFactura.onAdd(
                                 (Button) v,
-                                String.valueOf(this.IdLineaDocumentoFactura.getText())
+                                String.valueOf(this.IdLineaDocumentoFactura.getText()),
+                                String.valueOf(this.CantLineaDocumentoFactura.getText())
                         );
                         break;
                     case R.id.btnMinus:
                         mListenerLineaDocumentoFactura.onMinus(
                                 (Button) v,
                                 String.valueOf(this.IdLineaDocumentoFactura.getText()),
-                                String.valueOf(this.CantLineaDocumentoFactura.getText())
+                                String.valueOf(this.NewCantLineaDocumentoFactura.getText())
                         );
                         break;
                 }
 //            mListener.onTomato((ImageView)v);
 
-            } else {
+            }
+            if (v instanceof TextView) {
+                Log.i("instance v dentro", v.getClass().getName().toString());
+                switch (v.getId()) {
+                    case R.id.preu:
+                        mListenerLineaDocumentoFactura.onPotato(
+                                v,
+                                this.iconLineaDocumentoFactura,
+                                "Preu",
+                                String.valueOf(this.IdLineaDocumentoFactura.getText()),
+                                String.valueOf(this.NombreLineaDocumentoFactura.getText()),
+                                String.valueOf(this.ArticuloLineaDocumentoFactura.getText()),
+                                String.valueOf(this.iconLineaDocumentoFactura.getTag().toString()),
+                                String.valueOf(this.CantLineaDocumentoFactura.getText()),
+                                String.valueOf(this.PreuLineaDocumentoFactura.getText()),
+                                String.valueOf(this.ImporteLineaDocumentoFactura.getText()),
+                                String.valueOf(this.TivaLineaDocumentoFactura.getText())
+                        );
+                        break;
+                    case R.id.nombre:
+                        mListenerLineaDocumentoFactura.onPotato(
+                                v,
+                                this.iconLineaDocumentoFactura,
+                                "Nombre",
+                                String.valueOf(this.IdLineaDocumentoFactura.getText()),
+                                String.valueOf(this.NombreLineaDocumentoFactura.getText()),
+                                String.valueOf(this.ArticuloLineaDocumentoFactura.getText()),
+                                String.valueOf(this.iconLineaDocumentoFactura.getTag().toString()),
+                                String.valueOf(this.CantLineaDocumentoFactura.getText()),
+                                String.valueOf(this.PreuLineaDocumentoFactura.getText()),
+                                String.valueOf(this.ImporteLineaDocumentoFactura.getText()),
+                                String.valueOf(this.TivaLineaDocumentoFactura.getText())
+                        );
+                        break;
+                }
+            }
+            if (v instanceof ImageView) {
                 Log.i("instance v dentro",v.getClass().getName().toString());
                 mListenerLineaDocumentoFactura.onPotato(
                         v,
                         this.iconLineaDocumentoFactura,
+                        "",
                         String.valueOf(this.IdLineaDocumentoFactura.getText()),
                         String.valueOf(this.NombreLineaDocumentoFactura.getText()),
                         String.valueOf(this.ArticuloLineaDocumentoFactura.getText()),
@@ -405,6 +500,7 @@ public class AdaptadorLineaDocumentoFacturaHeader extends RecyclerView.Adapter<R
         @Override
         public void onPotato(View caller,
                              ImageView imageLineaDocumentoFactura,
+                             String campoLineaDocumentoFactura,
                              String idLineaDocumentoFactura,
                              String nombreLineaDocumentoFactura,
                              String articuloLineaDocumentoFactura,
@@ -418,7 +514,8 @@ public class AdaptadorLineaDocumentoFacturaHeader extends RecyclerView.Adapter<R
 
         @Override
         public void onAdd(Button callerButton,
-                          String idLineaDocumentoFactura) {
+                          String idLineaDocumentoFactura,
+                          String cantLineaDocumentoFactura) {
 
         }
 
@@ -445,10 +542,10 @@ public class AdaptadorLineaDocumentoFacturaHeader extends RecyclerView.Adapter<R
     }
     // La actividad contenedora debe implementar esta interfaz
     public interface OnHeadlineSelectedListenerLineaDocumentoFacturaHeader {
-        void onUpdateLineaDocumentoFacturaSelected(int id, String preu);
+        void onUpdateLineaDocumentoFacturaSelected(int id, String valor, String campo);
         void onDeleteLineaDocumentoFacturaSelected(int id);
-        void onAddCantLineaDocumentoFacturaSelected(int id);
-        void onMinusCantLineaDocumentoFacturaSelected(int id);
+        void onAddCantDivisionLineaDocumentoFacturaSelected(int id);
+        void onMinusCantDivisionLineaDocumentoFacturaSelected(int id);
 
     }
     /*para filtro*/
@@ -457,5 +554,6 @@ public class AdaptadorLineaDocumentoFacturaHeader extends RecyclerView.Adapter<R
         mLineaDocumentoFactura.addAll(LineaDocumentoFacturas);
         notifyDataSetChanged();
     }
+
 
 }

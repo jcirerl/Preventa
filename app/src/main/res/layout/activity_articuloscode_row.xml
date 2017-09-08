@@ -15,29 +15,105 @@
         android:scaleType="centerInside"
         android:layout_marginRight="8dp"
         android:layout_marginLeft="4dp" />
--->    <ImageView
+-->
+
+    <ImageView
         android:id="@+id/imagen"
         android:layout_width="wrap_content"
-        android:layout_height="35dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true" />
-<!--
-    <TextView
+    <Spinner android:id="@+id/CmbToolbarPlato"
+        style="@style/RowTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Title"
-        android:id="@+id/name"
-        android:layout_gravity="center_vertical" />-->
+        android:layout_marginLeft="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/imagen"
+        android:layout_toRightOf="@id/imagen" />
+    <TextView
+        android:id="@+id/cant"
+        style="@style/RowTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_toEndOf="@+id/CmbToolbarPlato"
+        android:layout_toRightOf="@+id/CmbToolbarPlato"
+        android:paddingLeft="@dimen/row_padding" />
+    <Button
+        android:id="@+id/btnAdd"
+        style="@style/RowTitle"
+        android:layout_gravity="center"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/cant"
+        android:layout_toRightOf="@+id/cant"
+        android:drawableLeft="@android:drawable/ic_input_add"
+        android:layout_marginLeft="10dp"
+        android:gravity="center"
+        android:text=""
+        android:background="@drawable/button_bg_transparent"/>
+    <Button
+        android:id="@+id/btnMinus"
+        style="@style/RowTitle"
+        android:layout_gravity="center"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/btnAdd"
+        android:layout_toRightOf="@+id/btnAdd"
+        android:layout_marginLeft="20dp"
+        android:drawableLeft="@android:drawable/ic_delete"
+        android:gravity="center"
+        android:text=""
+        android:background="@drawable/button_bg_transparent"
+        />
+    <TextView
+        android:id="@+id/preu"
+        style="@style/RowTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_toEndOf="@+id/btnMinus"
+        android:layout_toRightOf="@+id/btnMinus"
+        android:paddingLeft="@dimen/row_padding" />
+    <TextView
+        android:id="@+id/importe"
+        style="@style/RowTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_toEndOf="@+id/preu"
+        android:layout_toRightOf="@+id/preu"
+        android:paddingLeft="@dimen/row_padding" />
+
+    <CheckBox
+        android:id="@+id/checkbox"
+        style="@style/RowTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/importe"
+        android:layout_toRightOf="@+id/importe"
+        android:button="@drawable/boton_checkbox"
+        android:text="" />
     <TextView
         android:id="@+id/name"
         style="@style/RowTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/icon"
-        android:layout_toRightOf="@+id/icon"
+        android:layout_toEndOf="@+id/checkbox"
+        android:layout_toRightOf="@+id/checkbox"
         android:paddingLeft="@dimen/row_padding" />
-
 </LinearLayout>

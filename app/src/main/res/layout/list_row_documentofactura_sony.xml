@@ -141,6 +141,16 @@
         android:visibility="gone"
         android:paddingLeft="@dimen/row_padding" />
     <TextView
+        android:id="@+id/impcobro"
+        style="@style/RowTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/impbase"
+        android:layout_toRightOf="@+id/impbase"
+        android:visibility="gone"
+        android:paddingLeft="@dimen/row_padding" />
+    <TextView
         android:id="@+id/imptotal"
         style="@style/RowTitle"
         android:layout_width="wrap_content"
@@ -247,7 +257,7 @@
         android:text="@string/cobrar"
         android:background="@drawable/button_bg_transparent"/>
     <Button
-        android:id="@+id/btnFactura"
+        android:id="@+id/btnDivision"
         style="@style/RowSubtitle"
         android:layout_gravity="center"
         android:minHeight="0dp"
@@ -260,11 +270,31 @@
         android:layout_below="@+id/caja"
         android:layout_toEndOf="@+id/btnCobro"
         android:layout_toRightOf="@+id/btnCobro"
+        android:drawableLeft="@drawable/minus32"
+        android:layout_marginLeft="20dp"
+        android:gravity="center"
+        android:text="@string/facturar"
+        android:background="@drawable/button_bg_transparent"/>
+    <Button
+        android:id="@+id/btnFactura"
+        style="@style/RowSubtitle"
+        android:layout_gravity="center"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/turno"
+        android:layout_alignStart="@+id/turno"
+        android:layout_below="@+id/turno"
+        android:layout_toEndOf="@+id/btnDivision"
+        android:layout_toRightOf="@+id/btnDivision"
         android:drawableLeft="@drawable/invoice32"
         android:layout_marginLeft="20dp"
         android:gravity="center"
         android:text="@string/facturar"
         android:background="@drawable/button_bg_transparent"/>
+
 </RelativeLayout>
 
     <!-- Bottom Sheet-->

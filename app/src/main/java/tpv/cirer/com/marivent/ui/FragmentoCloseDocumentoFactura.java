@@ -42,6 +42,8 @@ import tpv.cirer.com.marivent.herramientas.Filtro;
 import tpv.cirer.com.marivent.herramientas.WrapContentLinearLayoutManager;
 import tpv.cirer.com.marivent.modelo.DocumentoFactura;
 
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lparam;
+
 /**
  * Created by JUAN on 08/11/2016.
  */
@@ -229,49 +231,49 @@ public class FragmentoCloseDocumentoFactura extends Fragment {
             String cSql = "";
             String xWhere = "";
 
-            if(!(Filtro.getGrupo().equals("00"))) {
+            if(!(Filtro.getGrupo().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_GRUPO().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE ftp.GRUPO='" + Filtro.getGrupo() + "'";
                 } else {
                     xWhere += " AND ftp.GRUPO='" + Filtro.getGrupo() + "'";
                 }
             }
-            if(!(Filtro.getEmpresa().equals("00"))) {
+            if(!(Filtro.getEmpresa().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_EMPRESA().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE ftp.EMPRESA='" + Filtro.getEmpresa() + "'";
                 } else {
                     xWhere += " AND ftp.EMPRESA='" + Filtro.getEmpresa() + "'";
                 }
             }
-            if(!(Filtro.getLocal().equals("00"))) {
+            if(!(Filtro.getLocal().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_LOCAL().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE ftp.LOCAL='" + Filtro.getLocal() + "'";
                 } else {
                     xWhere += " AND ftp.LOCAL='" + Filtro.getLocal() + "'";
                 }
             }
-            if(!(Filtro.getSeccion().equals("00"))) {
+            if(!(Filtro.getSeccion().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_SECCION().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE ftp.SECCION='" + Filtro.getSeccion() + "'";
                 } else {
                     xWhere += " AND ftp.SECCION='" + Filtro.getSeccion() + "'";
                 }
             }
-            if(!(Filtro.getCaja().equals("00"))) {
+            if(!(Filtro.getCaja().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_CAJA().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE ftp.CAJA='" + Filtro.getCaja() + "'";
                 } else {
                     xWhere += " AND ftp.CAJA='" + Filtro.getCaja() + "'";
                 }
             }
-            if(!(Filtro.getTurno().equals("00"))) {
+            if(!(Filtro.getTurno().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_TURNO().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE ftp.COD_TURNO='" + Filtro.getTurno() + "'";
                 } else {
                     xWhere += " AND ftp.COD_TURNO='" + Filtro.getTurno() + "'";
                 }
             }
-            if(!(Filtro.getMesa().equals("00"))) {
+            if(!(Filtro.getMesa().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_MESA().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE ftp.MESA='" + Filtro.getMesa() + "'";
                 } else {
@@ -466,6 +468,7 @@ public class FragmentoCloseDocumentoFactura extends Fragment {
                 documentofacturaItem.setDocumentoFacturaImp_base(post.optString("IMP_BASE"));
                 documentofacturaItem.setDocumentoFacturaImp_iva(post.optString("IMP_IVA"));
                 documentofacturaItem.setDocumentoFacturaImp_total(post.optString("IMP_TOTAL"));
+                documentofacturaItem.setDocumentoFacturaImp_cobro(post.optString("IMP_COBRO"));
                 documentofacturaItem.setDocumentoFacturaLineas(post.optInt("LINEAS"));
                 documentofacturaItem.setDocumentoFacturaUrlimagen(Filtro.getUrl() + "/image/" +post.optString("IMAGEN").trim());
 

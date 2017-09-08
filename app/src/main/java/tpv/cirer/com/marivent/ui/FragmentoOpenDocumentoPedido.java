@@ -55,6 +55,7 @@ import tpv.cirer.com.marivent.modelo.DocumentoPedido;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.CountTable;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getLocalIpAddress;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getPalabras;
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lparam;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.mSerialExecutorActivity;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.url_count;
 
@@ -289,49 +290,49 @@ public class FragmentoOpenDocumentoPedido extends Fragment    {
                     String cSql = "";
                     String xWhere = "";
 
-                    if(!(Filtro.getGrupo().equals("00"))) {
+                    if(!(Filtro.getGrupo().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_GRUPO().trim()))) {
                         if (xWhere.equals("")) {
                             xWhere += " WHERE pdd.GRUPO='" + Filtro.getGrupo() + "'";
                         } else {
                             xWhere += " AND pdd.GRUPO='" + Filtro.getGrupo() + "'";
                         }
                     }
-                    if(!(Filtro.getEmpresa().equals("00"))) {
+                    if(!(Filtro.getEmpresa().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_EMPRESA().trim()))) {
                         if (xWhere.equals("")) {
                             xWhere += " WHERE pdd.EMPRESA='" + Filtro.getEmpresa() + "'";
                         } else {
                             xWhere += " AND pdd.EMPRESA='" + Filtro.getEmpresa() + "'";
                         }
                     }
-                    if(!(Filtro.getLocal().equals("00"))) {
+                    if(!(Filtro.getLocal().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_LOCAL().trim()))) {
                         if (xWhere.equals("")) {
                             xWhere += " WHERE pdd.LOCAL='" + Filtro.getLocal() + "'";
                         } else {
                             xWhere += " AND pdd.LOCAL='" + Filtro.getLocal() + "'";
                         }
                     }
-                    if(!(Filtro.getSeccion().equals("00"))) {
+                    if(!(Filtro.getSeccion().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_SECCION().trim()))) {
                         if (xWhere.equals("")) {
                             xWhere += " WHERE pdd.SECCION='" + Filtro.getSeccion() + "'";
                         } else {
                             xWhere += " AND pdd.SECCION='" + Filtro.getSeccion() + "'";
                         }
                     }
-                    if(!(Filtro.getCaja().equals("00"))) {
+                    if(!(Filtro.getCaja().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_CAJA().trim()))) {
                         if (xWhere.equals("")) {
                             xWhere += " WHERE pdd.CAJA='" + Filtro.getCaja() + "'";
                         } else {
                             xWhere += " AND pdd.CAJA='" + Filtro.getCaja() + "'";
                         }
                     }
-                    if(!(Filtro.getTurno().equals("00"))) {
+                    if(!(Filtro.getTurno().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_TURNO().trim()))) {
                         if (xWhere.equals("")) {
                             xWhere += " WHERE pdd.COD_TURNO='" + Filtro.getTurno() + "'";
                         } else {
                             xWhere += " AND pdd.COD_TURNO='" + Filtro.getTurno() + "'";
                         }
                     }
-                    if(!(Filtro.getMesa().equals("00"))) {
+                    if(!(Filtro.getMesa().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_MESA().trim()))) {
                         if (xWhere.equals("")) {
                             xWhere += " WHERE pdd.MESA='" + Filtro.getMesa() + "'";
                         } else {
@@ -607,10 +608,10 @@ public class FragmentoOpenDocumentoPedido extends Fragment    {
             values.put("pedido", Long.toString(maxDate));
             values.put("mesa", Filtro.getMesa());
             values.put("comensales", args[0]);
-            values.put("estado", "01");
+            values.put("estado", lparam.get(0).getDEFAULT_ESTADO_OPEN_PEDIDO());
             values.put("fecha", Filtro.getFechaapertura());
             values.put("empleado", Filtro.getEmpleado());
-            values.put("tabla", "pdd");
+            values.put("tabla", lparam.get(0).getDEFAULT_TABLA_OPEN_PEDIDO());
             values.put("obs", "");
             values.put("updated", dateNow);
             values.put("creado", dateNow);

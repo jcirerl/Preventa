@@ -41,6 +41,8 @@ import tpv.cirer.com.marivent.herramientas.Filtro;
 import tpv.cirer.com.marivent.herramientas.WrapContentLinearLayoutManager;
 import tpv.cirer.com.marivent.modelo.Seccion;
 
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lparam;
+
 /**
  * Created by JUAN on 14/09/2016.
  */
@@ -190,37 +192,37 @@ public class FragmentoOpenSeccion  extends Fragment    {
 //            Integer result = 0;
             String cSql = "";
             String xWhere = "";
-            if(!(Filtro.getGrupo().equals("00"))) {
+            if(!(Filtro.getGrupo().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_GRUPO().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE sec.GRUPO='" + Filtro.getGrupo() + "'";
                 } else {
                     xWhere += " AND sec.GRUPO='" + Filtro.getGrupo() + "'";
                 }
             }
-            if(!(Filtro.getEmpresa().equals("00"))) {
+            if(!(Filtro.getEmpresa().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_EMPRESA().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE sec.EMPRESA='" + Filtro.getEmpresa() + "'";
                 } else {
                     xWhere += " AND sec.EMPRESA='" + Filtro.getEmpresa() + "'";
                 }
             }
-            if(!(Filtro.getLocal().equals("00"))) {
+            if(!(Filtro.getLocal().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_LOCAL().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE sec.LOCAL='" + Filtro.getLocal() + "'";
                 } else {
                     xWhere += " AND sec.LOCAL='" + Filtro.getLocal() + "'";
                 }
             }
-            if(!(Filtro.getSeccion().equals("00"))) {
+            if(!(Filtro.getSeccion().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_SECCION().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE sec.SECCION='" + Filtro.getSeccion() + "'";
                 } else {
                     xWhere += " AND sec.SECCION='" + Filtro.getSeccion() + "'";
                 }
             }
-            xWhere += " AND sec.ACTIVO=1";
-            xWhere += " AND sec.APERTURA=1";
-            xWhere += " AND sec.SECCION<>'00'"; // SECCION 00 NO DEBE TENERLA EN CUENTA
+            xWhere += " AND sec.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
+            xWhere += " AND sec.APERTURA="+lparam.get(0).getDEFAULT_VALOR_ON_APERTURA();
+            xWhere += " AND sec.SECCION<>'"+ lparam.get(0).getDEFAULT_ESTADO_TODOS_SECCION().trim()+"'"; // SECCION 00 NO DEBE TENERLA EN CUENTA
 
             cSql += xWhere;
             if(cSql.equals("")) {

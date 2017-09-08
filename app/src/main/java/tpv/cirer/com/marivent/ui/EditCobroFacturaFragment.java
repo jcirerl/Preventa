@@ -68,6 +68,7 @@ import tpv.cirer.com.marivent.modelo.TipoCobro;
 import tpv.cirer.com.marivent.print.PrintTicket;
 
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getLocalIpAddress;
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lparam;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.tftList;
 
 //import static com.google.android.gms.internal.zzir.runOnUiThread;
@@ -297,7 +298,7 @@ public class EditCobroFacturaFragment  extends Fragment implements View.OnKeyLis
                     documentofacturalist.get(i).setDocumentoFacturaImp_diferencia(txtTotalDiferencia.getText().toString());
                     documentofacturalist.get(i).setDocumentoFacturaObs(txtObs.getText().toString());
                     documentofacturalist.get(i).setDocumentoFacturaT_fra(Filtro.getT_fra());
-                    documentofacturalist.get(i).setDocumentoFacturaEstado("14");
+                    documentofacturalist.get(i).setDocumentoFacturaEstado(lparam.get(0).getDEFAULT_ESTADO_COBRO_FACTURA());
 
                 }
                 // starting background task to update Factura

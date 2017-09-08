@@ -45,6 +45,8 @@ import tpv.cirer.com.marivent.herramientas.Filtro;
 import tpv.cirer.com.marivent.herramientas.WrapContentLinearLayoutManager;
 import tpv.cirer.com.marivent.modelo.Caja;
 
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lparam;
+
 
 /**
  * Created by JUAN on 07/11/2016.
@@ -196,44 +198,44 @@ public class FragmentoCloseCaja  extends Fragment {
             String cSql = "";
             String xWhere = "";
 
-            if(!(Filtro.getGrupo().equals("00"))) {
+            if(!(Filtro.getGrupo().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_GRUPO().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE caja.GRUPO='" + Filtro.getGrupo() + "'";
                 } else {
                     xWhere += " AND caja.GRUPO='" + Filtro.getGrupo() + "'";
                 }
             }
-            if(!(Filtro.getEmpresa().equals("00"))) {
+            if(!(Filtro.getEmpresa().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_EMPRESA().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE caja.EMPRESA='" + Filtro.getEmpresa() + "'";
                 } else {
                     xWhere += " AND caja.EMPRESA='" + Filtro.getEmpresa() + "'";
                 }
             }
-            if(!(Filtro.getLocal().equals("00"))) {
+            if(!(Filtro.getLocal().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_LOCAL().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE caja.LOCAL='" + Filtro.getLocal() + "'";
                 } else {
                     xWhere += " AND caja.LOCAL='" + Filtro.getLocal() + "'";
                 }
             }
-            if(!(Filtro.getSeccion().equals("00"))) {
+            if(!(Filtro.getSeccion().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_SECCION().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE caja.SECCION='" + Filtro.getSeccion() + "'";
                 } else {
                     xWhere += " AND caja.SECCION='" + Filtro.getSeccion() + "'";
                 }
             }
-            if(!(Filtro.getCaja().equals("00"))) {
+            if(!(Filtro.getCaja().equals(lparam.get(0).getDEFAULT_ESTADO_TODOS_CAJA().trim()))) {
                 if (xWhere.equals("")) {
                     xWhere += " WHERE caja.CAJA='" + Filtro.getCaja() + "'";
                 } else {
                     xWhere += " AND caja.CAJA='" + Filtro.getCaja() + "'";
                 }
             }
-            xWhere += " AND caja.ACTIVO=1";
-            xWhere += " AND caja.APERTURA=0";
-            xWhere += " AND caja.CAJA<>'00'"; // CAJA 00 NO DEBE TENERLA EN CUENTA
+            xWhere += " AND caja.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
+            xWhere += " AND caja.APERTURA="+lparam.get(0).getDEFAULT_VALOR_OFF_APERTURA();
+            xWhere += " AND caja.CAJA<>'"+ lparam.get(0).getDEFAULT_ESTADO_TODOS_CAJA().trim()+"'"; // CAJA 00 NO DEBE TENERLA EN CUENTA
 
             cSql += xWhere;
             if(cSql.equals("")) {

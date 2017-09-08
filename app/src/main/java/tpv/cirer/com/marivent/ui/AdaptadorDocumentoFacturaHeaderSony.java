@@ -71,7 +71,7 @@ public class AdaptadorDocumentoFacturaHeaderSony extends RecyclerView.Adapter<Re
                                      String iconDocumentoFactura,
                                      String idDocumentoFactura,
                                      String serieDocumentoFactura,
-                                     String facturaDocumentoFactura,
+                                     final String facturaDocumentoFactura,
                                      String fechaDocumentoFactura,
                                      String mesaDocumentoFactura,
                                      String tfraDocumentoFactura,
@@ -80,6 +80,7 @@ public class AdaptadorDocumentoFacturaHeaderSony extends RecyclerView.Adapter<Re
                                      String cajaDocumentoFactura,
                                      String turnoDocumentoFactura,
                                      String obsDocumentoFactura,
+                                     String impcobroDocumentoFactura,
                                      String lineasDocumentoFactura) {
                     final String campoFTP = campoDocumentoFactura;
                     final String serieFTP = serieDocumentoFactura;
@@ -92,6 +93,7 @@ public class AdaptadorDocumentoFacturaHeaderSony extends RecyclerView.Adapter<Re
                     final String empleadoFTP = empleadoDocumentoFactura;
                     final String cajaFTP = cajaDocumentoFactura;
                     final String turnoFTP = turnoDocumentoFactura;
+                    final String impcobroFTP = impcobroDocumentoFactura;
                     final String obsFTP = obsDocumentoFactura;
                     lineasDocumentoFactura = lineasDocumentoFactura.replace(Html.fromHtml("&nbsp;"), "");
                     final int lineasFTP = Integer.parseInt(lineasDocumentoFactura);
@@ -143,7 +145,7 @@ public class AdaptadorDocumentoFacturaHeaderSony extends RecyclerView.Adapter<Re
                                         if(fechaFTP.substring(0,10).equals(myText)) {
                                             switch (campoFTP) {
                                                 case "Tipo Cobro":
-                                                    mCallbackDocumentoFactura.onUpdateDocumentoFacturaSelected(idFTP, tfraFTP, campoFTP);
+                                                    mCallbackDocumentoFactura.onUpdateCobroDocumentoFacturaSelected(idFTP, serieFTP, String.valueOf(facturaFTP), impcobroFTP);
                                                     break;
                                             }
                                         }else{
@@ -238,6 +240,29 @@ public class AdaptadorDocumentoFacturaHeaderSony extends RecyclerView.Adapter<Re
                     }
 
                 }
+                public void onDivision(Button callerButton,
+                                     ImageView imageDocumentoFactura,
+                                     String idDocumentoFactura,
+                                     String estadoDocumentoFactura,
+                                     String mesaDocumentoFactura,
+                                     String serieDocumentoFactura,
+                                     String facturaDocumentoFactura ) {
+                    Log.d("UPDATE BUTTON", "+");
+                    final ImageView imageFTP = imageDocumentoFactura;
+                    final int idFTP = Integer.parseInt(idDocumentoFactura);
+                    final String mesaFTP = mesaDocumentoFactura;
+                    final String serieFTP = serieDocumentoFactura;
+                    final String facturaFTP = facturaDocumentoFactura;
+                    final String estadoFTP = estadoDocumentoFactura;
+
+                    try {
+                        mCallbackDocumentoFactura.onUpdateDivisionLineasDocumentoFacturaSelected(imageFTP,idFTP,mesaFTP,estadoFTP,serieFTP,facturaFTP);
+                    } catch (ClassCastException exception) {
+                        // do something
+                    }
+
+                }
+
                 public void onFactura (Button callerButton,
                                        ImageView imageDocumentoFactura,
                                        String idDocumentoFactura,
@@ -376,6 +401,8 @@ public class AdaptadorDocumentoFacturaHeaderSony extends RecyclerView.Adapter<Re
                 newText +=myText;
                 ((VHItem) holder).ImptotalDocumentoFactura.setText(Html.fromHtml(newText.replace(" ", "&nbsp;&nbsp;")).toString()+" "+ Filtro.getSimbolo());
 
+                ((VHItem) holder).ImpcobroDocumentoFactura.setText(DocumentoFactura.getDocumentoFacturaImp_cobro());
+
                 ((VHItem) holder).FacturaDocumentoFactura.setTextColor(Color.BLACK);
                 ((VHItem) holder).NombreMesaDocumentoFactura.setTextColor(Color.MAGENTA);
                 ((VHItem) holder).EmpleadoDocumentoFactura.setTextColor(Color.MAGENTA);
@@ -464,6 +491,7 @@ public class AdaptadorDocumentoFacturaHeaderSony extends RecyclerView.Adapter<Re
         public Button UpdateDocumentoFactura;
         public Button DeleteDocumentoFactura;
         public Button CobroDocumentoFactura;
+        public Button DivisionDocumentoFactura;
         public Button FacturarDocumentoFactura;
 
         //      SONY
@@ -483,6 +511,7 @@ public class AdaptadorDocumentoFacturaHeaderSony extends RecyclerView.Adapter<Re
         public TextView ImpbaseDocumentoFactura;
         public TextView ImpivaDocumentoFactura;
         public TextView ImptotalDocumentoFactura;
+        public TextView ImpcobroDocumentoFactura;
         public AutoResizeTextView NombreTftDocumentoFactura;
 
         public IMyDocumentoFacturaViewHolderClicks mListenerDocumentoFactura;
@@ -512,16 +541,19 @@ public class AdaptadorDocumentoFacturaHeaderSony extends RecyclerView.Adapter<Re
             this.ImpbaseDocumentoFactura = (TextView) itemView.findViewById(R.id.impbase);
             this.ImpivaDocumentoFactura = (TextView) itemView.findViewById(R.id.impiva);
             this.ImptotalDocumentoFactura = (TextView) itemView.findViewById(R.id.imptotal);
+            this.ImpcobroDocumentoFactura = (TextView) itemView.findViewById(R.id.impcobro);
             this.NombreTftDocumentoFactura = (AutoResizeTextView) itemView.findViewById(R.id.nombretft);
 
             this.UpdateDocumentoFactura = (Button) itemView.findViewById(R.id.btnUpdate);
             this.DeleteDocumentoFactura = (Button) itemView.findViewById(R.id.btnDelete);
             this.CobroDocumentoFactura = (Button) itemView.findViewById(R.id.btnCobro);
+            this.DivisionDocumentoFactura = (Button) itemView.findViewById(R.id.btnDivision);
             this.FacturarDocumentoFactura = (Button) itemView.findViewById(R.id.btnFactura);
 
             this.UpdateDocumentoFactura.setOnClickListener(this);
             this.DeleteDocumentoFactura.setOnClickListener(this);
             this.CobroDocumentoFactura.setOnClickListener(this);
+            this.DivisionDocumentoFactura.setOnClickListener(this);
             this.FacturarDocumentoFactura.setOnClickListener(this);
 
             this.ObsDocumentoFactura.setOnClickListener(this);
@@ -548,12 +580,15 @@ public class AdaptadorDocumentoFacturaHeaderSony extends RecyclerView.Adapter<Re
             ImpbaseDocumentoFactura.setText(DocumentoFactura.getDocumentoFacturaImp_base());
             ImpivaDocumentoFactura.setText(DocumentoFactura.getDocumentoFacturaImp_iva());
             ImptotalDocumentoFactura.setText(DocumentoFactura.getDocumentoFacturaImp_total());
+            ImpcobroDocumentoFactura.setText(DocumentoFactura.getDocumentoFacturaImp_cobro());
             NombreTftDocumentoFactura.setText(DocumentoFactura.getDocumentoFacturaNombre_tft());
 
             UpdateDocumentoFactura.setText(getPalabras("Modificar"));
             DeleteDocumentoFactura.setText(getPalabras("Borrar"));
             CobroDocumentoFactura.setText(getPalabras("Cobro"));
+            DivisionDocumentoFactura.setText(getPalabras("Dividir"));
             FacturarDocumentoFactura.setText(getPalabras("Facturar"));
+
         }
         public String padRight(String s, int n) {
             return String.format("%1$-" + n + "s", s);
@@ -600,6 +635,17 @@ public class AdaptadorDocumentoFacturaHeaderSony extends RecyclerView.Adapter<Re
                                 String.valueOf(this.FacturaDocumentoFactura.getText())
                         );
                         break;
+                    case R.id.btnDivision:
+                        mListenerDocumentoFactura.onDivision(
+                                (Button) v,
+                                this.iconDocumentoFactura,
+                                String.valueOf(this.IdDocumentoFactura.getText()),
+                                String.valueOf(this.EstadoDocumentoFactura.getText()),
+                                String.valueOf(this.MesaDocumentoFactura.getText()),
+                                String.valueOf(this.SerieDocumentoFactura.getText()),
+                                String.valueOf(this.FacturaDocumentoFactura.getText())
+                        );
+                        break;
                     case R.id.btnFactura:
                         mListenerDocumentoFactura.onFactura(
                                 (Button) v,
@@ -635,6 +681,7 @@ public class AdaptadorDocumentoFacturaHeaderSony extends RecyclerView.Adapter<Re
                                     String.valueOf(this.CajaDocumentoFactura.getText()),
                                     String.valueOf(this.TurnoDocumentoFactura.getText()),
                                     String.valueOf(this.ObsDocumentoFactura.getText()),
+                                    String.valueOf(this.ImpcobroDocumentoFactura.getText()),
                                     String.valueOf(this.LineasDocumentoFactura.getText())
                             );
                             break;
@@ -656,6 +703,7 @@ public class AdaptadorDocumentoFacturaHeaderSony extends RecyclerView.Adapter<Re
                                         String.valueOf(this.CajaDocumentoFactura.getText()),
                                         String.valueOf(this.TurnoDocumentoFactura.getText()),
                                         String.valueOf(this.ObsDocumentoFactura.getText()),
+                                        String.valueOf(this.ImpcobroDocumentoFactura.getText()),
                                         String.valueOf(this.LineasDocumentoFactura.getText())
                                 );
                             }
@@ -677,6 +725,7 @@ public class AdaptadorDocumentoFacturaHeaderSony extends RecyclerView.Adapter<Re
                                     String.valueOf(this.CajaDocumentoFactura.getText()),
                                     String.valueOf(this.TurnoDocumentoFactura.getText()),
                                     String.valueOf(this.ObsDocumentoFactura.getText()),
+                                    String.valueOf(this.ImpcobroDocumentoFactura.getText()),
                                     String.valueOf(this.LineasDocumentoFactura.getText())
                             );
                             break;
@@ -697,6 +746,7 @@ public class AdaptadorDocumentoFacturaHeaderSony extends RecyclerView.Adapter<Re
                                     String.valueOf(this.CajaDocumentoFactura.getText()),
                                     String.valueOf(this.TurnoDocumentoFactura.getText()),
                                     String.valueOf(this.ObsDocumentoFactura.getText()),
+                                    String.valueOf(this.ImpcobroDocumentoFactura.getText()),
                                     String.valueOf(this.LineasDocumentoFactura.getText())
                             );
                             break;
@@ -722,6 +772,7 @@ public class AdaptadorDocumentoFacturaHeaderSony extends RecyclerView.Adapter<Re
                              String cajaDocumentoFactura,
                              String turnoDocumentoFactura,
                              String obsDocumentoFactura,
+                             String impcobroDocumentoFactura,
                              String lineasDocumentoFactura) {
 
         }
@@ -757,6 +808,16 @@ public class AdaptadorDocumentoFacturaHeaderSony extends RecyclerView.Adapter<Re
 
         }
         @Override
+        public void onDivision(Button callerButton,
+                             ImageView imageDocumentoFactura,
+                             String idDocumentoFactura,
+                             String estadoDocumentoFactura,
+                             String mesaDocumentoFactura,
+                             String serieDocumentoFactura,
+                             String facturaDocumentoFactura) {
+
+        }
+        @Override
         public void onFactura (Button callerButton,
                              ImageView imageDocumentoFactura,
                              String idDocumentoFactura,
@@ -787,7 +848,9 @@ public class AdaptadorDocumentoFacturaHeaderSony extends RecyclerView.Adapter<Re
     public interface OnHeadlineSelectedListenerDocumentoFacturaHeader {
         void onDeleteDocumentoFacturaSelected(int id, String estado, String serie, int factura);
         void onUpdateDocumentoFacturaSelected(int id, String valor, String campo);
+        void onUpdateCobroDocumentoFacturaSelected(int id, String serie, String factura, String impcobro);
         void onUpdateLineasDocumentoFacturaSelected(ImageView image, int id, String mesa, String estado, String serie, String factura);
+        void onUpdateDivisionLineasDocumentoFacturaSelected(ImageView image, int id, String mesa, String estado, String serie, String factura);
         void onCobroDocumentoFacturaSelected(int id, String estado, String serie, String factura);
         void onFacturarDocumentoFacturaSelected(int id, String estado, String serie, String factura);
     }

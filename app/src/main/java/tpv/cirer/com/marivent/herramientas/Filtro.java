@@ -1,6 +1,7 @@
 package tpv.cirer.com.marivent.herramientas;
 
 public class Filtro {
+    private static String totaldivision;
     private static boolean oppedidodirectomesa;
     private static boolean opfacturadirectomesa;
     private static int resize_logo_print;
@@ -98,8 +99,9 @@ public class Filtro {
 
 
   	public Filtro(){
-        oppedidodirectomesa=false;
-        opfacturadirectomesa=false;
+        totaldivision="0.00";
+        oppedidodirectomesa = false;
+        opfacturadirectomesa = false;
         resize_logo_print=0;
         resize_logo_screen=0;
         seriebuffet="";
@@ -192,6 +194,13 @@ public class Filtro {
         fechafinal="";
         lineas=false;
     }
+    public static String getTotaldivision() {
+        return totaldivision;
+    }
+    public static void setTotaldivision(String idtotaldivision) {
+        totaldivision = idtotaldivision;
+    }
+
     public static String getCod_cliente() {
         return cod_cliente;
     }

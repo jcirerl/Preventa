@@ -57,8 +57,8 @@ import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lcabeceraempr;
 public class PrintTicket {
     private static String urlPrint;
     private Context context;
-    private int nFactura;
-    private String sSerie;
+    private int nFacturaTicket;
+    private String sSerieTicket;
     
     String ticket;
     String ticketTotal;
@@ -89,8 +89,8 @@ public class PrintTicket {
 
     public PrintTicket(Context contexto, int factura, String serie) {
         this.context = contexto;
-        this.nFactura = factura;
-        this.sSerie = serie;
+        this.nFacturaTicket = factura;
+        this.sSerieTicket = serie;
     }
 
     public void iniciarTicket(){
@@ -143,7 +143,7 @@ public class PrintTicket {
             if(cSql.equals("")) {
                 cSql="Todos";
             }
-            Log.i("Sql Lista",cSql);
+            Log.i("Sql Print",cSql);
             InputStream inputStream = null;
             Integer result = 0;
             HttpURLConnection urlConnection = null;
@@ -310,27 +310,14 @@ public class PrintTicket {
                     xWhere += " AND ftp.CAJA='" + Filtro.getCaja() + "'";
                 }
             }
-            if(!(Filtro.getSerie().equals(""))) {
-                if (xWhere.equals("")) {
-                    xWhere += " WHERE ftp.SERIE='" + sSerie + "'";
-                } else {
-                    xWhere += " AND ftp.SERIE='" + sSerie + "'";
-                }
-            }
-
-            if(!(Filtro.getFactura()==0)) {
-                if (xWhere.equals("")) {
-                    xWhere += " WHERE ftp.FACTURA=" + nFactura;
-                } else {
-                    xWhere += " AND ftp.FACTURA=" + nFactura;
-                }
-            }
+            xWhere += " AND ftp.SERIE='" + sSerieTicket + "'";
+            xWhere += " AND ftp.FACTURA=" + nFacturaTicket;
 
             cSql += xWhere;
             if(cSql.equals("")) {
                 cSql="Todos";
             }
-            Log.i("Sql Lista",cSql);
+            Log.i("Sql Print",cSql);
             InputStream inputStream = null;
             Integer result = 0;
             HttpURLConnection urlConnection = null;
@@ -507,27 +494,14 @@ public class PrintTicket {
                     xWhere += " AND lft.CAJA='" + Filtro.getCaja() + "'";
                 }
             }
-            if(!(Filtro.getSerie().equals(""))) {
-                if (xWhere.equals("")) {
-                    xWhere += " WHERE lft.SERIE='" + sSerie + "'";
-                } else {
-                    xWhere += " AND lft.SERIE='" + sSerie + "'";
-                }
-            }
-
-            if(!(Filtro.getFactura()==0)) {
-                if (xWhere.equals("")) {
-                    xWhere += " WHERE lft.FACTURA=" + nFactura;
-                } else {
-                    xWhere += " AND lft.FACTURA=" + nFactura;
-                }
-            }
+            xWhere += " AND lft.SERIE='" + sSerieTicket + "'";
+            xWhere += " AND lft.FACTURA=" + nFacturaTicket;
 
             cSql += xWhere;
             if(cSql.equals("")) {
                 cSql="Todos";
             }
-            Log.i("Sql Lista",cSql);
+            Log.i("Sql Print",cSql);
             InputStream inputStream = null;
             Integer result = 0;
             HttpURLConnection urlConnection = null;
@@ -694,27 +668,14 @@ public class PrintTicket {
                     xWhere += " AND ftpiva.CAJA='" + Filtro.getCaja() + "'";
                 }
             }
-            if(!(Filtro.getSerie().equals(""))) {
-                if (xWhere.equals("")) {
-                    xWhere += " WHERE ftpiva.SERIE='" + sSerie + "'";
-                } else {
-                    xWhere += " AND ftpiva.SERIE='" + sSerie + "'";
-                }
-            }
-
-            if(!(Filtro.getFactura()==0)) {
-                if (xWhere.equals("")) {
-                    xWhere += " WHERE ftpiva.FACTURA=" + nFactura;
-                } else {
-                    xWhere += " AND ftpiva.FACTURA=" + nFactura;
-                }
-            }
+            xWhere += " AND ftpiva.SERIE='" + sSerieTicket + "'";
+            xWhere += " AND ftpiva.FACTURA=" + nFacturaTicket;
 
             cSql += xWhere;
             if(cSql.equals("")) {
                 cSql="Todos";
             }
-            Log.i("Sql Lista",cSql);
+            Log.i("Sql Print",cSql);
             InputStream inputStream = null;
             Integer result = 0;
             HttpURLConnection urlConnection = null;
@@ -880,17 +841,17 @@ public class PrintTicket {
             }
             if(!(Filtro.getSerie().equals(""))) {
                 if (xWhere.equals("")) {
-                    xWhere += " WHERE ftp.SERIE='" + sSerie + "'";
+                    xWhere += " WHERE ftp.SERIE='" + sSerieTicket + "'";
                 } else {
-                    xWhere += " AND ftp.SERIE='" + sSerie + "'";
+                    xWhere += " AND ftp.SERIE='" + sSerieTicket + "'";
                 }
             }
 
             if(!(Filtro.getFactura()==0)) {
                 if (xWhere.equals("")) {
-                    xWhere += " WHERE ftp.FACTURA=" + nFactura;
+                    xWhere += " WHERE ftp.FACTURA=" + nFacturaTicket;
                 } else {
-                    xWhere += " AND ftp.FACTURA=" + nFactura;
+                    xWhere += " AND ftp.FACTURA=" + nFacturaTicket;
                 }
             }
             cSql += xWhere;

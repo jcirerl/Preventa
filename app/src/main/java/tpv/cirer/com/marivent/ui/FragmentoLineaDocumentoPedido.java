@@ -1000,7 +1000,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
                             int txtViewID = getResources().getIdentifier("total_carrito", "id", BuildConfig.APPLICATION_ID);
                             TextView txtSaldo = (TextView) rootView.findViewById(txtViewID);
                             txtSaldo.setText(String.format("%1$,.2f", saldo)+" "+Filtro.getSimbolo());
-                            txtSaldo.setTextSize(16);
+                            txtSaldo.setTextSize(30);
 //                            Log.i("Saldo Dentro ","txtViewID:"+Integer.toString(txtViewID)+" Total Drawer: "+textSaldo.getText().toString()+" Total Appbar: "+txtSaldo.getText().toString());
 
 
@@ -1195,13 +1195,13 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
             //Turno
 //            pedido = pedido + String.format("%-48s","Turno: " + String.valueOf(lcabecerapdd.get(i).getCabeceraNombre_turno())) + "\n";
             //Mesa
+            pedido = pedido + String.format("%-48s","Terminal: " + terminalList.get(nPosition).getTerminalTerminal()) + "\n";
             pedido = pedido + String.format("%-48s","Mesa: " + String.valueOf(lcabecerapdd.get(i).getCabeceraNombre_mesa())) + "\n";
             //Comensales
             pedido = pedido + String.format("%-48s","Comensales: " + String.valueOf(lcabecerapdd.get(i).getCabeceraComensales())) + "\n";
             //Empleado
 //            pedido = pedido + String.format("%-48s","Empleado: " + String.valueOf(lcabecerapdd.get(i).getCabeceraNombre_empleado())) + "\n";
             // Terminal
-//            pedido = pedido + String.format("%-48s","Terminal: " + terminalList.get(nPosition).getTerminalTerminal()) + "\n";
 
             pedido = pedido + separador;
             //Observaciones
@@ -1327,6 +1327,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
         for (int i = 0; i < lcabecerapdd.size(); i++) {
             //LOCAL
             pedidocabeceraantesmesa = pedidocabeceraantesmesa + String.format("%-48s","Local: " + String.valueOf(lcabecerapdd.get(i).getCabeceraNombre_local())) + "\n";
+            pedidocabeceraantesmesa = pedidocabeceraantesmesa + String.format("%-48s","Empleado: " + String.valueOf(lcabecerapdd.get(i).getCabeceraNombre_empleado())) + "\n";
             //Seccion
             //           pedidocabecera = pedidocabecera + String.format("%-48s","Seccion: " + String.valueOf(lcabecerapdd.get(i).getCabeceraNombre_seccion())) + "\n";
             //Caja
@@ -1334,13 +1335,13 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
             //Turno
 //            pedidocabecera = pedidocabecera + String.format("%-48s","Turno: " + String.valueOf(lcabecerapdd.get(i).getCabeceraNombre_turno())) + "\n";
             //Mesa
+            pedidocabeceramesa = pedidocabeceramesa + String.format("%-24s","Terminal: " + terminalList.get(nPosition).getTerminalTerminal()) + "\n";
             pedidocabeceramesa = pedidocabeceramesa + String.format("%-24s","Mesa: " + String.valueOf(lcabecerapdd.get(i).getCabeceraNombre_mesa())) + "\n";
             //Comensales
             pedidocabeceradespuesmesa = pedidocabeceradespuesmesa + String.format("%-48s","Comensales: " + String.valueOf(lcabecerapdd.get(i).getCabeceraComensales())) + "\n";
             //Empleado
 //            pedidocabecera = pedidocabecera + String.format("%-48s","Empleado: " + String.valueOf(lcabecerapdd.get(i).getCabeceraNombre_empleado())) + "\n";
             // Terminal
-//            pedidocabecera = pedidocabecera + String.format("%-48s","Terminal: " + terminalList.get(nPosition).getTerminalTerminal()) + "\n";
 
             pedidocabeceradespuesmesa = pedidocabeceradespuesmesa + separador;
             //Observaciones

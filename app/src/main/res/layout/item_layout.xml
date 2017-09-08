@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/selector">
+
+    <TextView
+        android:id="@+id/tv_texto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FF2700"
+        android:textColor="#E8B30C"
+        android:textSize="50sp"
+        android:padding="16dp"
+        android:text="Texto" />
+
+</LinearLayout>

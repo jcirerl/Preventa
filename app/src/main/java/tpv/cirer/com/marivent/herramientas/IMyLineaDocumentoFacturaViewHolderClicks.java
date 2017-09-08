@@ -11,6 +11,7 @@ import android.widget.ImageView;
 public interface IMyLineaDocumentoFacturaViewHolderClicks {
     void onPotato(View caller,
                   ImageView imageLineaDocumentoFactura,
+                  String campoLineaDocumentoFactura,
                   String idLineaDocumentoFactura,
                   String nombreLineaDocumentoFactura,
                   String articuloLineaDocumentoFactura,
@@ -20,7 +21,8 @@ public interface IMyLineaDocumentoFacturaViewHolderClicks {
                   String importeLineaDocumentoFactura,
                   String tiva_idLineaDocumentoFactura);
     void onAdd(Button callerButton,
-               String idLineaDocumentoFactura);
+               String idLineaDocumentoFactura,
+               String cantLineaDocumentoFactura);
     void onMinus(Button callerButton,
                  String idLineaDocumentoFactura,
                  String cantLineaDocumentoFactura);

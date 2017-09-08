@@ -29,6 +29,14 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
             android:textStyle="normal|bold" />
         <TextView
+            android:id="@+id/urlimagen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="URL Imagen"
+            android:visibility="gone"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+            android:textStyle="normal|bold" />
+        <TextView
             android:id="@+id/tiva_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

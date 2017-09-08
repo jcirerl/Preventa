@@ -15,6 +15,7 @@ public class LineaDocumentoFactura {
     private String LineaDocumentoFacturaNombre;
 
     private String LineaDocumentoFacturaCant;
+    private String LineaDocumentoFacturaCantRestar;
     private String LineaDocumentoFacturaPreu;
     private String LineaDocumentoFacturaImporte;
 
@@ -94,13 +95,19 @@ public class LineaDocumentoFactura {
         this.LineaDocumentoFacturaNombre = lineadocumentofacturaNombre;
     }
 
+    public String getLineaDocumentoFacturaCantRestar() {
+        return LineaDocumentoFacturaCantRestar;
+    }
+    public void setLineaDocumentoFacturaCantRestar(String lineadocumentofacturaCantRestar) {
+        this.LineaDocumentoFacturaCantRestar = lineadocumentofacturaCantRestar;
+    }
+
     public String getLineaDocumentoFacturaCant() {
         return LineaDocumentoFacturaCant;
     }
     public void setLineaDocumentoFacturaCant(String lineadocumentofacturaCant) {
         this.LineaDocumentoFacturaCant = lineadocumentofacturaCant;
     }
-
     public String getLineaDocumentoFacturaPreu() {
         return LineaDocumentoFacturaPreu;
     }

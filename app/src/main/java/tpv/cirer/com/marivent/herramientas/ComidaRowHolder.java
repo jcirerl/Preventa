@@ -20,6 +20,7 @@ public class ComidaRowHolder extends RecyclerView.ViewHolder implements View.OnC
     public TextView nombre;
     public TextView precio;
     public ImageView imagen;
+    public TextView urlimagen;
 
     public ComidaRowHolder.IMyViewHolderClicks mListener;
 
@@ -27,6 +28,7 @@ public class ComidaRowHolder extends RecyclerView.ViewHolder implements View.OnC
         super(view);
         mListener = listener;
         this.articulo = (TextView) view.findViewById(R.id.articulo);
+        this.urlimagen = (TextView) view.findViewById(R.id.urlimagen);
         this.tiva_id = (TextView) view.findViewById(R.id.tiva_id);
         this.nombre = (TextView) view.findViewById(R.id.nombre_comida);
         this.precio = (TextView) view.findViewById(R.id.precio_comida);
@@ -43,6 +45,7 @@ public class ComidaRowHolder extends RecyclerView.ViewHolder implements View.OnC
         nombre.setText(Html.fromHtml(myText.replace(" ", "&nbsp;")).toString());
         precio.setText(Html.fromHtml(String.format("%1$,.2f", Double.valueOf(Comida.getPrecio()))+" "+Filtro.getSimbolo()));
         articulo.setText(Comida.getArticulo());
+        urlimagen.setText(Comida.getUrlimagen());
         tiva_id.setText(Integer.toString(Comida.getTiva_id()));
         individual.setText(Integer.toString(Comida.getIndividual()));
 
@@ -58,12 +61,13 @@ public class ComidaRowHolder extends RecyclerView.ViewHolder implements View.OnC
                 String.valueOf(this.nombre.getText()),
                 String.valueOf(this.precio.getText()),
                 String.valueOf(this.tiva_id.getText()),
-                String.valueOf(this.individual.getText())
+                String.valueOf(this.individual.getText()),
+                String.valueOf(this.urlimagen.getText())
         );
     }
 
     public static interface IMyViewHolderClicks {
-        void onPotato(View caller, ImageView imagenComida, String articuloComida, String nombreComida, String precioComida, String tivaComida, String individualComida);
+        void onPotato(View caller, ImageView imagenComida, String articuloComida, String nombreComida, String precioComida, String tivaComida, String individualComida, String urlimagen);
         void onTomato(ImageView callerImage);
     }
 }
