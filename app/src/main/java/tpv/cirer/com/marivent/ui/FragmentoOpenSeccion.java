@@ -58,6 +58,8 @@ public class FragmentoOpenSeccion  extends Fragment    {
 
     public static RecyclerView recViewseccion;
     public static AdaptadorSeccionHeader adaptadorseccion;
+    public static AdaptadorSeccionHeader_ochopulgadas adaptadorseccionochopulgadas;
+
     View rootViewseccion;
     FloatingActionButton btnFab;
     Context cont;
@@ -110,10 +112,32 @@ public class FragmentoOpenSeccion  extends Fragment    {
             recViewseccion.setLayoutManager(new WrapContentLinearLayoutManager(getActivity()));
 
             // 3. create an adapter
-            adaptadorseccion = new AdaptadorSeccionHeader(getActivity(),lseccion);
-
+//            adaptadorseccion = new AdaptadorSeccionHeader(getActivity(),lseccion);
+            switch (Filtro.getOptipotablet()) {
+                case 0:
+                    adaptadorseccion = new AdaptadorSeccionHeader(getActivity(),lseccion);
+                    break;
+                case 1:
+                    adaptadorseccion = new AdaptadorSeccionHeader(getActivity(),lseccion);
+                    break;
+                case 2:
+                    adaptadorseccionochopulgadas = new AdaptadorSeccionHeader_ochopulgadas(getActivity(),lseccion);
+                    break;
+            }
             // 4. set adapter
-            recViewseccion.setAdapter(adaptadorseccion);
+            switch (Filtro.getOptipotablet()) {
+                case 0:
+                    recViewseccion.setAdapter(adaptadorseccion);
+                    break;
+                case 1:
+                    recViewseccion.setAdapter(adaptadorseccion);
+                    break;
+                case 2:
+                    recViewseccion.setAdapter(adaptadorseccionochopulgadas);
+                    break;
+            }
+
+//            recViewseccion.setAdapter(adaptadorseccion);
 
             // 5. set item animator to DefaultAnimator
             recViewseccion.setItemAnimator(new DefaultItemAnimator());
@@ -312,9 +336,25 @@ public class FragmentoOpenSeccion  extends Fragment    {
 
             /* Download complete. Lets update UI */
             if (result == 1) {
-                Log.i("ADAPTADOR SECCION", Integer.toString(adaptadorseccion.getItemCount()));
-                ActividadPrincipal.itemseccion.setText(Integer.toString(adaptadorseccion.getItemCount()-1));
-                adaptadorseccion.notifyDataSetChanged();
+///                adaptadorseccion.notifyDataSetChanged();
+                switch (Filtro.getOptipotablet()) {
+                    case 0:
+                        ActividadPrincipal.itemseccion.setText(Integer.toString(adaptadorseccion.getItemCount()-1));
+                        Log.i("ADAPTADOR SECCION", Integer.toString(adaptadorseccion.getItemCount()));
+                        adaptadorseccion.notifyDataSetChanged();
+                        break;
+                    case 1:
+                        ActividadPrincipal.itemseccion.setText(Integer.toString(adaptadorseccion.getItemCount()-1));
+                        Log.i("ADAPTADOR SECCION", Integer.toString(adaptadorseccion.getItemCount()));
+                        adaptadorseccion.notifyDataSetChanged();
+                        break;
+                    case 2:
+                        ActividadPrincipal.itemseccion.setText(Integer.toString(adaptadorseccionochopulgadas.getItemCount()-1));
+                        Log.i("ADAPTADOR SECCION", Integer.toString(adaptadorseccionochopulgadas.getItemCount()));
+                        adaptadorseccionochopulgadas.notifyDataSetChanged();
+                        break;
+                }
+
                 if(mContext!=null) {
                     if (Integer.parseInt(ActividadPrincipal.itemseccion.getText().toString()) == 0) {
                         ActividadPrincipal.itemseccion.setTextColor(Filtro.getColorItemZero());
@@ -322,7 +362,7 @@ public class FragmentoOpenSeccion  extends Fragment    {
                         ActividadPrincipal.itemseccion.setTextColor(Filtro.getColorItem());
                     }
                 }
-                adaptadorseccion.notifyDataSetChanged();
+//                adaptadorseccion.notifyDataSetChanged();
             } else {
                 Log.e(TAG, "Failed to fetch data!");
             }

@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
@@ -181,19 +182,25 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
                                                                      AdaptadorPopulares.OnHeadlineSelectedListener,
                                                                      ArticulosListArrayAdapterNew.OnHeadlineSelectedListenerArticulos,
                                                                      AdaptadorSeccionHeader.OnHeadlineSelectedListenerSeccionHeader,
+                                                                     AdaptadorSeccionHeader_ochopulgadas.OnHeadlineSelectedListenerSeccionHeader,
                                                                      AdaptadorCajaHeader.OnHeadlineSelectedListenerCajaHeader,
                                                                      AdaptadorTurnoHeader.OnHeadlineSelectedListenerTurnoHeader,
                                                                      AdaptadorDcjHeader.OnHeadlineSelectedListenerDcjHeader,
+                                                                     AdaptadorDcjHeader_ochopulgadas.OnHeadlineSelectedListenerDcjHeader,
                                                                      AdaptadorDocumentoPedidoHeaderAsus.OnHeadlineSelectedListenerDocumentoPedidoHeader,
                                                                      AdaptadorDocumentoPedidoHeaderSony.OnHeadlineSelectedListenerDocumentoPedidoHeader,
+                                                                     AdaptadorDocumentoPedidoHeaderOchoPulgadas.OnHeadlineSelectedListenerDocumentoPedidoHeader,
                                                                      AdaptadorDocumentoFacturaHeaderAsus.OnHeadlineSelectedListenerDocumentoFacturaHeader,
                                                                      AdaptadorDocumentoFacturaHeaderSony.OnHeadlineSelectedListenerDocumentoFacturaHeader,
+                                                                     AdaptadorDocumentoFacturaHeaderOchoPulgadas.OnHeadlineSelectedListenerDocumentoFacturaHeader,
                                                                      AdaptadorMessageHeader.OnHeadlineSelectedListenerMessageHeader,
                                                                      AdaptadorLineaDocumentoFacturaHeaderAsus.OnHeadlineSelectedListenerLineaDocumentoFacturaHeader,
                                                                      AdaptadorLineaDocumentoFacturaHeaderSony.OnHeadlineSelectedListenerLineaDocumentoFacturaHeader,
+                                                                     AdaptadorLineaDocumentoFacturaHeaderOchoPulgadas.OnHeadlineSelectedListenerLineaDocumentoFacturaHeader,
                                                                      AdaptadorDivisionLineaDocumentoFacturaHeaderSony.OnHeadlineSelectedListenerLineaDocumentoFacturaHeader,
                                                                      AdaptadorLineaDocumentoPedidoHeaderAsus.OnHeadlineSelectedListenerLineaDocumentoPedidoHeader,
-                                                                     AdaptadorLineaDocumentoPedidoHeaderSony.OnHeadlineSelectedListenerLineaDocumentoPedidoHeader {
+                                                                     AdaptadorLineaDocumentoPedidoHeaderSony.OnHeadlineSelectedListenerLineaDocumentoPedidoHeader,
+                                                                     AdaptadorLineaDocumentoPedidoHeaderOchoPulgadas.OnHeadlineSelectedListenerLineaDocumentoPedidoHeader{
     Intent intent;
     TextView txtMesaOpen;
     ImageView imagemesa;
@@ -286,6 +293,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
 
     boolean ArticuloGrupo = false;
     ImageView ArticuloImagenGrupo;
+    ImageView logo;
     String ArticuloUrlImagen;
     String ArticuloCodigoGrupo;
     String ArticuloNombreGrupo;
@@ -1414,6 +1422,14 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
 
                 }
                 break;
+            case R.id.item_nfc:
+//                if(getCruge("action_nfc")){ //HAY QUE CREAR EN CRUGE
+                    startactivity=true;
+                    startActivity(new Intent(this, CreditCardNfcReaderActivity.class));
+
+//                }
+                break;
+
         }
         if (fragmentoGenerico != null) {
             fragmentManager
@@ -3478,7 +3494,24 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             if (estado.contains("CLOSE")) {
                 Toast.makeText(this, getPalabras("Factura")+" " + estado + " " + id, Toast.LENGTH_SHORT).show();
             } else {
-                CargaFragment cargafragment = null;
+         /*       OrderCES orderCES = new OrderCES.Builder(AppConfigImpl.class)
+                        .transactionType(TransactionType.AUTORIZACION)
+                        .currency(Currency.EUR)
+                        .consumerLanguage(Language.SPANISH)
+                        .order("FACTURA PRUEBA")
+                        .amount(1000)
+                        .productDescription("FACTURA RESTAURANTE")
+                        .payMethods(PaymentMethod.TARJETA)
+                        .urlOk("http://grupcirer.org/yii_b3_aguassv/")
+                        .urlKo("http://grupcirer.org/yii_b3_aguasnt/")
+                        .urlNotification("http://www.grupcirer.org/")
+                        .build();
+                MessageOrderCESRequest messageOrderCESRequest = new MessageOrderCESRequest.Builder(AppConfigImpl.class)
+                        .withOrder(orderCES)
+                        .build();
+
+                // VERSION CORRECTA
+*/                CargaFragment cargafragment = null;
                 cargafragment = new CargaFragment(EditCobroFacturaFragment.newInstance(Integer.toString(id),serie,factura,"lista"),getSupportFragmentManager());
                 cargafragment.getFragmentManager().addOnBackStackChangedListener(this);
                 if (cargafragment.getFragment() != null){
@@ -8107,6 +8140,7 @@ ge     * */
                 values.put("factura_ftp", factura_ftp);
                 values.put("filtro",filtro);
                 values.put("cliente",Filtro.getCod_cliente());
+                values.put("tabla",lparam.get(0).getDEFAULT_TABLA_OPEN_FACTURA_CLIENTES());
                 values.put("serie",Filtro.getSerieFac());
                 values.put("factura",Long.toString(maxDate));
                 values.put("updated", dateNow);
@@ -12736,9 +12770,15 @@ ge     * */
             }
         }
     }
-
+    public static Bitmap loadBitmapFromView(View v) {
+        Bitmap b = Bitmap.createBitmap( v.getLayoutParams().width, v.getLayoutParams().height, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(b);
+        v.layout(0, 0, v.getLayoutParams().width, v.getLayoutParams().height);
+        v.draw(c);
+        return b;
+    }
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position,
+    public void onItemSelected(AdapterView<?> parent, View view, final int position,
                                long id) {
         Spinner spinner = (Spinner) parent;
 
@@ -12785,18 +12825,39 @@ ge     * */
                 /// Leemos i cargamos la imagen para LOGO SCREEN
                 Drawable d = LoadImageFromWebOperations(localList.get(position).getLocalUrlimagen());
                 Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
+                Bitmap new_iconscreen = null;
+                switch (Filtro.getOptipotablet()) {
+                    case 0:
+                        new_iconscreen = getResizedBitmap(bitmap,localList.get(position).getLocalResize_logo_screen_width(),localList.get(position).getLocalResize_logo_screen_height());
+                        break;
+                    case 1:
+                        new_iconscreen = getResizedBitmap(bitmap,localList.get(position).getLocalResize_logo_screen_width(),localList.get(position).getLocalResize_logo_screen_height());
+                        break;
+                    case 2:
+                        new_iconscreen = resizeBitmapImageFn(bitmap, 50); //resizing the bitmap 500: ricoparico 75 Marivent
+                        break;
+                }
+                Drawable d1screen = new BitmapDrawable(getResources(),new_iconscreen); //Converting bitmap into drawable
+                getSupportActionBar().setIcon(d1screen); //also displays wide logo_ricoparico
+                imagelogo = new_iconscreen; // GUARDAMOS EL ICONO MODIFICADO .
+/*
+                /// Leemos i cargamos la imagen para LOGO SCREEN
+                Drawable d = LoadImageFromWebOperations(localList.get(position).getLocalUrlimagen());
+                Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
 //*                Bitmap new_iconscreen = resizeBitmapImageFn(bitmap, localList.get(position).getLocalResize_logo_screen()); //resizing the bitmap 500: ricoparico 75 Marivent
                 Bitmap new_iconscreen = getResizedBitmap(bitmap,localList.get(position).getLocalResize_logo_screen_width(),localList.get(position).getLocalResize_logo_screen_height());
                 Drawable d1screen = new BitmapDrawable(getResources(),new_iconscreen); //Converting bitmap into drawable
                 getSupportActionBar().setIcon(d1screen); //also displays wide logo_ricoparico
                 imagelogo = new_iconscreen; // GUARDAMOS EL ICONO MODIFICADO .
+*/
+
 
                 /// Leemos i cargamos la imagen para LOGO PRINT
                 Drawable dprint = LoadImageFromWebOperations(localList.get(position).getLocalUrlimagen());
                 Bitmap bitmapprint = ((BitmapDrawable)dprint).getBitmap();
                 Bitmap bitmaplogo = getResizedBitmap(bitmapprint,localList.get(position).getLocalResize_logo_print_width(),localList.get(position).getLocalResize_logo_print_height());
 
-                Bitmap scaled = Bitmap.createScaledBitmap(bitmaplogo,localList.get(position).getLocalResize_logo_print_width(),localList.get(position).getLocalResize_logo_print_height(),true);
+                Bitmap scaled = Bitmap.createScaledBitmap(bitmaplogo,localList.get(position).getLocalResize_logo_print_width(),localList.get(position).getLocalResize_logo_print_height(),false);
                 if (bitmaplogo != scaled) {
                     bitmaplogo.recycle();
                 }
@@ -13986,7 +14047,7 @@ ge     * */
                     JSONArray posts = json.getJSONArray("posts"); // JSON Array
                     switch (xTabla) {
                         case "param":
-                            Log.i("Longitud Datos: ",Integer.toString(posts.length()));
+                            Log.i("Longitud Datos Param: ",Integer.toString(posts.length()));
                             for (int ii = 0; ii < posts.length(); ii++) {
                                 JSONObject post = posts.optJSONObject(ii);
                                 Param cat = new Param(
@@ -14007,6 +14068,7 @@ ge     * */
                                     post.optString("DEFAULT_TIPO_COBRO_OPEN_FACTURA"),
                                     post.optString("DEFAULT_TABLA_OPEN_PEDIDO"),
                                     post.optString("DEFAULT_TABLA_OPEN_FACTURA"),
+                                    post.optString("DEFAULT_TABLA_OPEN_FACTURA_CLIENTES"),
                                     post.optString("DEFAULT_TIPO_MESA_BUFFET"),
                                     post.optString("DEFAULT_TIPO_COBRO_BUFFET"),
                                     post.optString("DEFAULT_SERIE_BUFFET"),
@@ -14015,7 +14077,7 @@ ge     * */
                                     post.optInt("DEFAULT_VALOR_ON_ACTIVO"),
                                     post.optInt("DEFAULT_VALOR_OFF_APERTURA"),
                                     post.optInt("DEFAULT_VALOR_OFF_ACTIVO"));
-/*
+
                                 Log.i("Params: ", 
                                         cat.getDEFAULT_ESTADO_TODOS_GRUPO()+"\n" +
                                         cat.getDEFAULT_ESTADO_TODOS_EMPRESA()+"\n" +
@@ -14034,15 +14096,16 @@ ge     * */
                                         cat.getDEFAULT_TIPO_COBRO_OPEN_FACTURA()+"\n" +
                                         cat.getDEFAULT_TABLA_OPEN_PEDIDO()+"\n" +
                                         cat.getDEFAULT_TABLA_OPEN_FACTURA()+"\n" +
+                                        cat.getDEFAULT_TABLA_OPEN_FACTURA_CLIENTES()+"\n" +
                                         cat.getDEFAULT_TIPO_MESA_BUFFET()+"\n" +
                                         cat.getDEFAULT_TIPO_COBRO_BUFFET()+"\n" +
                                         cat.getDEFAULT_SERIE_BUFFET()+"\n" +
                                         cat.getDEFAULT_TIPO_SERIE_FACTURA_CLIENTE()+"\n" +
                                         cat.getDEFAULT_VALOR_ON_APERTURA()+"\n" +
-                                        cat.getDEFAULT_VALOR_ON_"+"\n" +
+                                        cat.getDEFAULT_VALOR_ON_ACTIVO()+"\n" +
                                         cat.getDEFAULT_VALOR_OFF_APERTURA()+"\n" +
                                         cat.getDEFAULT_VALOR_OFF_ACTIVO());
-*/
+
                                 lparam.add(cat);
                                 Filtro.setT_fra(lparam.get(0).getDEFAULT_TIPO_COBRO_OPEN_FACTURA());
                             }

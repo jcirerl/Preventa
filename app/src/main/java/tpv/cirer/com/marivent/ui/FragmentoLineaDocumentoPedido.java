@@ -152,6 +152,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
     public static RecyclerView recViewlineadocumentopedido;
     public static AdaptadorLineaDocumentoPedidoHeaderAsus adaptadorlineadocumentopedidoasus;
     public static AdaptadorLineaDocumentoPedidoHeaderSony adaptadorlineadocumentopedidosony;
+    public static AdaptadorLineaDocumentoPedidoHeaderOchoPulgadas adaptadorlineadocumentopedidoochopulgadas;
     View rootViewlineadocumentopedido;
     FloatingActionButton btnSend,btnPrint;
     
@@ -232,7 +233,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
                     adaptadorlineadocumentopedidosony = new AdaptadorLineaDocumentoPedidoHeaderSony(getActivity(),llineadocumentopedido,cEstado);
                     break;
                 case 2:
-                    adaptadorlineadocumentopedidosony = new AdaptadorLineaDocumentoPedidoHeaderSony(getActivity(),llineadocumentopedido,cEstado);
+                    adaptadorlineadocumentopedidoochopulgadas = new AdaptadorLineaDocumentoPedidoHeaderOchoPulgadas(getActivity(),llineadocumentopedido,cEstado);
                     break;
             }
             // 4. set adapter
@@ -244,7 +245,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
                     recViewlineadocumentopedido.setAdapter(adaptadorlineadocumentopedidosony);
                     break;
                 case 2:
-                    recViewlineadocumentopedido.setAdapter(adaptadorlineadocumentopedidosony);
+                    recViewlineadocumentopedido.setAdapter(adaptadorlineadocumentopedidoochopulgadas);
                     break;
             }
 
@@ -759,8 +760,8 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
                         adaptadorlineadocumentopedidosony.notifyDataSetChanged();
                         break;
                     case 2:
-                        Log.i("ADAPTADOR LPD", Integer.toString(adaptadorlineadocumentopedidosony.getItemCount()));
-                        adaptadorlineadocumentopedidosony.notifyDataSetChanged();
+                        Log.i("ADAPTADOR LPD", Integer.toString(adaptadorlineadocumentopedidoochopulgadas.getItemCount()));
+                        adaptadorlineadocumentopedidoochopulgadas.notifyDataSetChanged();
                         break;
                 }
                 if (!Filtro.getCabecera()) {

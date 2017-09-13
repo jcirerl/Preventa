@@ -197,7 +197,21 @@ public class EditCobroFacturaFragment  extends Fragment implements View.OnKeyLis
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //   View rootView = inflater.inflate(R.layout.add_lectura, container, false);
-        rootView = (LinearLayout) inflater.inflate(R.layout.edit_cobro,container, false);
+        switch (Filtro.getOptipotablet()) {
+            case 0:
+                rootView = (LinearLayout) inflater.inflate(R.layout.edit_cobro,container, false);
+                 break;
+            case 1:
+                rootView = (LinearLayout) inflater.inflate(R.layout.edit_cobro,container, false);
+                break;
+            case 2:
+                if(origen.equals("lista")){
+                    rootView = (LinearLayout) inflater.inflate(R.layout.edit_cobro,container, false);
+                }else {
+                    rootView = (LinearLayout) inflater.inflate(R.layout.edit_cobro_ochopulgadas, container, false);
+                }
+                break;
+        }
 
         lblObs = (TextView) rootView.findViewById(R.id.lblObs);
         lblObs.setText(ValorCampo(R.id.lblObs, lblObs.getClass().getName(),0));

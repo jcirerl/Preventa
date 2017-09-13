@@ -70,6 +70,7 @@ public class FragmentoOpenDocumentoFactura extends Fragment {
 
     public static AdaptadorDocumentoFacturaHeaderAsus adaptadordocumentofacturaasus;
     public static AdaptadorDocumentoFacturaHeaderSony adaptadordocumentofacturasony;
+    public static AdaptadorDocumentoFacturaHeaderOchoPulgadas adaptadordocumentofacturaochopulgadas;
     View rootViewopendocumentofactura;
     FloatingActionButton btnFab;
     Context cont;
@@ -144,7 +145,7 @@ public class FragmentoOpenDocumentoFactura extends Fragment {
                     adaptadordocumentofacturasony = new AdaptadorDocumentoFacturaHeaderSony(getActivity(),ldocumentofactura);
                     break;
                 case 2:
-                    adaptadordocumentofacturasony = new AdaptadorDocumentoFacturaHeaderSony(getActivity(),ldocumentofactura);
+                    adaptadordocumentofacturaochopulgadas = new AdaptadorDocumentoFacturaHeaderOchoPulgadas(getActivity(),ldocumentofactura);
                     break;
             }
             // 4. set adapter
@@ -156,7 +157,7 @@ public class FragmentoOpenDocumentoFactura extends Fragment {
                     recViewopendocumentofactura.setAdapter(adaptadordocumentofacturasony);
                     break;
                 case 2:
-                    recViewopendocumentofactura.setAdapter(adaptadordocumentofacturasony);
+                    recViewopendocumentofactura.setAdapter(adaptadordocumentofacturaochopulgadas);
                     break;
             }
 
@@ -425,8 +426,8 @@ public class FragmentoOpenDocumentoFactura extends Fragment {
                         adaptadordocumentofacturasony.notifyDataSetChanged();
                         break;
                     case 2:
-                        Log.i("ADAPTADOR FTP", Integer.toString(adaptadordocumentofacturasony.getItemCount()));
-                        adaptadordocumentofacturasony.notifyDataSetChanged();
+                        Log.i("ADAPTADOR FTP", Integer.toString(adaptadordocumentofacturaochopulgadas.getItemCount()));
+                        adaptadordocumentofacturaochopulgadas.notifyDataSetChanged();
                         break;
                 }
                 if (mContext!=null) {

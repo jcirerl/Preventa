@@ -60,6 +60,7 @@ public class FragmentoCloseDocumentoPedido extends Fragment {
     public static RecyclerView recViewopendocumentopedido;
     public static AdaptadorDocumentoPedidoHeaderAsus adaptadordocumentopedidoasus;
     public static AdaptadorDocumentoPedidoHeaderSony adaptadordocumentopedidosony;
+    public static AdaptadorDocumentoPedidoHeaderOchoPulgadas adaptadorDocumentopedidoochopulgadas;
 
     View rootViewopendocumentopedido;
     FloatingActionButton btnFab;
@@ -131,7 +132,7 @@ public class FragmentoCloseDocumentoPedido extends Fragment {
                     adaptadordocumentopedidosony = new AdaptadorDocumentoPedidoHeaderSony(getActivity(),ldocumentopedido);
                     break;
                 case 2:
-                    adaptadordocumentopedidosony = new AdaptadorDocumentoPedidoHeaderSony(getActivity(),ldocumentopedido);
+                    adaptadorDocumentopedidoochopulgadas = new AdaptadorDocumentoPedidoHeaderOchoPulgadas(getActivity(),ldocumentopedido);
                     break;
             }
             // 4. set adapter
@@ -143,7 +144,7 @@ public class FragmentoCloseDocumentoPedido extends Fragment {
                     recViewopendocumentopedido.setAdapter(adaptadordocumentopedidosony);
                     break;
                 case 2:
-                    recViewopendocumentopedido.setAdapter(adaptadordocumentopedidosony);
+                    recViewopendocumentopedido.setAdapter(adaptadorDocumentopedidoochopulgadas);
                     break;
             }
 
@@ -417,8 +418,8 @@ public class FragmentoCloseDocumentoPedido extends Fragment {
                         adaptadordocumentopedidosony.notifyDataSetChanged();
                         break;
                     case 2:
-                        Log.i("ADAPTADOR PDD", Integer.toString(adaptadordocumentopedidosony.getItemCount()));
-                        adaptadordocumentopedidosony.notifyDataSetChanged();
+                        Log.i("ADAPTADOR PDD", Integer.toString(adaptadorDocumentopedidoochopulgadas.getItemCount()));
+                        adaptadorDocumentopedidoochopulgadas.notifyDataSetChanged();
                         break;
                 }
             } else {

@@ -18,6 +18,10 @@
             android:id="@+id/item_cuenta"
             android:icon="@drawable/cuenta"
             android:title="@string/item_cuenta" />
+        <item
+            android:id="@+id/item_nfc"
+            android:icon="@drawable/ic_launcher_card"
+            android:title="@string/item_nfc" />
     </group>
 
     <group

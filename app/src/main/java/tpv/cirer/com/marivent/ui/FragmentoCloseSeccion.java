@@ -63,6 +63,8 @@ public class FragmentoCloseSeccion  extends Fragment    {
     Context cont;
     public static RecyclerView recViewseccion;
     public static AdaptadorSeccionHeader adaptadorseccion;
+    public static AdaptadorSeccionHeader_ochopulgadas adaptadorseccionochopulgadas;
+
     View rootViewseccion;
     FloatingActionButton btnFab;
     private static FragmentoCloseSeccion CloseSeccion = null;
@@ -113,10 +115,33 @@ public class FragmentoCloseSeccion  extends Fragment    {
             recViewseccion.setLayoutManager(new WrapContentLinearLayoutManager(getActivity()));
 
             // 3. create an adapter
-            adaptadorseccion = new AdaptadorSeccionHeader(getActivity(),lseccion);
+//            adaptadorseccion = new AdaptadorSeccionHeader(getActivity(),lseccion);
+            switch (Filtro.getOptipotablet()) {
+                case 0:
+                    adaptadorseccion = new AdaptadorSeccionHeader(getActivity(),lseccion);
+                    break;
+                case 1:
+                    adaptadorseccion = new AdaptadorSeccionHeader(getActivity(),lseccion);
+                    break;
+                case 2:
+                    adaptadorseccionochopulgadas = new AdaptadorSeccionHeader_ochopulgadas(getActivity(),lseccion);
+                    break;
+            }
+            // 4. set adapter
+            switch (Filtro.getOptipotablet()) {
+                case 0:
+                    recViewseccion.setAdapter(adaptadorseccion);
+                    break;
+                case 1:
+                    recViewseccion.setAdapter(adaptadorseccion);
+                    break;
+                case 2:
+                    recViewseccion.setAdapter(adaptadorseccionochopulgadas);
+                    break;
+            }
 
             // 4. set adapter
-            recViewseccion.setAdapter(adaptadorseccion);
+  //          recViewseccion.setAdapter(adaptadorseccion);
 
             // 5. set item animator to DefaultAnimator
             recViewseccion.setItemAnimator(new DefaultItemAnimator());
@@ -311,8 +336,22 @@ public class FragmentoCloseSeccion  extends Fragment    {
 
             /* Download complete. Lets update UI */
             if (result == 1) {
-                Log.i("ADAPTADOR SECCION", Integer.toString(adaptadorseccion.getItemCount()));
-                adaptadorseccion.notifyDataSetChanged();
+//                Log.i("ADAPTADOR SECCION", Integer.toString(adaptadorseccion.getItemCount()));
+//                adaptadorseccion.notifyDataSetChanged();
+                switch (Filtro.getOptipotablet()) {
+                    case 0:
+                        Log.i("ADAPTADOR SECCION", Integer.toString(adaptadorseccion.getItemCount()));
+                        adaptadorseccion.notifyDataSetChanged();
+                        break;
+                    case 1:
+                        Log.i("ADAPTADOR SECCION", Integer.toString(adaptadorseccion.getItemCount()));
+                        adaptadorseccion.notifyDataSetChanged();
+                        break;
+                    case 2:
+                        Log.i("ADAPTADOR SECCION", Integer.toString(adaptadorseccionochopulgadas.getItemCount()));
+                        adaptadorseccionochopulgadas.notifyDataSetChanged();
+                        break;
+                }
             } else {
                 Log.e(TAG, "Failed to fetch data!");
             }

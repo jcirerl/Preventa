@@ -150,6 +150,7 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
 //    public static AdaptadorLineaDocumentoFacturaHeader adaptadorlineadocumentofactura;
     public static AdaptadorLineaDocumentoFacturaHeaderAsus adaptadorlineadocumentofacturaasus;
     public static AdaptadorLineaDocumentoFacturaHeaderSony adaptadorlineadocumentofacturasony;
+    public static AdaptadorLineaDocumentoFacturaHeaderOchoPulgadas adaptadorlineadocumentofacturaochopulgadas;
     View rootViewlineadocumentofactura;
     FloatingActionButton btnPrint,btnCobro;
 
@@ -234,7 +235,7 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
                     adaptadorlineadocumentofacturasony = new AdaptadorLineaDocumentoFacturaHeaderSony(getActivity(),llineadocumentofactura,cEstado);
                     break;
                 case 2:
-                    adaptadorlineadocumentofacturasony = new AdaptadorLineaDocumentoFacturaHeaderSony(getActivity(),llineadocumentofactura,cEstado);
+                    adaptadorlineadocumentofacturaochopulgadas = new AdaptadorLineaDocumentoFacturaHeaderOchoPulgadas(getActivity(),llineadocumentofactura,cEstado);
                     break;
             }
             // 4. set adapter
@@ -246,7 +247,7 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
                     recViewlineadocumentofactura.setAdapter(adaptadorlineadocumentofacturasony);
                     break;
                 case 2:
-                    recViewlineadocumentofactura.setAdapter(adaptadorlineadocumentofacturasony);
+                    recViewlineadocumentofactura.setAdapter(adaptadorlineadocumentofacturaochopulgadas);
                     break;
             }
 
@@ -517,8 +518,8 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
                         adaptadorlineadocumentofacturasony.notifyDataSetChanged();
                         break;
                     case 2:
-                        Log.i("ADAPTADOR LFT", Integer.toString(adaptadorlineadocumentofacturasony.getItemCount()));
-                        adaptadorlineadocumentofacturasony.notifyDataSetChanged();
+                        Log.i("ADAPTADOR LFT", Integer.toString(adaptadorlineadocumentofacturaochopulgadas.getItemCount()));
+                        adaptadorlineadocumentofacturaochopulgadas.notifyDataSetChanged();
                         break;
                 }
                 if (null!=getActivity()) {

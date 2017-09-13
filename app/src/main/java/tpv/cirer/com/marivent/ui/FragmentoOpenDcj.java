@@ -71,6 +71,8 @@ public class FragmentoOpenDcj  extends Fragment {
 
     public static RecyclerView recViewdcj;
     public static AdaptadorDcjHeader adaptadordcj;
+    public static AdaptadorDcjHeader_ochopulgadas adaptadordcjochopulgadas;
+
     View rootViewdcj;
     FloatingActionButton btnFab;
     Context cont;
@@ -124,10 +126,32 @@ public class FragmentoOpenDcj  extends Fragment {
             recViewdcj.setLayoutManager(new WrapContentLinearLayoutManager(getActivity()));
 
             // 3. create an adapter
-            adaptadordcj = new AdaptadorDcjHeader(getActivity(),ldcj);
-
+//            adaptadordcj = new AdaptadorDcjHeader(getActivity(),ldcj);
+            switch (Filtro.getOptipotablet()) {
+                case 0:
+                    adaptadordcj = new AdaptadorDcjHeader(getActivity(),ldcj);
+                    break;
+                case 1:
+                    adaptadordcj = new AdaptadorDcjHeader(getActivity(),ldcj);
+                    break;
+                case 2:
+                    adaptadordcjochopulgadas = new AdaptadorDcjHeader_ochopulgadas(getActivity(),ldcj);
+                    break;
+            }
             // 4. set adapter
-            recViewdcj.setAdapter(adaptadordcj);
+            switch (Filtro.getOptipotablet()) {
+                case 0:
+                    recViewdcj.setAdapter(adaptadordcj);
+                    break;
+                case 1:
+                    recViewdcj.setAdapter(adaptadordcj);
+                    break;
+                case 2:
+                    recViewdcj.setAdapter(adaptadordcjochopulgadas);
+                    break;
+            }
+
+//            recViewdcj.setAdapter(adaptadordcj);
 
             // 5. set item animator to DefaultAnimator
             recViewdcj.setItemAnimator(new DefaultItemAnimator());
@@ -361,9 +385,24 @@ public class FragmentoOpenDcj  extends Fragment {
                 pDialogOpen.dismiss();
             }
             if (result == 1) {
-                Log.i("ADAPTADOR DCJ", Integer.toString(adaptadordcj.getItemCount()));
-                ActividadPrincipal.itemdcj.setText(Integer.toString(adaptadordcj.getItemCount()-1));
-                adaptadordcj.notifyDataSetChanged();
+                switch (Filtro.getOptipotablet()) {
+                    case 0:
+                        Log.i("ADAPTADOR DCJ", Integer.toString(adaptadordcj.getItemCount()));
+                        ActividadPrincipal.itemdcj.setText(Integer.toString(adaptadordcj.getItemCount()-1));
+                        adaptadordcj.notifyDataSetChanged();
+                        break;
+                    case 1:
+                        Log.i("ADAPTADOR DCJ", Integer.toString(adaptadordcj.getItemCount()));
+                        ActividadPrincipal.itemdcj.setText(Integer.toString(adaptadordcj.getItemCount()-1));
+                        adaptadordcj.notifyDataSetChanged();
+                        break;
+                    case 2:
+                        Log.i("ADAPTADOR DCJ", Integer.toString(adaptadordcjochopulgadas.getItemCount()));
+                        ActividadPrincipal.itemdcj.setText(Integer.toString(adaptadordcjochopulgadas.getItemCount()-1));
+                        adaptadordcjochopulgadas.notifyDataSetChanged();
+                        break;
+                }
+                
                 if(mContext!=null) {
                     if (Integer.parseInt(ActividadPrincipal.itemdcj.getText().toString()) == 0) {
                         ActividadPrincipal.itemdcj.setTextColor(Filtro.getColorItemZero());

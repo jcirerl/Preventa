@@ -66,6 +66,8 @@ public class FragmentoCloseDcj extends Fragment {
 
     public static RecyclerView recViewdcj;
     public static AdaptadorDcjHeader adaptadordcj;
+    public static AdaptadorDcjHeader_ochopulgadas adaptadordcjochopulgadas;
+
     View rootViewdcj;
     FloatingActionButton btnFab;
     private static FragmentoCloseDcj CloseDcj = null;
@@ -117,10 +119,33 @@ public class FragmentoCloseDcj extends Fragment {
             recViewdcj.setLayoutManager(new WrapContentLinearLayoutManager(getActivity()));
 
             // 3. create an adapter
-            adaptadordcj = new AdaptadorDcjHeader(getActivity(),ldcj);
+//            adaptadordcj = new AdaptadorDcjHeader(getActivity(),ldcj);
+            switch (Filtro.getOptipotablet()) {
+                case 0:
+                    adaptadordcj = new AdaptadorDcjHeader(getActivity(),ldcj);
+                    break;
+                case 1:
+                    adaptadordcj = new AdaptadorDcjHeader(getActivity(),ldcj);
+                    break;
+                case 2:
+                    adaptadordcjochopulgadas = new AdaptadorDcjHeader_ochopulgadas(getActivity(),ldcj);
+                    break;
+            }
+            // 4. set adapter
+            switch (Filtro.getOptipotablet()) {
+                case 0:
+                    recViewdcj.setAdapter(adaptadordcj);
+                    break;
+                case 1:
+                    recViewdcj.setAdapter(adaptadordcj);
+                    break;
+                case 2:
+                    recViewdcj.setAdapter(adaptadordcjochopulgadas);
+                    break;
+            }
 
             // 4. set adapter
-            recViewdcj.setAdapter(adaptadordcj);
+//            recViewdcj.setAdapter(adaptadordcj);
 
             // 5. set item animator to DefaultAnimator
             recViewdcj.setItemAnimator(new DefaultItemAnimator());
@@ -345,8 +370,20 @@ public class FragmentoCloseDcj extends Fragment {
                 pDialog.dismiss();
             }
             if (result == 1) {
-                Log.i("ADAPTADOR DCJ", Integer.toString(adaptadordcj.getItemCount()));
-                adaptadordcj.notifyDataSetChanged();
+                switch (Filtro.getOptipotablet()) {
+                    case 0:
+                        Log.i("ADAPTADOR DCJ", Integer.toString(adaptadordcj.getItemCount()));
+                        adaptadordcj.notifyDataSetChanged();
+                        break;
+                    case 1:
+                        Log.i("ADAPTADOR DCJ", Integer.toString(adaptadordcj.getItemCount()));
+                        adaptadordcj.notifyDataSetChanged();
+                        break;
+                    case 2:
+                        Log.i("ADAPTADOR DCJ", Integer.toString(adaptadordcjochopulgadas.getItemCount()));
+                        adaptadordcjochopulgadas.notifyDataSetChanged();
+                        break;
+                }
             } else {
                 Log.e(TAG, "Failed to fetch data!");
             }

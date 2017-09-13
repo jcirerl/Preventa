@@ -61,6 +61,7 @@
             android:screenOrientation="landscape"
             android:label="@string/titulopersonalizado" >
             <intent-filter>
+                <action android:name="android.nfc.action.TECH_DISCOVERED" />
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -69,6 +70,10 @@
                 android:resource="@xml/device_filter" />
             <meta-data android:name="tpv.cirer.com.marivent.GlideConfiguration"
                 android:value="GlideModule"/>
+            <meta-data
+                android:name="android.nfc.action.TECH_DISCOVERED"
+                android:resource="@xml/nfc_tech_filter" />
+
         </activity>
         <!--    android:theme="@style/Theme.ConNavigationDrawer"-->
         <activity android:name=".ui.LoginActivity"
@@ -97,6 +102,17 @@
             android:label="@string/app_name_emvcardreader"
             android:screenOrientation="landscape"
             android:icon="@drawable/icon"
+            android:theme="@style/Base.AppTheme"
+            android:parentActivityName=".ui.ActividadPrincipal" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.ActividadPrincipal" />
+        </activity>
+        <activity
+            android:name=".ui.CreditCardNfcReaderActivity"
+            android:label="@string/app_name_creditcardnfcreader"
+            android:screenOrientation="landscape"
+            android:icon="@drawable/ic_launcher_card"
             android:theme="@style/Base.AppTheme"
             android:parentActivityName=".ui.ActividadPrincipal" >
             <meta-data

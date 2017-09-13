@@ -76,6 +76,8 @@ public class FragmentoOpenDocumentoPedido extends Fragment    {
     public static RecyclerView recViewopendocumentopedido;
     public static AdaptadorDocumentoPedidoHeaderAsus adaptadordocumentopedidoasus;
     public static AdaptadorDocumentoPedidoHeaderSony adaptadordocumentopedidosony;
+    public static AdaptadorDocumentoPedidoHeaderOchoPulgadas adaptadordocumentopedidoochopulgadas;
+
     View rootViewopendocumentopedido;
     FloatingActionButton btnFab;
     Context cont;
@@ -147,7 +149,7 @@ public class FragmentoOpenDocumentoPedido extends Fragment    {
                                 adaptadordocumentopedidosony = new AdaptadorDocumentoPedidoHeaderSony(getActivity(),ldocumentopedido);
                                 break;
                             case 2:
-                                adaptadordocumentopedidosony = new AdaptadorDocumentoPedidoHeaderSony(getActivity(),ldocumentopedido);
+                                adaptadordocumentopedidoochopulgadas = new AdaptadorDocumentoPedidoHeaderOchoPulgadas(getActivity(),ldocumentopedido);
                                 break;
                         }
                         // 4. set adapter
@@ -159,7 +161,7 @@ public class FragmentoOpenDocumentoPedido extends Fragment    {
                                 recViewopendocumentopedido.setAdapter(adaptadordocumentopedidosony);
                                 break;
                             case 2:
-                                recViewopendocumentopedido.setAdapter(adaptadordocumentopedidosony);
+                                recViewopendocumentopedido.setAdapter(adaptadordocumentopedidoochopulgadas);
                                 break;
                         }
 
@@ -477,8 +479,8 @@ public class FragmentoOpenDocumentoPedido extends Fragment    {
                                 adaptadordocumentopedidosony.notifyDataSetChanged();
                                 break;
                             case 2:
-                                Log.i("ADAPTADOR PDD", Integer.toString(adaptadordocumentopedidosony.getItemCount()));
-                                adaptadordocumentopedidosony.notifyDataSetChanged();
+                                Log.i("ADAPTADOR PDD", Integer.toString(adaptadordocumentopedidoochopulgadas.getItemCount()));
+                                adaptadordocumentopedidoochopulgadas.notifyDataSetChanged();
                                 break;
                         }
                         if (mContext!=null) {
