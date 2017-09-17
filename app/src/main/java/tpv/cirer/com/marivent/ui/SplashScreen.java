@@ -60,37 +60,36 @@ public class SplashScreen extends AppCompatActivity {
     private static String URL_SERVER="";
     private static String URL_SERVERSWS;
     private static final String TAG_PALABRAS = "Lista Palabras";
-
     public static List<Palabras> lpalabras;
-
+    private boolean ok_permisos;
     private String url_palabras;
 
     String TAG_SERVER = "SERVER: ";
+    String TAG_FILE = "FILE: ";
     String TAG_SERVERSWS = "SERVERSWS: ";
     // Progress Dialog
-    private ProgressDialog pDialogserver,pDialogserverws,pDialogPalabras;
+    private ProgressDialog pDialogserver,pDialogserverws,pDialogPalabras,pDialogfile;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
+        ok_permisos = false;
 
         if (Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-        String androidOS = Build.VERSION.RELEASE;
-        Log.i("Android",androidOS + " SDK "+Integer.toString(Build.VERSION.SDK_INT)+ " JELLY BEAN "+Integer.toString(Build.VERSION_CODES.JELLY_BEAN_MR1));
-
-
-        Thread timerThread = new Thread(){
+        final String androidOS = Build.VERSION.RELEASE;
+        Log.i("Android", androidOS + " SDK " + Integer.toString(Build.VERSION.SDK_INT) + " JELLY BEAN " + Integer.toString(Build.VERSION_CODES.JELLY_BEAN_MR1));
+        Thread timerThread = new Thread() {
             @Override
-			public void run(){
-                try{
+            public void run() {
+                try {
                     sleep(3000);
-                }catch(InterruptedException e){
+                } catch (InterruptedException e) {
                     e.printStackTrace();
-                }finally{
+                } finally {
                     /**
                      * Showing splashscreen while making network calls to download necessary
                      * data before launching the app Will use AsyncTask to make http call
@@ -98,8 +97,8 @@ public class SplashScreen extends AppCompatActivity {
 
                     SharedPreferences pref =
                             PreferenceManager.getDefaultSharedPreferences(
-                                            SplashScreen.this);
-                    Filtro.setOpurl(pref.getString("opurl", "LOCAL"));
+                                    SplashScreen.this);
+                    Filtro.setOpurl(pref.getString("opurl", "HOSTING"));
                     Filtro.setIdioma(pref.getString("opidioma", "ESP"));
                     Filtro.setOpgrid(Integer.parseInt(pref.getString("opgrid", "8")));
                     Filtro.setOpmesas(Integer.parseInt(pref.getString("opmesas", "128")));
@@ -107,27 +106,27 @@ public class SplashScreen extends AppCompatActivity {
                     Filtro.setOptoolbar(Integer.parseInt(pref.getString("optoolbar", "0")));
                     Filtro.setOptab(Integer.parseInt(pref.getString("optab", "0")));
 
-                    Filtro.setOppedidomesa(Boolean.parseBoolean(pref.getString("oppedidomesa","false"))); // CONTROL PEDIDOS DESDE MESA
+                    Filtro.setOppedidomesa(Boolean.parseBoolean(pref.getString("oppedidomesa", "false"))); // CONTROL PEDIDOS DESDE MESA
 
-                    Filtro.setOppedidodirectomesa(Boolean.parseBoolean(pref.getString("oppedidodirectomesa","false")));
-                    Filtro.setOpfacturadirectomesa(Boolean.parseBoolean(pref.getString("opfacturadirectomesa","false")));
+                    Filtro.setOppedidodirectomesa(Boolean.parseBoolean(pref.getString("oppedidodirectomesa", "false")));
+                    Filtro.setOpfacturadirectomesa(Boolean.parseBoolean(pref.getString("opfacturadirectomesa", "false")));
 
                     Filtro.setOpintervalo(Integer.parseInt(pref.getString("opintervalo", "10000")));
-                    Filtro.setOplog(Boolean.parseBoolean(pref.getString("oplog","true")));
+                    Filtro.setOplog(Boolean.parseBoolean(pref.getString("oplog", "true")));
                     Filtro.setOptab(Integer.parseInt(pref.getString("optab", "0")));
-                    Filtro.setOptipotablet(Integer.parseInt(pref.getString("optipotablet","0")));
+                    Filtro.setOptipotablet(Integer.parseInt(pref.getString("optipotablet", "0")));
                     Filtro.setFilelog("");
-                    Log.i("oplog",Boolean.toString((Filtro.getOplog())));
-                    if(Filtro.getOptoolbar()==0){
+                    Log.i("oplog", Boolean.toString((Filtro.getOplog())));
+                    if (Filtro.getOptoolbar() == 0) {
                         Filtro.setHide_toolbar1(false);
                         Filtro.setHide_toolbar2(false);
-                    }else{
+                    } else {
                         Filtro.setHide_toolbar1(true);
                         Filtro.setHide_toolbar2(true);
                     }
 ////                    Log.i("pixels",Double.toString(checkDimension(getApplicationContext())));
                     if (Filtro.getOplog()) {
-                        Log.i("oplog",Boolean.toString((Filtro.getOplog())));
+                        Log.i("oplog", Boolean.toString((Filtro.getOplog())));
                         /// REGISTRAR LOG APLICACION
                         String fileName = "logcat_" + System.currentTimeMillis() + ".txt";
                         try {
@@ -146,43 +145,76 @@ public class SplashScreen extends AppCompatActivity {
 //                    File sdcard = Environment.getExternalStorageDirectory();
                     //Get the text file
 //                    File file = new File(sdcard,Filtro.getOpurl()+".txt");
-                    File file = new File(Environment.getExternalStoragePublicDirectory("/www/tpv/"), Filtro.getOpurl()+".txt");
-                    if (!file.exists()) {
-                        Log.e("Fichero", "File not found "+file.getAbsolutePath());
-                    }
+/////                    if (androidOS.contains("6.0.1")) {
+// Here, thisActivity is the current activity
 
+/*                        try {
+                            HttpURLConnection.setFollowRedirects(false);
+                            // note : you may also need
+                            //HttpURLConnection.setInstanceFollowRedirects(false)
+                            URL_SERVER = "http://localhost:8080/tpv/get_host_" + Filtro.getOpurl().trim().toLowerCase() + ".php";
 
-                    //Read text from file
-                    StringBuilder text = new StringBuilder();
-
-                    try {
-                        BufferedReader br = new BufferedReader(new FileReader(file));
-                        String line;
-
-                        while ((line = br.readLine()) != null) {
-                            text.append(line);
-                            break; // solo debe leer una linaa.
-//                            text.append('\n');
+                            HttpURLConnection con = (HttpURLConnection) new URL(URL_SERVER).openConnection();
+                            con.setRequestMethod("HEAD");
+                            if ((con.getResponseCode() == HttpURLConnection.HTTP_OK)) {
+                                Log.d("FILE_EXISTS", "true");
+                                runOnUiThread(new Runnable() {
+                                    public void run() {
+                                        // runs on UI thread
+                                        new GetFile().execute(URL_SERVER);
+                                    }
+                                });
+                            } else {
+                                Log.d("FILE_EXISTS", "false " + Integer.toString(con.getResponseCode()));
+                                showToastInThread(SplashScreen.this, "FILE_EXISTS " + URL_SERVER + " false " + Integer.toString(con.getResponseCode()));
+                                finish();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Log.d("FILE_EXISTS", "false");
+                            showToastInThread(SplashScreen.this, "URL SERVER NO EXISTE GETFILE " + URL_SERVER);
+                            finish();
                         }
-                        br.close();
-                        URL_SERVER=String.valueOf(text).trim()+"/get_server.php";
-                    }
-                    catch (IOException e) {
-                        //You'll need to add proper error handling here
-                        showToastInThread(SplashScreen.this,"NO ENCONTRADO FILE "+file.getAbsolutePath());
-                        finish();
-                    }
-                    Log.i("URLSERVER",URL_SERVER);
+*/
+/////                    } else {
+                        File file = new File(Environment.getExternalStoragePublicDirectory("/www/tpv/"), Filtro.getOpurl() + ".txt");
+                        if (!file.exists()) {
+                            Log.e("Fichero", "File not found " + file.getAbsolutePath());
+                        }
+
+
+                        //Read text from file
+                        StringBuilder text = new StringBuilder();
+
+                        try {
+                            BufferedReader br = new BufferedReader(new FileReader(file));
+                            String line;
+
+                            while ((line = br.readLine()) != null) {
+                                text.append(line);
+                                break; // solo debe leer una linaa.
+//                            text.append('\n');
+                            }
+                            br.close();
+                            URL_SERVER = String.valueOf(text).trim() + "/get_server.php";
+                        } catch (IOException e) {
+                            //You'll need to add proper error handling here
+                            showToastInThread(SplashScreen.this, "NO ENCONTRADO FILE " + file.getAbsolutePath());
+                            URL_SERVER = String.valueOf(text).trim() + "/get_server.php";
+                            finish();
+                        }
+/////                    }
+                    Log.i("URLSERVER", URL_SERVER);
 ///                    URL_SERVER = "http://192.168.1.33:8080/tpv/get_server.php";
-                     ////////////////////////////////////////////////////////////////////////////////////////////
+                    ////////////////////////////////////////////////////////////////////////////////////////////
                     try {
                         HttpURLConnection.setFollowRedirects(false);
                         // note : you may also need
                         //HttpURLConnection.setInstanceFollowRedirects(false)
 
-                        HttpURLConnection con =  (HttpURLConnection) new URL(URL_SERVER).openConnection();
+                        HttpURLConnection con = (HttpURLConnection) new URL(URL_SERVER).openConnection();
                         con.setRequestMethod("HEAD");
-                        if( (con.getResponseCode() == HttpURLConnection.HTTP_OK) ) {
+                        if ((con.getResponseCode() == HttpURLConnection.HTTP_OK)) {
                             Log.d("FILE_EXISTS", "true");
                             runOnUiThread(new Runnable() {
                                 public void run() {
@@ -190,36 +222,24 @@ public class SplashScreen extends AppCompatActivity {
                                     new GetServer().execute(URL_SERVER);
                                     if (Filtro.getOpurl().contains("LOCAL")) {
                                         Filtro.setConexion("LOCAL");
-                                    }else{
+                                    } else {
                                         Filtro.setConexion("HOSTING");
                                     }
                                 }
                             });
 
-                        }else {
+                        } else {
                             Log.d("FILE_EXISTS", "false " + Integer.toString(con.getResponseCode()));
-                            showToastInThread(SplashScreen.this,"FILE_EXISTS false " + Integer.toString(con.getResponseCode()));
+                            showToastInThread(SplashScreen.this, "FILE_EXISTS false " + Integer.toString(con.getResponseCode()));
                             finish();
                         }
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                         Log.d("FILE_EXISTS", "false");
-                        showToastInThread(SplashScreen.this,"URL SERVER NO EXISTE");
+                        showToastInThread(SplashScreen.this, "URL SERVER NO EXISTE " + URL_SERVER);
                         finish();
                     }
-/*                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            // runs on UI thread
-                            new GetServer().execute(URL_SERVER);
-                            if (Filtro.getOpurl().contains("LOCAL")) {
-                                Filtro.setConexion("LOCAL");
-                            }else{
-                                Filtro.setConexion("HOSTING");
-                            }
-                        }
-                    });
-*/                 }
+                }
             }
         };
         timerThread.start();
@@ -315,6 +335,118 @@ public class SplashScreen extends AppCompatActivity {
         lpalabras = new ArrayList<Palabras>();
         TaskHelper.execute(new GetPalabras(), url_palabras);
 
+    }
+    public class GetFile extends AsyncTask<String, Void, Integer> {
+
+        @Override
+        protected void onPreExecute() {
+            //setProgressBarIndeterminateVisibility(true);
+            super.onPreExecute();
+            pDialogfile = new ProgressDialog(SplashScreen.this);
+            pDialogfile.setMessage(getPalabras("Cargando")+" URL. "+getPalabras("Espere por favor")+"...");
+            pDialogfile.setIndeterminate(false);
+            pDialogfile.setCancelable(true);
+            pDialogfile.show();
+        }
+
+        @Override
+        protected Integer doInBackground(String... params) {
+//            Integer result = 0;
+            InputStream inputStream = null;
+            Integer result = 0;
+            HttpURLConnection urlConnection = null;
+
+            try {
+                // forming th java.net.URL object
+                URL url = new URL(params[0]);
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                // for Get request
+                ///           urlConnection.setRequestMethod("GET");
+
+                urlConnection.setReadTimeout(10000);
+                urlConnection.setConnectTimeout(15000);
+                urlConnection.setRequestMethod("GET");
+                urlConnection.setDoInput(true);
+                urlConnection.setDoOutput(true);
+//                List<NameValuePair> params1 = new ArrayList<NameValuePair>();
+//                params1.add(new BasicNameValuePair("filtro", cSql));
+
+                ContentValues values = new ContentValues();
+                values.put("filtro", "");
+
+                OutputStream os = urlConnection.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+//                writer.write(getQuery(params1));
+                writer.write(getQuery(values));
+                writer.flush();
+                writer.close();
+                os.close();
+                urlConnection.connect();
+
+                int statusCode = urlConnection.getResponseCode();
+                Log.i("STATUS CODE: ", Integer.toString(urlConnection.getResponseCode()) + " - " + urlConnection.getResponseMessage());
+                // 200 represents HTTP OK
+                if (statusCode ==  200) {
+
+                    BufferedReader r = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = r.readLine()) != null) {
+                        response.append(line);
+                    }
+                    Log.i("JSON-->", response.toString());
+                    if (response.toString().trim().length()==0){
+                        showToastInThread(SplashScreen.this,"Sin Datos en "+URL_SERVER+response.toString());
+                        showToastInThread(SplashScreen.this,response.toString());
+                        result = 0;
+                    }else {
+                        parseResultFile(response.toString());
+                        result = 1; // Successful
+                    }
+                }else{
+                    result = 0; //"Failed to fetch data!";
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+//                Log.d(TAG, e.getLocalizedMessage());
+            }
+
+            return result; //"Failed to fetch data!";
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            /* Download complete. Lets update UI */
+            pDialogfile.dismiss();
+            if (result == 1) {
+                Log.e(TAG_FILE, "OK FILE");
+            } else {
+                Log.e(TAG_FILE, "Failed to fetch data!");
+                finish();
+            }
+        }
+    }
+    private void parseResultFile(String result) {
+        try {
+            JSONObject response = new JSONObject(result);
+            JSONArray posts = response.optJSONArray("posts");
+
+            Log.i("Longitud Datos: ",Integer.toString(posts.length()));
+            for (int ii = 0; ii < posts.length(); ii++) {
+                JSONObject post = posts.optJSONObject(ii);
+                URL_SERVER = post.optString("URL").trim() + "/get_server.php";
+
+                Log.i("url SERVER", URL_SERVER);
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

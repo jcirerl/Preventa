@@ -260,8 +260,8 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
             recViewlineadocumentofactura.addItemDecoration(itemDecoration);
 
             btnCobro = (FloatingActionButton) rootViewlineadocumentofactura.findViewById(R.id.btnCobro);
+            btnCobro.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.visacurved));
             if (!cEstado.contains("CLOSE") && Filtro.getCobroDesdeFactura()==0) {
-                btnCobro.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.visacurved));
                 btnCobro.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -300,7 +300,8 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
                     }
                 });
             }else{
-                btnCobro.setVisibility(View.GONE);
+                btnCobro.setAlpha(0.3f); // COLOR APAGADO PEDIDO CERRADO
+//                btnCobro.setVisibility(View.GONE);
             }
             btnPrint = (FloatingActionButton)rootViewlineadocumentofactura.findViewById(R.id.btnPrint);
             btnPrint.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.print48));

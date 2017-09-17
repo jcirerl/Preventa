@@ -42,7 +42,10 @@ import tpv.cirer.com.marivent.herramientas.Filtro;
 import tpv.cirer.com.marivent.herramientas.WrapContentLinearLayoutManager;
 import tpv.cirer.com.marivent.modelo.DocumentoFactura;
 
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.empleadosList;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lparam;
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.position_usuario;
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.usuario_identificado;
 
 /**
  * Created by JUAN on 08/11/2016.
@@ -302,13 +305,22 @@ public class FragmentoCloseDocumentoFactura extends Fragment {
                 } else {
                     xWhere += " AND ftp.ESTADO>='13'";
                 }
-            if(!(ActividadPrincipal.InUsuarios.equals(""))) {
+            if(usuario_identificado) {
+                if (!(ActividadPrincipal.InUsuarios.equals(""))) {
+                    if (xWhere.equals("")) {
+                        xWhere += " WHERE ftp.EMPLEADO IN (" + ActividadPrincipal.InUsuarios + ")";
+                    } else {
+                        xWhere += " AND ftp.EMPLEADO IN (" + ActividadPrincipal.InUsuarios + ")";
+                    }
+                }
+            }else{
                 if (xWhere.equals("")) {
-                    xWhere += " WHERE ftp.EMPLEADO IN (" + ActividadPrincipal.InUsuarios + ")";
+                    xWhere += " WHERE ftp.EMPLEADO IN ('" + empleadosList.get(position_usuario).getEmpleadoEmpleado() + "')";
                 } else {
-                    xWhere += " AND ftp.EMPLEADO IN (" + ActividadPrincipal.InUsuarios + ")";
+                    xWhere += " AND ftp.EMPLEADO IN ('" +empleadosList.get(position_usuario).getEmpleadoEmpleado() + "')";
                 }
             }
+
 
             cSql += xWhere;
             if(cSql.equals("")) {

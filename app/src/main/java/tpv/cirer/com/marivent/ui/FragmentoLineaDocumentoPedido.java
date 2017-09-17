@@ -272,63 +272,67 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
 
             btnSend = (FloatingActionButton)rootViewlineadocumentopedido.findViewById(R.id.btnSend);
             btnSend.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.send48));
-            btnSend.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (!((ActividadPrincipal)getActivity()).getCruge("action_pdd_printg")){
-                        Snackbar.make(view, ActividadPrincipal.getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_LONG).show();
-                    }else {
-                        Snackbar.make(view, ActividadPrincipal.getPalabras("Enviar")+" "+ActividadPrincipal.getPalabras("Pedido")+" "+ActividadPrincipal.getPalabras("Secciones"), Snackbar.LENGTH_LONG).show();
-                        optionprint = false;
-/*
+            if (cEstado.contains("CLOSE")){
+                btnSend.setAlpha(0.3f); // COLOR APAGADO PEDIDO CERRADO
+            } else {
+                btnSend.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (!((ActividadPrincipal)getActivity()).getCruge("action_pdd_printg")){
+                            Snackbar.make(view, ActividadPrincipal.getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_LONG).show();
+                        }else {
+                            Snackbar.make(view, ActividadPrincipal.getPalabras("Enviar")+" "+ActividadPrincipal.getPalabras("Pedido")+" "+ActividadPrincipal.getPalabras("Secciones"), Snackbar.LENGTH_LONG).show();
+                            optionprint = false;
+    /*
 
-                            // LEER MODELOS SECUENCIALMENTE
-                            mSerialExecutorActivity = new MySerialExecutor(getActivity());
+                                // LEER MODELOS SECUENCIALMENTE
+                                mSerialExecutorActivity = new MySerialExecutor(getActivity());
 
-                            // Lineas PEDIDO
-                            for (Iterator<LineaDocumentoPedido> it = llineadocumentopedidoprint.iterator(); it.hasNext();){
-                                LineaDocumentoPedido lineadocumentopedido = it.next();
-                                it.remove();
-                            }
-                            PrintTable="lpd";
-                            urlPrint = Filtro.getUrl()+"/RellenaListaLPD.php";
-                            mSerialExecutorActivity.execute(null);
+                                // Lineas PEDIDO
+                                for (Iterator<LineaDocumentoPedido> it = llineadocumentopedidoprint.iterator(); it.hasNext();){
+                                    LineaDocumentoPedido lineadocumentopedido = it.next();
+                                    it.remove();
+                                }
+                                PrintTable="lpd";
+                                urlPrint = Filtro.getUrl()+"/RellenaListaLPD.php";
+                                mSerialExecutorActivity.execute(null);
 
-                            // Cabecera EMPRESA
-                            for (Iterator<CabeceraEmpr> it = lcabeceraempr.iterator(); it.hasNext(); ) {
-                                CabeceraEmpr cabeceraEmpr = it.next();
-                                it.remove();
-                            }
-                            PrintTable = "empr";
-                            urlPrint = Filtro.getUrl() + "/CabeceraEMPR.php";
-                            mSerialExecutorActivity.execute(null);
+                                // Cabecera EMPRESA
+                                for (Iterator<CabeceraEmpr> it = lcabeceraempr.iterator(); it.hasNext(); ) {
+                                    CabeceraEmpr cabeceraEmpr = it.next();
+                                    it.remove();
+                                }
+                                PrintTable = "empr";
+                                urlPrint = Filtro.getUrl() + "/CabeceraEMPR.php";
+                                mSerialExecutorActivity.execute(null);
 
-                            // CABECERA PEDIDO
-                            for (Iterator<CabeceraPdd> it = lcabecerapdd.iterator(); it.hasNext();){
-                                CabeceraPdd cabeceraPdd = it.next();
-                                it.remove();
-                            }
-                            PrintTable = "pdd";
-                            urlPrint = Filtro.getUrl() + "/CabeceraPDD.php";
-                            mSerialExecutorActivity.execute(null);
+                                // CABECERA PEDIDO
+                                for (Iterator<CabeceraPdd> it = lcabecerapdd.iterator(); it.hasNext();){
+                                    CabeceraPdd cabeceraPdd = it.next();
+                                    it.remove();
+                                }
+                                PrintTable = "pdd";
+                                urlPrint = Filtro.getUrl() + "/CabeceraPDD.php";
+                                mSerialExecutorActivity.execute(null);
 
-                            // LINEAS IVA PEDIDO
-                            for (Iterator<DocumentoPedidoIva> it = ldocumentopedidoiva.iterator(); it.hasNext();){
-                                DocumentoPedidoIva ldocumentopedidoiva = it.next();
-                                it.remove();
-                            }
-                            PrintTable = "pddiva";
-                            urlPrint = Filtro.getUrl() + "/RellenaListaPDDIVA.php";
-                            mSerialExecutorActivity.execute(null);
-*/
-                        nPosition = 0;
-                        setImpresora(nPosition);
- ///                       urlPrint = Filtro.getUrl() + "/RellenaListaLPDprintsec.php"; // ORDENADO POR TIPO ARTICULO
-                        urlPrint = Filtro.getUrl() + "/RellenaListaLPDprintsecplato.php";    // ORDENADO POR TIPO PLATO
-                        new LeerLineasLpd().execute(urlPrint,Integer.toString(nPosition));
-                   }
-                }
-            });
+                                // LINEAS IVA PEDIDO
+                                for (Iterator<DocumentoPedidoIva> it = ldocumentopedidoiva.iterator(); it.hasNext();){
+                                    DocumentoPedidoIva ldocumentopedidoiva = it.next();
+                                    it.remove();
+                                }
+                                PrintTable = "pddiva";
+                                urlPrint = Filtro.getUrl() + "/RellenaListaPDDIVA.php";
+                                mSerialExecutorActivity.execute(null);
+    */
+                            nPosition = 0;
+                            setImpresora(nPosition);
+     ///                       urlPrint = Filtro.getUrl() + "/RellenaListaLPDprintsec.php"; // ORDENADO POR TIPO ARTICULO
+                            urlPrint = Filtro.getUrl() + "/RellenaListaLPDprintsecplato.php";    // ORDENADO POR TIPO PLATO
+                            new LeerLineasLpd().execute(urlPrint,Integer.toString(nPosition));
+                       }
+                    }
+                });
+            }
             btnPrint = (FloatingActionButton)rootViewlineadocumentopedido.findViewById(R.id.btnPrint);
             btnPrint.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.print48));
             btnPrint.setOnClickListener(new View.OnClickListener() {

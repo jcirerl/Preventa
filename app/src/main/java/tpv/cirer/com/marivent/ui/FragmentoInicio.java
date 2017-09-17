@@ -49,6 +49,7 @@ import tpv.cirer.com.marivent.herramientas.Filtro;
 import tpv.cirer.com.marivent.herramientas.WrapContentLinearLayoutManager;
 import tpv.cirer.com.marivent.modelo.Popular;
 
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lparam;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lpopular;
 
 
@@ -198,6 +199,7 @@ public class FragmentoInicio extends Fragment {
                     if (!((ActividadPrincipal)getActivity()).getCruge("action_ftp_admin")){
                         Snackbar.make(view, ActividadPrincipal.getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_LONG).show();
                     }else {
+                        Filtro.setMesa(lparam.get(0).getDEFAULT_ESTADO_TODOS_MESA());
                         CargaFragment cargafragment = null;
                         cargafragment = new CargaFragment(FragmentoFactura.newInstance(0),getFragmentManager());
                         cargafragment.getFragmentManager().addOnBackStackChangedListener((ActividadPrincipal)getActivity());
@@ -216,6 +218,7 @@ public class FragmentoInicio extends Fragment {
                     if (!((ActividadPrincipal)getActivity()).getCruge("action_pdd_admin")){
                         Snackbar.make(view, ActividadPrincipal.getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_LONG).show();
                     }else {
+                        Filtro.setMesa(lparam.get(0).getDEFAULT_ESTADO_TODOS_MESA());
                         CargaFragment cargafragment = null;
                         cargafragment = new CargaFragment(FragmentoPedido.newInstance(),getFragmentManager());
                         cargafragment.getFragmentManager().addOnBackStackChangedListener((ActividadPrincipal)getActivity());

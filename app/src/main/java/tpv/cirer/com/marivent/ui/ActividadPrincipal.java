@@ -248,6 +248,9 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     String TAG_FAC = "FACTURA";
     String TAG_TFT = "TFT: ";
 
+    public static boolean usuario_identificado;
+    public static int position_usuario;
+
     // url to update Factura
     private static final String url_update_Factura = Filtro.getUrl()+"/modifica_cobro_factura_resta.php";
 
@@ -468,7 +471,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     public static ArrayList<Mesa> mesasList;
     private Spinner cmbToolbarMesas;
 
-    private ArrayList<Empleado> empleadosList;
+    public static ArrayList<Empleado> empleadosList;
     private Spinner cmbToolbarEmpleados;
 
     private ArrayList<Moneda> monedaList;
@@ -496,6 +499,8 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
+        usuario_identificado = true;
+        position_usuario = 0;
 
         tooltips = new ToolTipManager(this);
 
@@ -1331,7 +1336,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.addOnBackStackChangedListener(this);
         switch (itemDrawer.getItemId()) {
-            case R.id.item_seccion:
+            case R.id.0item_seccion:
                 if(getCruge("action_sec_admin")){
                     fragmentoGenerico = new FragmentoSeccion();
                 }
@@ -1382,11 +1387,13 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
                 break;
             case R.id.item_pedido:
                 if(getCruge("action_pdd_admin")){
+                    Filtro.setMesa(lparam.get(0).getDEFAULT_ESTADO_TODOS_MESA());
                     fragmentoGenerico = new FragmentoPedido();
                 }
                 break;
             case R.id.item_factura:
                 if(getCruge("action_ftp_admin")){
+                    Filtro.setMesa(lparam.get(0).getDEFAULT_ESTADO_TODOS_MESA());
                     fragmentoGenerico = new FragmentoFactura();
                 }
                 break;
@@ -1762,6 +1769,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                     if (!getCruge("action_ftp_admin")){
                         Snackbar.make(view, getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_LONG).show();
                     }else {
+                        Filtro.setMesa(lparam.get(0).getDEFAULT_ESTADO_TODOS_MESA());
                         CargaFragment cargafragment = null;
                         cargafragment = new CargaFragment(FragmentoFactura.newInstance(0),getSupportFragmentManager());
                         cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
@@ -1800,6 +1808,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                     if (!getCruge("action_pdd_admin")){
                         Snackbar.make(view, getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_LONG).show();
                     }else {
+                        Filtro.setMesa(lparam.get(0).getDEFAULT_ESTADO_TODOS_MESA());
                         CargaFragment cargafragment = null;
                         cargafragment = new CargaFragment(FragmentoPedido.newInstance(),getSupportFragmentManager());
                         cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
@@ -2246,9 +2255,9 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         InUsuarios = "";
         for (int i = 0; i < empleadosList.size(); i++) {
-            if (empleadosList.get(i).getEmpleadoUsername().equals(Filtro.getUsuario())) {
+//***            if (empleadosList.get(i).getEmpleadoUsername().equals(Filtro.getUsuario())) {
                 lables_empleados.add(empleadosList.get(i).getEmpleadoNombre_Empleado());
-            }
+//***           }
             // Rellenamos string usuarios para condicion
             InUsuarios += ("'"+ empleadosList.get(i).getEmpleadoEmpleado().trim() +"',");
         }
@@ -12013,11 +12022,9 @@ ge     * */
             }
 
             if (xWhere.equals("")) {
-                xWhere += " WHERE (empleados.username='" + Filtro.getUsuario() + "'";
-                xWhere += " OR roles.NIVEL<" + Integer.toString(Filtro.getNivelroles()) + ")";
+                xWhere += " WHERE empleados.username='" + Filtro.getUsuario() + "'";
             }else{
-                xWhere += " AND (empleados.username='" + Filtro.getUsuario() + "'";
-                xWhere += " OR roles.NIVEL<" + Integer.toString(Filtro.getNivelroles()) + ")";
+                xWhere += " AND empleados.username='" + Filtro.getUsuario() + "'";
             }
 
             if (xWhere.equals("")) {
@@ -12029,7 +12036,7 @@ ge     * */
             if(cSql.equals("")) {
                 cSql="Todos";
             }
-            Log.i("Sql Lista",cSql);
+            Log.i("Sql Lista Empleados",cSql);
             InputStream inputStream = null;
             Integer result = 0;
             HttpURLConnection urlConnection = null;
@@ -12075,13 +12082,157 @@ ge     * */
                     while ((line = r.readLine()) != null) {
                         response.append(line);
                     }
-                    Log.i("JSON-->", response.toString());
+                    Log.i("JSON EMPLEADOS-->", response.toString());
 
                     for (Iterator<Empleado> it = empleadosList.iterator(); it.hasNext();){
                         Empleado empleado = it.next();
                         it.remove();
                     }
 
+                    parseResultEmpleados(response.toString());
+                    result = 1; // Successful
+                }else{
+                    result = 0; //"Failed to fetch data!";
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+//                Log.d(TAG, e.getLocalizedMessage());
+            }
+
+            return result; //"Failed to fetch data!";
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            /* Download complete. Lets update UI */
+            pDialogEmpleado.dismiss();
+            if (result == 1) {
+                Log.e(TAG_EMPLEADO, "OK EMPLEADO");
+                TaskHelper.execute(new GetEmpleadosRolInferior(), URL_EMPLEADOS);
+            } else {
+                Log.e(TAG_EMPLEADO, "Failed to fetch data!");
+            }
+        }
+    }
+    public class GetEmpleadosRolInferior extends AsyncTask<String, Void, Integer> {
+
+        @Override
+        protected void onPreExecute() {
+            //setProgressBarIndeterminateVisibility(true);
+            super.onPreExecute();
+            pDialogEmpleado = new ProgressDialog(ActividadPrincipal.this);
+            pDialogEmpleado.setMessage(getPalabras("Cargando")+" "+getPalabras("Empleados")+". "+getPalabras("Espere por favor")+"...");
+            pDialogEmpleado.setIndeterminate(false);
+            pDialogEmpleado.setCancelable(true);
+            pDialogEmpleado.show();
+        }
+
+        @Override
+        protected Integer doInBackground(String... params) {
+//            Integer result = 0;
+            String cSql = "";
+            String xWhere = "";
+            if(!(Filtro.getGrupo().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE empleados.GRUPO='" + Filtro.getGrupo() + "'";
+                } else {
+                    xWhere += " AND empleados.GRUPO='" + Filtro.getGrupo() + "'";
+                }
+            }
+            if(!(Filtro.getEmpresa().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE empleados.EMPRESA='" + Filtro.getEmpresa() + "'";
+                } else {
+                    xWhere += " AND empleados.EMPRESA='" + Filtro.getEmpresa() + "'";
+                }
+            }
+            if(!(Filtro.getLocal().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE empleados.LOCAL='" + Filtro.getLocal() + "'";
+                } else {
+                    xWhere += " AND empleados.LOCAL='" + Filtro.getLocal() + "'";
+                }
+            }
+            if(!(Filtro.getSeccion().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE empleados.SECCION='" + Filtro.getSeccion() + "'";
+                } else {
+                    xWhere += " AND empleados.SECCION='" + Filtro.getSeccion() + "'";
+                }
+            }
+
+            if (xWhere.equals("")) {
+                xWhere += " WHERE (empleados.username<>'" + Filtro.getUsuario() + "'";
+                xWhere += " AND roles.NIVEL<" + Integer.toString(Filtro.getNivelroles()) + ")";
+            }else{
+                xWhere += " AND (empleados.username<>'" + Filtro.getUsuario() + "'";
+                xWhere += " AND roles.NIVEL<" + Integer.toString(Filtro.getNivelroles()) + ")";
+            }
+
+            if (xWhere.equals("")) {
+                xWhere += " WHERE empleados.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
+            }else{
+                xWhere += " AND empleados.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
+            }
+            cSql += xWhere;
+            if(cSql.equals("")) {
+                cSql="Todos";
+            }
+            Log.i("Sql Lista Empleados",cSql);
+            InputStream inputStream = null;
+            Integer result = 0;
+            HttpURLConnection urlConnection = null;
+
+            try {
+                // forming th java.net.URL object
+                URL url = new URL(params[0]);
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                // for Get request
+                ///           urlConnection.setRequestMethod("GET");
+
+                urlConnection.setReadTimeout(10000);
+                urlConnection.setConnectTimeout(15000);
+                urlConnection.setRequestMethod("GET");
+                urlConnection.setDoInput(true);
+                urlConnection.setDoOutput(true);
+//                List<NameValuePair> params1 = new ArrayList<NameValuePair>();
+//                params1.add(new BasicNameValuePair("filtro", cSql));
+
+                ContentValues values = new ContentValues();
+                values.put("filtro", cSql);
+
+                OutputStream os = urlConnection.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+//                writer.write(getQuery(params1));
+                writer.write(getQuery(values));
+                writer.flush();
+                writer.close();
+                os.close();
+                urlConnection.connect();
+
+                int statusCode = urlConnection.getResponseCode();
+                Log.i("STATUS CODE: ", Integer.toString(urlConnection.getResponseCode()) + " - " + urlConnection.getResponseMessage());
+                // 200 represents HTTP OK
+                if (statusCode ==  200) {
+
+                    BufferedReader r = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = r.readLine()) != null) {
+                        response.append(line);
+                    }
+                    Log.i("JSON EMPLEADOS-->", response.toString());
+
+/*                    for (Iterator<Empleado> it = empleadosList.iterator(); it.hasNext();){
+                        Empleado empleado = it.next();
+                        it.remove();
+                    }
+*/
                     parseResultEmpleados(response.toString());
                     result = 1; // Successful
                 }else{
@@ -12979,7 +13130,14 @@ ge     * */
                                 parent.getItemAtPosition(position).toString() + " Selected",
                         Toast.LENGTH_LONG).show();
 */
-                Filtro.setEmpleado(empleadosList.get(position).getEmpleadoEmpleado());
+                if (position==0){
+                    usuario_identificado = true;
+                    position_usuario = 0;
+                    Filtro.setEmpleado(empleadosList.get(position).getEmpleadoEmpleado());
+                }else{
+                    usuario_identificado = false;
+                    position_usuario = position;
+                }
             }
         }
         if(spinner.getId() == R.id.CmbToolbarMoneda)

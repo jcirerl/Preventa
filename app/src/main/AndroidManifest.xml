@@ -57,7 +57,7 @@
 
 
         <activity
-            android:name=".ui.SplashScreen"
+            android:name=".ui.ActividadInicio"
             android:screenOrientation="landscape"
             android:label="@string/titulopersonalizado" >
             <intent-filter>
@@ -75,6 +75,18 @@
                 android:resource="@xml/nfc_tech_filter" />
 
         </activity>
+        <activity
+            android:name=".ui.SplashScreen"
+            android:label="@string/titulopersonalizado"
+            android:screenOrientation="landscape"
+            android:icon="@drawable/logo"
+            android:theme="@style/Base.AppTheme"
+            android:parentActivityName=".ui.ActividadInicio" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.ActividadInicio" />
+        </activity>
+
         <!--    android:theme="@style/Theme.ConNavigationDrawer"-->
         <activity android:name=".ui.LoginActivity"
             android:screenOrientation="landscape"

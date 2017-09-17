@@ -53,11 +53,14 @@ import tpv.cirer.com.marivent.herramientas.WrapContentLinearLayoutManager;
 import tpv.cirer.com.marivent.modelo.DocumentoPedido;
 
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.CountTable;
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.empleadosList;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getLocalIpAddress;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getPalabras;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lparam;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.mSerialExecutorActivity;
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.position_usuario;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.url_count;
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.usuario_identificado;
 
 /**
  * Created by JUAN on 19/09/2016.
@@ -362,15 +365,21 @@ public class FragmentoOpenDocumentoPedido extends Fragment    {
                     } else {
                         xWhere += " AND pdd.ESTADO<'13'";
                     }
-
-                    if(!(ActividadPrincipal.InUsuarios.equals(""))) {
+                    if(usuario_identificado) {
+                        if (!(ActividadPrincipal.InUsuarios.equals(""))) {
+                            if (xWhere.equals("")) {
+                                xWhere += " WHERE pdd.EMPLEADO IN (" + ActividadPrincipal.InUsuarios + ")";
+                            } else {
+                                xWhere += " AND pdd.EMPLEADO IN (" + ActividadPrincipal.InUsuarios + ")";
+                            }
+                        }
+                    }else{
                         if (xWhere.equals("")) {
-                            xWhere += " WHERE pdd.EMPLEADO IN (" + ActividadPrincipal.InUsuarios + ")";
+                            xWhere += " WHERE pdd.EMPLEADO IN ('" + empleadosList.get(position_usuario).getEmpleadoEmpleado() + "')";
                         } else {
-                            xWhere += " AND pdd.EMPLEADO IN (" + ActividadPrincipal.InUsuarios + ")";
+                            xWhere += " AND pdd.EMPLEADO IN ('" +empleadosList.get(position_usuario).getEmpleadoEmpleado() + "')";
                         }
                     }
-
                         cSql += xWhere;
                         if(cSql.equals("")) {
                                 cSql="Todos";

@@ -15,7 +15,7 @@
         android:text="@string/grupo"
         />
     <Spinner android:id="@+id/CmbToolbarGrup"
-        android:layout_width="180dp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/LblGrup" />
 
@@ -25,7 +25,7 @@
         android:text="@string/empresa"
         android:layout_toRightOf="@id/CmbToolbarGrup"/>
     <Spinner android:id="@+id/CmbToolbarEmpr"
-        android:layout_width="180dp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/LblEmpr" />
 
@@ -35,7 +35,7 @@
         android:text="@string/local"
         android:layout_toRightOf="@id/CmbToolbarEmpr"/>
     <Spinner android:id="@+id/CmbToolbarLocal"
-        android:layout_width="180dp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/LblLocal" />
 
@@ -46,7 +46,7 @@
         android:layout_toRightOf="@id/CmbToolbarLocal"/>
 
     <Spinner android:id="@+id/CmbToolbarSec"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/LblSec" />
 
