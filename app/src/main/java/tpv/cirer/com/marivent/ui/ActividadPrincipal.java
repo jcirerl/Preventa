@@ -211,7 +211,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
 
     ProgressDialog pDialogtft,pDialogTipoare,pDialogUserrel,pDialogGrup,pDialogTerminal,pDialogFra,pDialogCruge,pDialogPlato,pDialogFac,pDialogPalabras,
             pDialogEmpr,pDialogLocal,pDialogSec,pDialogSecFechas,pDialogCaja,pDialogTurno,pDialogMesa,pDialogRango,pDialogEmpleado,pDialogMoneda;
-    ProgressDialog pDialog;
+    ProgressDialog pDialog,pDialogParam;
     public static TextView itempedido;
     public static TextView itemseccion;
     public static TextView itemcaja;
@@ -234,6 +234,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     String TAG_EMPRESA = "EMPRESA: ";
     String TAG_LOCAL = "LOCAL: ";
     String TAG_SECCION = "SECCION: ";
+    String TAG_PARAM = "PARAMETROS: ";
     String TAG_CAJA = "CAJA: ";
     String TAG_SERIE = "SERIE";
     String TAG_TURNO = "TURNO: ";
@@ -648,6 +649,9 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
              
         URL_TFTBUFFET = Filtro.getUrl() + "/get_tiposcobro.php";
         //  RELACION USUARIO
+        lparam = new ArrayList<Param>();
+        URL_PARAMS = Filtro.getUrl() + "/RellenaListaPARAM.php";
+
         url_userrel = Filtro.getUrl() + "/RellenaListaUserrel.php";
         luserrel = new ArrayList<Userrel>();
         new GetUserrel().execute(url_userrel);
@@ -1336,7 +1340,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.addOnBackStackChangedListener(this);
         switch (itemDrawer.getItemId()) {
-            case R.id.0item_seccion:
+            case R.id.item_seccion:
                 if(getCruge("action_sec_admin")){
                     fragmentoGenerico = new FragmentoSeccion();
                 }
@@ -2022,6 +2026,12 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         cmbToolbarLocal.setAdapter(adapter_local);
         if (localList.size()>0) {
             Filtro.setLocal(localList.get(0).getLocalLocal());
+/*            /// CARGAR PARAMS
+            lparam = new ArrayList<Param>();
+            CountTable = "param";
+            url_count = Filtro.getUrl() + "/RellenaListaPARAM.php";
+            mSerialExecutorActivity.execute(null);
+*/
         }
     }
     /**
@@ -2047,11 +2057,6 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             //Calcular Items
             mSerialExecutorActivity = new MySerialExecutor(getApplicationContext());
             if (Filtro.getInicio()) {
-                /// CARGAR PARAMS
-                lparam = new ArrayList<Param>();
-                CountTable = "param";
-                url_count = Filtro.getUrl() + "/RellenaListaPARAM.php";
-                mSerialExecutorActivity.execute(null);
 
                 CountTable = "sec";
                 url_count = Filtro.getUrl() + "/CountSecOpen.php";
@@ -2577,17 +2582,21 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (!getCruge("action_ftp_update")) {
             Toast.makeText(this, getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
         }else{
-            FragmentManager fragmentManager = this.getSupportFragmentManager();
-            Fragment currentFragment = fragmentManager.findFragmentById(R.id.contenedor_principal);
-            Log.i("Fragment Activo: ",currentFragment.getTag().toString());
-            CargaFragment cargafragment = null;
-            cargafragment = new CargaFragment(FragmentoDivisionPagesFactura.newInstance(id,estado,mesa,serie,factura),getSupportFragmentManager());
-            cargafragment.getFragmentManager().addOnBackStackChangedListener(this);
-            if (cargafragment.getFragment() != null){
+            if (estado.contains("CLOSE")) {
+                Toast.makeText(this, getPalabras("Factura")+" " + estado + " " + id, Toast.LENGTH_SHORT).show();
+            } else {
+                FragmentManager fragmentManager = this.getSupportFragmentManager();
+                Fragment currentFragment = fragmentManager.findFragmentById(R.id.contenedor_principal);
+                Log.i("Fragment Activo: ", currentFragment.getTag().toString());
+                CargaFragment cargafragment = null;
+                cargafragment = new CargaFragment(FragmentoDivisionPagesFactura.newInstance(id, estado, mesa, serie, factura), getSupportFragmentManager());
+                cargafragment.getFragmentManager().addOnBackStackChangedListener(this);
+                if (cargafragment.getFragment() != null) {
 /////**                cargafragment.setTransactionToBackStackTransition(this,R.id.contenedor_principal,currentFragment,image);
-                cargafragment.setTransactionToBackStack(R.id.contenedor_principal);
-                Toast.makeText(this, getPalabras("Modificar")+" "+getPalabras("Lineas")+" " + getPalabras("Factura")+" "+ factura, Toast.LENGTH_SHORT).show();
+                    cargafragment.setTransactionToBackStack(R.id.contenedor_principal);
+                    Toast.makeText(this, getPalabras("Modificar") + " " + getPalabras("Lineas") + " " + getPalabras("Factura") + " " + factura, Toast.LENGTH_SHORT).show();
 ////                TaskHelper.execute(new CalculaCabecera(),"ftp","lft","0");
+                }
             }
         }
     }
@@ -9063,8 +9072,8 @@ ge     * */
             pDialogUserrel.dismiss();
             if (result == 1) {
                 Log.i("Resultado userrel", Integer.toString(result));
-                new GetGrupos().execute(URL_GRUPOS);
-
+  ///              new GetGrupos().execute(URL_GRUPOS);
+                new GetParams().execute(URL_PARAMS);
             } else {
                 Log.e(TAG_USERREL, "Failed to fetch data!");
             }
@@ -9980,6 +9989,200 @@ ge     * */
             e.printStackTrace();
         }
     }
+    public class GetParams extends AsyncTask<String, Void, Integer> {
+
+        @Override
+        protected void onPreExecute() {
+            //setProgressBarIndeterminateVisibility(true);
+            super.onPreExecute();
+            pDialogParam = new ProgressDialog(ActividadPrincipal.this);
+            pDialogParam.setMessage(getPalabras("Cargando")+" "+getPalabras("Parametros")+". "+getPalabras("Espere por favor")+"...");
+            pDialogParam.setIndeterminate(false);
+            pDialogParam.setCancelable(true);
+            pDialogParam.show();
+        }
+
+        @Override
+        protected Integer doInBackground(String... params) {
+//            Integer result = 0;
+            String cSql = "";
+            String xWhere = "";
+/*            String xWhere = " WHERE sec.GRUPO='" + Filtro.getGrupo() + "'";
+            xWhere += " AND sec.EMPRESA='" + Filtro.getEmpresa() + "'";
+            xWhere += " AND sec.LOCAL='" + Filtro.getLocal() + "'";
+            xWhere += " AND sec.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
+*/
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE param.GRUPO='01'";
+                } else {
+                    xWhere += " AND param.GRUPO='01'";
+                }
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE param.EMPRESA='01'";
+                } else {
+                    xWhere += " AND param.EMPRESA='01'";
+                }
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE param.LOCAL='01'";
+                } else {
+                    xWhere += " AND param.LOCAL='01'";
+                }
+
+            cSql += xWhere;
+            if(cSql.equals("")) {
+                cSql="Todos";
+            }
+            Log.i("Sql Lista",cSql);
+            InputStream inputStream = null;
+            Integer result = 0;
+            HttpURLConnection urlConnection = null;
+
+            try {
+                // forming th java.net.URL object
+                URL url = new URL(params[0]);
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                // for Get request
+                ///           urlConnection.setRequestMethod("GET");
+
+                urlConnection.setReadTimeout(10000);
+                urlConnection.setConnectTimeout(15000);
+                urlConnection.setRequestMethod("GET");
+                urlConnection.setDoInput(true);
+                urlConnection.setDoOutput(true);
+//                List<NameValuePair> params1 = new ArrayList<NameValuePair>();
+//                params1.add(new BasicNameValuePair("filtro", cSql));
+
+                ContentValues values = new ContentValues();
+                values.put("filtro", cSql);
+
+                OutputStream os = urlConnection.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+//                writer.write(getQuery(params1));
+                writer.write(getQuery(values));
+                writer.flush();
+                writer.close();
+                os.close();
+                urlConnection.connect();
+
+                int statusCode = urlConnection.getResponseCode();
+                Log.i("STATUS CODE: ", Integer.toString(urlConnection.getResponseCode()) + " - " + urlConnection.getResponseMessage());
+                // 200 represents HTTP OK
+                if (statusCode ==  200) {
+
+                    BufferedReader r = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = r.readLine()) != null) {
+                        response.append(line);
+                    }
+                    Log.i("JSON-->", response.toString());
+
+                    for (Iterator<Param> it = lparam.iterator(); it.hasNext();){
+                        Param param = it.next();
+                        it.remove();
+                    }
+
+                    parseResultParam(response.toString());
+                    result = 1; // Successful
+                }else{
+                    result = 0; //"Failed to fetch data!";
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+//                Log.d(TAG, e.getLocalizedMessage());
+            }
+
+            return result; //"Failed to fetch data!";
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            /* Download complete. Lets update UI */
+            pDialogParam.dismiss();
+            if (result == 1) {
+                Log.e(TAG_PARAM, "OK PARAM");
+                new GetGrupos().execute(URL_GRUPOS);
+            } else {
+                Log.e(TAG_PARAM, "Failed to fetch data!");
+            }
+        }
+    }
+    private void parseResultParam(String result) {
+        try {
+            JSONObject response = new JSONObject(result);
+            JSONArray posts = response.optJSONArray("posts");
+            Log.i("Longitud Datos Param: ",Integer.toString(posts.length()));
+            for (int ii = 0; ii < posts.length(); ii++) {
+                JSONObject post = posts.optJSONObject(ii);
+                Param cat = new Param(
+                        post.optString("DEFAULT_ESTADO_TODOS_GRUPO"),
+                        post.optString("DEFAULT_ESTADO_TODOS_EMPRESA"),
+                        post.optString("DEFAULT_ESTADO_TODOS_LOCAL"),
+                        post.optString("DEFAULT_ESTADO_TODOS_SECCION"),
+                        post.optString("DEFAULT_ESTADO_TODOS_CAJA"),
+                        post.optString("DEFAULT_ESTADO_TODOS_TURNO"),
+                        post.optString("DEFAULT_ESTADO_TODOS_MESA"),
+                        post.optString("DEFAULT_ESTADO_TODOS_EMPLEADO"),
+                        post.optString("DEFAULT_ESTADO_TODOS_TIPOPLATO"),
+                        post.optString("DEFAULT_ESTADO_OPEN_PEDIDO"),
+                        post.optString("DEFAULT_ESTADO_OPEN_FACTURA"),
+                        post.optString("DEFAULT_ESTADO_CLOSE_PEDIDO"),
+                        post.optString("DEFAULT_ESTADO_CLOSE_FACTURA"),
+                        post.optString("DEFAULT_ESTADO_COBRO_FACTURA"),
+                        post.optString("DEFAULT_TIPO_COBRO_OPEN_FACTURA"),
+                        post.optString("DEFAULT_TABLA_OPEN_PEDIDO"),
+                        post.optString("DEFAULT_TABLA_OPEN_FACTURA"),
+                        post.optString("DEFAULT_TABLA_OPEN_FACTURA_CLIENTES"),
+                        post.optString("DEFAULT_TIPO_MESA_BUFFET"),
+                        post.optString("DEFAULT_TIPO_COBRO_BUFFET"),
+                        post.optString("DEFAULT_SERIE_BUFFET"),
+                        post.optString("DEFAULT_TIPO_SERIE_FACTURA_CLIENTE"),
+                        post.optInt("DEFAULT_VALOR_ON_APERTURA"),
+                        post.optInt("DEFAULT_VALOR_ON_ACTIVO"),
+                        post.optInt("DEFAULT_VALOR_OFF_APERTURA"),
+                        post.optInt("DEFAULT_VALOR_OFF_ACTIVO"));
+    
+                Log.i("Params: ",
+                        cat.getDEFAULT_ESTADO_TODOS_GRUPO()+"\n" +
+                                cat.getDEFAULT_ESTADO_TODOS_EMPRESA()+"\n" +
+                                cat.getDEFAULT_ESTADO_TODOS_LOCAL()+"\n" +
+                                cat.getDEFAULT_ESTADO_TODOS_SECCION()+"\n" +
+                                cat.getDEFAULT_ESTADO_TODOS_CAJA()+"\n" +
+                                cat.getDEFAULT_ESTADO_TODOS_TURNO()+"\n" +
+                                cat.getDEFAULT_ESTADO_TODOS_MESA()+"\n" +
+                                cat.getDEFAULT_ESTADO_TODOS_EMPLEADO()+"\n" +
+                                cat.getDEFAULT_ESTADO_TODOS_TIPOPLATO()+"\n" +
+                                cat.getDEFAULT_ESTADO_OPEN_PEDIDO()+"\n" +
+                                cat.getDEFAULT_ESTADO_OPEN_FACTURA()+"\n" +
+                                cat.getDEFAULT_ESTADO_CLOSE_PEDIDO()+"\n" +
+                                cat.getDEFAULT_ESTADO_CLOSE_FACTURA()+"\n" +
+                                cat.getDEFAULT_ESTADO_COBRO_FACTURA()+"\n" +
+                                cat.getDEFAULT_TIPO_COBRO_OPEN_FACTURA()+"\n" +
+                                cat.getDEFAULT_TABLA_OPEN_PEDIDO()+"\n" +
+                                cat.getDEFAULT_TABLA_OPEN_FACTURA()+"\n" +
+                                cat.getDEFAULT_TABLA_OPEN_FACTURA_CLIENTES()+"\n" +
+                                cat.getDEFAULT_TIPO_MESA_BUFFET()+"\n" +
+                                cat.getDEFAULT_TIPO_COBRO_BUFFET()+"\n" +
+                                cat.getDEFAULT_SERIE_BUFFET()+"\n" +
+                                cat.getDEFAULT_TIPO_SERIE_FACTURA_CLIENTE()+"\n" +
+                                cat.getDEFAULT_VALOR_ON_APERTURA()+"\n" +
+                                cat.getDEFAULT_VALOR_ON_ACTIVO()+"\n" +
+                                cat.getDEFAULT_VALOR_OFF_APERTURA()+"\n" +
+                                cat.getDEFAULT_VALOR_OFF_ACTIVO());
+    
+                lparam.add(cat);
+                Filtro.setT_fra(lparam.get(0).getDEFAULT_TIPO_COBRO_OPEN_FACTURA());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Async task to get all food secciones
      */
@@ -13023,6 +13226,14 @@ ge     * */
 
 //                TaskHelper.execute(new DownloadImageTask(imagelogo), localList.get(position).getLocalUrlimagen());
                 Log.i("image",localList.get(position).getLocalUrlimagen());
+
+                /// CARGAR PARAMS
+/*                lparam = new ArrayList<Param>();
+                CountTable = "param";
+                url_count = Filtro.getUrl() + "/RellenaListaPARAM.php";
+                mSerialExecutorActivity.execute(null);
+*/
+
                 new GetSecciones().execute(URL_SECCIONES);
             }
         }
@@ -13037,11 +13248,6 @@ ge     * */
                 Filtro.setSeccion(secList.get(position).getSeccionSeccion());
                 Filtro.setIvaIncluido(secList.get(position).getSeccionIvaIncluido());
 
-                /// CARGAR PARAMS
-                lparam = new ArrayList<Param>();
-                CountTable = "param";
-                url_count = Filtro.getUrl() + "/RellenaListaPARAM.php";
-                mSerialExecutorActivity.execute(null);
 
                 /// almacenar platos en arraylist
                 TaskHelper.execute(new GetPlatos(), url_platos);
@@ -13906,6 +14112,7 @@ ge     * */
             }
 
             switch (xTabla){
+
                 case "are":
                     if(!(Filtro.getTipo_are().equals(""))) {
                         if (xWhere.equals("")) {

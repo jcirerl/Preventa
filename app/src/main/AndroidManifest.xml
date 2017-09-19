@@ -59,6 +59,7 @@
         <activity
             android:name=".ui.ActividadInicio"
             android:screenOrientation="landscape"
+            android:launchMode="singleTask"
             android:label="@string/titulopersonalizado" >
             <intent-filter>
                 <action android:name="android.nfc.action.TECH_DISCOVERED" />

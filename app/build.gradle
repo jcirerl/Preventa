@@ -55,27 +55,35 @@ android {
     }
 
 }
+apply from: "$rootDir/dependencies.gradle"
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:25.3.1'
+    testCompile 'junit:junit:4.12'
+    compile MODULE_1_DEPS
+    compile('com.mikepenz:fastadapter:2.1.7@aar') {transitive = true}
+    compile 'com.mikepenz:fastadapter-commons:2.1.0@aar'
+ //   debugCompile project(path: ':creditCardNfcReader', configuration: "debug")
+ //   releaseCompile project(path: ':creditCardNfcReader', configuration: "release")
+
+//    compile project(':creditCardNfcReader')
+/*    compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.github.bumptech.glide:glide:3.8.0'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.android.support:cardview-v7:25.3.1'
     compile 'commons-net:commons-net:+'
-    compile 'com.google.android.gms:play-services:11.0.4'
+    compile 'com.google.android.gms:play-services:8.3.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.google.code.ksoap2-android:ksoap2-android:3.6.1'
     compile 'com.github.gcacace:signature-pad:1.2.0'
     compile 'eu.chainfire:libsuperuser:1.0.0.+'
-    compile 'org.apache.commons:commons-lang3:3.5'
+    compile 'org.apache.commons:commons-lang3:3.0'
     compile 'org.jetbrains:annotations-java5:15.0'
     compile 'com.github.greasemonk:timetable:1.2.0'
-    compile('com.mikepenz:fastadapter:2.1.7@aar') {transitive = true}
-    compile 'com.mikepenz:fastadapter-commons:2.1.0@aar'
     compile 'com.github.spyhunter99:super-tooltip-aar:4.0.0'
-    compile 'com.github.pro100svitlo:creditCardNfcReader:1.0.2'
+    compile 'com.github.pro100svitlo:creditCardNfcReader:1.0.2'*/
 // https://mvnrepository.com/artifact/com.miguelangeljulvez.easyredsys/easyredsys-server
  //   compile group: 'com.miguelangeljulvez.easyredsys', name: 'easyredsys-server', version: '1.0.0'
 }
