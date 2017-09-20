@@ -325,8 +325,8 @@ public class MesasActivity extends FragmentActivity {
             Drawable[] layers3 = {image.getBackground()};
 
     //        dMesa = new DecoratedTextViewDrawable(image, layers1, 0, "MESAS",model.getMesaMesa());
-            dpedidos = new DecoratedTextViewDrawable(image, layers2, model.getMesaPedidos(), "PEDIDOS", model.getMesaMesa());
-            dfacturas = new DecoratedTextViewDrawable(image, layers3, model.getMesaFacturas(), "FACTURAS", model.getMesaMesa());
+            dpedidos = new DecoratedTextViewDrawable(image, layers2, model.getMesaPedidos(), "PEDIDOS", model.getMesaMesa(),Filtro.getOppedidodirectomesa() );
+            dfacturas = new DecoratedTextViewDrawable(image, layers3, model.getMesaFacturas(), "FACTURAS", model.getMesaMesa(),Filtro.getOpfacturadirectomesa());
 
 
     //**        image.setCompoundDrawablesWithIntrinsicBounds( (model.getMesaPedidos()>0 ? dpedidos : null), (model.getMesaFacturas()>0 ? dfacturas : null), null, d1 );
@@ -1725,8 +1725,8 @@ public class MesasActivity extends FragmentActivity {
                                 Drawable[] layers2 = {image.getBackground()};
                                 Drawable[] layers3 = {image.getBackground()};
 
-                                dpedidos = new DecoratedTextViewDrawable(image, layers2, model.getMesaPedidos(), "PEDIDOS", model.getMesaMesa());
-                                dfacturas = new DecoratedTextViewDrawable(image, layers3, model.getMesaFacturas(), "FACTURAS", model.getMesaMesa());
+                                dpedidos = new DecoratedTextViewDrawable(image, layers2, model.getMesaPedidos(), "PEDIDOS", model.getMesaMesa(),Filtro.getOppedidodirectomesa());
+                                dfacturas = new DecoratedTextViewDrawable(image, layers3, model.getMesaFacturas(), "FACTURAS", model.getMesaMesa(),Filtro.getOpfacturadirectomesa());
 
                                 image.setCompoundDrawablesWithIntrinsicBounds( (model.getMesaApertura()>0 ? dpedidos : null), (model.getMesaApertura()>0 ? dfacturas : null), null, d1 );
 
@@ -1760,8 +1760,8 @@ public class MesasActivity extends FragmentActivity {
                                 Drawable[] layers2 = {image.getBackground()};
                                 Drawable[] layers3 = {image.getBackground()};
 
-                                dpedidos = new DecoratedTextViewDrawable(image, layers2, model.getMesaPedidos(), "PEDIDOS", model.getMesaMesa());
-                                dfacturas = new DecoratedTextViewDrawable(image, layers3, model.getMesaFacturas(), "FACTURAS", model.getMesaMesa());
+                                dpedidos = new DecoratedTextViewDrawable(image, layers2, model.getMesaPedidos(), "PEDIDOS", model.getMesaMesa(),Filtro.getOppedidodirectomesa());
+                                dfacturas = new DecoratedTextViewDrawable(image, layers3, model.getMesaFacturas(), "FACTURAS", model.getMesaMesa(),Filtro.getOpfacturadirectomesa());
 
                                 image.setCompoundDrawablesWithIntrinsicBounds( (model.getMesaApertura()>0 ? dpedidos : null), (model.getMesaApertura()>0 ? dfacturas : null), null, d1 );
 

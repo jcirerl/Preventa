@@ -53,6 +53,7 @@ import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -61,6 +62,7 @@ import tpv.cirer.com.marivent.R;
 import tpv.cirer.com.marivent.conexion_http_post.JSONParser;
 import tpv.cirer.com.marivent.herramientas.Filtro;
 import tpv.cirer.com.marivent.herramientas.ProcessManager;
+import tpv.cirer.com.marivent.modelo.Cruge;
 import tpv.cirer.com.marivent.modelo.Palabras;
 
 import static tpv.cirer.com.marivent.ui.SplashScreen.lpalabras;
@@ -68,6 +70,8 @@ import static tpv.cirer.com.marivent.ui.SplashScreen.lpalabras;
 //import tpv.cirer.com.marivent.R;
 
 public class LoginActivity extends AppCompatActivity {
+    public static List<Cruge> lcruge;
+    private static final String TAG_CRUGE = "Lista Cruge";
     EditText user;
     EditText pass;
     TextView lblUser;
@@ -77,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
     Button salir;
 
     // declare the dialog as a member field of your activity
-    ProgressDialog mProgressDialog;
+    ProgressDialog mProgressDialog,pDialogCruge;
     StringBuilder sb_local = new StringBuilder();
     StringBuilder response = null;
     String sourceUrl;
@@ -329,9 +333,10 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     if (result == 1) {
                         Toast.makeText(getBaseContext(), getPalabras("Usuario")+" "+getPalabras("Correcto"), Toast.LENGTH_SHORT).show();
-                        Intent myIntent = new Intent(LoginActivity.this, ActividadPrincipal.class);
-                        LoginActivity.this.startActivityForResult(myIntent, 0);
-                        finish();
+                        // RELLENAMOS ACCIONES PERMITIDAS CRUGE
+                        String url_cruge = Filtro.getUrl() + "/RellenaListaCruge.php";
+                        lcruge = new ArrayList<Cruge>();
+                        new GetCruge().execute(url_cruge);
                     } else {
 
                         Toast.makeText(getBaseContext(),getPalabras("Usuario")+" "+getPalabras("Incorrecto"), Toast.LENGTH_SHORT).show();
@@ -989,6 +994,129 @@ public class LoginActivity extends AppCompatActivity {
         }
         return "**";
     }
+    public class GetCruge extends AsyncTask<String, Void, Integer> {
+
+        @Override
+        protected void onPreExecute() {
+            //setProgressBarIndeterminateVisibility(true);
+            super.onPreExecute();
+            pDialogCruge = new ProgressDialog(LoginActivity.this);
+            pDialogCruge.setMessage(getPalabras("Cargando")+" Cruge. "+getPalabras("Espere por favor")+"...");
+            pDialogCruge.setIndeterminate(false);
+            pDialogCruge.setCancelable(true);
+            pDialogCruge.show();
+
+        }
+
+        @Override
+        protected Integer doInBackground(String... params) {
+            String cSql = "";
+            String xWhere = "";
+            if(!(Filtro.getUsuario().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE cruge_user.username='" + Filtro.getUsuario() + "'";
+                } else {
+                    xWhere += " AND cruge_user.username='" + Filtro.getUsuario() + "'";
+                }
+            }
+
+            cSql += xWhere;
+            if(cSql.equals("")) {
+                cSql="Todos";
+            }
+            Log.i("Sql Lista",cSql);
+            InputStream inputStream = null;
+            Integer result = 0;
+            HttpURLConnection urlConnection = null;
+
+            try {
+                // forming th java.net.URL object
+                URL url = new URL(params[0]);
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                urlConnection.setReadTimeout(10000);
+                urlConnection.setConnectTimeout(15000);
+                urlConnection.setRequestMethod("GET");
+                urlConnection.setDoInput(true);
+                urlConnection.setDoOutput(true);
+
+                ContentValues values = new ContentValues();
+                values.put("filtro", cSql);
+
+                OutputStream os = urlConnection.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+                writer.write(getQuery(values));
+                writer.flush();
+                writer.close();
+                os.close();
+                urlConnection.connect();
+
+                int statusCode = urlConnection.getResponseCode();
+                Log.i("STATUS CODE: ", Integer.toString(urlConnection.getResponseCode()) + " - " + urlConnection.getResponseMessage());
+                // 200 represents HTTP OK
+                if (statusCode ==  200) {
+
+                    BufferedReader r = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = r.readLine()) != null) {
+                        response.append(line);
+                    }
+                    Log.i("JSON-->", response.toString());
+                    for (Iterator<Cruge> it = lcruge.iterator(); it.hasNext();){
+                        Cruge cruge = it.next();
+                        it.remove();
+                    }
+
+                    parseResultcruge(response.toString());
+                    result = 1; // Successful
+                }else{
+                    result = 0; //"Failed to fetch data!";
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+//                Log.d(TAG, e.getLocalizedMessage());
+            }
+
+            return result; //"Failed to fetch data!";
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            /* Download complete. Lets update UI */
+            pDialogCruge.dismiss();
+            if (result == 1) {
+                Log.i(TAG_CRUGE, Integer.toString(lcruge.size()));
+            } else {
+                Log.e(TAG_CRUGE, "Failed to fetch data!");
+            }
+            Intent myIntent = new Intent(LoginActivity.this, ActividadPrincipal.class);
+            LoginActivity.this.startActivityForResult(myIntent, 0);
+            finish();
+
+        }
+    }
+    private void parseResultcruge(String result) {
+        try {
+            JSONObject response = new JSONObject(result);
+            JSONArray posts = response.optJSONArray("posts");
+
+            Log.i("Longitud Datos: ",Integer.toString(posts.length()));
+            for (int ii = 0; ii < posts.length(); ii++) {
+                JSONObject post = posts.optJSONObject(ii);
+                Cruge cat = new Cruge(post.optString("ACTION"));
+                Log.i(TAG_CRUGE,post.optString("ACTION"));
+                lcruge.add(cat);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
 

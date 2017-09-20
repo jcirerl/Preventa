@@ -23,12 +23,14 @@ public class DecoratedTextViewDrawable extends LayerDrawable {
     private String mModelo;
     private String mMesa;
     private String mTexto;
+    private Boolean mAmpliado;
 
-    public DecoratedTextViewDrawable(Button tv, Drawable[] layers, int cnt, String modelo, String mesaDecorated) {
+    public DecoratedTextViewDrawable(Button tv, Drawable[] layers, int cnt, String modelo, String mesaDecorated, Boolean ampliado) {
         super(layers);
         mParent = tv;
         mModelo=modelo;
         mMesa=mesaDecorated;
+        mAmpliado=ampliado;
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setTextAlign(Paint.Align.CENTER);
         mPaint.setTextSize(tv.getTextSize());
@@ -66,9 +68,15 @@ public class DecoratedTextViewDrawable extends LayerDrawable {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-
-        float x = mPaint.getTextSize() * 1.5f;
-        float r = mPaint.getTextSize() * 1.5f; // Antes 0.9f
+        float x;
+        float r;
+        if (mAmpliado){
+            x = mPaint.getTextSize() * 1.5f;
+            r = mPaint.getTextSize() * 1.5f; // Antes 0.9f
+        }else{
+            x = mPaint.getTextSize() * 1.5f;
+            r = mPaint.getTextSize() * 0.9f;
+        }
         int base = mParent.getBaseline();
         int[] stateSet = getState();
 //        Log.d(TAG, "draw " + StateSet.dump(stateSet));

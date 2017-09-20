@@ -31,6 +31,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -170,6 +172,7 @@ import tpv.cirer.com.marivent.print.PrintTicket;
 import tpv.cirer.com.marivent.servicios.ServiceMesas;
 
 import static tpv.cirer.com.marivent.print.PrintTicket.getResizedBitmap;
+import static tpv.cirer.com.marivent.ui.LoginActivity.lcruge;
 import static tpv.cirer.com.marivent.ui.SplashScreen.lpalabras;
 
 //import android.support.v7.app.AlertDialog;
@@ -357,7 +360,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
 
     public static List<Categoria> lcategoria;
     public static List<Userrel> luserrel;
-    public static List<Cruge> lcruge;
+//    public static List<Cruge> lcruge;
     public static List<Plato> lplato;
     public static List<Fac> lfac;
     public static List<Param> lparam;
@@ -490,12 +493,14 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+    private Toolbar toolbar;
 
     private long backPressedTime = 0;    // used by onBackPressed()
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actividad_principal);
+
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
@@ -510,10 +515,10 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setIcon(R.drawable.logo_ricoparico); //also displays wide logo_ricoparico
         */
-        Calendar c=Calendar.getInstance();
-        mYear=c.get(Calendar.YEAR);
-        mMonth=c.get(Calendar.MONTH);
-        mDay=c.get(Calendar.DAY_OF_MONTH);
+        Calendar c = Calendar.getInstance();
+        mYear = c.get(Calendar.YEAR);
+        mMonth = c.get(Calendar.MONTH);
+        mDay = c.get(Calendar.DAY_OF_MONTH);
 
 /*        shared = getSharedPreferences("App_settings", MODE_PRIVATE);
         // add values for your ArrayList any where...
@@ -542,26 +547,26 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         Filtro.setOptipoarticulo(Float.parseFloat(pref.getString("optipoarticulo", "16.0")));
         Filtro.setOptoolbar(Integer.parseInt(pref.getString("optoolbar", "0")));
         Filtro.setOptab(Integer.parseInt(pref.getString("optab", "0")));
-        Filtro.setOppedidomesa(Boolean.parseBoolean(pref.getString("oppedidomesa","false")));
+        Filtro.setOppedidomesa(Boolean.parseBoolean(pref.getString("oppedidomesa", "false")));
 
-        Filtro.setOppedidodirectomesa(Boolean.parseBoolean(pref.getString("oppedidodirectomesa","false")));
-        Filtro.setOpfacturadirectomesa(Boolean.parseBoolean(pref.getString("opfacturadirectomesa","false")));
+        Filtro.setOppedidodirectomesa(Boolean.parseBoolean(pref.getString("oppedidodirectomesa", "false")));
+        Filtro.setOpfacturadirectomesa(Boolean.parseBoolean(pref.getString("opfacturadirectomesa", "false")));
 
         Filtro.setOpintervalo(Integer.parseInt(pref.getString("opintervalo", "10000")));
-        Filtro.setOplog(Boolean.parseBoolean(pref.getString("oplog","true")));
-        Filtro.setOptipotablet(Integer.parseInt(pref.getString("optipotablet","0")));
+        Filtro.setOplog(Boolean.parseBoolean(pref.getString("oplog", "true")));
+        Filtro.setOptipotablet(Integer.parseInt(pref.getString("optipotablet", "0")));
         Filtro.setFilelog("");
-        Log.i("oplog",Boolean.toString((Filtro.getOplog())));
-        if(Filtro.getOptoolbar()==0){
+        Log.i("oplog", Boolean.toString((Filtro.getOplog())));
+        if (Filtro.getOptoolbar() == 0) {
             Filtro.setHide_toolbar1(false);
             Filtro.setHide_toolbar2(false);
-        }else{
+        } else {
             Filtro.setHide_toolbar1(true);
             Filtro.setHide_toolbar2(true);
         }
 ////                    Log.i("pixels",Double.toString(checkDimension(getApplicationContext())));
         if (Filtro.getOplog()) {
-            Log.i("oplog",Boolean.toString((Filtro.getOplog())));
+            Log.i("oplog", Boolean.toString((Filtro.getOplog())));
             /// REGISTRAR LOG APLICACION
             String fileName = "logcat_" + System.currentTimeMillis() + ".txt";
             try {
@@ -582,7 +587,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         Filtro.setPrintPrinterName("TM-T20II");
 */
 ///        Filtro.setUrl("http://localhost:8080/tpv");
-    ///    Filtro.setNamespace("http://jcirerl-001-site1.dtempurl.com/webserviceslinux/");
+        ///    Filtro.setNamespace("http://jcirerl-001-site1.dtempurl.com/webserviceslinux/");
 /*        Filtro.setNamespace("http://192.168.1.36:8082/");
         Filtro.setDirreportname("tpv/rpt/");
         Filtro.setDirpdfname("tpv/pdf/");
@@ -593,11 +598,11 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         Filtro.setPwdname("");
 */
         Calendar currentDate = Calendar.getInstance(); //Get the current date
-        SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); //format it as per your requirement
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); //format it as per your requirement
         String dateNow = formatter.format(currentDate.getTime());
 
         Filtro.setFechaapertura(dateNow);
-        Log.i("FechaApertura",Filtro.getFechaapertura());
+        Log.i("FechaApertura", Filtro.getFechaapertura());
 
         Filtro.setT_fra("");
         Filtro.setGrupo("");
@@ -646,7 +651,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         tftList = new ArrayList<TipoCobro>();
         URL_TFTBUFFET = Filtro.getUrl() + "/get_tiposcobro.php";
 
-             
+
         URL_TFTBUFFET = Filtro.getUrl() + "/get_tiposcobro.php";
         //  RELACION USUARIO
         lparam = new ArrayList<Param>();
@@ -656,11 +661,10 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         luserrel = new ArrayList<Userrel>();
         new GetUserrel().execute(url_userrel);
 
-        // RELLENAMOS ACCIONES PERMITIDAS CRUGE
-        url_cruge = Filtro.getUrl() + "/RellenaListaCruge.php";
-        lcruge = new ArrayList<Cruge>();
-        new GetCruge().execute(url_cruge);
-
+        // RELLENAMOS ACCIONES PERMITIDAS CRUGE (ahora lo carga de loginactivity
+//        url_cruge = Filtro.getUrl() + "/RellenaListaCruge.php";
+//        lcruge = new ArrayList<Cruge>();
+//        new GetCruge().execute(url_cruge);
 
 
         // Rellenar string toolbar_grupo
@@ -697,7 +701,6 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         lblGrup = (TextView) findViewById(R.id.LblGrup);
         lblGrup.setText(ValorCampo(R.id.LblGrup, lblGrup.getClass().getName()));
         cmbToolbarGrup = (Spinner) findViewById(R.id.CmbToolbarGrup);
-
         cmbToolbarGrup.setOnItemSelectedListener(this);
         URL_GRUPOS = Filtro.getUrl() + "/get_grupos.php";
 ///        new GetGrupos().execute(URL_GRUPOS);
@@ -943,6 +946,19 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
 
 
         initializeCountDrawer();
+
+    }
+    private void comprobarToolbar(){
+        if (!getCruge("action_grup_view")) {
+            int textviewGrupID = getResources().getIdentifier("LblGrup", "id", getPackageName());
+            TextView txtGrup = (TextView) findViewById(textviewGrupID);
+            txtGrup.setVisibility(View.GONE);
+
+            int spinnerGrupID = getResources().getIdentifier("CmbToolbarGrup", "id", getPackageName());
+            Spinner spnGrup = (Spinner) findViewById(spinnerGrupID);
+            spnGrup.setVisibility(View.GONE);
+
+        }
 
     }
     private void packagesharedPreferences() {
@@ -1229,9 +1245,18 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
 
         }
     };
-
+    public static void setOverflowButtonColor(final Toolbar toolbar1, final int color) {
+        Drawable drawable = toolbar1.getOverflowIcon();
+        if(drawable != null) {
+            drawable = DrawableCompat.wrap(drawable);
+            DrawableCompat.setTint(drawable.mutate(), color);
+            toolbar1.setOverflowIcon(drawable);
+        }
+    }
     private void agregarToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+///        toolbar.setBackgroundColor(Filtro.getColorItem()); PONER COLOR A TODA LA BARRA
+///        setOverflowButtonColor(toolbar, Filtro.getColorItem()); // PONER COLOR AL BOTTON DEL FINAL DE LA BARRA
         TextView conn = (TextView) toolbar.findViewById(R.id.txtconnection);
         conn.setText(Filtro.getConexion());
         conn.setTextSize(16);
@@ -1269,8 +1294,14 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         final ActionBar ab = getSupportActionBar();
         if (ab != null) {
             // Poner ícono del drawer toggle
-            ab.setHomeAsUpIndicator(R.drawable.drawer_toggle);
+//            ab.setHomeAsUpIndicator(R.drawable.drawer_toggle);
+//            ab.setDisplayHomeAsUpEnabled(true);
+            Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.drawer_toggle, null);
+            drawable = DrawableCompat.wrap(drawable);
+            DrawableCompat.setTint(drawable, Filtro.getColorItem());
+            ab.setHomeAsUpIndicator(drawable);
             ab.setDisplayHomeAsUpEnabled(true);
+
         }
 
     }
@@ -2278,6 +2309,19 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (empleadosList.size()>0) {
             Filtro.setEmpleado(empleadosList.get(0).getEmpleadoEmpleado());
         }
+        if(!Filtro.getInicio()){
+            // Ponemos en verde opcion menu
+            final ActionBar ab = getSupportActionBar();
+            if (ab != null) {
+                // Poner ícono del drawer toggle
+                Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.drawer_toggle, null);
+                drawable = DrawableCompat.wrap(drawable);
+                DrawableCompat.setTint(drawable, Filtro.getColorItemZero());
+                ab.setHomeAsUpIndicator(drawable);
+                ab.setDisplayHomeAsUpEnabled(true);
+            }
+        }
+
     }
     /**
      * Adding spinner data empleados
@@ -8836,7 +8880,7 @@ ge     * */
                 }
             }
 
-            xWhere += " AND tipoare.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
+            xWhere += " AND tipoare.ACTIVO=1";
 
             cSql += xWhere;
             if(cSql.equals("")) {
@@ -9072,8 +9116,8 @@ ge     * */
             pDialogUserrel.dismiss();
             if (result == 1) {
                 Log.i("Resultado userrel", Integer.toString(result));
-  ///              new GetGrupos().execute(URL_GRUPOS);
-                new GetParams().execute(URL_PARAMS);
+                new GetGrupos().execute(URL_GRUPOS);
+  ///              new GetParams().execute(URL_PARAMS);
             } else {
                 Log.e(TAG_USERREL, "Failed to fetch data!");
             }
@@ -9257,7 +9301,7 @@ ge     * */
     }
 
 
-    public class GetCruge extends AsyncTask<String, Void, Integer> {
+ /*   public class GetCruge extends AsyncTask<String, Void, Integer> {
 
         @Override
         protected void onPreExecute() {
@@ -9350,17 +9394,18 @@ ge     * */
 
         @Override
         protected void onPostExecute(Integer result) {
-            /* Download complete. Lets update UI */
             pDialogCruge.dismiss();
             if (result == 1) {
                 Log.i(TAG_CRUGE, Integer.toString(lcruge.size()));
+                comprobarToolbar();
             } else {
                 Log.e(TAG_CRUGE, "Failed to fetch data!");
             }
         }
     }
+    */
 
-    private void parseResultcruge(String result) {
+/*    private void parseResultcruge(String result) {
         try {
             JSONObject response = new JSONObject(result);
             JSONArray posts = response.optJSONArray("posts");
@@ -9376,7 +9421,7 @@ ge     * */
             e.printStackTrace();
         }
     }
-
+*/
     public static String getLocalIpAddress() {
         String ip ="127.0.0.1";
         try {
@@ -10007,26 +10052,34 @@ ge     * */
 //            Integer result = 0;
             String cSql = "";
             String xWhere = "";
-/*            String xWhere = " WHERE sec.GRUPO='" + Filtro.getGrupo() + "'";
-            xWhere += " AND sec.EMPRESA='" + Filtro.getEmpresa() + "'";
-            xWhere += " AND sec.LOCAL='" + Filtro.getLocal() + "'";
-            xWhere += " AND sec.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
-*/
+            if(!(Filtro.getGrupo().equals(""))) {
                 if (xWhere.equals("")) {
-                    xWhere += " WHERE param.GRUPO='01'";
+                    xWhere += " WHERE param.GRUPO='" + Filtro.getGrupo() + "'";
                 } else {
-                    xWhere += " AND param.GRUPO='01'";
+                    xWhere += " AND param.GRUPO='" + Filtro.getGrupo() + "'";
                 }
+            }
+            if(!(Filtro.getEmpresa().equals(""))) {
                 if (xWhere.equals("")) {
-                    xWhere += " WHERE param.EMPRESA='01'";
+                    xWhere += " WHERE param.EMPRESA='" + Filtro.getEmpresa() + "'";
                 } else {
-                    xWhere += " AND param.EMPRESA='01'";
+                    xWhere += " AND param.EMPRESA='" + Filtro.getEmpresa() + "'";
                 }
+            }
+            if(!(Filtro.getLocal().equals(""))) {
                 if (xWhere.equals("")) {
-                    xWhere += " WHERE param.LOCAL='01'";
+                    xWhere += " WHERE param.LOCAL='" + Filtro.getLocal() + "'";
                 } else {
-                    xWhere += " AND param.LOCAL='01'";
+                    xWhere += " AND param.LOCAL='" + Filtro.getLocal() + "'";
                 }
+            }
+            if(!(Filtro.getSeccion().equals(""))) {
+                if (xWhere.equals("")) {
+                    xWhere += " WHERE param.SECCION='" + Filtro.getSeccion() + "'";
+                } else {
+                    xWhere += " AND param.SECCION='" + Filtro.getSeccion() + "'";
+                }
+            }
 
             cSql += xWhere;
             if(cSql.equals("")) {
@@ -10106,7 +10159,7 @@ ge     * */
             pDialogParam.dismiss();
             if (result == 1) {
                 Log.e(TAG_PARAM, "OK PARAM");
-                new GetGrupos().execute(URL_GRUPOS);
+///                new GetGrupos().execute(URL_GRUPOS);
             } else {
                 Log.e(TAG_PARAM, "Failed to fetch data!");
             }
@@ -10398,7 +10451,7 @@ ge     * */
                 }
             }
 
-            xWhere += " AND sec.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
+            xWhere += " AND sec.ACTIVO=1";
 
             cSql += xWhere;
             if(cSql.equals("")) {
@@ -10554,7 +10607,7 @@ ge     * */
             }
 
 
-            xWhere += " AND caja.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
+            xWhere += " AND caja.ACTIVO=1";
 
             cSql += xWhere;
             if(cSql.equals("")) {
@@ -10732,7 +10785,7 @@ ge     * */
                 }
             }
 
-            xWhere += " AND rangos.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
+            xWhere += " AND rangos.ACTIVO=1";
 
             cSql += xWhere;
             if(cSql.equals("")) {
@@ -10893,7 +10946,7 @@ ge     * */
                 }
             }
 
-            xWhere += " AND turno.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
+            xWhere += " AND turno.ACTIVO=1";
 
             cSql += xWhere;
             if(cSql.equals("")) {
@@ -11254,7 +11307,7 @@ ge     * */
                 }
             }
 
-            xWhere += " AND mesas.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
+            xWhere += " AND mesas.ACTIVO=1";
 
             cSql += xWhere;
             if(cSql.equals("")) {
@@ -11422,8 +11475,8 @@ ge     * */
                 }
             }
 
-            xWhere += " AND mesas.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
-            xWhere += " AND mesas.APERTURA="+lparam.get(0).getDEFAULT_VALOR_ON_APERTURA();
+            xWhere += " AND mesas.ACTIVO=1";
+            xWhere += " AND mesas.APERTURA=1";
 
             cSql += xWhere;
             if(cSql.equals("")) {
@@ -11586,8 +11639,8 @@ ge     * */
             }
 
             xWhere += " AND mesas.T_MESA='"+lparam.get(0).getDEFAULT_TIPO_MESA_BUFFET() +"'";
-            xWhere += " AND mesas.APERTURA="+lparam.get(0).getDEFAULT_VALOR_ON_APERTURA();
-            xWhere += " AND mesas.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
+            xWhere += " AND mesas.APERTURA=1";
+            xWhere += " AND mesas.ACTIVO=1";
             cSql += xWhere;
             if(cSql.equals("")) {
                 cSql="Todos";
@@ -11758,8 +11811,8 @@ ge     * */
                 }
             }
 
-            xWhere += " AND mesas.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
-            xWhere += " AND mesas.APERTURA="+lparam.get(0).getDEFAULT_VALOR_ON_APERTURA();
+            xWhere += " AND mesas.ACTIVO=1";
+            xWhere += " AND mesas.APERTURA=1";
 
             cSql += xWhere;
             if(cSql.equals("")) {
@@ -11914,7 +11967,7 @@ ge     * */
                 }
             }
 
-            xWhere += " AND empleados.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
+            xWhere += " AND empleados.ACTIVO=1";
 
             cSql += xWhere;
             if(cSql.equals("")) {
@@ -12069,7 +12122,7 @@ ge     * */
                 }
             }
 
-            xWhere += " AND empleados.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
+            xWhere += " AND empleados.ACTIVO=1";
 
             cSql += xWhere;
             if(cSql.equals("")) {
@@ -12231,9 +12284,9 @@ ge     * */
             }
 
             if (xWhere.equals("")) {
-                xWhere += " WHERE empleados.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
+                xWhere += " WHERE empleados.ACTIVO=1";
             }else{
-                xWhere += " AND empleados.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
+                xWhere += " AND empleados.ACTIVO=1";
             }
             cSql += xWhere;
             if(cSql.equals("")) {
@@ -12375,9 +12428,9 @@ ge     * */
             }
 
             if (xWhere.equals("")) {
-                xWhere += " WHERE empleados.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
+                xWhere += " WHERE empleados.ACTIVO=1";
             }else{
-                xWhere += " AND empleados.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
+                xWhere += " AND empleados.ACTIVO=1";
             }
             cSql += xWhere;
             if(cSql.equals("")) {
@@ -13248,7 +13301,7 @@ ge     * */
                 Filtro.setSeccion(secList.get(position).getSeccionSeccion());
                 Filtro.setIvaIncluido(secList.get(position).getSeccionIvaIncluido());
 
-
+                new GetParams().execute(URL_PARAMS);
                 /// almacenar platos en arraylist
                 TaskHelper.execute(new GetPlatos(), url_platos);
                 /// almacenar categorias en arraylist
@@ -13823,8 +13876,8 @@ ge     * */
 
             switch (xTabla){
                 case "sec":
-                    xWhere += " AND sec.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
-                    xWhere += " AND sec.APERTURA="+lparam.get(0).getDEFAULT_VALOR_ON_APERTURA();
+                    xWhere += " AND sec.ACTIVO=1";
+                    xWhere += " AND sec.APERTURA=1";
 
                     break;
                 case "caja":
@@ -13843,8 +13896,8 @@ ge     * */
                         }
                     }
 
-                    xWhere += " AND caja.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
-                    xWhere += " AND caja.APERTURA="+lparam.get(0).getDEFAULT_VALOR_ON_APERTURA();
+                    xWhere += " AND caja.ACTIVO=1";
+                    xWhere += " AND caja.APERTURA=1";
 
                     break;
                 case "turno":
@@ -13869,8 +13922,8 @@ ge     * */
                             xWhere += " AND turno.COD_TURNO='" + Filtro.getTurno() + "'";
                         }
                     }
-                    xWhere += " AND turno.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
-                    xWhere += " AND turno.APERTURA="+lparam.get(0).getDEFAULT_VALOR_ON_APERTURA();
+                    xWhere += " AND turno.ACTIVO=1";
+                    xWhere += " AND turno.APERTURA=1";
 
                     break;
                 case "pdd":
@@ -14123,8 +14176,8 @@ ge     * */
                     }
                     break;
                 case "sec":
-                    xWhere += " AND sec.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
-                    xWhere += " AND sec.APERTURA="+lparam.get(0).getDEFAULT_VALOR_ON_APERTURA();
+                    xWhere += " AND sec.ACTIVO=1";
+                    xWhere += " AND sec.APERTURA=1";
                     break;
                 case "caja":
                     if(!(Filtro.getCaja().equals(""))) {
@@ -14150,8 +14203,8 @@ ge     * */
                         }
                     }
 
-                    xWhere += " AND caja.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
-                    xWhere += " AND caja.APERTURA="+lparam.get(0).getDEFAULT_VALOR_ON_APERTURA();
+                    xWhere += " AND caja.ACTIVO=1";
+                    xWhere += " AND caja.APERTURA=1";
                     break;
                 case "message":
                     if(!(Filtro.getCaja().equals(""))) {
@@ -14177,7 +14230,7 @@ ge     * */
                         }
                     }
 
-                    xWhere += " AND message.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
+                    xWhere += " AND message.ACTIVO=1";
                     break;
 
                 case "turno":
@@ -14210,8 +14263,8 @@ ge     * */
                             xWhere += " AND turno.COD_TURNO='" + Filtro.getTurno() + "'";
                         }
                     }
-                    xWhere += " AND turno.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
-                    xWhere += " AND turno.APERTURA="+lparam.get(0).getDEFAULT_VALOR_ON_APERTURA();
+                    xWhere += " AND turno.ACTIVO=1";
+                    xWhere += " AND turno.APERTURA=1";
                     break;
                 case "dcj":
                     if(!(Filtro.getCaja().equals(""))) {
@@ -14243,7 +14296,7 @@ ge     * */
                             xWhere += " AND dcj.COD_TURNO='" + Filtro.getTurno() + "'";
                         }
                     }
-                    xWhere += " AND dcj.APERTURA="+lparam.get(0).getDEFAULT_VALOR_ON_APERTURA();
+                    xWhere += " AND dcj.APERTURA=1";
                     break;
                 case "pdd":
                     if(!(Filtro.getCaja().equals(""))) {
@@ -14344,8 +14397,8 @@ ge     * */
                         }
                     }
 
-                    xWhere += " AND mesas.ACTIVO="+lparam.get(0).getDEFAULT_VALOR_ON_ACTIVO();
-                    xWhere += " AND mesas.APERTURA="+lparam.get(0).getDEFAULT_VALOR_ON_APERTURA();
+                    xWhere += " AND mesas.ACTIVO=1";
+                    xWhere += " AND mesas.APERTURA=1";
                     break;
 
                 case "lft":
