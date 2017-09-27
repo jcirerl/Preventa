@@ -173,7 +173,7 @@ public class FragmentoCloseDocumentoFactura extends Fragment {
                 @Override
                 public void onClick(View view) {
 //                    new CreaDocumentoFactura().execute();
-                    Snackbar.make(view, ActividadPrincipal.getPalabras("No se puede crear")+ActividadPrincipal.getPalabras("Documento")+" "+ActividadPrincipal.getPalabras("Factura"), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(view, ActividadPrincipal.getPalabras("No se puede crear")+ActividadPrincipal.getPalabras("Documento")+" "+ActividadPrincipal.getPalabras("Factura"), Snackbar.LENGTH_SHORT).show();
                 }
             });
             setUserVisibleHint(true);

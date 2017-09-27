@@ -688,12 +688,12 @@ public class Test extends Activity implements OnTouchListener {
                             if (valueapertura.equals("1")) {
                                 setMesas(Filtro.getMesa(),1);
                                 view.setAlpha(1.0f); // abro mesa
-                                Snackbar.make(layout, ActividadPrincipal.getPalabras("Mesa")+" "+ActividadPrincipal.getPalabras("ABIERTA"), Snackbar.LENGTH_LONG).show();
+                                Snackbar.make(layout, ActividadPrincipal.getPalabras("Mesa")+" "+ActividadPrincipal.getPalabras("ABIERTA"), Snackbar.LENGTH_SHORT).show();
 
                             }else{
                                 setMesas(Filtro.getMesa(),0);
                                 view.setAlpha(0.3f); // cierro mesa
-                                Snackbar.make(layout, ActividadPrincipal.getPalabras("Mesa")+" "+ActividadPrincipal.getPalabras("CERRADA"), Snackbar.LENGTH_LONG).show();
+                                Snackbar.make(layout, ActividadPrincipal.getPalabras("Mesa")+" "+ActividadPrincipal.getPalabras("CERRADA"), Snackbar.LENGTH_SHORT).show();
                             }
                         } else {
                             Toast.makeText(getApplicationContext(), "ERROR NO MESA MESA ", Toast.LENGTH_SHORT).show();
@@ -806,7 +806,7 @@ public class Test extends Activity implements OnTouchListener {
             pDialog.dismiss();
 
             if (success == 1) {
-                Snackbar.make(layout, ActividadPrincipal.getPalabras("Factura")+" "+ActividadPrincipal.getPalabras("Generada")+" "+Filtro.getSerie()+" "+Integer.toString(Filtro.getFactura()), Snackbar.LENGTH_LONG).show();
+                Snackbar.make(layout, ActividadPrincipal.getPalabras("Factura")+" "+ActividadPrincipal.getPalabras("Generada")+" "+Filtro.getSerie()+" "+Integer.toString(Filtro.getFactura()), Snackbar.LENGTH_SHORT).show();
 //                Toast.makeText(getApplicationContext(), "Creado Factura ", Toast.LENGTH_SHORT).show();
                 // SALIR ACTIVITY
                 Intent returnIntent = new Intent();
@@ -905,7 +905,7 @@ public class Test extends Activity implements OnTouchListener {
             pDialog.dismiss();
 
             if (success == 1) {
-                Snackbar.make(layout, "Documento Pedido Generado "+Integer.toString(Filtro.getPedido()), Snackbar.LENGTH_LONG).show();
+                Snackbar.make(layout, "Documento Pedido Generado "+Integer.toString(Filtro.getPedido()), Snackbar.LENGTH_SHORT).show();
 //                Toast.makeText(getApplicationContext(), "Creado Pedido ", Toast.LENGTH_SHORT).show();
                 // SALIR ACTIVITY
                 Intent returnIntent = new Intent();
@@ -1564,7 +1564,7 @@ public class Test extends Activity implements OnTouchListener {
                         if (success == 1) {
                             Filtro.setId(json.getInt(TAG_ID));
                             Filtro.setFactura(json.getInt(TAG_FACTURA));
-                            Snackbar.make(layout, ActividadPrincipal.getPalabras("Factura")+" "+ActividadPrincipal.getPalabras("Generada")+" "+Filtro.getSerie()+" "+Integer.toString(Filtro.getFactura()), Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(layout, ActividadPrincipal.getPalabras("Factura")+" "+ActividadPrincipal.getPalabras("Generada")+" "+Filtro.getSerie()+" "+Integer.toString(Filtro.getFactura()), Snackbar.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(getApplicationContext(), "ERROR NO "+ActividadPrincipal.getPalabras("Traspaso")+" "+ActividadPrincipal.getPalabras("Pedido")+" "+ActividadPrincipal.getPalabras("Factura"), Toast.LENGTH_SHORT).show();
                             // failed to create product

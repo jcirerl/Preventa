@@ -166,7 +166,7 @@ public class FragmentoCloseDocumentoPedido extends Fragment {
                 @Override
                 public void onClick(View view) {
 //                    new CreaDocumentoPedido().execute();
-                    Snackbar.make(view, ActividadPrincipal.getPalabras("No se puede crear")+" "+ActividadPrincipal.getPalabras("Documento")+" "+ActividadPrincipal.getPalabras("Pedido"), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(view, ActividadPrincipal.getPalabras("No se puede crear")+" "+ActividadPrincipal.getPalabras("Documento")+" "+ActividadPrincipal.getPalabras("Pedido"), Snackbar.LENGTH_SHORT).show();
                 }
             });
             setUserVisibleHint(true);

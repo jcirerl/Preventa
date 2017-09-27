@@ -180,13 +180,13 @@ public class FragmentoOpenDocumentoFactura extends Fragment {
                 public void onClick(View view) {
                     if(!(ActividadPrincipal.itemdcj.getText().equals("0"))) {
                         if (!((ActividadPrincipal)getActivity()).getCruge("action_ftp_create")){
-                            Snackbar.make(view, ActividadPrincipal.getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(view, ActividadPrincipal.getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_SHORT).show();
                         }else {
                             new CreaDocumentoFactura().execute();
-                            Snackbar.make(view, ActividadPrincipal.getPalabras("Creando")+" "+ActividadPrincipal.getPalabras("Documento")+" "+ActividadPrincipal.getPalabras("Factura"), Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(view, ActividadPrincipal.getPalabras("Creando")+" "+ActividadPrincipal.getPalabras("Documento")+" "+ActividadPrincipal.getPalabras("Factura"), Snackbar.LENGTH_SHORT).show();
                         }
                     } else {
-                        Snackbar.make(view, ActividadPrincipal.getPalabras("Diario Caja No Existe o No Abierto"), Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(view, ActividadPrincipal.getPalabras("Diario Caja No Existe o No Abierto"), Snackbar.LENGTH_SHORT).show();
                     }
                 }
             });

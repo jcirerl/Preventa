@@ -155,7 +155,7 @@ public class FragmentoCloseSeccion  extends Fragment    {
             btnFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Snackbar.make(view, "No se puede crear SECCION", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(view, "No se puede crear SECCION", Snackbar.LENGTH_SHORT).show();
                 }
             });
 

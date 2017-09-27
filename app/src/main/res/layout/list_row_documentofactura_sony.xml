@@ -83,6 +83,8 @@
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/fecha"
         android:layout_toRightOf="@+id/fecha"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
         android:paddingLeft="@dimen/row_padding" />
     <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
         android:id="@+id/estado"
@@ -101,6 +103,8 @@
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/estado"
         android:layout_toRightOf="@+id/estado"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
         android:paddingLeft="@dimen/row_padding" />
     <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
         android:id="@+id/caja"
@@ -185,6 +189,8 @@
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/lineas"
         android:layout_toRightOf="@+id/lineas"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
         android:paddingLeft="@dimen/row_padding" />
     <!--    <Button
             android:id="@+id/BtnSalir"
@@ -202,7 +208,7 @@
 
     <Button
         android:id="@+id/btnUpdate"
-        style="@style/RowSubtitle"
+        style="@style/ButtonBorder.Accent"
         android:layout_gravity="center"
         android:minHeight="0dp"
         android:minWidth="0dp"
@@ -215,11 +221,10 @@
         android:drawableLeft="@android:drawable/ic_input_add"
         android:layout_marginLeft="10dp"
         android:text="@string/modificar"
-        android:gravity="center"
-        android:background="@drawable/button_bg_transparent"/>
+        android:gravity="center"/>
     <Button
         android:id="@+id/btnDelete"
-        style="@style/RowSubtitle"
+        style="@style/ButtonBorder.Accent"
         android:layout_gravity="center"
         android:minHeight="0dp"
         android:minWidth="0dp"
@@ -234,12 +239,10 @@
         android:layout_marginLeft="20dp"
         android:drawableLeft="@android:drawable/ic_delete"
         android:text="@string/anular"
-        android:gravity="center"
-        android:background="@drawable/button_bg_transparent"
-        />
+        android:gravity="center"/>
     <Button
         android:id="@+id/btnCobro"
-        style="@style/RowSubtitle"
+        style="@style/ButtonBorder.Accent"
         android:layout_gravity="center"
         android:minHeight="0dp"
         android:minWidth="0dp"
@@ -254,11 +257,10 @@
         android:drawableLeft="@drawable/visa32"
         android:layout_marginLeft="20dp"
         android:gravity="center"
-        android:text="@string/cobrar"
-        android:background="@drawable/button_bg_transparent"/>
+        android:text="@string/cobrar"/>
     <Button
         android:id="@+id/btnDivision"
-        style="@style/RowSubtitle"
+        style="@style/ButtonBorder.Accent"
         android:layout_gravity="center"
         android:minHeight="0dp"
         android:minWidth="0dp"
@@ -273,11 +275,10 @@
         android:drawableLeft="@drawable/minus32"
         android:layout_marginLeft="20dp"
         android:gravity="center"
-        android:text="@string/facturar"
-        android:background="@drawable/button_bg_transparent"/>
+        android:text="@string/facturar"/>
     <Button
         android:id="@+id/btnFactura"
-        style="@style/RowSubtitle"
+        style="@style/ButtonBorder.Accent"
         android:layout_gravity="center"
         android:minHeight="0dp"
         android:minWidth="0dp"
@@ -292,8 +293,7 @@
         android:drawableLeft="@drawable/invoice32"
         android:layout_marginLeft="20dp"
         android:gravity="center"
-        android:text="@string/facturar"
-        android:background="@drawable/button_bg_transparent"/>
+        android:text="@string/facturar"/>
 
 </RelativeLayout>
 

@@ -267,14 +267,14 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
                     public void onClick(View view) {
 
                         if (!((ActividadPrincipal) getActivity()).getCruge("action_ftp_update")) {
-                            Snackbar.make(view, getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(view, getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_SHORT).show();
                         } else {
 /*                            CargaFragment cargafragment = null;
                             cargafragment = new CargaFragment(EditCobroFacturaFragment.newInstance(Integer.toString(nId), sSerie, Integer.toString(nFactura),"factura"), getFragmentManager());
                             cargafragment.getFragmentManager().addOnBackStackChangedListener((ActividadPrincipal) getActivity());
                             if (cargafragment.getFragment() != null) {
                                 cargafragment.setTransactionToBackStack(R.id.lista_coordinator);
-                                Snackbar.make(view, ActividadPrincipal.getPalabras("Cobro") + " " + ActividadPrincipal.getPalabras("Factura"), Snackbar.LENGTH_LONG).show();
+                                Snackbar.make(view, ActividadPrincipal.getPalabras("Cobro") + " " + ActividadPrincipal.getPalabras("Factura"), Snackbar.LENGTH_SHORT).show();
                             }
 */                          if ( Filtro.getCobroDesdeFactura()==0) {
                                 Fragment cobrofragment = null;
@@ -300,7 +300,7 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
                     }
                 });
             }else{
-                btnCobro.setAlpha(0.3f); // COLOR APAGADO PEDIDO CERRADO
+                btnCobro.setAlpha(0.3f); // COLOR APAGADO
 //                btnCobro.setVisibility(View.GONE);
             }
             btnPrint = (FloatingActionButton)rootViewlineadocumentofactura.findViewById(R.id.btnPrint);
@@ -309,10 +309,10 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
                 @Override
                 public void onClick(View view) {
                     if (!((ActividadPrincipal)getActivity()).getCruge("action_ftp_printg")){
-                        Snackbar.make(view, getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(view, getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_SHORT).show();
                     }else {
 
-                        Snackbar.make(view, getPalabras("Imprimir")+" "+ getPalabras("Ticket"), Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(view, getPalabras("Imprimir")+" "+ getPalabras("Ticket"), Snackbar.LENGTH_SHORT).show();
 
 /***   LEEMOS DESDE ACTIVIDAD PRINCIPAL
                         urlPrint = Filtro.getUrl() + "/CabeceraEMPR.php";

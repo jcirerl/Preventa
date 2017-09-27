@@ -111,6 +111,8 @@ public class SplashScreen extends AppCompatActivity {
                     Filtro.setOppedidodirectomesa(Boolean.parseBoolean(pref.getString("oppedidodirectomesa", "false")));
                     Filtro.setOpfacturadirectomesa(Boolean.parseBoolean(pref.getString("opfacturadirectomesa", "false")));
 
+                    Filtro.setOpokprint(Boolean.parseBoolean(pref.getString("opokprint", "false")));
+
                     Filtro.setOpintervalo(Integer.parseInt(pref.getString("opintervalo", "10000")));
                     Filtro.setOplog(Boolean.parseBoolean(pref.getString("oplog", "true")));
                     Filtro.setOptab(Integer.parseInt(pref.getString("optab", "0")));

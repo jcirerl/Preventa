@@ -42,7 +42,7 @@ public class ArticulosNew {
         this.minus = minus;
         this.urlimagen = urlimagen;
     }
-    public ArticulosNew(String codigo, String name, String code, CheckBox checkbox, Spinner cmbtoolbar, ArrayAdapter<String> adapter_plato, int posicionplato, String urlimagen, int dependietetipoplatomaestro ){
+    public ArticulosNew(String codigo, String name, String code, CheckBox checkbox, Spinner cmbtoolbar, ArrayAdapter<String> adapter_plato, int posicionplato, String urlimagen, int dependietetipoplatomaestro, float preu ){
         this.codigo = codigo;
         this.name = name;
         this.code = code;
@@ -53,6 +53,7 @@ public class ArticulosNew {
         this.posicionplato = posicionplato;
         this.urlimagen = urlimagen;
         this.dependientetipoplatomaestro=dependietetipoplatomaestro;
+        this.preu = preu;
     }
     public ArticulosNew(String name, String code, String urlimagen){
         this.name = name;

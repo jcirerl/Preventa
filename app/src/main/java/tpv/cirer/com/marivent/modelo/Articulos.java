@@ -38,6 +38,12 @@ public class Articulos {
         this.minus = minus;
         this.urlimagen = urlimagen;
     }
+    public Articulos(String name, String code, CheckBox checkbox,  float importe ){
+        this.name = name;
+        this.code = code;
+        this.checkbox = checkbox;
+        this.importe = importe;
+    }
     public Articulos(String name, String code, CheckBox checkbox, Spinner cmbtoolbar, ArrayAdapter<String> adapter_plato, int posicionplato, String urlimagen ){
         this.name = name;
         this.code = code;

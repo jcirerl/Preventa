@@ -89,7 +89,7 @@
 
     <Button
         android:id="@+id/btnUpdate"
-        style="@style/RowTitle"
+        style="@style/ButtonBorder.Accent"
         android:minHeight="0dp"
         android:minWidth="0dp"
         android:layout_alignParentBottom="true"
@@ -98,11 +98,10 @@
         android:drawableLeft="@android:drawable/ic_input_add"
         android:layout_marginLeft="10dp"
         android:layout_toEndOf="@+id/mesa"
-        android:layout_toRightOf="@+id/mesa"
-        android:background="@drawable/button_bg_transparent"/>
+        android:layout_toRightOf="@+id/mesa"/>
     <Button
         android:id="@+id/btnDelete"
-        style="@style/RowTitle"
+        style="@style/ButtonBorder.Accent"
         android:minHeight="0dp"
         android:minWidth="0dp"
         android:layout_alignParentBottom="true"
@@ -111,9 +110,7 @@
         android:layout_toEndOf="@+id/btnUpdate"
         android:layout_toRightOf="@+id/btnUpdate"
         android:layout_marginLeft="20dp"
-        android:drawableLeft="@android:drawable/ic_delete"
-        android:background="@drawable/button_bg_transparent"
-        />
+        android:drawableLeft="@android:drawable/ic_delete"/>
 </RelativeLayout>
 
     <!-- Bottom Sheet-->

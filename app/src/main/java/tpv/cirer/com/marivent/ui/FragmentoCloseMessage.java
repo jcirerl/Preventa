@@ -133,7 +133,7 @@ public class FragmentoCloseMessage extends Fragment {
             btnFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Snackbar.make(view, ActividadPrincipal.getPalabras("No se puede crear")+" "+ActividadPrincipal.getPalabras("Mensajes"), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(view, ActividadPrincipal.getPalabras("No se puede crear")+" "+ActividadPrincipal.getPalabras("Mensajes"), Snackbar.LENGTH_SHORT).show();
                 }
             });
             setUserVisibleHint(true);

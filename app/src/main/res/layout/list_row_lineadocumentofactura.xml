@@ -63,6 +63,8 @@
             android:layout_toEndOf="@+id/articulo"
             android:layout_toRightOf="@+id/articulo"
             android:gravity="center_vertical|left"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
             android:paddingLeft="2dp" />
         <TextView
             android:id="@+id/importe"
@@ -93,11 +95,13 @@
             android:layout_toEndOf="@+id/tipoiva"
             android:layout_toRightOf="@+id/tipoiva"
             android:gravity="center_vertical|right"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
             android:paddingLeft="4dp" />
 
         <Button
             android:id="@+id/btnAdd"
-            style="@style/RowSubtitle"
+            style="@style/ButtonBorder.Accent"
             android:layout_gravity="center"
             android:minHeight="0dp"
             android:minWidth="0dp"
@@ -110,11 +114,10 @@
             android:drawableLeft="@android:drawable/ic_input_add"
             android:layout_marginLeft="10dp"
             android:gravity="center"
-            android:text="@string/sumar"
-            android:background="@drawable/button_bg_transparent"/>
+            android:text="@string/sumar"/>
         <Button
             android:id="@+id/btnMinus"
-            style="@style/RowSubtitle"
+            style="@style/ButtonBorder.Accent"
             android:layout_gravity="center"
             android:minHeight="0dp"
             android:minWidth="0dp"
@@ -129,8 +132,6 @@
             android:layout_marginLeft="20dp"
             android:drawableLeft="@android:drawable/ic_delete"
             android:gravity="center"
-            android:text="@string/restar"
-            android:background="@drawable/button_bg_transparent"
-            />
+            android:text="@string/restar"/>
 
     </RelativeLayout>

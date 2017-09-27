@@ -154,7 +154,7 @@ public class FragmentoOpenSeccion  extends Fragment    {
             btnFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Snackbar.make(view, ActividadPrincipal.getPalabras("No se puede crear")+" "+ActividadPrincipal.getPalabras("Seccion"), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(view, ActividadPrincipal.getPalabras("No se puede crear")+" "+ActividadPrincipal.getPalabras("Seccion"), Snackbar.LENGTH_SHORT).show();
                 }
             });
 

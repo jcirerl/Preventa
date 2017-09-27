@@ -132,7 +132,7 @@
 -->
        <Button
            android:id="@+id/btnAdd"
-           style="@style/RowSubtitle"
+           style="@style/ButtonBorder.Accent"
            android:layout_gravity="center"
            android:minHeight="0dp"
            android:minWidth="0dp"
@@ -145,11 +145,10 @@
            android:drawableLeft="@android:drawable/ic_input_add"
            android:layout_marginLeft="10dp"
            android:gravity="center"
-           android:text="@string/sumar"
-           android:background="@drawable/button_bg_transparent"/>
+           android:text="@string/sumar"/>
        <Button
            android:id="@+id/btnMinus"
-           style="@style/RowSubtitle"
+           style="@style/ButtonBorder.Accent"
            android:layout_gravity="center"
            android:minHeight="0dp"
            android:minWidth="0dp"
@@ -161,9 +160,7 @@
            android:layout_marginLeft="20dp"
            android:drawableLeft="@android:drawable/ic_delete"
            android:gravity="center"
-           android:text="@string/restar"
-           android:background="@drawable/button_bg_transparent"
-           />
+           android:text="@string/restar"/>
        <TextView
            android:id="@+id/obs"
            style="@style/RowSubtitle"
@@ -173,6 +170,8 @@
            android:layout_height="wrap_content"
            android:layout_toEndOf="@+id/btnMinus"
            android:layout_toRightOf="@+id/btnMinus"
+           android:background="?attr/selectableItemBackgroundBorderless"
+           android:clickable="true"
            android:layout_marginLeft="10dp" />
 
    </RelativeLayout>

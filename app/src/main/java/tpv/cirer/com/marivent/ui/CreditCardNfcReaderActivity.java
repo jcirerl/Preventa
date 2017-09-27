@@ -192,7 +192,7 @@ public class CreditCardNfcReaderActivity extends AppCompatActivity implements Ca
 
     private void parseCardType(String cardType){
         if (cardType.equals(CardNfcAsyncTask.CARD_UNKNOWN)){
-            Snackbar.make(mToolbar, getString(R.string.snack_unknown_bank_card), Snackbar.LENGTH_LONG)
+            Snackbar.make(mToolbar, getString(R.string.snack_unknown_bank_card), Snackbar.LENGTH_SHORT)
                     .setAction("GO", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

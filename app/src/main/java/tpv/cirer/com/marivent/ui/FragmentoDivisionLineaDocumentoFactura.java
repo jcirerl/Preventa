@@ -8,6 +8,7 @@ import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -94,7 +95,7 @@ public class FragmentoDivisionLineaDocumentoFactura extends Fragment {
     public static AdaptadorLineaDocumentoFacturaHeaderAsus adaptadordivisionlineadocumentofacturaasus;
     public static AdaptadorDivisionLineaDocumentoFacturaHeaderSony adaptadordivisionlineadocumentofacturasony;
     View rootViewdivisionlineadocumentofactura;
-    FloatingActionButton btnFacturar;
+    FloatingActionButton btnFacturar,btnCobro;
 
     private static FragmentoDivisionLineaDocumentoFactura DivisionLineaDocumentoFactura = null;
 
@@ -190,13 +191,36 @@ public class FragmentoDivisionLineaDocumentoFactura extends Fragment {
                     new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL);
             recViewdivisionlineadocumentofactura.addItemDecoration(itemDecoration);
 
+            btnCobro = (FloatingActionButton) rootViewdivisionlineadocumentofactura.findViewById(R.id.btnCobro);
+            btnCobro.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.visacurved));
+            btnCobro.setAlpha(0.3f); // COLOR APAGADO BOTON COBRO
+            btnCobro.setEnabled(false);
+
+            btnCobro.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    if (!((ActividadPrincipal) getActivity()).getCruge("action_ftp_update")) {
+                        Snackbar.make(view, getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_SHORT).show();
+                    } else {
+                        Fragment cobrofragment = null;
+                        cobrofragment = EditCobroFacturaFragment.newInstance(pid, sSerie, Integer.toString(Filtro.getFactura()), "lista");
+                        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                        ft.replace(R.id.lista_coordinator, cobrofragment, cobrofragment.getClass().getName());
+                        ft.addToBackStack(null);
+                        ft.commit();
+                    }
+                }
+                          });
             btnFacturar = (FloatingActionButton)rootViewdivisionlineadocumentofactura.findViewById(R.id.btnFacturar);
             btnFacturar.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.invoice48));
+            btnFacturar.setAlpha(1.0f); // COLOR BRILLANTE BOTON FACTURAR
+            btnFacturar.setEnabled(true);
             btnFacturar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (!((ActividadPrincipal)getActivity()).getCruge("action_ftp_create")){
-                        Snackbar.make(view, getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(view, getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_SHORT).show();
                     }else {
                         String cValor = Filtro.getTotaldivision();
                         cValor = cValor.replace(Html.fromHtml("&nbsp;"),"");
@@ -205,10 +229,10 @@ public class FragmentoDivisionLineaDocumentoFactura extends Fragment {
                         final double totaldivision = Double.parseDouble(cValor.toString().trim());
                         if (totaldivision>0) {
                             new TraspasoTicketTicket().execute();
-                            Toast.makeText(getActivity(), getPalabras("Facturarr") + " " + getPalabras("Ticket"), Toast.LENGTH_SHORT).show();
-//                        Snackbar.make(view, getPalabras("Facturar")+" "+ getPalabras("Ticket"), Snackbar.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), getPalabras("Facturar") + " " + getPalabras("Ticket"), Toast.LENGTH_SHORT).show();
+//                        Snackbar.make(view, getPalabras("Facturar")+" "+ getPalabras("Ticket"), Snackbar.LENGTH_SHORT).show();
                         }else{
-                           Snackbar.make(view, "ERROR "+getPalabras("Total")+" "+ getPalabras("Cero"), Snackbar.LENGTH_LONG).show();
+                           Snackbar.make(view, "ERROR "+getPalabras("Total")+" "+ getPalabras("Cero"), Snackbar.LENGTH_SHORT).show();
                         }
                     }
 
@@ -223,6 +247,13 @@ public class FragmentoDivisionLineaDocumentoFactura extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (Filtro.getCobroDesdeFactura()==1) {
+            cEstado = "CLOSE"+" "+getPalabras("Cobro");
+            Filtro.setFactura(nFactura);
+            Filtro.setCabecera(false);
+            ((ActividadPrincipal)getActivity()).setCabecera(getPalabras("Factura")+": "+Integer.toString(Filtro.getFactura())+" "+getPalabras(cEstado),Float.parseFloat("0.00"),Filtro.getFactura());
+
+        }
         new AsyncHttpTaskLineaDocumentoFactura().execute(url);
         ///      TaskHelper.execute(new AsyncHttpTaskLineaDocumentoFactura(),url);
     }
@@ -379,6 +410,8 @@ public class FragmentoDivisionLineaDocumentoFactura extends Fragment {
                         adaptadordivisionlineadocumentofacturasony.notifyDataSetChanged();
                         break;
                 }
+
+
 
                 if (!Filtro.getCabecera()) {
                     TaskHelper.execute(new CalculaCabecera(), "ftp", "lft", "0");
@@ -627,8 +660,19 @@ public class FragmentoDivisionLineaDocumentoFactura extends Fragment {
             if(traspasoticket) {
                 PrintTicket printticket = new PrintTicket(getActivity(), Filtro.getFactura(), sSerie);
                 printticket.iniciarTicket();
-                Filtro.setFactura(nFactura);
+
+                btnFacturar.setAlpha(0.3f); // COLOR APAGADO BOTON FACTURAR
+                btnFacturar.setEnabled(false);
+                btnCobro.setAlpha(1.0f); // COLOR BRILLANTE BOTON COBRO
+                btnCobro.setEnabled(true);
+
+                cEstado = "OPEN PRINT";
                 Filtro.setCabecera(false);
+                traspasoticket=false;
+                ((ActividadPrincipal)getActivity()).setCabecera(getPalabras("Factura")+": "+Integer.toString(Filtro.getFactura())+" "+getPalabras(cEstado),Float.parseFloat("0.00"),Filtro.getFactura());
+
+                new AsyncHttpTaskLineaDocumentoFactura().execute(url);
+
                 traspasoticket=false;
             }
         }
@@ -696,7 +740,10 @@ public class FragmentoDivisionLineaDocumentoFactura extends Fragment {
                 // check for success tag
 
                 success = json.getInt(TAG_SUCCESS);
-                Filtro.setFactura(json.getInt(TAG_FACTURA));
+                if (success==1) {
+                    Filtro.setFactura(json.getInt(TAG_FACTURA));
+                    pid = json.getString("id");
+                }
 
             } catch (JSONException e) {
                 e.printStackTrace();

@@ -107,24 +107,24 @@
 
         <Button
             android:id="@+id/btnAdd"
-            style="@style/RowSubtitle"
-            android:layout_gravity="center"
+            style="@style/ButtonBorder.Accent"
+            android:layout_gravity="left|center_vertical"
             android:minHeight="0dp"
             android:minWidth="0dp"
             android:layout_alignParentBottom="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/cant"
+            android:layout_alignParentStart="@+id/cant"
             android:layout_alignStart="@+id/cant"
             android:layout_below="@+id/cant"
-            android:drawableLeft="@android:drawable/ic_input_add"
-            android:layout_marginLeft="10dp"
-            android:gravity="center"
+            android:drawableStart="@android:drawable/ic_input_add"
+            android:layout_marginStart="10dp"
+            android:gravity="left|center_vertical"
             android:text="@string/sumar"
-            android:background="@drawable/button_bg_transparent"/>
+/>
         <Button
             android:id="@+id/btnMinus"
-            style="@style/RowSubtitle"
+            style="@style/ButtonBorder.Accent"
             android:layout_gravity="center"
             android:minHeight="0dp"
             android:minWidth="0dp"
@@ -140,7 +140,6 @@
             android:drawableLeft="@android:drawable/ic_delete"
             android:gravity="center"
             android:text="@string/restar"
-            android:background="@drawable/button_bg_transparent"
             />
 
     </RelativeLayout>

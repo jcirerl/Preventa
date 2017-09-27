@@ -178,7 +178,7 @@ public class AdaptadorDivisionLineaDocumentoFacturaHeaderSony extends RecyclerVi
 
             });
         } else if (viewType == TYPE_HEADER) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.header_lineasfacturas, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.header_lineasfacturasdivision, parent, false);
             return new VHHeader(v);
         }
 
@@ -312,13 +312,23 @@ public class AdaptadorDivisionLineaDocumentoFacturaHeaderSony extends RecyclerVi
                     ActividadPrincipal.getPalabras("Dividir")+StringUtils.repeat(space01, 5)+
                     ActividadPrincipal.getPalabras("Precio")+StringUtils.repeat(space01, 4)+
                     ActividadPrincipal.getPalabras("Importe")+StringUtils.repeat(space01, 4)+
-                    ActividadPrincipal.getPalabras("Articulo")+StringUtils.repeat(space01, 20)+
-                    ActividadPrincipal.getPalabras("TOTAL DIVISION")+": "+
-                    Filtro.getTotaldivision()+" "+Filtro.getSimbolo() ;
+                    ActividadPrincipal.getPalabras("Articulo")+StringUtils.repeat(space01, 20);
             //    Html.fromHtml(myText.replace(" ", "&nbsp;")).toString()
             //cast holder to VHHeader and set data for header_facturas.
             ((VHHeader) holder).headerLineaDocumentoFactura.setText(Html.fromHtml(myText.replace(" ", "&nbsp;")).toString());
             ((VHHeader) holder).headerLineaDocumentoFactura.setTextColor(Color.WHITE);
+
+            myText = ActividadPrincipal.getPalabras("TOTAL DIVISION")+": ";
+            ((VHHeader) holder).headerLineaDocumentoFacturaTextoTotal.setText(Html.fromHtml(myText.replace(" ", "&nbsp;")).toString());
+            ((VHHeader) holder).headerLineaDocumentoFacturaTextoTotal.setTextColor(Color.WHITE);
+            ((VHHeader) holder).headerLineaDocumentoFacturaTextoTotal.setTextSize(30);
+
+            myText = Filtro.getTotaldivision()+" "+Filtro.getSimbolo() ;
+            myText = myText.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+            myText = myText.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+            ((VHHeader) holder).headerLineaDocumentoFacturaImporteTotal.setText(myText);
+            ((VHHeader) holder).headerLineaDocumentoFacturaImporteTotal.setTextColor(Color.WHITE);
+            ((VHHeader) holder).headerLineaDocumentoFacturaImporteTotal.setTextSize(30);
 
         }
     }
@@ -525,10 +535,13 @@ public class AdaptadorDivisionLineaDocumentoFacturaHeaderSony extends RecyclerVi
 
     class VHHeader extends RecyclerView.ViewHolder {
         public TextView headerLineaDocumentoFactura;
-
+        public TextView headerLineaDocumentoFacturaTextoTotal;
+        public TextView headerLineaDocumentoFacturaImporteTotal;
         public VHHeader(View itemView) {
             super(itemView);
             this.headerLineaDocumentoFactura = (TextView) itemView.findViewById(R.id.header_texto);
+            this.headerLineaDocumentoFacturaTextoTotal = (TextView) itemView.findViewById(R.id.header_texto_total);
+            this.headerLineaDocumentoFacturaImporteTotal = (TextView) itemView.findViewById(R.id.header_importe_total);
         }
     }
     // La actividad contenedora debe implementar esta interfaz

@@ -102,7 +102,7 @@ public class AdaptadorLineaDocumentoPedidoHeaderSony  extends RecyclerView.Adapt
                                 cArticulo = cArticulo.replace(Html.fromHtml("&nbsp;"),"");
 
                                 try {
-                                    mCallbackLineaDocumentoPedido.onUpdateLineaDocumentoPedidoSelected(idLPD, obsLPD, cArticulo);
+                                    mCallbackLineaDocumentoPedido.onUpdateLineaDocumentoPedidoSelected(idLPD, obsLPD, cArticulo, mEstado);
                                 } catch (ClassCastException exception) {
                                     // do something
                                 }
@@ -115,7 +115,7 @@ public class AdaptadorLineaDocumentoPedidoHeaderSony  extends RecyclerView.Adapt
                         public void onClick(DialogInterface dialog, int which) {
                             if (!mEstado.contains("CLOSE")) {
                                 try {
-                                    mCallbackLineaDocumentoPedido.onDeleteLineaDocumentoPedidoSelected(idLPD, individualLPD);
+                                    mCallbackLineaDocumentoPedido.onDeleteLineaDocumentoPedidoSelected(idLPD, individualLPD, mEstado);
                                 } catch (ClassCastException exception) {
                                     // do something
                                 }
@@ -153,7 +153,7 @@ public class AdaptadorLineaDocumentoPedidoHeaderSony  extends RecyclerView.Adapt
                     final int individualLPD = Integer.parseInt(individualLineaDocumentoPedido);
                     try {
                         if (!mEstado.contains("CLOSE")) {
-                            mCallbackLineaDocumentoPedido.onAddCantLineaDocumentoPedidoSelected(idLPD,individualLPD);
+                            mCallbackLineaDocumentoPedido.onAddCantLineaDocumentoPedidoSelected(idLPD,individualLPD, mEstado);
                         }
                     } catch (ClassCastException exception) {
                         // do something
@@ -177,9 +177,9 @@ public class AdaptadorLineaDocumentoPedidoHeaderSony  extends RecyclerView.Adapt
                     try {
                         if (!mEstado.contains("CLOSE")) {
                             if (cantLPD > 1) {
-                                mCallbackLineaDocumentoPedido.onMinusCantLineaDocumentoPedidoSelected(idLPD,individualLPD);
+                                mCallbackLineaDocumentoPedido.onMinusCantLineaDocumentoPedidoSelected(idLPD,individualLPD,mEstado);
                             } else {
-                                mCallbackLineaDocumentoPedido.onDeleteLineaDocumentoPedidoSelected(idLPD,individualLPD);
+                                mCallbackLineaDocumentoPedido.onDeleteLineaDocumentoPedidoSelected(idLPD,individualLPD,mEstado);
 
                             }
                         }
@@ -321,6 +321,10 @@ public class AdaptadorLineaDocumentoPedidoHeaderSony  extends RecyclerView.Adapt
                 if (LineaDocumentoPedido.getLineaDocumentoPedidoSwPedido()==0){
                     ((VHItem) holder).CantLineaDocumentoPedido.setBackgroundColor(Color.parseColor("#bdbdbd"));
                     ((VHItem) holder).NombreLineaDocumentoPedido.setBackgroundColor(Color.parseColor("#bdbdbd"));
+                }else{
+                    ((VHItem) holder).CantLineaDocumentoPedido.setBackgroundColor(Color.TRANSPARENT);
+                    ((VHItem) holder).NombreLineaDocumentoPedido.setBackgroundColor(Color.TRANSPARENT);
+
                 }
                 //        LineaDocumentoPedidoRowHolder.NombreLineaDocumentoPedido.setTextSize(16);
                 //        LineaDocumentoPedidoRowHolder.ArticuloLineaDocumentoPedido.setTextSize(16);
@@ -531,11 +535,11 @@ public class AdaptadorLineaDocumentoPedidoHeaderSony  extends RecyclerView.Adapt
     }
     // La actividad contenedora debe implementar esta interfaz
     public interface OnHeadlineSelectedListenerLineaDocumentoPedidoHeader {
-        void onDeleteLineaDocumentoPedidoSelected(int id, int individual);
-        void onUpdateLineaDocumentoPedidoSelected(int id, String observa, String articulo);
+        void onDeleteLineaDocumentoPedidoSelected(int id, int individual, String estado);
+        void onUpdateLineaDocumentoPedidoSelected(int id, String observa, String articulo,String estado );
         void onArticulosLineaDocumentoPedidoSelected(ImageView imagelinea, String articulo, String cNombre);
-        void onAddCantLineaDocumentoPedidoSelected(int id, int individual);
-        void onMinusCantLineaDocumentoPedidoSelected(int id, int individual);
+        void onAddCantLineaDocumentoPedidoSelected(int id, int individual, String estado);
+        void onMinusCantLineaDocumentoPedidoSelected(int id, int individual, String estado);
 
     }
     /*para filtro*/

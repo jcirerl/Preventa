@@ -68,6 +68,7 @@ import tpv.cirer.com.marivent.modelo.TipoCobro;
 import tpv.cirer.com.marivent.print.PrintTicket;
 
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getLocalIpAddress;
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getPalabras;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lparam;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.tftList;
 
@@ -187,7 +188,10 @@ public class EditCobroFacturaFragment  extends Fragment implements View.OnKeyLis
 
         /// Poner Titulo CABECERA
 ////        ((ActividadPrincipal) getActivity()).setTitle("Cobro Factura");
-        ((ActividadPrincipal) getActivity()).setTitle(((ActividadPrincipal)getActivity()).getPalabras("Cobro")+" "+((ActividadPrincipal)getActivity()).getPalabras("Factura"));
+        ((ActividadPrincipal) getActivity()).setTitle(getPalabras("Cobro")+" "+getPalabras("Factura")+": "+factura);
+        Spannable text = new SpannableString(((ActividadPrincipal) getActivity()).getTitle());
+        text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(((ActividadPrincipal) getActivity()), R.color.light_blue_500)), 0, text.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        ((ActividadPrincipal) getActivity()).setTitle(text);
 
         documentofacturalist = new ArrayList<DocumentoFactura>();
         // Rellenar string toolbar_tft
@@ -418,7 +422,7 @@ public class EditCobroFacturaFragment  extends Fragment implements View.OnKeyLis
                             });
                             dialog.show();
                         }else{
-                            Snackbar.make(view, ActividadPrincipal.getPalabras("No") + " " + ActividadPrincipal.getPalabras("Registra")+ " " + ActividadPrincipal.getPalabras("Firma"), Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(view, getPalabras("No") + " " + getPalabras("Registra")+ " " + getPalabras("Firma"), Snackbar.LENGTH_SHORT).show();
                         }
                         break;
                     case "CC":
@@ -500,7 +504,7 @@ public class EditCobroFacturaFragment  extends Fragment implements View.OnKeyLis
         protected void onPreExecute() {
             super.onPreExecute();
             pDialogtft = new ProgressDialog(getActivity());
-            pDialogtft.setMessage(ActividadPrincipal.getPalabras("Cargando")+" "+ActividadPrincipal.getPalabras("Tipo Cobro")+"...");
+            pDialogtft.setMessage(getPalabras("Cargando")+" "+ getPalabras("Tipo Cobro")+"...");
             pDialogtft.setIndeterminate(false);
             pDialogtft.setCancelable(true);
             pDialogtft.show();
@@ -688,7 +692,7 @@ public class EditCobroFacturaFragment  extends Fragment implements View.OnKeyLis
         protected void onPreExecute() {
             super.onPreExecute();
             pDialogftp = new ProgressDialog(getActivity());
-            pDialogftp.setMessage(ActividadPrincipal.getPalabras("Cargando")+" "+ActividadPrincipal.getPalabras("Factura")+". "+ActividadPrincipal.getPalabras("Espere por favor")+"...");
+            pDialogftp.setMessage(getPalabras("Cargando")+" "+ getPalabras("Factura")+". "+ getPalabras("Espere por favor")+"...");
             pDialogftp.setIndeterminate(false);
             pDialogftp.setCancelable(true);
             pDialogftp.show();
@@ -793,7 +797,10 @@ public class EditCobroFacturaFragment  extends Fragment implements View.OnKeyLis
                                     }
                                 }
                             }
-                            ((ActividadPrincipal) getActivity()).setTitle("Cobro Factura "+documentofacturalist.get(0).getDocumentoFacturaFactura());
+                            ((ActividadPrincipal) getActivity()).setTitle(getPalabras("Cobro")+" "+getPalabras("Factura")+": "+documentofacturalist.get(0).getDocumentoFacturaFactura());
+                            Spannable text = new SpannableString(((ActividadPrincipal) getActivity()).getTitle());
+                            text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(((ActividadPrincipal) getActivity()), R.color.light_blue_500)), 0, text.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                            ((ActividadPrincipal) getActivity()).setTitle(text);
 
 
                         }else{
@@ -844,7 +851,7 @@ public class EditCobroFacturaFragment  extends Fragment implements View.OnKeyLis
         protected void onPreExecute() {
             super.onPreExecute();
             pDialogftp = new ProgressDialog(getActivity());
-            pDialogftp.setMessage(ActividadPrincipal.getPalabras("Guardar")+" "+ActividadPrincipal.getPalabras("Cobro")+" ...");
+            pDialogftp.setMessage(getPalabras("Guardar")+" "+ getPalabras("Cobro")+" ...");
             pDialogftp.setIndeterminate(false);
             pDialogftp.setCancelable(true);
             pDialogftp.show();
@@ -958,7 +965,7 @@ public class EditCobroFacturaFragment  extends Fragment implements View.OnKeyLis
 
                         String cTotalcobro = myEditText.getText().toString();
                         if (cTotalcobro.matches("")) {
-                            Toast.makeText(getActivity(), ActividadPrincipal.getPalabras("Valor")+" "+ActividadPrincipal.getPalabras("Vacio"), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getPalabras("Valor")+" "+ getPalabras("Vacio"), Toast.LENGTH_SHORT).show();
                             //            this.btnGuardar.setEnabled(false);
                             this.btnGuardarCobro.setEnabled(false);
                             this.btnGuardarCobro.setChecked(false);
@@ -1000,7 +1007,7 @@ public class EditCobroFacturaFragment  extends Fragment implements View.OnKeyLis
                         myEditText.setSelection(pos);
                         String cTipoDto = myEditText.getText().toString();
                         if (cTipoDto.matches("")) {
-                            Toast.makeText(getActivity(), ActividadPrincipal.getPalabras("Valor")+" "+ActividadPrincipal.getPalabras("Vacio"), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getPalabras("Valor")+" "+ getPalabras("Vacio"), Toast.LENGTH_SHORT).show();
                             //            this.btnGuardar.setEnabled(false);
                             this.btnGuardarCobro.setEnabled(false);
                             this.btnGuardarCobro.setChecked(false);

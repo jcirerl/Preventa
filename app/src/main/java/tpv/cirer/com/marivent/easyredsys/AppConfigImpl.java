@@ -3,13 +3,11 @@ package tpv.cirer.com.marivent.easyredsys;
 /**
  * Created by JUAN on 10/09/2017.
  */
+
+public class AppConfigImpl {
+
+}
 /*
-import android.util.Log;
-
-import com.miguelangeljulvez.easyredsys.client.AppConfig;
-import com.miguelangeljulvez.easyredsys.client.core.Notification;
-
-
 public class AppConfigImpl implements AppConfig {
 
     static String getMerchantCode() {
@@ -31,10 +29,11 @@ public class AppConfigImpl implements AppConfig {
 
     @Override
     public void saveNotification(Notification notification) {
-        Log.i("OLEEEEEÉ"," - Si puedes leer esto es que todo ha ido bien");
         // Pon aquí lo que quieras hacer con la notificación. Seguramente, almacenar en tu base de datos que el pedido ha sido pagado
         // Las notificaciones aquí recibidas ya han pasado todas las comprobaciones de seguridad y son válidas
+        Log.i("COBRADO","OK");
+
     }
+
 }
 */
-public class AppConfigImpl  {}

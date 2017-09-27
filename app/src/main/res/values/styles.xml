@@ -57,4 +57,14 @@
         <item name="android:gravity">left</item>
         <item name="android:layout_marginRight">@dimen/activity_vertical_margin</item>
     </style>
+
+    <style name="ButtonBorder" parent="Widget.AppCompat.Button.Colored"/>
+
+    <style name="ButtonBorder.Accent">
+        <item name="android:background">@drawable/bg_btn_outline</item>
+        <item name="android:textColor">@color/colorOverlay</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:singleLine">true</item>
+    </style>
 </resources>

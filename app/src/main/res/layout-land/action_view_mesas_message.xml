@@ -6,7 +6,7 @@
 
     <Button
         android:id="@+id/btnMesasMessage"
-        style="@style/RowSubtitle"
+        style="@style/ButtonBorder.Accent"
         android:layout_gravity="center"
         android:minHeight="0dp"
         android:minWidth="0dp"
@@ -15,8 +15,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:drawableLeft="@drawable/house_kitchen_table"
-        android:gravity="center"
-        android:background="@drawable/button_bg_transparent"
-        />
+        android:gravity="center"/>
 
 </LinearLayout>

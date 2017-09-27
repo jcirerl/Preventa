@@ -3,7 +3,8 @@
     android:orientation="horizontal"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="4dp" >
+    android:padding="4dp"
+    android:descendantFocusability="afterDescendants">
 
     <!-- Views with default image and text, for demonstration.
     They will be changed in the adapter -->
@@ -75,7 +76,8 @@
         android:text=""
         android:background="@drawable/button_bg_transparent"
         />
-    <TextView
+
+    <EditText
         android:id="@+id/preu"
         style="@style/RowTitle"
         android:layout_width="wrap_content"
@@ -84,7 +86,13 @@
         android:layout_gravity="center_horizontal"
         android:layout_toEndOf="@+id/btnMinus"
         android:layout_toRightOf="@+id/btnMinus"
-        android:paddingLeft="@dimen/row_padding" />
+        android:paddingLeft="@dimen/row_padding"
+        android:windowSoftInputMode="adjustResize"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:inputType="numberDecimal"
+        android:ems="7" />
+
     <TextView
         android:id="@+id/importe"
         style="@style/RowTitle"

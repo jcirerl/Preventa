@@ -274,56 +274,22 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
             btnSend.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.send48));
             if (cEstado.contains("CLOSE")){
                 btnSend.setAlpha(0.3f); // COLOR APAGADO PEDIDO CERRADO
+                btnSend.setEnabled(false);
             } else {
+                if(cEstado.contains("PRINT")) {
+                    if (!((ActividadPrincipal) getActivity()).getCruge("action_pdd_printg_admin")) {
+                        btnSend.setAlpha(0.3f); // COLOR APAGADO PEDIDO CERRADO
+                        btnSend.setEnabled(false);
+                    }
+                }
                 btnSend.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if (!((ActividadPrincipal)getActivity()).getCruge("action_pdd_printg")){
-                            Snackbar.make(view, ActividadPrincipal.getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(view, ActividadPrincipal.getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_SHORT).show();
                         }else {
-                            Snackbar.make(view, ActividadPrincipal.getPalabras("Enviar")+" "+ActividadPrincipal.getPalabras("Pedido")+" "+ActividadPrincipal.getPalabras("Secciones"), Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(view, ActividadPrincipal.getPalabras("Enviar")+" "+ActividadPrincipal.getPalabras("Pedido")+" "+ActividadPrincipal.getPalabras("Secciones"), Snackbar.LENGTH_SHORT).show();
                             optionprint = false;
-    /*
-
-                                // LEER MODELOS SECUENCIALMENTE
-                                mSerialExecutorActivity = new MySerialExecutor(getActivity());
-
-                                // Lineas PEDIDO
-                                for (Iterator<LineaDocumentoPedido> it = llineadocumentopedidoprint.iterator(); it.hasNext();){
-                                    LineaDocumentoPedido lineadocumentopedido = it.next();
-                                    it.remove();
-                                }
-                                PrintTable="lpd";
-                                urlPrint = Filtro.getUrl()+"/RellenaListaLPD.php";
-                                mSerialExecutorActivity.execute(null);
-
-                                // Cabecera EMPRESA
-                                for (Iterator<CabeceraEmpr> it = lcabeceraempr.iterator(); it.hasNext(); ) {
-                                    CabeceraEmpr cabeceraEmpr = it.next();
-                                    it.remove();
-                                }
-                                PrintTable = "empr";
-                                urlPrint = Filtro.getUrl() + "/CabeceraEMPR.php";
-                                mSerialExecutorActivity.execute(null);
-
-                                // CABECERA PEDIDO
-                                for (Iterator<CabeceraPdd> it = lcabecerapdd.iterator(); it.hasNext();){
-                                    CabeceraPdd cabeceraPdd = it.next();
-                                    it.remove();
-                                }
-                                PrintTable = "pdd";
-                                urlPrint = Filtro.getUrl() + "/CabeceraPDD.php";
-                                mSerialExecutorActivity.execute(null);
-
-                                // LINEAS IVA PEDIDO
-                                for (Iterator<DocumentoPedidoIva> it = ldocumentopedidoiva.iterator(); it.hasNext();){
-                                    DocumentoPedidoIva ldocumentopedidoiva = it.next();
-                                    it.remove();
-                                }
-                                PrintTable = "pddiva";
-                                urlPrint = Filtro.getUrl() + "/RellenaListaPDDIVA.php";
-                                mSerialExecutorActivity.execute(null);
-    */
                             nPosition = 0;
                             setImpresora(nPosition);
      ///                       urlPrint = Filtro.getUrl() + "/RellenaListaLPDprintsec.php"; // ORDENADO POR TIPO ARTICULO
@@ -339,9 +305,9 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
                 @Override
                 public void onClick(View view) {
                     if (!((ActividadPrincipal)getActivity()).getCruge("action_pdd_printg")){
-                        Snackbar.make(view, ActividadPrincipal.getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(view, ActividadPrincipal.getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_SHORT).show();
                     }else {
-                        Snackbar.make(view, ActividadPrincipal.getPalabras("Imprimir")+" "+ActividadPrincipal.getPalabras("Pedido"), Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(view, ActividadPrincipal.getPalabras("Imprimir")+" "+ActividadPrincipal.getPalabras("Pedido"), Snackbar.LENGTH_SHORT).show();
 //                    new WSPedido().execute();
                         optionprint = true;
 /**** Anulado lo carga desde ACTIVIDAD PRINCIPAL
@@ -1519,7 +1485,15 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
             try{
 //                            Print printer = EPOSPrintSampleActivity.getPrinter();
                 printer.sendData(builder, SEND_TIMEOUT, status, battery);
-                ShowMsg.showStatus(EposException.SUCCESS, status[0], battery[0], getActivity());
+                if(Filtro.getOpokprint()) {
+                    ShowMsg.showStatus(EposException.SUCCESS, status[0], battery[0], getActivity());
+                }
+                if(!optionprint){
+                    getActivity().onBackPressed();
+//                    cEstado ="OPEN PRINT";
+//                    btnSend.setEnabled(false);
+//                    btnSend.setAlpha(0.3f); // COLOR APAGADO PEDIDO CERRADO
+                }
             }catch(EposException e){
                 ShowMsg.showStatus(e.getErrorStatus(), e.getPrinterStatus(), e.getBatteryStatus(), getActivity());
             }
@@ -1723,12 +1697,12 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
         protected void onPreExecute() {
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
-            pDialogPdd = new ProgressDialog(getActivity());
+/*            pDialogPdd = new ProgressDialog(getActivity());
             pDialogPdd.setMessage(ActividadPrincipal.getPalabras("Leyendo")+" "+ActividadPrincipal.getPalabras("Cabecera")+" "+ActividadPrincipal.getPalabras("Pedido")+"..");
             pDialogPdd.setIndeterminate(false);
             pDialogPdd.setCancelable(true);
             pDialogPdd.show();
-
+*/
         }
 
         @Override
@@ -1813,8 +1787,9 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
 
         @Override
         protected void onPostExecute(Integer result) {
-            if (pDialogPdd.isShowing()) {
-                pDialogPdd.dismiss();
+//            if (pDialogPdd.isShowing()) {
+
+//                pDialogPdd.dismiss();
                 if (result == 1) {
                     Log.i("Cabecera Pdd", Integer.toString(lcabecerapdd.size()));
                     if (optionprint) {
@@ -1827,8 +1802,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
                 } else {
                     Log.e("Cabecera Pdd", "Failed to fetch data!");
                 }
-            }
-
+//           }
         }
     }
     private void parseResultCabeceraPdd(String result) {
@@ -1865,12 +1839,12 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
         protected void onPreExecute() {
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
-            pDialogLpd = new ProgressDialog(getActivity());
+/*            pDialogLpd = new ProgressDialog(getActivity());
             pDialogLpd.setMessage(ActividadPrincipal.getPalabras("Leyendo")+" "+ActividadPrincipal.getPalabras("Lineas")+" "+ActividadPrincipal.getPalabras("Pedido")+"..");
             pDialogLpd.setIndeterminate(false);
             pDialogLpd.setCancelable(true);
             pDialogLpd.show();
-        }
+*/        }
 
         @Override
         protected Integer doInBackground(String... params) {
@@ -2008,8 +1982,8 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
 
         @Override
         protected void onPostExecute(Integer result) {
-            if (pDialogLpd.isShowing()) {
-                pDialogLpd.dismiss();
+//            if (pDialogLpd.isShowing()) {
+//                pDialogLpd.dismiss();
 
                 if (result == 1) {
                     Log.i("Lineas LPD", Integer.toString(llineadocumentopedidoprint.size()));
@@ -2032,7 +2006,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
                 } else {
                     Log.e("Lineas LPD", "Failed to fetch data!");
                 }
-            }
+//            }
         }
     }
 
@@ -2044,6 +2018,11 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
             new LeerLineasLpd().execute(urlPrint, Integer.toString(nPosition));
         }else{
             setImpresora(ActividadPrincipal.cmbToolbarTerminal.getSelectedItemPosition());
+
+
+            // ESTO LO HACE EN SHOWSTATUS SUCCCES - AQUI PARA PRUEBA
+//            getActivity().onBackPressed();
+
         }
 
     }
@@ -2085,12 +2064,12 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
         protected void onPreExecute() {
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
-            pDialogPddiva = new ProgressDialog(getActivity());
+/*            pDialogPddiva = new ProgressDialog(getActivity());
             pDialogPddiva.setMessage(ActividadPrincipal.getPalabras("Leyendo")+" "+ActividadPrincipal.getPalabras("Lineas")+" "+ActividadPrincipal.getPalabras("Iva")+"..");
             pDialogPddiva.setIndeterminate(false);
             pDialogPddiva.setCancelable(true);
             pDialogPddiva.show();
-        }
+*/        }
 
         @Override
         protected Integer doInBackground(String... params) {
@@ -2212,8 +2191,8 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
 
         @Override
         protected void onPostExecute(Integer result) {
-            if (pDialogPddiva.isShowing()) {
-                pDialogPddiva.dismiss();
+//            if (pDialogPddiva.isShowing()) {
+//                pDialogPddiva.dismiss();
                 if (result == 1) {
                     Log.i("Lineas PDDIVA", Integer.toString(ldocumentopedidoiva.size()));
                     crearPedidoPlato();
@@ -2221,7 +2200,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
                     Log.e("Lineas PDDIVA", "Failed to fetch data!");
                 }
             }
-        }
+  //      }
     }
 
     private void parseResultPddiva(String result) {

@@ -162,7 +162,7 @@ public class FragmentoCloseDcj extends Fragment {
             btnFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                        Snackbar.make(view, ActividadPrincipal.getPalabras("No se puede crear")+" "+ActividadPrincipal.getPalabras("Diario Caja"), Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(view, ActividadPrincipal.getPalabras("No se puede crear")+" "+ActividadPrincipal.getPalabras("Diario Caja"), Snackbar.LENGTH_SHORT).show();
                 }
             });
 

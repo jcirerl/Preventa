@@ -49,6 +49,7 @@ import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getLocalIpAddress;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getQuery;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.imagelogoprint;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lcabeceraempr;
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.lparam;
 
 /**
  * Created by JUAN on 08/08/2017.
@@ -262,12 +263,12 @@ public class PrintTicket {
             super.onPreExecute();
             if (null==context) {
             }else{
-                pDialogFtp = new ProgressDialog(context);
+/*                pDialogFtp = new ProgressDialog(context);
                 pDialogFtp.setMessage(ActividadPrincipal.getPalabras("Leyendo") + " " + ActividadPrincipal.getPalabras("Cabecera") + " " + ActividadPrincipal.getPalabras("Factura") + "..");
                 pDialogFtp.setIndeterminate(false);
                 pDialogFtp.setCancelable(true);
                 pDialogFtp.show();
-            }
+*/            }
         }
 
         @Override
@@ -388,7 +389,7 @@ public class PrintTicket {
             //    setProgressBarIndeterminateVisibility(false);
             if(null==context){
             }else {
-                pDialogFtp.dismiss();
+//                pDialogFtp.dismiss();
             }
 
             if (result == 1) {
@@ -427,7 +428,11 @@ public class PrintTicket {
                 cabeceraFtpItem.setCabeceraImagen_firma(post.optString("IMAGEN_FIRMA").trim());
                 cabeceraFtpItem.setCabeceraIvaincluido(post.optInt("IVAINCLUIDO"));
                 cabeceraFtpItem.setCabeceraEstado(post.optString("ESTADO"));
-                cabeceraFtpItem.setCabeceraMensaje(post.optString("MENSAJE"));
+                if(post.optString("T_MESA").equals(lparam.get(0).getDEFAULT_TIPO_MESA_BUFFET())){
+                    cabeceraFtpItem.setCabeceraMensaje(post.optString("MENSAJE_BUFFET"));
+                }else {
+                    cabeceraFtpItem.setCabeceraMensaje(post.optString("MENSAJE"));
+                }
                 cabeceraFtpItem.setCabeceraTelefono(post.optString("TELEFONO"));
                 cabeceraFtpItem.setCabeceraEMail(post.optString("EMAIL"));
                 cabeceraFtpItem.setCabeceraWeb(post.optString("WEB"));
@@ -446,12 +451,12 @@ public class PrintTicket {
             super.onPreExecute();
             if (null==context) {
             }else {
-                pDialogLft = new ProgressDialog(context);
+/*                pDialogLft = new ProgressDialog(context);
                 pDialogLft.setMessage(ActividadPrincipal.getPalabras("Leyendo") + " " + ActividadPrincipal.getPalabras("Lineas") + " " + ActividadPrincipal.getPalabras("Factura") + "..");
                 pDialogLft.setIndeterminate(false);
                 pDialogLft.setCancelable(true);
                 pDialogLft.show();
-            }
+*/            }
         }
 
         @Override
@@ -572,7 +577,7 @@ public class PrintTicket {
             //    setProgressBarIndeterminateVisibility(false);
             if (null==context) {
             }else {
-                pDialogLft.dismiss();
+//                pDialogLft.dismiss();
             }
             /* Download complete. Lets update UI */
             if (result == 1) {
@@ -620,12 +625,12 @@ public class PrintTicket {
             super.onPreExecute();
             if (null==context) {
             }else {
-                pDialogFtpiva = new ProgressDialog(context);
+/*                pDialogFtpiva = new ProgressDialog(context);
                 pDialogFtpiva.setMessage(ActividadPrincipal.getPalabras("Leyendo") + " " + ActividadPrincipal.getPalabras("Lineas") + " " + ActividadPrincipal.getPalabras("Iva") + "..");
                 pDialogFtpiva.setIndeterminate(false);
                 pDialogFtpiva.setCancelable(true);
                 pDialogFtpiva.show();
-            }
+*/            }
         }
 
         @Override
@@ -746,7 +751,7 @@ public class PrintTicket {
             //    setProgressBarIndeterminateVisibility(false);
             if (null==context) {
             }else {
-                pDialogFtpiva.dismiss();
+//                pDialogFtpiva.dismiss();
             }
             /* Download complete. Lets update UI */
             if (result == 1) {
@@ -788,12 +793,12 @@ public class PrintTicket {
             super.onPreExecute();
             if (null==context) {
             }else {
-                pDialogFtp = new ProgressDialog(context);
+/*                pDialogFtp = new ProgressDialog(context);
                 pDialogFtp.setMessage(ActividadPrincipal.getPalabras("Guardar") + " " + ActividadPrincipal.getPalabras("Estado") + " ...");
                 pDialogFtp.setIndeterminate(false);
                 pDialogFtp.setCancelable(true);
                 pDialogFtp.show();
-            }
+*/            }
         }
 
         /**
@@ -904,7 +909,7 @@ public class PrintTicket {
             // dismiss the dialog once Factura updated
             if (null==context) {
             }else {
-                pDialogFtp.dismiss();
+//                pDialogFtp.dismiss();
             }
         }
     }
@@ -1397,7 +1402,9 @@ public class PrintTicket {
         try{
 //                            Print printer = EPOSPrintSampleActivity.getPrinter();
             printer.sendData(builder, SEND_TIMEOUT, status, battery);
-            ShowMsg.showStatus(EposException.SUCCESS, status[0], battery[0], context);
+            if(Filtro.getOpokprint()) {
+                ShowMsg.showStatus(EposException.SUCCESS, status[0], battery[0], context);
+            }
             // Comprobar estado ticket si = "01" modificar "02"
             if (lcabeceraftp.get(0).getCabeceraEstado().contains("01")){
                 new SaveEstadoFactura().execute(url_update_Factura);

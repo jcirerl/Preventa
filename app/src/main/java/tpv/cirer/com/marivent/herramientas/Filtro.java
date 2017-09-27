@@ -4,6 +4,7 @@ public class Filtro {
     private static String totaldivision;
     private static boolean oppedidodirectomesa;
     private static boolean opfacturadirectomesa;
+    private static boolean opokprint;
     private static int resize_logo_print;
     private static int resize_logo_screen;
     private static String seriefac;
@@ -102,6 +103,7 @@ public class Filtro {
         totaldivision="0.00";
         oppedidodirectomesa = false;
         opfacturadirectomesa = false;
+        opokprint = false;
         resize_logo_print=0;
         resize_logo_screen=0;
         seriebuffet="";
@@ -226,6 +228,12 @@ public class Filtro {
         opfacturadirectomesa = idopfacturadirectomesa;
     }
 
+    public static boolean getOpokprint() {
+        return opokprint;
+    }
+    public static void setOpokprint(boolean idopokprint) {
+        opokprint = idopokprint;
+    }
 
     public static boolean getOplog() {
         return oplog;

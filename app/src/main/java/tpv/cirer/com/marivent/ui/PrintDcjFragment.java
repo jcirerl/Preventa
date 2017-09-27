@@ -1003,7 +1003,9 @@ public class PrintDcjFragment extends Fragment {
             try{
 //                            Print printer = EPOSPrintSampleActivity.getPrinter();
                 printer.sendData(builder, SEND_TIMEOUT, status, battery);
-                ShowMsg.showStatus(EposException.SUCCESS, status[0], battery[0], getActivity());
+                if(Filtro.getOpokprint()) {
+                    ShowMsg.showStatus(EposException.SUCCESS, status[0], battery[0], getActivity());
+                }
             }catch(EposException e){
                 ShowMsg.showStatus(e.getErrorStatus(), e.getPrinterStatus(), e.getBatteryStatus(), getActivity());
             }

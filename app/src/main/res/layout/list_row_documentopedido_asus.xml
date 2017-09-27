@@ -64,6 +64,8 @@
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/fecha"
         android:layout_toRightOf="@+id/fecha"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
         android:paddingLeft="@dimen/row_padding" />
 
     <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
@@ -74,6 +76,8 @@
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/comensales"
         android:layout_toRightOf="@+id/comensales"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
         android:paddingLeft="@dimen/row_padding" />
 
     <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
@@ -93,6 +97,8 @@
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/estado"
         android:layout_toRightOf="@+id/estado"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
         android:paddingLeft="@dimen/row_padding" />
     <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
         android:id="@+id/caja"
@@ -129,10 +135,12 @@
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/lineas"
         android:layout_toRightOf="@+id/lineas"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
         android:paddingLeft="@dimen/row_padding" />
     <Button
         android:id="@+id/btnUpdate"
-        style="@style/RowSubtitle"
+        style="@style/ButtonBorder.Accent"
         android:layout_gravity="center"
         android:minHeight="0dp"
         android:minWidth="0dp"
@@ -145,11 +153,10 @@
         android:drawableLeft="@android:drawable/ic_input_add"
         android:layout_marginLeft="10dp"
         android:gravity="center"
-        android:text="@string/modificar"
-        android:background="@drawable/button_bg_transparent"/>
+        android:text="@string/modificar"/>
     <Button
         android:id="@+id/btnDelete"
-        style="@style/RowSubtitle"
+        style="@style/ButtonBorder.Accent"
         android:layout_gravity="center"
         android:minHeight="0dp"
         android:minWidth="0dp"
@@ -164,12 +171,10 @@
         android:layout_marginLeft="20dp"
         android:drawableLeft="@android:drawable/ic_delete"
         android:gravity="center"
-        android:text="@string/anular"
-        android:background="@drawable/button_bg_transparent"
-        />
+        android:text="@string/anular"/>
     <Button
         android:id="@+id/btnSend"
-        style="@style/RowSubtitle"
+        style="@style/ButtonBorder.Accent"
         android:layout_gravity="center"
         android:minHeight="0dp"
         android:minWidth="0dp"
@@ -184,11 +189,10 @@
         android:drawableLeft="@android:drawable/ic_menu_send"
         android:layout_marginLeft="20dp"
         android:gravity="center"
-        android:visibility="gone"
-        android:background="@drawable/button_bg_transparent"/>
+        android:visibility="gone"/>
     <Button
         android:id="@+id/btnInvoice"
-        style="@style/RowSubtitle"
+        style="@style/ButtonBorder.Accent"
         android:layout_gravity="center"
         android:minHeight="0dp"
         android:minWidth="0dp"
@@ -203,9 +207,7 @@
         android:layout_marginLeft="20dp"
         android:drawableLeft="@drawable/invoice32"
         android:gravity="center"
-        android:text="@string/factura"
-        android:background="@drawable/button_bg_transparent"
-        />
+        android:text="@string/factura"/>
 
 </RelativeLayout>
     <!-- Bottom Sheet-->

@@ -16,17 +16,26 @@ public class Mesa {
     private int MesaPedidos;
     private int MesaFacturas;
     private int MesaComensales;
+    private String MesaT_mesa;
+    private String MesaMensaje;
 
     public Mesa(){}
 
-    public Mesa(String Mesa, String nombre){
+    public Mesa(String Mesa, String nombre, String t_mesa){
         this.MesaMesa = Mesa;
         this.MesaNombre_Mesas = nombre;
+        this.MesaT_mesa = t_mesa;
      }
     public Mesa(String Mesa, String nombre, int comensales){
         this.MesaMesa = Mesa;
         this.MesaNombre_Mesas = nombre;
         this.MesaComensales = comensales;
+    }
+    public Mesa(String Mesa, String nombre, int comensales, String mensaje){
+        this.MesaMesa = Mesa;
+        this.MesaNombre_Mesas = nombre;
+        this.MesaComensales = comensales;
+        this.MesaMensaje = mensaje;
     }
 
     public float getMesaXCoordenate() {
@@ -80,6 +89,13 @@ public class Mesa {
     public void setMesaApertura(int mesaApertura) {
         this.MesaApertura = mesaApertura;
     }
+    public String getMesaMesa() {
+        return MesaMesa;
+    }
+
+    public void setMesaMesa(String MesaMesa) {
+        this.MesaMesa = MesaMesa;
+    }
 
     public String getMesaNombre_Mesas() {
         return MesaNombre_Mesas;
@@ -88,13 +104,20 @@ public class Mesa {
     public void setMesaNombre_Mesas(String mesaNombre_Mesas) {
         this.MesaNombre_Mesas = mesaNombre_Mesas;
     }
-
-    public String getMesaMesa() {
-        return MesaMesa;
+    public String getMesaT_mesa() {
+        return MesaT_mesa;
     }
 
-    public void setMesaMesa(String MesaMesa) {
-        this.MesaMesa = MesaMesa;
+    public void setMesaT_mesa(String mesaT_mesa) {
+        this.MesaT_mesa = mesaT_mesa;
+    }
+
+    public String getMesaMensaje() {
+        return MesaMensaje;
+    }
+
+    public void setMesaMensaje(String MesaMensaje) {
+        this.MesaMensaje = MesaMensaje;
     }
     public String getMesaUrlimagen() {
         return MesaUrlimagen;

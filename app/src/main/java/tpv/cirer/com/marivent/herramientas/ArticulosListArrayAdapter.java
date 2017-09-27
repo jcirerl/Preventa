@@ -1,19 +1,28 @@
 package tpv.cirer.com.marivent.herramientas;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.text.Html;
+import android.text.InputType;
+import android.text.method.DigitsKeyListener;
+import android.text.method.KeyListener;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -24,7 +33,10 @@ import tpv.cirer.com.marivent.BuildConfig;
 import tpv.cirer.com.marivent.R;
 import tpv.cirer.com.marivent.modelo.Articulos;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.getPalabras;
 import static tpv.cirer.com.marivent.ui.ActividadPrincipal.iconCarrito;
+import static tpv.cirer.com.marivent.ui.ActividadPrincipal.larticulobuffet;
 
 /**
  * Created by JUAN on 31/01/2017.
@@ -34,6 +46,7 @@ public class ArticulosListArrayAdapter  extends ArrayAdapter<Articulos> {
 
     private final List<Articulos> list;
     private final Activity context;
+    private OnHeadlineSelectedListenerArticulos mCallback;
 
     static class ViewHolder {
         protected TextView name;
@@ -51,8 +64,60 @@ public class ArticulosListArrayAdapter  extends ArrayAdapter<Articulos> {
         super(context, R.layout.activity_articuloscode_row, list);
         this.context = context;
         this.list = list;
+        try {
+            this.mCallback = ((OnHeadlineSelectedListenerArticulos) context);
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Activity must implement AdapterCallback.");
+        }
+
     }
 
+    public boolean onKey(View view, int keyCode, KeyEvent event) {
+
+        //TextView responseText = (TextView) findViewById(R.id.responseText);
+        EditText myEditText = (EditText) view;
+        String value = myEditText.getText().toString();
+        int pos = 0;
+        /////////////////////////////////////////
+        if (keyCode == EditorInfo.IME_ACTION_SEARCH ||
+                keyCode == EditorInfo.IME_ACTION_DONE ||
+                event.getAction() == KeyEvent.ACTION_DOWN &&
+                        event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+
+            if (!event.isShiftPressed()) {
+                Log.v("AndroidEnterKeyActivity","Enter Key Pressed!");
+                int id = view.getId();
+                switch (view.getId()) {
+                    case R.id.TotalCobro:
+                }
+                return true;
+            }
+        }
+        return false; // pass on to other listeners.
+
+    }
+    /**
+     * To hide a keypad.
+     *
+     * @param context
+     * @param view
+     */
+    public static void hideKeyboard(Context context, View view) {
+        if ((context == null) || (view == null)) {
+            return;
+        }
+        InputMethodManager mgr =
+                (InputMethodManager) context.getSystemService(INPUT_METHOD_SERVICE);
+        mgr.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+    public static void showKeyboard(Context context, View view) {
+        if ((context == null) || (view == null)) {
+            return;
+        }
+        InputMethodManager mgr = (InputMethodManager) context.
+                                getSystemService(INPUT_METHOD_SERVICE);
+        mgr.showSoftInputFromInputMethod(view.getWindowToken(), 0);
+    }
     @Override
     public View getView(final int position, final View convertView, final ViewGroup parent) {
         View view = null;
@@ -67,30 +132,175 @@ public class ArticulosListArrayAdapter  extends ArrayAdapter<Articulos> {
             viewHolder.add = (Button) view.findViewById(R.id.btnAdd);
             viewHolder.minus = (Button) view.findViewById(R.id.btnMinus);
             viewHolder.cmbtoolbarplato = (Spinner) view.findViewById(R.id.CmbToolbarPlato);
-            viewHolder.preu = (TextView) view.findViewById(R.id.preu);
+            viewHolder.preu = (EditText) view.findViewById(R.id.preu);
             viewHolder.importe = (TextView) view.findViewById(R.id.importe);
 
-
             view.setTag(viewHolder);
+            view.setFocusable(true);
+
+            //Fill EditText with the value you have in data source
+            viewHolder.preu.setText(String.valueOf(list.get(position).getPreu()));
+            viewHolder.preu.setId(position);
+            viewHolder.preu.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+
+            viewHolder.preu.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                        final EditText Caption = (EditText) v;
+                        float nSaldo = 0;
+                        String value = Caption.getText().toString();
+                        value = value.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+                        value = value.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+                        if (value.matches("") || !value.matches("-?\\d+(\\,\\d+)?")) {
+                            Toast.makeText(context, getPalabras("Valor")+" "+getPalabras("Vacio")+" " + getPalabras("Precio"), Toast.LENGTH_SHORT).show();
+                            //            this.btnGuardar.setEnabled(false);
+                            Caption.setText("0");
+                            String cValor = Caption.getText().toString();
+                            cValor = cValor.replace(Html.fromHtml("&nbsp;"), "");
+                            cValor = cValor.replace(".", "");
+                            cValor = cValor.replace(",", ".");
+
+                            list.get(position).setPreu(Float.parseFloat(cValor));
+                            String space01 = new String(new char[01]).replace('\0', ' ');
+                            String myText = "";
+                            myText = String.format("%1$,.2f", list.get(position).getPreu());
+                            Log.i("lMytextImp", Integer.toString(myText.length()));
+                            myText = myText.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+                            myText = myText.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+                            String newText = "";
+                            for (int ii = 0; ii < (8 - myText.length()); ii++) {
+                                newText += space01;
+                            }
+                            newText += myText;
+                            viewHolder.preu.setText(Html.fromHtml(newText.replace(" ", "&nbsp;&nbsp;")).toString());
+                            nSaldo = 0;
+                            hideKeyboard(context,Caption);
+
+                        } else {
+
+                            String cValor = Caption.getText().toString();
+                            cValor = cValor.replace(Html.fromHtml("&nbsp;"), "");
+                            cValor = cValor.replace(".", "");
+                            cValor = cValor.replace(",", ".");
+
+                            list.get(position).setPreu(Float.parseFloat(cValor));
+                            list.get(position).setImporte(list.get(position).getCant() * list.get(position).getPreu());
+
+                            larticulobuffet.get(position).setArticuloPrecio(Float.parseFloat(cValor));
+
+                            String space01 = new String(new char[01]).replace('\0', ' ');
+                            String myText = "";
+                            myText = String.format("%1$,.2f", list.get(position).getPreu());
+                            Log.i("lMytextImp", Integer.toString(myText.length()));
+                            myText = myText.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+                            myText = myText.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+                            String newText = "";
+                            for (int ii = 0; ii < (8 - myText.length()); ii++) {
+                                newText += space01;
+                            }
+                            newText += myText;
+                            viewHolder.preu.setText(Html.fromHtml(newText.replace(" ", "&nbsp;&nbsp;")).toString());
+
+                            myText = String.format("%1$,.2f", list.get(position).getImporte());
+                            Log.i("lMytextImp", Integer.toString(myText.length()));
+                            myText = myText.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+                            myText = myText.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+                            newText = "";
+                            for (int ii = 0; ii < (8 - myText.length()); ii++) {
+                                newText += space01;
+                            }
+                            newText += myText;
+                            viewHolder.importe.setText(Html.fromHtml(newText.replace(" ", "&nbsp;&nbsp;")).toString() + " " + Filtro.getSimbolo());
+
+                            /// PONEMOS TOTAL EN CARRITO
+                            int textViewID = context.getResources().getIdentifier("texto_total_carrito", "id", BuildConfig.APPLICATION_ID);
+                            View rootView = context.getWindow().getDecorView().findViewById(android.R.id.content);
+                            nSaldo = 0;
+                            for (int i = 0; i < list.size(); i++) {
+                                nSaldo += list.get(i).getImporte();
+                            }
+
+                            TextView textSaldo = (TextView) rootView.findViewById(textViewID);
+                            if (textSaldo != null) {
+                                textSaldo.setText(String.format("%1$,.2f", nSaldo) + " " + Filtro.getSimbolo());
+                            }
+                            // Datos en appbar
+                            //                         int layoutID = getResources().getIdentifier("action_view_total", "layout", getPackageName());
+                            int txtViewID = context.getResources().getIdentifier("total_carrito", "id", BuildConfig.APPLICATION_ID);
+                            TextView txtSaldo = (TextView) rootView.findViewById(txtViewID);
+                            txtSaldo.setText(String.format("%1$,.2f", nSaldo) + " " + Filtro.getSimbolo());
+                            txtSaldo.setTextSize(30);
+
+                            Utils.setBadgeCount(context, iconCarrito, 0);
+
+                            // the user is done typing.
+                            hideKeyboard(context,Caption);
+                        }
+                        ////////////////////////////////////////////////////////////////////////
+                        /// PONEMOS TOTAL EN TOTALBUFFET
+                        ////////////////////////////////////////////////////////////////////////
+                        try {
+                            mCallback.onArticulosBuffetNewChecked(String.valueOf(nSaldo));
+                        } catch (ClassCastException exception) {
+                            // do something
+                        }
+                        ////////////////////////////////////////////////////////////////////////
+
+                       return true;
+                    }
+                    return false;
+                }
+            });
+            viewHolder.preu.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+                    final EditText Caption = (EditText) view;
+
+                    String valor = Caption.getText().toString();
+                    int pos = 0;
+                    valor = valor.replace(Filtro.getSimbolo(), ""); //Quitamos simbolo moneda
+                    valor = valor.replace(Html.fromHtml("&nbsp;"), ""); //Quitamos espacion
+                    valor = valor.replace(".", "");
+                    valor = valor.replace(",", ".");
+
+                    double xValor = Double.valueOf(valor);
+                    Caption.setText(String.format("%1$,.2f", xValor));
+
+                    // Ponerse al final del edittext
+                    pos = Caption.getText().length();
+                    Caption.setSelection(pos);
+
+                    Caption.setTextColor(Color.RED);
+                    Caption.setRawInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                    KeyListener keyListener = DigitsKeyListener.getInstance("-,1234567890");
+                    Caption.setKeyListener(keyListener);
+
+                }
+            });
             viewHolder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     Log.i("Checkbox", "Click");
                     switch(list.get(position).getCode()) {
                         case "BUFFET":
+                            viewHolder.preu.setVisibility(isChecked ? View.VISIBLE : View.GONE);
                             viewHolder.cant.setVisibility(isChecked ? View.VISIBLE : View.GONE);
                             viewHolder.add.setVisibility(isChecked ? View.VISIBLE : View.GONE);
                             viewHolder.minus.setVisibility(isChecked ? View.VISIBLE : View.GONE);
                             viewHolder.importe.setVisibility(isChecked ? View.VISIBLE : View.GONE);
                             break;
                     }
+
                     if(isChecked){
+
                         list.get(position).setChecked(true);
                         list.get(position).setImporte(list.get(position).getCant()*list.get(position).getPreu());
 
                         String space01 = new String(new char[01]).replace('\0', ' ');
                         String myText="";
-                        myText = String.format("%1$,.2f", list.get(position).getImporte());
+                        myText = String.format("%1$,.2f", list.get(position).getPreu());
                         Log.i("lMytextImp",Integer.toString(myText.length()));
                         myText = myText.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
                         myText = myText.replaceAll("\\s+$", ""); // Quitamos espacios derecha
@@ -99,8 +309,18 @@ public class ArticulosListArrayAdapter  extends ArrayAdapter<Articulos> {
                             newText+=space01;
                         }
                         newText +=myText;
-                        viewHolder.importe.setText(Html.fromHtml(newText.replace(" ", "&nbsp;&nbsp;")).toString()+" "+ Filtro.getSimbolo());
+                        viewHolder.preu.setText(Html.fromHtml(newText.replace(" ", "&nbsp;&nbsp;")).toString());
 
+                        myText = String.format("%1$,.2f", list.get(position).getImporte());
+                        Log.i("lMytextImp",Integer.toString(myText.length()));
+                        myText = myText.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+                        myText = myText.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+                        newText="";
+                        for (int ii = 0; ii < (8-myText.length()); ii++) {
+                            newText+=space01;
+                        }
+                        newText +=myText;
+                        viewHolder.importe.setText(Html.fromHtml(newText.replace(" ", "&nbsp;&nbsp;")).toString()+" "+ Filtro.getSimbolo());
                         /// PONEMOS TOTAL EN CARRITO
                         int textViewID = context.getResources().getIdentifier("texto_total_carrito", "id", BuildConfig.APPLICATION_ID);
                         View rootView = context.getWindow().getDecorView().findViewById(android.R.id.content);
@@ -122,6 +342,14 @@ public class ArticulosListArrayAdapter  extends ArrayAdapter<Articulos> {
 
                         Utils.setBadgeCount(context, iconCarrito, 0);
                         ////////////////////////////////////////////////////////////////////////
+                        /// PONEMOS TOTAL EN TOTALBUFFET
+                        ////////////////////////////////////////////////////////////////////////
+                        try {
+                            mCallback.onArticulosBuffetNewChecked( String.valueOf(nSaldo));
+                        } catch (ClassCastException exception) {
+                            // do something
+                        }
+                        ////////////////////////////////////////////////////////////////////////
                     }else{
                         list.get(position).setChecked(false);
 
@@ -130,11 +358,22 @@ public class ArticulosListArrayAdapter  extends ArrayAdapter<Articulos> {
 
                         String space01 = new String(new char[01]).replace('\0', ' ');
                         String myText="";
-                        myText = String.format("%1$,.2f", list.get(position).getImporte());
+                        myText = String.format("%1$,.2f", list.get(position).getPreu());
                         Log.i("lMytextImp",Integer.toString(myText.length()));
                         myText = myText.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
                         myText = myText.replaceAll("\\s+$", ""); // Quitamos espacios derecha
                         String newText="";
+                        for (int ii = 0; ii < (8-myText.length()); ii++) {
+                            newText+=space01;
+                        }
+                        newText +=myText;
+                        viewHolder.preu.setText(Html.fromHtml(newText.replace(" ", "&nbsp;&nbsp;")).toString());
+
+                        myText = String.format("%1$,.2f", list.get(position).getImporte());
+                        Log.i("lMytextImp",Integer.toString(myText.length()));
+                        myText = myText.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+                        myText = myText.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+                        newText="";
                         for (int ii = 0; ii < (8-myText.length()); ii++) {
                             newText+=space01;
                         }
@@ -163,6 +402,14 @@ public class ArticulosListArrayAdapter  extends ArrayAdapter<Articulos> {
 
                         Utils.setBadgeCount(context, iconCarrito, 0);
                         ////////////////////////////////////////////////////////////////////////
+                        ////////////////////////////////////////////////////////////////////////
+                        /// PONEMOS TOTAL EN TOTALBUFFET
+                        ////////////////////////////////////////////////////////////////////////
+                        try {
+                            mCallback.onArticulosBuffetNewChecked( String.valueOf(nSaldo));
+                        } catch (ClassCastException exception) {
+                            // do something
+                        }
                     }
                 }
             });
@@ -178,11 +425,22 @@ public class ArticulosListArrayAdapter  extends ArrayAdapter<Articulos> {
 
                     String space01 = new String(new char[01]).replace('\0', ' ');
                     String myText="";
-                    myText = String.format("%1$,.2f", list.get(position).getImporte());
+                    myText = String.format("%1$,.2f", list.get(position).getPreu());
                     Log.i("lMytextImp",Integer.toString(myText.length()));
                     myText = myText.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
                     myText = myText.replaceAll("\\s+$", ""); // Quitamos espacios derecha
                     String newText="";
+                    for (int ii = 0; ii < (8-myText.length()); ii++) {
+                        newText+=space01;
+                    }
+                    newText +=myText;
+                    viewHolder.preu.setText(Html.fromHtml(newText.replace(" ", "&nbsp;&nbsp;")).toString());
+
+                    myText = String.format("%1$,.2f", list.get(position).getImporte());
+                    Log.i("lMytextImp",Integer.toString(myText.length()));
+                    myText = myText.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+                    myText = myText.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+                    newText="";
                     for (int ii = 0; ii < (8-myText.length()); ii++) {
                         newText+=space01;
                     }
@@ -212,6 +470,11 @@ public class ArticulosListArrayAdapter  extends ArrayAdapter<Articulos> {
                     ////////////////////////////////////////////////////////////////////////
                     /// PONEMOS TOTAL EN TOTALBUFFET
                     ////////////////////////////////////////////////////////////////////////
+                    try {
+                        mCallback.onArticulosBuffetNewChecked( String.valueOf(nSaldo));
+                    } catch (ClassCastException exception) {
+                        // do something
+                    }
 
                 }
             });
@@ -227,11 +490,22 @@ public class ArticulosListArrayAdapter  extends ArrayAdapter<Articulos> {
 
                     String space01 = new String(new char[01]).replace('\0', ' ');
                     String myText="";
-                    myText = String.format("%1$,.2f", list.get(position).getImporte());
+                    myText = String.format("%1$,.2f", list.get(position).getPreu());
                     Log.i("lMytextImp",Integer.toString(myText.length()));
                     myText = myText.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
                     myText = myText.replaceAll("\\s+$", ""); // Quitamos espacios derecha
                     String newText="";
+                    for (int ii = 0; ii < (8-myText.length()); ii++) {
+                        newText+=space01;
+                    }
+                    newText +=myText;
+                    viewHolder.preu.setText(Html.fromHtml(newText.replace(" ", "&nbsp;&nbsp;")).toString());
+
+                    myText = String.format("%1$,.2f", list.get(position).getImporte());
+                    Log.i("lMytextImp",Integer.toString(myText.length()));
+                    myText = myText.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+                    myText = myText.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+                    newText="";
                     for (int ii = 0; ii < (8-myText.length()); ii++) {
                         newText+=space01;
                     }
@@ -260,22 +534,19 @@ public class ArticulosListArrayAdapter  extends ArrayAdapter<Articulos> {
 
                     Utils.setBadgeCount(context, iconCarrito, 0);
                     ////////////////////////////////////////////////////////////////////////
-                    ////////////////////////////////////////////////////////////////////////
                     /// PONEMOS TOTAL EN TOTALBUFFET
                     ////////////////////////////////////////////////////////////////////////
+                    try {
+                        mCallback.onArticulosBuffetNewChecked( String.valueOf(nSaldo));
+                    } catch (ClassCastException exception) {
+                        // do something
+                    }
 
                 }
             });
 
-/*            viewHolder.checkbox.setOnClickListener(new View.OnClickListener() {
 
-                @Override
-                public void onClick(View view) {
-                    Log.i("Checkbox","Click");
-                    list.get(position).setCant(1);
-                }
-            });
-*/
+
         } else {
             view = convertView;
         }
@@ -300,10 +571,13 @@ public class ArticulosListArrayAdapter  extends ArrayAdapter<Articulos> {
                 holder.cant.setTextColor(Color.RED);
                 holder.cant.setTextSize(30);
 
+                holder.preu.setTextColor(Color.RED);
+                holder.preu.setTextSize(30);
+
                 holder.importe.setTextColor(Color.RED);
                 holder.importe.setTextSize(30);
 
-                String space01 = new String(new char[01]).replace('\0', ' ');
+/*                String space01 = new String(new char[01]).replace('\0', ' ');
                 String myText="";
                 myText = String.format("%1$,.2f", list.get(position).getImporte());
                 Log.i("lMytextImp",Integer.toString(myText.length()));
@@ -315,24 +589,25 @@ public class ArticulosListArrayAdapter  extends ArrayAdapter<Articulos> {
                 }
                 newText +=myText;
                 holder.importe.setText(Html.fromHtml(newText.replace(" ", "&nbsp;&nbsp;")).toString()+" "+ Filtro.getSimbolo());
-
+*/
                 if (holder.checkbox.isChecked()) {
                     holder.cant.setVisibility(View.VISIBLE);
                     holder.add.setVisibility(View.VISIBLE);
                     holder.minus.setVisibility(View.VISIBLE);
                     holder.importe.setVisibility(View.VISIBLE);
+                    holder.preu.setVisibility(View.VISIBLE);
                 } else{
                     holder.cant.setVisibility(View.GONE);
                     holder.add.setVisibility(View.GONE);
                     holder.minus.setVisibility(View.GONE);
                     holder.importe.setVisibility(View.GONE);
+                    holder.preu.setVisibility(View.GONE);
                 }
                 holder.name.setText(list.get(position).getName());
 ///                holder.imagen.setImageDrawable(list.get(position).getImagen());
                 holder.checkbox.setText(list.get(position).getName());
                 holder.name.setVisibility(View.GONE);
                 holder.cmbtoolbarplato.setVisibility(View.GONE);
-                holder.preu.setVisibility(View.GONE);
                 break;
             case "ARTICULO":
                 holder.name.setText(list.get(position).getName());
@@ -364,18 +639,12 @@ public class ArticulosListArrayAdapter  extends ArrayAdapter<Articulos> {
 
         return view;
     }
-    private void findAllEdittexts(ViewGroup viewGroup) {
 
-        int count = viewGroup.getChildCount();
-        for (int i = 0; i < count; i++) {
-            View view = viewGroup.getChildAt(i);
-            Log.i("Buffet:",view.getTag()+" "+String.valueOf(view.getId()));
-            if (view instanceof ViewGroup)
-                findAllEdittexts((ViewGroup) view);
-            else if (view instanceof TextView) {
- //               Log.i("Buffet:",String.valueOf(view.getId()));
-            }
-        }
+    ///////////////////////////////////////////
+// La actividad contenedora debe implementar esta interfaz
+    public interface OnHeadlineSelectedListenerArticulos {
+        void onArticulosBuffetNewChecked(String saldo);
 
     }
+
 }

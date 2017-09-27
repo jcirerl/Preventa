@@ -137,6 +137,7 @@
             android:name=".ui.ActividadPrincipal"
             android:screenOrientation="landscape"
             android:label="@string/titulopersonalizado"
+            android:windowSoftInputMode="adjustPan"
             android:theme="@style/Theme.ConNavigationDrawer"
             android:parentActivityName=".ui.LoginActivity" >
             <meta-data

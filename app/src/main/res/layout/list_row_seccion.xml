@@ -65,7 +65,7 @@
         android:src="@drawable/no" />
     <Button
         android:id="@+id/btnOpen"
-        style="@style/RowSubtitle"
+        style="@style/ButtonBorder.Accent"
         android:layout_gravity="center"
         android:layout_alignParentBottom="true"
         android:layout_width="wrap_content"
@@ -76,11 +76,10 @@
         android:drawableLeft="@drawable/open24"
         android:layout_marginLeft="10dp"
         android:gravity="center"
-        android:text="@string/abierto"
-        android:background="@drawable/button_bg_transparent"/>
+        android:text="@string/abierto"/>
     <Button
         android:id="@+id/btnClose"
-        style="@style/RowSubtitle"
+        style="@style/ButtonBorder.Accent"
         android:layout_gravity="center"
         android:layout_alignParentBottom="true"
         android:layout_width="wrap_content"
@@ -93,9 +92,7 @@
         android:layout_marginLeft="20dp"
         android:drawableLeft="@drawable/close24"
         android:gravity="center"
-        android:text="@string/cerrado"
-        android:background="@drawable/button_bg_transparent"
-        />
+        android:text="@string/cerrado"/>
 
 </RelativeLayout>
     <!-- Bottom Sheet-->

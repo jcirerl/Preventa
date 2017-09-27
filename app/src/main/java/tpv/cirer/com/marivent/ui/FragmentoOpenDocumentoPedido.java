@@ -184,7 +184,7 @@ public class FragmentoOpenDocumentoPedido extends Fragment    {
                                 public void onClick(View view) {
                                     if(!(ActividadPrincipal.itemdcj.getText().equals("0"))) {
                                         if (!((ActividadPrincipal)getActivity()).getCruge("action_pdd_create")){
-                                            Snackbar.make(view, getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_LONG).show();
+                                            Snackbar.make(view, getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_SHORT).show();
                                         }else {
                                             final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
                                             final EditText input = new EditText(getActivity());
@@ -215,7 +215,7 @@ public class FragmentoOpenDocumentoPedido extends Fragment    {
 
                                                         new CreaDocumentoPedido().execute(value);
 
-            //                                               Snackbar.make(view, "Creando Documento Pedido", Snackbar.LENGTH_LONG).show();
+            //                                               Snackbar.make(view, "Creando Documento Pedido", Snackbar.LENGTH_SHORT).show();
                                                         Toast.makeText(getActivity(),  ActividadPrincipal.getPalabras("Creando")+" "+ActividadPrincipal.getPalabras("Documento")+" "+ActividadPrincipal.getPalabras("Pedido").toString(),
                                                                 Toast.LENGTH_SHORT).show();
                                                     }
@@ -230,7 +230,7 @@ public class FragmentoOpenDocumentoPedido extends Fragment    {
                                             alert.show();
                                         }
                                     } else {
-                                        Snackbar.make(view, ActividadPrincipal.getPalabras("Diario Caja No Existe o No Abierto"), Snackbar.LENGTH_LONG).show();
+                                        Snackbar.make(view, ActividadPrincipal.getPalabras("Diario Caja No Existe o No Abierto"), Snackbar.LENGTH_SHORT).show();
                                     }
                                 }
                         });

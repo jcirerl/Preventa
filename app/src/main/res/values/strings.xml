@@ -163,7 +163,7 @@
     <string name="on">ON Guardar</string>
     <string name="off">OFF Guardar</string>
 
-    <string name="opservidor">LOCAL</string>
+    <string name="opservidor">HOSTING</string>
     <string name="opidioma">ESP</string>
 
     <string name="oper_mesas">Operaciones Mesa</string>

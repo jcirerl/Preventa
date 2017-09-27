@@ -16,27 +16,27 @@ android {
         exclude 'META-INF/license.txt'
         exclude 'META-INF/dependencies.txt'
         exclude 'META-INF/LGPL2.1'
-
      }
 
     defaultConfig {
         applicationId "tpv.cirer.com.marivent"
-        minSdkVersion 21  // NECESARIO PARA EASYREDSYS SDK 24 PARA LLOLIPOP 21,22 //16 android mashallow 6.0.1 evita problema leer directorio
+        minSdkVersion 22  // NECESARIO PARA EASYREDSYS SDK 24 PARA LLOLIPOP 21,22 //16 android mashallow 6.0.1 evita problema leer directorio
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
         // NECESARIO PARA EASYREDSYS
-        //  jackOptions {
-        //    enabled true
-        //}
+//        jackOptions {
+//            enabled true
+//        }
         ///////////////////////////
     }
     // NECESARIO PARA EASYREDSYS
-    //compileOptions {
-    //    sourceCompatibility JavaVersion.VERSION_1_8
-    //    targetCompatibility JavaVersion.VERSION_1_8
-    //}
+//    compileOptions {
+//        sourceCompatibility JavaVersion.VERSION_1_8
+//        targetCompatibility JavaVersion.VERSION_1_8
+//    }
+    // HAY QUE QUITAR LAS LIBRERIAS DE EASYREDSYS DE DENTRO DE LIBS
     ///////////////////////////////////////////////
     configurations {
         all*.exclude group: 'commons-logging', module: 'commons-logging'
@@ -53,10 +53,19 @@ android {
 
         }
     }
-
+    // SE EMPLEA PARA TRABAJAR CON DISPOSITIVOS VIRTUALES
+    // si se activa ahi que desactivarlo para PRODUCCION APK o PARA DEBUG EN DISPOSITIVOS NO VIRTUALES
+    // HACER CLEAN PROJECT Y BUILD PROJECT YA QUE GENERA UNAS LIBRERIAS APARTE
+//    splits {
+//        abi {
+//            enable true
+//            reset()
+//            include 'x86_64', 'armeabi-v7a'
+//            universalApk true
+//        }
+//    }
 }
 apply from: "$rootDir/dependencies.gradle"
-
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
@@ -84,6 +93,10 @@ dependencies {
     compile 'com.github.greasemonk:timetable:1.2.0'
     compile 'com.github.spyhunter99:super-tooltip-aar:4.0.0'
     compile 'com.github.pro100svitlo:creditCardNfcReader:1.0.2'*/
-// https://mvnrepository.com/artifact/com.miguelangeljulvez.easyredsys/easyredsys-server
+ //https://mvnrepository.com/artifact/com.miguelangeljulvez.easyredsys/easyredsys-server
  //   compile group: 'com.miguelangeljulvez.easyredsys', name: 'easyredsys-server', version: '1.0.0'
+    /// AÑADIR CUANDO JACK = TRUE
+   // compile 'com.google.dagger:dagger:2.0'
+  //  annotationProcessor 'com.google.dagger:dagger-compiler:2.0'
+
 }

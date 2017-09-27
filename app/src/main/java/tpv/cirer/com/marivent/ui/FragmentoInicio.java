@@ -173,7 +173,7 @@ public class FragmentoInicio extends Fragment {
                 @Override
                 public void onClick(View view) {
                     if (!((ActividadPrincipal)getActivity()).getCruge("action_mesas_admin")){
-                        Snackbar.make(view, ActividadPrincipal.getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(view, ActividadPrincipal.getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_SHORT).show();
                     }else {
                         // 1. create an intent pass class name or intnet action name
                         Intent intent = new Intent(getActivity(),MesasActivity.class);
@@ -197,7 +197,7 @@ public class FragmentoInicio extends Fragment {
                 @Override
                 public void onClick(View view) {
                     if (!((ActividadPrincipal)getActivity()).getCruge("action_ftp_admin")){
-                        Snackbar.make(view, ActividadPrincipal.getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(view, ActividadPrincipal.getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_SHORT).show();
                     }else {
                         Filtro.setMesa(lparam.get(0).getDEFAULT_ESTADO_TODOS_MESA());
                         CargaFragment cargafragment = null;
@@ -205,7 +205,7 @@ public class FragmentoInicio extends Fragment {
                         cargafragment.getFragmentManager().addOnBackStackChangedListener((ActividadPrincipal)getActivity());
                         if (cargafragment.getFragment() != null){
                             cargafragment.setTransaction(R.id.contenedor_principal);
-                            Snackbar.make(view, "Ir a Ticket", Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(view, "Ir a Ticket", Snackbar.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -216,7 +216,7 @@ public class FragmentoInicio extends Fragment {
                 @Override
                 public void onClick(View view) {
                     if (!((ActividadPrincipal)getActivity()).getCruge("action_pdd_admin")){
-                        Snackbar.make(view, ActividadPrincipal.getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(view, ActividadPrincipal.getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_SHORT).show();
                     }else {
                         Filtro.setMesa(lparam.get(0).getDEFAULT_ESTADO_TODOS_MESA());
                         CargaFragment cargafragment = null;
@@ -224,7 +224,7 @@ public class FragmentoInicio extends Fragment {
                         cargafragment.getFragmentManager().addOnBackStackChangedListener((ActividadPrincipal)getActivity());
                         if (cargafragment.getFragment() != null){
                             cargafragment.setTransaction(R.id.contenedor_principal);
-                            Snackbar.make(view,ActividadPrincipal.getPalabras("Ir")+" "+ActividadPrincipal.getPalabras("Pedido"), Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(view,ActividadPrincipal.getPalabras("Ir")+" "+ActividadPrincipal.getPalabras("Pedido"), Snackbar.LENGTH_SHORT).show();
                         }
                     }
                 }

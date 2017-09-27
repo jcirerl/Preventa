@@ -98,6 +98,14 @@
             android:dialogTitle="Control Factura Directo Mesa"
             android:entries="@array/tabfacturamesa"
             android:entryValues="@array/ctrltabfacturamesa" />
+        <ListPreference
+            android:defaultValue="false"
+            android:key="opprintok"
+            android:title="Aviso Ok Impresion"
+            android:summary="Avisar finalizacion correcta impresion"
+            android:dialogTitle="Control Ok Impresion"
+            android:entries="@array/tabokprint"
+            android:entryValues="@array/ctrltabokprint" />
 
     </PreferenceCategory>
     <PreferenceCategory
