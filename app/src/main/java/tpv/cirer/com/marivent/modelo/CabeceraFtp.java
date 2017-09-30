@@ -38,6 +38,7 @@ public class CabeceraFtp {
     private int CabeceraEfectivo;
     private String CabeceraImagen_firma;
     private int CabeceraIvaincluido;
+    private String CabeceraImporte;
 
     public CabeceraFtp(){}
     
@@ -78,6 +79,12 @@ public class CabeceraFtp {
     }
     public void setCabeceraImp_diferencia(String documentoFacturaImp_diferencia) {
         this.CabeceraImp_diferencia = documentoFacturaImp_diferencia;
+    }
+    public String getCabeceraImporte() {
+        return CabeceraImporte;
+    }
+    public void setCabeceraImporte(String cabeceraimp_total) {
+        this.CabeceraImporte = cabeceraimp_total;
     }
 
     public void setCabeceraMesa(String cabeceraMesa ){

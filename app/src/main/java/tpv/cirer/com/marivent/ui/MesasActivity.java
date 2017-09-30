@@ -141,6 +141,8 @@ public class MesasActivity extends FragmentActivity implements ArticulosListArra
     String valortabla;
     String pid;
     String selectedVal;
+    String totalfactura;
+    String obsfactura;
 
     float dx=0,dy=0,x=0,y=0;
 
@@ -218,6 +220,11 @@ public class MesasActivity extends FragmentActivity implements ArticulosListArra
     }
     public void onArticulosBuffetNewChecked(String saldo) {
        // txtBoxTotal.setText(String.format("%1$,.2f", Float.parseFloat(saldo)) + " " + Filtro.getSimbolo());
+
+//        Toast.makeText(this, getPalabras("Articulo") + " " + saldo, Toast.LENGTH_SHORT).show();
+    }
+    public void onArticulosCobroNewChecked(String saldo) {
+        // txtBoxTotal.setText(String.format("%1$,.2f", Float.parseFloat(saldo)) + " " + Filtro.getSimbolo());
 
 //        Toast.makeText(this, getPalabras("Articulo") + " " + saldo, Toast.LENGTH_SHORT).show();
     }
@@ -2767,6 +2774,20 @@ public class MesasActivity extends FragmentActivity implements ArticulosListArra
                 Filtro.setFactura(json.getInt(TAG_FACTURA));
                 Filtro.setId(json.getInt(TAG_ID));
 
+                totalfactura = "0.00";
+                obsfactura = "";
+
+                String space01 = new String(new char[01]).replace('\0', ' ');
+                String myText= String.format("%1$,.2f", Float.parseFloat(totalfactura));
+                myText = myText.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+                myText = myText.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+                String newText="";
+                for (int ii = 0; ii < (10-myText.length()); ii++) {
+                    newText+=space01;
+                }
+                newText +=myText;
+                totalfactura=Html.fromHtml(newText.replace(" ", "&nbsp;&nbsp;")).toString()+" "+ Filtro.getSimbolo();
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -2790,6 +2811,8 @@ public class MesasActivity extends FragmentActivity implements ArticulosListArra
                 returnIntent.putExtra("Mesa",Filtro.getMesa());
                 returnIntent.putExtra("Action","ADD");
                 returnIntent.putExtra("Tabla","ftp");
+                returnIntent.putExtra("total",totalfactura);
+                returnIntent.putExtra("obs",obsfactura);
                 setResult(RESULT_OK,returnIntent);
                 finish();
 
@@ -3569,6 +3592,21 @@ public class MesasActivity extends FragmentActivity implements ArticulosListArra
                         if (success == 1) {
                             Filtro.setId(json.getInt(TAG_ID));
                             Filtro.setFactura(json.getInt(TAG_FACTURA));
+
+                            totalfactura = json.getString("total");
+                            obsfactura = json.getString("obs");
+
+                            String space01 = new String(new char[01]).replace('\0', ' ');
+                            String myText= String.format("%1$,.2f", Float.parseFloat(totalfactura));
+                            myText = myText.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+                            myText = myText.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+                            String newText="";
+                            for (int ii = 0; ii < (10-myText.length()); ii++) {
+                                newText+=space01;
+                            }
+                            newText +=myText;
+                            totalfactura=Html.fromHtml(newText.replace(" ", "&nbsp;&nbsp;")).toString()+" "+ Filtro.getSimbolo();
+
                             Snackbar.make(layout, ActividadPrincipal.getPalabras("Factura")+" "+ActividadPrincipal.getPalabras("Generada")+" "+Filtro.getSerie()+" "+Integer.toString(Filtro.getFactura()), Snackbar.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(getApplicationContext(), "ERROR NO "+ActividadPrincipal.getPalabras("Traspaso")+" "+ActividadPrincipal.getPalabras("Pedido")+" "+ActividadPrincipal.getPalabras("Factura"), Toast.LENGTH_SHORT).show();
@@ -3598,6 +3636,8 @@ public class MesasActivity extends FragmentActivity implements ArticulosListArra
                 returnIntent.putExtra("Mesa", Filtro.getMesa());
                 returnIntent.putExtra("Action", "ADD");
                 returnIntent.putExtra("Tabla", "ftp");
+                returnIntent.putExtra("Total", totalfactura);
+                returnIntent.putExtra("Obs", obsfactura);
                 setResult(RESULT_OK, returnIntent);
                 finish();
             }

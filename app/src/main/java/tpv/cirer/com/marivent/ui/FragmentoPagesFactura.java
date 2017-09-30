@@ -49,6 +49,8 @@ public class FragmentoPagesFactura
     String sSerie;
     String cEstado;
     String cMesa;
+    String cTotal;
+    String cObs;
     View rootView;
     FloatingActionButton btnFab;
     public FragmentoPagesFactura() {
@@ -56,7 +58,7 @@ public class FragmentoPagesFactura
 
     private static FragmentoPagesFactura PagesFactura = null;
 
-    public static FragmentoPagesFactura newInstance(int id, String estado, String mesa, String serie, String factura) {
+    public static FragmentoPagesFactura newInstance(int id, String estado, String mesa, String serie, String factura, String total, String obs) {
         FragmentoPagesFactura PagesFactura = new FragmentoPagesFactura();
         Bundle args = new Bundle();
         args.putInt("ID", id);
@@ -64,6 +66,8 @@ public class FragmentoPagesFactura
         args.putString("MESA", mesa);
         args.putString("SERIE", serie);
         args.putInt("FACTURA", Integer.parseInt(factura));
+        args.putString("TOTAL", total);
+        args.putString("OBS", obs);
         PagesFactura.setArguments(args);
         return PagesFactura;
     }
@@ -83,6 +87,8 @@ public class FragmentoPagesFactura
         sSerie = getArguments().getString("SERIE", "");
         cEstado = getArguments().getString("ESTADO", "");
         cMesa = getArguments().getString("MESA", "");
+        cTotal = getArguments().getString("TOTAL", "0");
+        cObs = getArguments().getString("OBS", "");
 
         /// Poner Datos CABECERA
         Filtro.setCabecera(false);
@@ -111,7 +117,7 @@ public class FragmentoPagesFactura
         FragmentTransaction remove = fragmentManager.beginTransaction();
         if (one == null) {
 //            one = ColorFragment.newInstance(COLOR_ONE);
-            one = FragmentoLineaDocumentoFactura.newInstance(nId,cEstado,sSerie,nFactura);
+            one = FragmentoLineaDocumentoFactura.newInstance(nId,cEstado,sSerie,nFactura,cTotal,cObs);
 //            one = new FragmentoLineaDocumentoFactura();
             Log.d(TAG, "Creating new fragment one.");
         } else {

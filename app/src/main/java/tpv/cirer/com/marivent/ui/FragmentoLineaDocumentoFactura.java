@@ -16,7 +16,6 @@ import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -145,6 +144,8 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
     String cEstado;
     String tabla;
     String lintabla;
+    String cTotal;
+    String cObs;
     boolean fragmentAlreadyLoaded = false;
     public static RecyclerView recViewlineadocumentofactura;
 //    public static AdaptadorLineaDocumentoFacturaHeader adaptadorlineadocumentofactura;
@@ -156,13 +157,15 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
 
     private static FragmentoLineaDocumentoFactura LineaDocumentoFactura = null;
 
-    public static FragmentoLineaDocumentoFactura newInstance(int id, String estado, String serie, int factura) {
+    public static FragmentoLineaDocumentoFactura newInstance(int id, String estado, String serie, int factura, String total, String obs) {
         FragmentoLineaDocumentoFactura LineaDocumentoFactura = new FragmentoLineaDocumentoFactura();
         // Supply num input as an argument.
         Bundle args = new Bundle();
         args.putInt("ID", id);
         args.putString("ESTADO", estado);
         args.putString("SERIE", serie);
+        args.putString("TOTAL", total);
+        args.putString("OBS", obs);
         args.putInt("FACTURA", factura);
         LineaDocumentoFactura.setArguments(args);
         return LineaDocumentoFactura;
@@ -201,6 +204,8 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
         nId = getArguments().getInt("ID", 0);
         sSerie = getArguments().getString("SERIE", "");
         cEstado = getArguments().getString("ESTADO", "");
+        cTotal = getArguments().getString("TOTAL", "0");
+        cObs = getArguments().getString("OBS", "");
 
         pid = Integer.toBinaryString(nId);
         Filtro.setCobroDesdeFactura(0);
@@ -277,13 +282,34 @@ public class FragmentoLineaDocumentoFactura extends Fragment {
                                 Snackbar.make(view, ActividadPrincipal.getPalabras("Cobro") + " " + ActividadPrincipal.getPalabras("Factura"), Snackbar.LENGTH_SHORT).show();
                             }
 */                          if ( Filtro.getCobroDesdeFactura()==0) {
-                                Fragment cobrofragment = null;
+                                View rootView = ((ActividadPrincipal)getActivity()).getWindow().getDecorView().findViewById(android.R.id.content);
+                                int txtViewID = getResources().getIdentifier("total_carrito", "id", BuildConfig.APPLICATION_ID);
+                                TextView txtSaldo = (TextView) rootView.findViewById(txtViewID);
+                                String cMaximo = txtSaldo.getText().toString();
+                                cMaximo = cMaximo.replace(Html.fromHtml("&nbsp;"),""); // quitamos espacios
+                                cMaximo = cMaximo.replace(Filtro.getSimbolo(),""); // quitamos moneda
+                                cMaximo = cMaximo.replace(".","");
+                                cMaximo = cMaximo.replace(",",".");
+
+                                String space01 = new String(new char[01]).replace('\0', ' ');
+                                String myText= String.format("%1$,.2f", Float.parseFloat(cMaximo));
+                                myText = myText.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+                                myText = myText.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+                                String newText="";
+                                for (int ii = 0; ii < (10-myText.length()); ii++) {
+                                    newText+=space01;
+                                }
+                                newText +=myText;
+                                cTotal=Html.fromHtml(newText.replace(" ", "&nbsp;&nbsp;")).toString()+" "+ Filtro.getSimbolo();
+
+                                ((ActividadPrincipal)getActivity()).dialog_cobro(nId,sSerie,String.valueOf(nFactura),cTotal,cObs,"factura");
+/*                                Fragment cobrofragment = null;
                                 cobrofragment = EditCobroFacturaFragment.newInstance(Integer.toString(nId), sSerie, Integer.toString(nFactura), "factura");
                                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                                 ft.replace(R.id.lista_coordinator, cobrofragment, cobrofragment.getClass().getName());
                                 ft.addToBackStack(null);
                                 ft.commit();
-                            }else{
+*/                            }else{
                                 View rootView = ((ActividadPrincipal)getActivity()).getWindow().getDecorView().findViewById(android.R.id.content);
                                 int txtViewID = getResources().getIdentifier("total_carrito", "id", BuildConfig.APPLICATION_ID);
                                 TextView txtSaldo = (TextView) rootView.findViewById(txtViewID);

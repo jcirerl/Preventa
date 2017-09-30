@@ -648,7 +648,8 @@ public class EditCobroFacturaFragment  extends Fragment implements View.OnKeyLis
                 Log.i("POST: ",post.optString("T_FRA")+ post.optString("NOMBRE"));
                 TipoCobro cat = new TipoCobro(post.optString("T_FRA"),
                         post.optString("NOMBRE"),
-                        post.optInt("COPIA_PRINT"));
+                        post.optInt("COPIA_PRINT"),
+                        0);
                 tftList.add(cat);
                 Log.i("POST Longitud: ",Integer.toString(tftList.size()));
 
@@ -839,7 +840,7 @@ public class EditCobroFacturaFragment  extends Fragment implements View.OnKeyLis
     }
 
 
-    /**
+     /**
      * Background Async Task to  Save Factura Details
      * */
     class SaveCobroFactura extends AsyncTask<String, String, Integer> {

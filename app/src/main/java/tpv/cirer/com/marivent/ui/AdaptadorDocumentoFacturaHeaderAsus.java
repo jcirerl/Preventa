@@ -204,7 +204,9 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
                                      String estadoDocumentoFactura,
                                      String mesaDocumentoFactura,
                                      String serieDocumentoFactura,
-                                     String facturaDocumentoFactura ) {
+                                     String facturaDocumentoFactura,
+                                     String totalDocumentoFactura,
+                                     String obsDocumentoFactura ) {
                     Log.d("UPDATE BUTTON", "+");
                     final ImageView imageFTP = imageDocumentoFactura;
                     final int idFTP = Integer.parseInt(idDocumentoFactura);
@@ -212,9 +214,11 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
                     final String serieFTP = serieDocumentoFactura;
                     final String facturaFTP = facturaDocumentoFactura;
                     final String estadoFTP = estadoDocumentoFactura;
+                    final String totalFTP = totalDocumentoFactura;
+                    final String obsFTP = obsDocumentoFactura;
 
                     try {
-                        mCallbackDocumentoFactura.onUpdateLineasDocumentoFacturaSelected(imageFTP,idFTP,mesaFTP,estadoFTP,serieFTP,facturaFTP);
+                        mCallbackDocumentoFactura.onUpdateLineasDocumentoFacturaSelected(imageFTP,idFTP,mesaFTP,estadoFTP,serieFTP,facturaFTP,totalFTP, obsFTP);
                     } catch (ClassCastException exception) {
                         // do something
                     }
@@ -225,15 +229,19 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
                                      String idDocumentoFactura,
                                      String estadoDocumentoFactura,
                                      String serieDocumentoFactura,
-                                     String facturaDocumentoFactura) {
+                                     String facturaDocumentoFactura,
+                                     String totalDocumentoFactura,
+                                     String obsDocumentoFactura) {
                     Log.d("UPDATE BUTTON", "+");
                     final String idFTP = idDocumentoFactura;
                     final String estadoFTP = estadoDocumentoFactura;
                     final String serieFTP = serieDocumentoFactura;
                     final String facturaFTP = facturaDocumentoFactura;
+                    final String totalFTP = totalDocumentoFactura;
+                    final String obsFTP = obsDocumentoFactura;
 
                     try {
-                        mCallbackDocumentoFactura.onCobroDocumentoFacturaSelected(Integer.parseInt(idFTP),estadoFTP,serieFTP,facturaFTP);
+                        mCallbackDocumentoFactura.onCobroDocumentoFacturaSelected(Integer.parseInt(idFTP),estadoFTP,serieFTP,facturaFTP,totalFTP,obsFTP);
                     } catch (ClassCastException exception) {
                         // do something
                     }
@@ -245,7 +253,9 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
                                        String estadoDocumentoFactura,
                                        String mesaDocumentoFactura,
                                        String serieDocumentoFactura,
-                                       String facturaDocumentoFactura ) {
+                                       String facturaDocumentoFactura,
+                                       String totalDocumentoFactura,
+                                       String obsDocumentoFactura ) {
                     Log.d("UPDATE BUTTON", "+");
                     final ImageView imageFTP = imageDocumentoFactura;
                     final int idFTP = Integer.parseInt(idDocumentoFactura);
@@ -253,9 +263,11 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
                     final String serieFTP = serieDocumentoFactura;
                     final String facturaFTP = facturaDocumentoFactura;
                     final String estadoFTP = estadoDocumentoFactura;
+                    final String totalFTP = totalDocumentoFactura;
+                    final String obsFTP = obsDocumentoFactura;
 
                     try {
-                        mCallbackDocumentoFactura.onUpdateDivisionLineasDocumentoFacturaSelected(imageFTP,idFTP,mesaFTP,estadoFTP,serieFTP,facturaFTP);
+                        mCallbackDocumentoFactura.onUpdateDivisionLineasDocumentoFacturaSelected(imageFTP,idFTP,mesaFTP,estadoFTP,serieFTP,facturaFTP,totalFTP, obsFTP);
                     } catch (ClassCastException exception) {
                         // do something
                     }
@@ -609,7 +621,9 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
                                 String.valueOf(this.EstadoDocumentoFactura.getText()),
                                 String.valueOf(this.MesaDocumentoFactura.getText()),
                                 String.valueOf(this.SerieDocumentoFactura.getText()),
-                                String.valueOf(this.FacturaDocumentoFactura.getText())
+                                String.valueOf(this.FacturaDocumentoFactura.getText()),
+                                String.valueOf(this.ImptotalDocumentoFactura.getText()),
+                                String.valueOf(this.ObsDocumentoFactura.getText())
                         );
                         break;
                     case R.id.btnDelete:
@@ -629,7 +643,9 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
                                 String.valueOf(this.IdDocumentoFactura.getText()),
                                 String.valueOf(this.EstadoDocumentoFactura.getText()),
                                 String.valueOf(this.SerieDocumentoFactura.getText()),
-                                String.valueOf(this.FacturaDocumentoFactura.getText())
+                                String.valueOf(this.FacturaDocumentoFactura.getText()),
+                                String.valueOf(this.ImptotalDocumentoFactura.getText()),
+                                String.valueOf(this.ObsDocumentoFactura.getText())
                         );
                         break;
                     case R.id.btnDivision:
@@ -640,7 +656,9 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
                                 String.valueOf(this.EstadoDocumentoFactura.getText()),
                                 String.valueOf(this.MesaDocumentoFactura.getText()),
                                 String.valueOf(this.SerieDocumentoFactura.getText()),
-                                String.valueOf(this.FacturaDocumentoFactura.getText())
+                                String.valueOf(this.FacturaDocumentoFactura.getText()),
+                                String.valueOf(this.ImptotalDocumentoFactura.getText()),
+                                String.valueOf(this.ObsDocumentoFactura.getText())
                         );
                         break;
                     case R.id.btnFactura:
@@ -781,7 +799,9 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
                              String estadoDocumentoFactura,
                              String mesaDocumentoFactura,
                              String serieDocumentoFactura,
-                             String facturaDocumentoFactura) {
+                             String facturaDocumentoFactura,
+                             String totalDocumentoFactura,
+                             String obsDocumentoFactura) {
 
         }
 
@@ -801,7 +821,9 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
                              String idDocumentoFactura,
                              String estadoDocumentoFactura,
                              String serieDocumentoFactura,
-                             String facturaDocumentoFactura) {
+                             String facturaDocumentoFactura,
+                             String totalDocumentoFactura,
+                             String obsDocumentoFactura) {
 
         }
         @Override
@@ -811,7 +833,9 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
                                String estadoDocumentoFactura,
                                String mesaDocumentoFactura,
                                String serieDocumentoFactura,
-                               String facturaDocumentoFactura) {
+                               String facturaDocumentoFactura,
+                               String totalDocumentoFactura,
+                               String obsDocumentoFactura) {
 
         }
         @Override
@@ -846,9 +870,9 @@ public class AdaptadorDocumentoFacturaHeaderAsus extends RecyclerView.Adapter<Re
         void onDeleteDocumentoFacturaSelected(int id, String estado, String serie, int factura);
         void onUpdateDocumentoFacturaSelected(int id, String valor, String campo);
         void onUpdateCobroDocumentoFacturaSelected(int id, String serie, String factura, String impcobro);
-        void onUpdateLineasDocumentoFacturaSelected(ImageView image, int id, String mesa, String estado, String serie, String factura);
-        void onUpdateDivisionLineasDocumentoFacturaSelected(ImageView image, int id, String mesa, String estado, String serie, String factura);
-        void onCobroDocumentoFacturaSelected(int id, String estado, String serie, String factura);
+        void onUpdateLineasDocumentoFacturaSelected(ImageView image, int id, String mesa, String estado, String serie, String factura, String total, String obs);
+        void onUpdateDivisionLineasDocumentoFacturaSelected(ImageView image, int id, String mesa, String estado, String serie, String factura, String total, String obs);
+        void onCobroDocumentoFacturaSelected(int id, String estado, String serie, String factura, String total, String obs);
         void onFacturarDocumentoFacturaSelected(int id, String estado, String serie, String factura);
     }
     /*para filtro*/

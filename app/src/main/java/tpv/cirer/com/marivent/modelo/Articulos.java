@@ -25,6 +25,9 @@ public class Articulos {
     private String urlimagen;
     private float preu;
     private float importe;
+    private int id;
+    private String serie;
+    private String factura;
 
     public Articulos(String name, String code, CheckBox checkbox, int cant, float preu, float importe, Button add, Button minus, String urlimagen){
         this.name = name;
@@ -38,11 +41,14 @@ public class Articulos {
         this.minus = minus;
         this.urlimagen = urlimagen;
     }
-    public Articulos(String name, String code, CheckBox checkbox,  float importe ){
+    public Articulos(String name, String code, CheckBox checkbox,  float preu, int id, String serie, String factura ){
         this.name = name;
         this.code = code;
         this.checkbox = checkbox;
-        this.importe = importe;
+        this.preu = preu;
+        this.id = id;
+        this.serie = serie;
+        this.factura = factura;
     }
     public Articulos(String name, String code, CheckBox checkbox, Spinner cmbtoolbar, ArrayAdapter<String> adapter_plato, int posicionplato, String urlimagen ){
         this.name = name;
@@ -103,6 +109,17 @@ public class Articulos {
     public void setImporte(float importe) {
         this.importe = importe;
     }
+
+    public int getId() {
+        return id;
+    }
+    public String getSerie() {
+        return serie;
+    }
+    public String getFactura() {
+        return factura;
+    }
+
 
 }
 

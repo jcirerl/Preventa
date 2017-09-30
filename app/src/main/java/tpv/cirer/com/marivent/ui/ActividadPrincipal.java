@@ -290,7 +290,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     String lintabla;
     String preu;
     String nombre;
-    String cantbuffet;
+    String origenCobro;
     String saldo_inicio;
     String obs;
     String comensales;
@@ -303,7 +303,9 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     int indiceCategoria;
     public static String InUsuarios;
     public TextView txtBoxTotal;
-
+    public TextView txtBoxTotalCobro;
+    public TextView txtBoxTotalFactura;
+    public TextView txtBoxDif;
     MenuItem buffetItem;
 
     boolean ArticuloGrupo = false;
@@ -315,7 +317,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     String ArticuloPrecioGrupo;
     String ArticuloTivaGrupo;
     boolean ArticuloBuffet = false;
-
+    boolean ArticuloCobro = false;
     int ArticuloIdGrupo;
     int nArticuloPositionSelected;
     private List<Articulos> articulosList;
@@ -324,7 +326,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
 
     int idPedido;
     int idFactura;
-    int oksucces;
+    int idPosition;
     int factura_ftp;
     String serie_ftp;
 
@@ -334,6 +336,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     private ArrayList<Integer> mSelectedItems;
     private ArrayList<Integer> mSelectedItemsCant;
     private ArrayList<Integer> mSelectedItemsTipoPlato;
+    private ArrayList<Float> mSelectedItemsPreu;
 
     MenuItem itemCarrito;
     public static LayerDrawable iconCarrito;
@@ -417,6 +420,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     private static String URL_ZONAS;
     
     private static String url_create_ftp;
+    private static String url_create_ftpcobro;
     private static String url_create_lft;
     private static String url_updatepreu_lft;
     private static String url_updatenombre_lft;
@@ -864,6 +868,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         url_update_cabecera = Filtro.getUrl()+"/update_cabecera.php";
 
         url_create_ftp = Filtro.getUrl()+"/crea_ftp.php";
+        url_create_ftpcobro = Filtro.getUrl()+"/crea_ftpcobro.php";
         url_create_lft = Filtro.getUrl()+"/crea_lft.php";
         url_updatepreu_lft = Filtro.getUrl()+"/updatepreu_lft.php";
         url_updatenombre_lft = Filtro.getUrl()+"/updatenombre_lft.php";
@@ -1558,7 +1563,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                     if (data.getStringExtra("Action").equals("ADD")) {
 
                         CargaFragment cargafragment = null;
-                        cargafragment = new CargaFragment(FragmentoPagesFactura.newInstance(Filtro.getId(), "OPEN",data.getStringExtra("Mesa"),Filtro.getSerie() ,Integer.toString(Filtro.getFactura())), getSupportFragmentManager());
+                        cargafragment = new CargaFragment(FragmentoPagesFactura.newInstance(Filtro.getId(), "OPEN",data.getStringExtra("Mesa"),Filtro.getSerie() ,Integer.toString(Filtro.getFactura()),data.getStringExtra("Total"),data.getStringExtra("Obs")), getSupportFragmentManager());
                         cargafragment.getFragmentManager().addOnBackStackChangedListener(this);
                         if (cargafragment.getFragment() != null) {
                             cargafragment.setTransactioncommitAllowingStateLoss(R.id.contenedor_principal);
@@ -2606,7 +2611,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             }
         }
     }
-    public void onUpdateLineasDocumentoFacturaSelected(ImageView image, int id, String mesa, String estado, String serie, String factura) {
+    public void onUpdateLineasDocumentoFacturaSelected(ImageView image, int id, String mesa, String estado, String serie, String factura, String total, String obs) {
         Filtro.setSerie(serie);
         Filtro.setFactura(Integer.parseInt(factura));
 
@@ -2617,7 +2622,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             Fragment currentFragment = fragmentManager.findFragmentById(R.id.contenedor_principal);
             Log.i("Fragment Activo: ",currentFragment.getTag().toString());
             CargaFragment cargafragment = null;
-            cargafragment = new CargaFragment(FragmentoPagesFactura.newInstance(id,estado,mesa,serie,factura),getSupportFragmentManager());
+            cargafragment = new CargaFragment(FragmentoPagesFactura.newInstance(id,estado,mesa,serie,factura,total,obs),getSupportFragmentManager());
             cargafragment.getFragmentManager().addOnBackStackChangedListener(this);
             if (cargafragment.getFragment() != null){
 /////**                cargafragment.setTransactionToBackStackTransition(this,R.id.contenedor_principal,currentFragment,image);
@@ -2627,7 +2632,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             }
         }
     }
-    public void onUpdateDivisionLineasDocumentoFacturaSelected(ImageView image, int id, String mesa, String estado, String serie, String factura) {
+    public void onUpdateDivisionLineasDocumentoFacturaSelected(ImageView image, int id, String mesa, String estado, String serie, String factura, String total, String obs) {
         Filtro.setSerie(serie);
         Filtro.setFactura(Integer.parseInt(factura));
 
@@ -2641,7 +2646,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                 Fragment currentFragment = fragmentManager.findFragmentById(R.id.contenedor_principal);
                 Log.i("Fragment Activo: ", currentFragment.getTag().toString());
                 CargaFragment cargafragment = null;
-                cargafragment = new CargaFragment(FragmentoDivisionPagesFactura.newInstance(id, estado, mesa, serie, factura), getSupportFragmentManager());
+                cargafragment = new CargaFragment(FragmentoDivisionPagesFactura.newInstance(id, estado, mesa, serie, factura, total, obs), getSupportFragmentManager());
                 cargafragment.getFragmentManager().addOnBackStackChangedListener(this);
                 if (cargafragment.getFragment() != null) {
 /////**                cargafragment.setTransactionToBackStackTransition(this,R.id.contenedor_principal,currentFragment,image);
@@ -2664,8 +2669,56 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     public void onArticulosNewSelected(String nombre) {
                 Toast.makeText(this, getPalabras("Articulo") + " " + nombre, Toast.LENGTH_SHORT).show();
     }
+    public void onArticulosCobroNewChecked(String saldo) {
+        String valor = txtBoxTotalFactura.getText().toString();
+        valor = valor.replace(Filtro.getSimbolo(), ""); //Quitamos simbolo moneda
+        valor = valor.replace(Html.fromHtml("&nbsp;"), ""); //Quitamos espacion
+        valor = valor.replace(".", "");
+        valor = valor.replace(",", ".");
+        float totalfactura = Float.parseFloat(valor);
+        valor = String.format("%1$,.2f", Float.parseFloat(saldo));
+        valor = valor.replace(Filtro.getSimbolo(), ""); //Quitamos simbolo moneda
+        valor = valor.replace(Html.fromHtml("&nbsp;"), ""); //Quitamos espacion
+        valor = valor.replace(".", "");
+        valor = valor.replace(",", ".");
+        float totalcobro = Float.parseFloat(valor);
+        Log.i("Cobros",String.valueOf(totalfactura)+" - "+String.valueOf(totalcobro));
+
+        String space01 = new String(new char[01]).replace('\0', ' ');
+        String myText = String.format("%1$,.2f", Float.parseFloat(saldo));
+        myText = myText.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+        myText = myText.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+        String newText="";
+        for (int ii = 0; ii < (10-myText.length()); ii++) {
+            newText+=space01;
+        }
+        newText +=myText;
+        txtBoxTotalCobro.setText(Html.fromHtml(newText.replace(" ", "&nbsp;&nbsp;")).toString()+" "+ Filtro.getSimbolo());
+
+        myText = String.format("%1$,.2f", (totalfactura-totalcobro));
+        myText = myText.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+        myText = myText.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+        newText="";
+        for (int ii = 0; ii < (10-myText.length()); ii++) {
+            newText+=space01;
+        }
+        newText +=myText;
+        txtBoxDif.setText(Html.fromHtml(newText.replace(" ", "&nbsp;&nbsp;")).toString()+" "+ Filtro.getSimbolo());
+
+//        Toast.makeText(this, getPalabras("Articulo") + " " + saldo, Toast.LENGTH_SHORT).show();
+    }
+
     public void onArticulosBuffetNewChecked(String saldo) {
-        txtBoxTotal.setText(String.format("%1$,.2f", Float.parseFloat(saldo)) + " " + Filtro.getSimbolo());
+        String space01 = new String(new char[01]).replace('\0', ' ');
+        String myText = String.format("%1$,.2f", Float.parseFloat(saldo));
+        myText = myText.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+        myText = myText.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+        String newText="";
+        for (int ii = 0; ii < (10-myText.length()); ii++) {
+            newText+=space01;
+        }
+        newText +=myText;
+        txtBoxTotal.setText(Html.fromHtml(newText.replace(" ", "&nbsp;&nbsp;")).toString()+" "+ Filtro.getSimbolo());
 
 //        Toast.makeText(this, getPalabras("Articulo") + " " + saldo, Toast.LENGTH_SHORT).show();
     }
@@ -3487,7 +3540,15 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             pid = String.valueOf(id);
             serie_ftp = serie;
             factura_ftp = Integer.parseInt(factura);
-            new SaveCobroFactura().execute(String.valueOf(id),lparam.get(0).getDEFAULT_TIPO_COBRO_OPEN_FACTURA(),"02",impcobro);
+            new SaveCobroFactura().execute(
+                    String.valueOf(id),
+                    lparam.get(0).getDEFAULT_TIPO_COBRO_OPEN_FACTURA(),
+                    "02",
+                    impcobro,
+                    "0.00",
+                    "0.00",
+                    ""
+            );
         }
     }
 
@@ -3590,13 +3651,14 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             }
         }
     }
-    public void onCobroDocumentoFacturaSelected(int id, String estado, String serie, String factura) {
+    public void onCobroDocumentoFacturaSelected(int id, String estado, String serie, String factura, String total, String obs) {
         if (!getCruge("action_ftp_update")){
             Toast.makeText(this, getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
         }else {
             if (estado.contains("CLOSE")) {
                 Toast.makeText(this, getPalabras("Factura")+" " + estado + " " + id, Toast.LENGTH_SHORT).show();
             } else {
+                dialog_cobro(id, serie,factura,total, obs, "lista");
 /*                OrderCES orderCES = new OrderCES.Builder(AppConfigImpl.class)
                         .transactionType(TransactionType.AUTORIZACION)
                         .currency(Currency.EUR)
@@ -3614,13 +3676,14 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                         .build();
 */
                 // VERSION CORRECTA
-                CargaFragment cargafragment = null;
+/*                CargaFragment cargafragment = null;
                 cargafragment = new CargaFragment(EditCobroFacturaFragment.newInstance(Integer.toString(id),serie,factura,"lista"),getSupportFragmentManager());
                 cargafragment.getFragmentManager().addOnBackStackChangedListener(this);
                 if (cargafragment.getFragment() != null){
                     cargafragment.setTransactionToBackStack(R.id.contenedor_principal);
                     Toast.makeText(this, getPalabras("Cobro")+" " + getPalabras("Factura") + " " + id, Toast.LENGTH_SHORT).show();
                 }
+*/
             }
         }
     }
@@ -3833,7 +3896,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     });
         alert.show();
 */
- public void dialog_cobro(){
+ public void dialog_cobro(final int id, final String serie, final String factura, String total, String obs, final String origen){
 
      final LinearLayout layout = new LinearLayout(this);
      layout.setId(R.id.layoutbuffet);
@@ -3843,43 +3906,6 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
      alert.setPositiveButton("OK", null);
      alert.setNegativeButton(getPalabras("Cancelar"), null);
 
-/*
-        //Para recyclerView in dialog
-        final RecyclerView rv_ejemplo;
-        final Button btn_obtener;
-        final TextView tv_marcados;
-        final AdaptadorObjetoSimple adaptador;
-        final ObjetoSimple objectsimple;
-        /////////////////////////////////
-
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View content = inflater.inflate(R.layout.buffet_main_layout, null);
-        rv_ejemplo = (RecyclerView) content.findViewById(R.id.rv_ejemplo);
-        btn_obtener = (Button) content.findViewById(R.id.btn_obtener);
-        tv_marcados = (TextView) content.findViewById(R.id.tv_marcados);
-        //Cargamos una lista con 8 objetos de ejemplo
-        final LinkedList objetosSimples = new LinkedList();
-        for (int i = 0 ; i < 8 ; i++)
-            objetosSimples.add(new ObjetoSimple(String.valueOf(i + 1)));
-
-        //Asignamos un LayoutManager y un adaptador al RecyclerView
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        rv_ejemplo.setLayoutManager(layoutManager);
-        adaptador = new AdaptadorObjetoSimple(this, objetosSimples);
-        rv_ejemplo.setAdapter(adaptador);
-
-        layout.addView(content);
-        //Asignamos una función al botón
-        btn_obtener.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LinkedList marcados = adaptador.obtenerSeleccionados();
-                String contenidoMarcados = "Marcados: ";
-                for (Object os : marcados) contenidoMarcados += ((ObjetoSimple)os).getTexto() + ", ";
-                tv_marcados.setText(contenidoMarcados);
-            }
-        });
-*/
      String[] articulos = new String[tftList.size()];
      String space01 = new String(new char[01]).replace('\0', ' ');
 
@@ -3891,15 +3917,26 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 ///            Drawable d = LoadImageFromWebOperations(comidas.get(indiceSeccion).get(i).getUrlimagen());
          CheckBox opcion = new CheckBox(this);
+         String valor = "";
 
-         articulosList.add(new Articulos(articulos[i], "COBRO", opcion, 0 ));
+         if(tftList.get(i).getTipoCobroT_fra().trim().equals("CC")){
+             valor="0.00";
+         }else{
+             valor = total;
+             valor = valor.replace(Filtro.getSimbolo(), ""); //Quitamos simbolo moneda
+             valor = valor.replace(Html.fromHtml("&nbsp;"), ""); //Quitamos espacion
+             valor = valor.replace(".", "");
+             valor = valor.replace(",", ".");
+         }
+
+         articulosList.add(new Articulos(articulos[i], "COBRO", opcion, Float.parseFloat(valor), id, serie, factura ));
 
      }
      ArrayAdapter<Articulos> adapter = new ArticulosListArrayAdapter(this, articulosList);
 
-
+     origenCobro = origen;
      mSelectedItems = new ArrayList();  // Where we track the selected items
-     mSelectedItemsCant = new ArrayList();
+     mSelectedItemsPreu = new ArrayList();
 
      boolean[] checkedItems = new boolean[articulos.length];
      /*   for (int i = 0; i < articulos.length; i++) {
@@ -3912,219 +3949,83 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             }
         }
 */
-     /// RELLENAR TOTAL
-     final TextView titleBoxTotal = new TextView(this);
-     titleBoxTotal.setHint(getPalabras("Total")+" "+getPalabras("Ticket"));
-     titleBoxTotal.setTextSize(30);
-     titleBoxTotal.setTextColor(Color.RED);
-     layout.addView(titleBoxTotal);
 
-     txtBoxTotal = new TextView(this);
-     txtBoxTotal.setId(R.id.totalbuffet);
-     txtBoxTotal.setText(String.format("%1$,.2f", Float.parseFloat("0.00")) + " " + Filtro.getSimbolo());
-     txtBoxTotal.setTextSize(30);
-     txtBoxTotal.setTypeface(txtBoxTotal.getTypeface(), Typeface.BOLD);
-     txtBoxTotal.setTextColor(Color.RED);
-     layout.addView(txtBoxTotal);
-     Log.i("buffetsaldo", "buffettextViewID: "+String.valueOf(txtBoxTotal.getId()));
-
-     /// RELLENAR CANTIDAD
-/*        final TextView titleBoxCant = new TextView(this);
-        titleBoxCant.setHint(getPalabras("Seleccionar")+" "+getPalabras("Cantidad"));
-        titleBoxCant.setTextColor(Color.RED);
-        layout.addView(titleBoxCant);
-
-        final LinearLayout layout1 = new LinearLayout(this);
-        layout1.setOrientation(LinearLayout.HORIZONTAL);
-
-        final TextView txtBoxCant = new TextView(this);
-        txtBoxCant.setText("1");
-        txtBoxCant.setTextSize(30);
-        txtBoxCant.setTextColor(Color.RED);
-        layout1.addView(txtBoxCant);
-        cantbuffet = txtBoxCant.getText().toString();
-
-        final TextView txtBoxSpace = new TextView(this);
-        txtBoxSpace.setText("                    ");
-        layout1.addView(txtBoxSpace);
+     /// MOSTRAR FACTURA Y TOTAL
+     final LinearLayout layout1 = new LinearLayout(this);
+     layout1.setOrientation(LinearLayout.HORIZONTAL);
 
 
-        final Button btnIncrease = new Button(this);
-        btnIncrease.setText("+");
-        btnIncrease.setTextSize(30);
-        layout1.addView(btnIncrease);
-        btnIncrease.setOnClickListener(new View.OnClickListener() {
+     final TextView titleBoxTotalFactura = new TextView(this);
+     titleBoxTotalFactura.setHint(getPalabras("Total"));
+     titleBoxTotalFactura.setTextSize(30);
+     titleBoxTotalFactura.setTextColor(Color.RED);
+     layout1.addView(titleBoxTotalFactura);
 
-            @Override
-            public void onClick(View view) {
+     layout.addView(layout1);
 
-                txtBoxCant.setText(String.valueOf(Integer.parseInt(txtBoxCant.getText().toString()) + 1));
-                cantbuffet = txtBoxCant.getText().toString();
+     final LinearLayout layout2 = new LinearLayout(this);
+     layout2.setOrientation(LinearLayout.HORIZONTAL);
 
-            }
-        });
-        final Button btnDecrement = new Button(this);
-        btnDecrement.setText("-");
-        btnDecrement.setTextSize(30);
-        layout1.addView(btnDecrement);
-        btnDecrement.setOnClickListener(new View.OnClickListener() {
+     txtBoxTotalFactura = new TextView(this);
+     txtBoxTotalFactura.setText(total);
+     txtBoxTotalFactura.setTextSize(30);
+     txtBoxTotalFactura.setTextColor(Color.RED);
+     layout2.addView(txtBoxTotalFactura);
 
-            @Override
-            public void onClick(View view) {
+     layout.addView(layout2);
 
-                txtBoxCant.setText(String.valueOf(Integer.parseInt(txtBoxCant.getText().toString()) - 1));
-                cantbuffet = txtBoxCant.getText().toString();
+     /// RELLENAR TOTAL COBRO
+     final TextView titleBoxTotalCobro = new TextView(this);
+     titleBoxTotalCobro.setHint(getPalabras("Total")+" "+getPalabras("Cobro"));
+     titleBoxTotalCobro.setTextSize(30);
+     titleBoxTotalCobro.setTextColor(Color.RED);
+     layout.addView(titleBoxTotalCobro);
 
-            }
-        });
-        layout.addView(layout1);
-*/
-
-     /// RELLENAR SPINNER MESAS BUFFET
-     final TextView titleBoxMesas = new TextView(this);
-     titleBoxMesas.setHint(getPalabras("Seleccionar")+" "+getPalabras("Mesa")+" "+getPalabras("Buffet"));
-     titleBoxMesas.setTextColor(Color.RED);
-     layout.addView(titleBoxMesas);
-
-     final Spinner cmbToolbarMesas = new Spinner(this);
-
-     List<String> lables_mesas = new ArrayList<String>();
-
-     for (int i = 0; i < mesaListBuffet.size(); i++) {
-         lables_mesas.add(mesaListBuffet.get(i).getMesaNombre_Mesas());
-         //            Log.i("zona ",zonasList.get(i).getDescripcion());
+     txtBoxTotalCobro = new TextView(this);
+     txtBoxTotalCobro.setId(R.id.totalbuffet);
+     String myText = String.format("%1$,.2f", Float.parseFloat("0.00"));
+     myText = myText.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+     myText = myText.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+     String newText="";
+     for (int ii = 0; ii < (10-myText.length()); ii++) {
+         newText+=space01;
      }
-     ArrayAdapter<String> adapter_mesas = new ArrayAdapter<>(
-             this,
-             R.layout.appbar_filter_title,lables_mesas);
+     newText +=myText;
+     txtBoxTotalCobro.setText(Html.fromHtml(newText.replace(" ", "&nbsp;&nbsp;")).toString()+" "+ Filtro.getSimbolo());
+     txtBoxTotalCobro.setTextSize(30);
+     txtBoxTotalCobro.setTypeface(txtBoxTotalCobro.getTypeface(), Typeface.BOLD);
+     txtBoxTotalCobro.setTextColor(Color.RED);
+     layout.addView(txtBoxTotalCobro);
+     Log.i("cobrosaldo", "cobrotextViewID: "+String.valueOf(txtBoxTotalCobro.getId()));
 
-     adapter_mesas.setDropDownViewResource(R.layout.appbar_filter_list);
+     final TextView titleBoxDif = new TextView(this);
+     titleBoxDif.setHint(getPalabras("Diferencia"));
+     titleBoxDif.setTextSize(30);
+     titleBoxDif.setTextColor(Color.RED);
+     layout.addView(titleBoxDif);
 
-     cmbToolbarMesas.setAdapter(adapter_mesas);
-     if (mesaListBuffet.size()>0) {
-         Filtro.setMimesa(mesaListBuffet.get(0).getMesaMesa());
-     }
+     txtBoxDif = new TextView(this);
+     txtBoxDif.setText(total);
+     txtBoxDif.setTextSize(30);
+     txtBoxDif.setTextColor(Color.RED);
+     layout.addView(txtBoxDif);
 
-     layout.addView(cmbToolbarMesas);
+     final TextView titleBoxObs = new TextView(this);
+     titleBoxObs.setHint(getPalabras("Observaciones"));
+     titleBoxObs.setTextSize(30);
+     titleBoxObs.setTextColor(Color.RED);
+     layout.addView(titleBoxObs);
 
-     cmbToolbarMesas.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-         @Override
-         public void onItemSelected(AdapterView<?> arg0, View arg1,
-                                    int arg2, long arg3) {
-
-
-             Filtro.setMimesa(mesaListBuffet.get(cmbToolbarMesas.getSelectedItemPosition()).getMesaMesa());
-
-         }
-
-         @Override
-         public void onNothingSelected(AdapterView<?> arg0) {
-             // TODO Auto-generated method stub
-
-         }
-     });
-     /// RELLENAR SPINNER SERIE FACTURACION
-     final TextView titleBoxFra = new TextView(this);
-     titleBoxFra.setHint(getPalabras("Seleccionar")+" "+getPalabras("Serie")+" "+getPalabras("Ticket"));
-     titleBoxFra.setTextColor(Color.RED);
-     layout.addView(titleBoxFra);
-
-     final Spinner cmbToolbarFra = new Spinner(this);
-
-     List<String> lables_fra = new ArrayList<String>();
-     int posfra = 0;
-     for (int i = 0; i < fraList.size(); i++) {
-         if(lparam.get(0).getDEFAULT_SERIE_BUFFET().equals(fraList.get(i).getFraSerie())){
-             posfra=i;
-         }
-         lables_fra.add(fraList.get(i).getFraSerie());
-         //            Log.i("zona ",zonasList.get(i).getDescripcion());
-     }
-     ArrayAdapter<String> adapter_fra = new ArrayAdapter<>(
-             this,
-             R.layout.appbar_filter_title,lables_fra);
-
-     adapter_fra.setDropDownViewResource(R.layout.appbar_filter_list);
-
-     cmbToolbarFra.setAdapter(adapter_fra);
-     if (fraList.size()>0) {
-         cmbToolbarFra.setSelection(posfra);
-         Filtro.setSerieBuffet(fraList.get(posfra).getFraSerie());
-     }
-
-     layout.addView(cmbToolbarFra);
-
-     cmbToolbarFra.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-         @Override
-         public void onItemSelected(AdapterView<?> arg0, View arg1,
-                                    int arg2, long arg3) {
+     final EditText txtBoxObs = new EditText(this);
+     txtBoxObs.setText(obs);
+     txtBoxObs.setTextSize(30);
+     txtBoxObs.setTextColor(Color.RED);
+     layout.addView(txtBoxObs);
 
 
-             Filtro.setSerieBuffet(fraList.get(cmbToolbarFra.getSelectedItemPosition()).getFraSerie());
-
-         }
-
-         @Override
-         public void onNothingSelected(AdapterView<?> arg0) {
-             // TODO Auto-generated method stub
-
-         }
-     });
-
-     /// RELLENAR SPINNER TIPOS COBRO
-     final TextView titleBoxTft = new TextView(this);
-     titleBoxTft.setHint(getPalabras("Seleccionar")+" "+getPalabras("Tipo")+" "+getPalabras("Cobro"));
-     titleBoxTft.setTextColor(Color.RED);
-     layout.addView(titleBoxTft);
-
-     final Spinner cmbToolbarTft = new Spinner(this);
-
-     List<String> lables_tft = new ArrayList<String>();
-     int postft=0;
-     for (int i = 0; i < tftbuffetList.size(); i++) {
-         if(lparam.get(0).getDEFAULT_TIPO_COBRO_BUFFET().equals(tftbuffetList.get(i).getTipoCobroT_fra())){
-             postft=i;
-         }
-         lables_tft.add(tftbuffetList.get(i).getTipoCobroNombre_tft());
-         //            Log.i("zona ",zonasList.get(i).getDescripcion());
-     }
-     ArrayAdapter<String> adapter_tft = new ArrayAdapter<>(
-             this,
-             R.layout.appbar_filter_title,lables_tft);
-
-     adapter_tft.setDropDownViewResource(R.layout.appbar_filter_list);
-
-     cmbToolbarTft.setAdapter(adapter_tft);
-     if (tftbuffetList.size()>0) {
-         cmbToolbarTft.setSelection(postft);
-         Filtro.setT_fra(tftbuffetList.get(postft).getTipoCobroT_fra());
-     }
-
-     layout.addView(cmbToolbarTft);
-
-     cmbToolbarTft.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-         @Override
-         public void onItemSelected(AdapterView<?> arg0, View arg1,
-                                    int arg2, long arg3) {
-
-
-             Filtro.setT_fra(tftbuffetList.get(cmbToolbarTft.getSelectedItemPosition()).getTipoCobroT_fra());
-
-         }
-
-         @Override
-         public void onNothingSelected(AdapterView<?> arg0) {
-             // TODO Auto-generated method stub
-
-         }
-     });
-
-     alert.setTitle(getPalabras("Articulo")+" "+ArticuloNombreGrupo);
-     Drawable d = LoadImageFromWebOperations(lcategoria.get(indiceCategoria).getCategoriaUrlimagen());
-     alert.setIcon(d);
+     alert.setTitle(getPalabras("Cobro")+" "+getPalabras("Factura")+" "+serie+" "+factura);
+//     Drawable d = LoadImageFromWebOperations(lcategoria.get(indiceCategoria).getCategoriaUrlimagen());
+     alert.setIcon(R.drawable.visa32);
      alert.setView(layout);
      alert.setSingleChoiceItems( adapter, -1, new DialogInterface.OnClickListener() {
          @Override
@@ -4207,25 +4108,84 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                  @Override
                  public void onClick(View view) {
                      // TODO Do something
-                     ArticuloBuffet = true;
+                     ArticuloCobro = true;
                      nArticuloPositionSelected=0;
                      mSelectedItems.clear();  // Where we track the selected items
-                     mSelectedItemsCant.clear();
+                     mSelectedItemsPreu.clear();
                      int i = 0;
                      for (Articulos articulo : articulosList) { //iterate element by element in a list
 ///                        Log.i("Articulo: ", articulo.getName()+" "+articulo.getCant());
-                         if (articulo.getChecked() && articulo.getCant()!=0)  {
+                         if (articulo.getChecked())  {
                              mSelectedItems.add(i);
-                             mSelectedItemsCant.add(articulo.getCant());
-///                            Log.i("Articulo OK: ", articulo.getName()+" "+articulo.getCant());
+                             mSelectedItemsPreu.add(articulo.getImporte());
+///                            Log.i("Articulo OK: ", articulo.getName()+" "+articulo.getImporte());
                          }
                          i++;
                      }
 
                      if (mSelectedItems.size()>0) {
-                         new CreaDocumentoFactura().execute();
+
+                         serie_ftp = serie;
+                         factura_ftp = Integer.parseInt(factura);
+
+                         String valorcobro = txtBoxTotalCobro.getText().toString();
+                         valorcobro = valorcobro.replace(Filtro.getSimbolo(), ""); //Quitamos simbolo moneda
+                         valorcobro = valorcobro.replace(Html.fromHtml("&nbsp;"), ""); //Quitamos espacion
+                         valorcobro = valorcobro.replace(".", "");
+                         valorcobro = valorcobro.replace(",", ".");
+
+                         final String v_cobro = valorcobro;
+                         String valordif = txtBoxDif.getText().toString();
+                         valordif = valordif.replace(Filtro.getSimbolo(), ""); //Quitamos simbolo moneda
+                         valordif = valordif.replace(Html.fromHtml("&nbsp;"), ""); //Quitamos espacion
+                         valordif = valordif.replace(".", "");
+                         valordif = valordif.replace(",", ".");
+
+                         final String v_dif = valordif;
+                         if (Float.parseFloat(valordif)>0){
+                             AlertDialog.Builder builder = new AlertDialog.Builder(ActividadPrincipal.this);
+                             builder.setTitle(getPalabras("Confirma Diferencia"));
+                             builder.setMessage(getPalabras("Confirma cobro a pesar diferencia")+"? "+txtBoxDif.getText().toString());
+                             builder.setCancelable(false);
+                             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                 @Override
+                                 public void onClick(DialogInterface dialog, int which) {
+//                Toast.makeText(getApplicationContext(), "You've choosen to delete all records", Toast.LENGTH_SHORT).show();
+                                     new SaveCobroFactura().execute(
+                                             String.valueOf(id),
+                                             tftList.get(mSelectedItems.get(0)).getTipoCobroT_fra(),
+                                             "14",
+                                             v_cobro,
+                                             v_dif,
+                                             "0.00",
+                                             txtBoxObs.getText().toString()
+                                     );
+                                     dialogo.cancel();
+                                 }
+                             });
+
+                             builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                 @Override
+                                 public void onClick(DialogInterface dialog, int which) {
+                                     Toast.makeText(getApplicationContext(), "You've changed your mind to delete all records", Toast.LENGTH_SHORT).show();
+                                 }
+                             });
+
+                             builder.show();
+                         }else {
+                             new SaveCobroFactura().execute(
+                                     String.valueOf(id),
+                                     tftList.get(mSelectedItems.get(0)).getTipoCobroT_fra(),
+                                     "14",
+                                     valorcobro,
+                                     valordif,
+                                     "0.00",
+                                     txtBoxObs.getText().toString()
+                             );
+                             dialogo.cancel();
+                         }
                      }else{
-                         Toast.makeText(getApplicationContext(), getPalabras("Debe seleccionar un articulo"), Toast.LENGTH_SHORT).show();
+                         Toast.makeText(getApplicationContext(), getPalabras("Debe seleccionar tipo de cobro"), Toast.LENGTH_SHORT).show();
                      }
 
                  }
@@ -4236,7 +4196,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                  @Override
                  public void onClick(View view) {
                      // TODO Do something
-                     ArticuloBuffet = false;
+                     ArticuloCobro = false;
                      dialogo.cancel();
 
                  }
@@ -4250,54 +4210,153 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
      window.setLayout(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
      dialogo.getWindow().clearFlags( WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
      dialogo.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-// Initially disable the button
-/*        if (mSelectedItems.size()>0) {
-            ((AlertDialog) dialogo).getButton(AlertDialog.BUTTON_POSITIVE)
-                    .setEnabled(true);
-
-        }else{
-            ((AlertDialog) dialogo).getButton(AlertDialog.BUTTON_POSITIVE)
-                    .setEnabled(false);
-
-        }
-        */
-// Now set the textchange listener for edittext
-/**        txtBoxCant.addTextChangedListener(new TextWatcher() {
-@Override
-public void onTextChanged(CharSequence s, int start, int before,
-int count) {
-if (s.toString().trim().equals("0")) {
-// Disable ok button
-((AlertDialog) dialogo).getButton(
-AlertDialog.BUTTON_POSITIVE).setEnabled(false);
-} else {
-// Something into edit text. Enable the button.
-((AlertDialog) dialogo).getButton(
-AlertDialog.BUTTON_POSITIVE).setEnabled(true);
-}
-}
-
-@Override
-public void beforeTextChanged(CharSequence s, int start, int count,
-int after) {
-}
-
-@Override
-public void afterTextChanged(Editable s) {
-// Check if edittext is empty
- **//*                if (TextUtils.isEmpty(s)) {
-                    // Disable ok button
-                    ((AlertDialog) dialogo).getButton(
-                            AlertDialog.BUTTON_POSITIVE).setEnabled(false);
-                } else {
-                    // Something into edit text. Enable the button.
-                    ((AlertDialog) dialogo).getButton(
-                            AlertDialog.BUTTON_POSITIVE).setEnabled(true);
-                }
-*/
-/**            }
- });**/
  }
+
+    private void control_articulos_cobro(){
+        Log.i("CONTROL ARTICULOS",Integer.toString(nArticuloPositionSelected)+" "+Integer.toString(mSelectedItems.size()));
+        if (nArticuloPositionSelected < mSelectedItems.size()) {
+            // Conversion precio a formato para base de datos
+            String cValor = String.format("%1$,.2f", mSelectedItemsPreu.get(nArticuloPositionSelected));
+            TaskHelper.execute(new CreaLineaDocumentoFacturaCobro(),
+                    serie_ftp,
+                    String.valueOf(factura_ftp),
+                    tftList.get(mSelectedItems.get(nArticuloPositionSelected)).getTipoCobroT_fra(),
+                    cValor,
+                    String.valueOf(mSelectedItems.get(nArticuloPositionSelected))
+            );
+            nArticuloPositionSelected++;
+        }else{
+            ArticuloCobro=false;
+            if(origenCobro.equals("factura")){
+                this.setCabecera(getPalabras("Inicio"),Float.parseFloat("0.00"),0);
+                CargaFragment cargafragment = new CargaFragment(FragmentoInicio.newInstance(),getSupportFragmentManager());
+                cargafragment.getFragmentManager().addOnBackStackChangedListener(this);
+                if (cargafragment.getFragment() != null){
+                    cargafragment.setTransaction(R.id.contenedor_principal);
+                }
+
+            }
+            if(origenCobro.equals("division")) {
+                Filtro.setCobroDesdeFactura(1);
+                this.onBackPressed();
+            }
+
+            if(origenCobro.equals("lista")) {
+                FragmentoOpenDocumentoFactura.getInstance().onResume();
+            }
+        }
+    }
+    class CreaLineaDocumentoFacturaCobro extends AsyncTask<String, String, Integer> {
+
+        /**
+         * Before starting background thread Show Progress Dialog
+         * */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(ActividadPrincipal.this);
+            pDialog.setMessage(getPalabras("Crear")+" "+getPalabras("Linea")+"..");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
+        }
+
+        /**
+         * Creating product
+         * */
+        @Override
+        protected Integer doInBackground(String... args) {
+            String importe = args[3];
+            importe = importe.replace(Filtro.getSimbolo(),"");
+            importe = importe.replace(Html.fromHtml("&nbsp;"), ""); //Quitamos espacion
+            importe = importe.replace(".","");
+            importe = importe.replace(",",".");
+
+            idPosition=Integer.parseInt(args[4]);
+
+            Calendar currentDate = Calendar.getInstance(); //Get the current date
+            SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); //format it as per your requirement
+            String dateNow = formatter.format(currentDate.getTime());
+
+            // Building Parameters
+            ContentValues values = new ContentValues();
+            values.put("grupo", Filtro.getGrupo());
+            values.put("empresa", Filtro.getEmpresa());
+            values.put("local", Filtro.getLocal());
+            values.put("seccion", Filtro.getSeccion());
+            values.put("caja", Filtro.getCaja());
+            values.put("serie", args[0]);
+            values.put("factura", args[1]);
+            values.put("t_fra",args[2]);
+            values.put("importe", importe);
+            values.put("updated", dateNow);
+            values.put("creado", dateNow);
+            values.put("usuario", Filtro.getUsuario());
+            values.put("ip",getLocalIpAddress());
+
+            // getting JSON Object
+            // Note that create product url accepts POST method
+
+            JSONObject json = jsonParserNew.makeHttpRequest(url_create_ftpcobro,
+                    "POST", values);
+
+            // check log cat fro response
+//            Log.d("Create Response", json.toString());
+
+            // check for success tag
+            Integer success = 0;
+
+            try {
+                success = json.getInt(TAG_SUCCESS);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return success;
+        }
+
+        /**
+         * After completing background task Dismiss the progress dialog
+         * **/
+        @Override
+        protected void onPostExecute(Integer success) {
+            // dismiss the dialog once done
+            pDialog.dismiss();
+
+            if (success == 1) {
+                if (ArticuloCobro){
+                    Log.i("Cobro Impresion",String.valueOf(idPosition)+" "+
+                            tftList.get(idPosition).getTipoCobroCopia_print()+" "+
+                            tftList.get(idPosition).getTipoCobroT_fra());
+                    if(tftList.get(idPosition).getTipoCobroCopia_print()>0) {
+                        for (int i = 0; i < tftList.get(idPosition).getTipoCobroCopia_print(); i++) {
+
+                            PrintTicket printticket = new PrintTicket(ActividadPrincipal.this, factura_ftp, serie_ftp);
+                            printticket.iniciarTicket();
+
+                        }
+                    }
+                    control_articulos_cobro();
+                }
+                if (ArticuloBuffet){
+                    if(tftList.get(idPosition).getTipoCobroCopia_print()>0) {
+                        for (int i = 0; i < tftList.get(idPosition).getTipoCobroCopia_print(); i++) {
+
+                            PrintTicket printticket = new PrintTicket(ActividadPrincipal.this, Filtro.getFactura(), Filtro.getSerieBuffet());
+                            printticket.iniciarTicket();
+
+                        }
+                    }
+                    control_articulos_buffet();
+                }
+                Toast.makeText(ActividadPrincipal.this, getPalabras("Crear") + " " + getPalabras("Linea"), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(ActividadPrincipal.this, "ERROR NO "+getPalabras("Crear")+" "+getPalabras("Linea"), Toast.LENGTH_SHORT).show();
+                // failed to create product
+            }
+        }
+
+    }
 
     public void dialog_buffet(){
 
@@ -4408,7 +4467,15 @@ public void afterTextChanged(Editable s) {
 
         txtBoxTotal = new TextView(this);
         txtBoxTotal.setId(R.id.totalbuffet);
-        txtBoxTotal.setText(String.format("%1$,.2f", Float.parseFloat("0.00")) + " " + Filtro.getSimbolo());
+        String myText = String.format("%1$,.2f", Float.parseFloat("0.00"));
+        myText = myText.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+        myText = myText.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+        String newText="";
+        for (int ii = 0; ii < (10-myText.length()); ii++) {
+            newText+=space01;
+        }
+        newText +=myText;
+        txtBoxTotal.setText(Html.fromHtml(newText.replace(" ", "&nbsp;&nbsp;")).toString()+" "+ Filtro.getSimbolo());
         txtBoxTotal.setTextSize(30);
         txtBoxTotal.setTypeface(txtBoxTotal.getTypeface(), Typeface.BOLD);
         txtBoxTotal.setTextColor(Color.RED);
@@ -4872,7 +4939,15 @@ public void afterTextChanged(Editable s) {
 
             if (success == 1) {
                 ArticuloBuffet = true;
-                control_articulos_buffet();
+                new CreaLineaDocumentoFacturaCobro().execute(
+                        Filtro.getSerieBuffet(),
+                        String.valueOf(Filtro.getFactura()),
+                        Filtro.getT_fra(),
+                        txtBoxTotal.getText().toString(),
+                        "0"
+                );
+
+       //         control_articulos_buffet();
             } else {
                 Toast.makeText(getApplicationContext(), "ERROR NO "+ActividadPrincipal.getPalabras("Crear")+" "+ActividadPrincipal.getPalabras("Factura"), Toast.LENGTH_SHORT).show();
                 // failed to create product
@@ -5323,10 +5398,14 @@ public void afterTextChanged(Editable s) {
     }
 
     @Override
-    public void onBackPressed() {        // to prevent irritating accidental logouts
-        FragmentManager fragManager = this.getSupportFragmentManager();
-        int count = this.getSupportFragmentManager().getBackStackEntryCount();
-        Log.i("Count Fragments: ",Integer.toString(count)+" "+Filtro.getTag_fragment());
+    public void onBackPressed() {
+        int count=0;
+        if (null!=this.getSupportFragmentManager()) {
+            // to prevent irritating accidental logouts
+            FragmentManager fragManager = this.getSupportFragmentManager();
+            count = this.getSupportFragmentManager().getBackStackEntryCount();
+            Log.i("Count Fragments: ", Integer.toString(count) + " " + Filtro.getTag_fragment());
+        }
         if (count==0) {
             long t = System.currentTimeMillis();
             if (t - backPressedTime > 2000) {    // 2 secs
@@ -5423,161 +5502,6 @@ public void afterTextChanged(Editable s) {
                     cargafragment.setTransaction(R.id.contenedor_principal);
                 }
             }
-/*            if (Filtro.getTag_fragment().equals("FragmentoOpenDocumentoFactura")){
-                Log.i("Fragment: ","FragmentoOpenDocumentoFactura ok"+Filtro.getTag_fragment());
-                CargaFragment cargafragment = null;
-                cargafragment = new CargaFragment(FragmentoFactura.newInstance(0),getSupportFragmentManager());
-                cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
-                if (cargafragment.getFragment() != null){
-                    cargafragment.setTransaction(R.id.contenedor_principal);
-                }
-            }
-            if (Filtro.getTag_fragment().equals("FragmentoCloseDocumentoFactura")){
-                Log.i("Fragment: ","FragmentoCloseDocumentoFactura ok");
-                CargaFragment cargafragment = null;
-                cargafragment = new CargaFragment(FragmentoFactura.newInstance(1),getSupportFragmentManager());
-                cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
-                if (cargafragment.getFragment() != null){
-                    cargafragment.setTransaction(R.id.contenedor_principal);
-                }
-            }
-            if (Filtro.getTag_fragment().equals("FragmentoLineaDocumentoFactura")){
-                Log.i("Fragment: ","FragmentoLineaDocumentoFactura ok");
-                CargaFragment cargafragment = null;
-                cargafragment = new CargaFragment(FragmentoFactura.newInstance(1),getSupportFragmentManager());
-                cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
-                if (cargafragment.getFragment() != null){
-                    cargafragment.setTransactionToBackStack(R.id.contenedor_principal);
-                }
-            }
-            if (Filtro.getTag_fragment().equals("FragmentoOpenDocumentoPedido")){
-                Log.i("Fragment: ","FragmentoOpenDocumentoPedido ok");
-                CargaFragment cargafragment = null;
-                cargafragment = new CargaFragment(FragmentoPedido.newInstance(),getSupportFragmentManager());
-                cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
-                if (cargafragment.getFragment() != null){
-                    cargafragment.setTransaction(R.id.contenedor_principal);
-                }
-            }
-            if (Filtro.getTag_fragment().equals("FragmentoCloseDocumentoPedido")){
-                Log.i("Fragment: ","FragmentoCloseDocumentoPedido ok");
-                CargaFragment cargafragment = null;
-                cargafragment = new CargaFragment(FragmentoPedido.newInstance(),getSupportFragmentManager());
-                cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
-                if (cargafragment.getFragment() != null){
-                    cargafragment.setTransaction(R.id.contenedor_principal);
-                }
-            }
-
-            if (Filtro.getTag_fragment().equals("FragmentoLineaDocumentoPedido")){
-                Log.i("Fragment: ","FragmentoLineaDocumentoPedido ok");
-                CargaFragment cargafragment = null;
-                cargafragment = new CargaFragment(FragmentoPedido.newInstance(),getSupportFragmentManager());
-                cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
-                if (cargafragment.getFragment() != null){
-                    cargafragment.setTransactionToBackStack(R.id.contenedor_principal);
-                }
-            }
-            if (Filtro.getTag_fragment().equals("FragmentoOpenDcj")){
-                Log.i("Fragment: ","FragmentoOpenDcj ok");
-                CargaFragment cargafragment = null;
-                cargafragment = new CargaFragment(FragmentoDcj.newInstance(),getSupportFragmentManager());
-                cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
-                if (cargafragment.getFragment() != null){
-                    cargafragment.setTransaction(R.id.contenedor_principal);
-                }
-            }
-            if (Filtro.getTag_fragment().equals("FragmentoCloseDcj")){
-                Log.i("Fragment: ","FragmentoCloseDcj ok");
-                CargaFragment cargafragment = null;
-                cargafragment = new CargaFragment(FragmentoDcj.newInstance(),getSupportFragmentManager());
-                cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
-                if (cargafragment.getFragment() != null){
-                    cargafragment.setTransaction(R.id.contenedor_principal);
-                }
-            }
-            if (Filtro.getTag_fragment().equals("PrintDcjFragment")){
-                Log.i("Fragment: ","PrintDcjFragment ok");
-                CargaFragment cargafragment = null;
-                cargafragment = new CargaFragment(FragmentoDcj.newInstance(),getSupportFragmentManager());
-                cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
-                if (cargafragment.getFragment() != null){
-                    cargafragment.setTransaction(R.id.contenedor_principal);
-                }
-            }
-            if (Filtro.getTag_fragment().equals("FragmentoOpenTurno")){
-                Log.i("Fragment: ","FragmentoOpenTurno ok");
-                CargaFragment cargafragment = null;
-                cargafragment = new CargaFragment(FragmentoTurno.newInstance(),getSupportFragmentManager());
-                cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
-                if (cargafragment.getFragment() != null){
-                    cargafragment.setTransaction(R.id.contenedor_principal);
-                }
-            }
-            if (Filtro.getTag_fragment().equals("FragmentoCloseTurno")){
-                Log.i("Fragment: ","FragmentoCloseTurno ok");
-                CargaFragment cargafragment = null;
-                cargafragment = new CargaFragment(FragmentoTurno.newInstance(),getSupportFragmentManager());
-                cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
-                if (cargafragment.getFragment() != null){
-                    cargafragment.setTransaction(R.id.contenedor_principal);
-                }
-            }
-            if (Filtro.getTag_fragment().equals("FragmentoOpenCaja")){
-                Log.i("Fragment: ","FragmentoOpenCaja ok");
-                CargaFragment cargafragment = null;
-                cargafragment = new CargaFragment(FragmentoCaja.newInstance(),getSupportFragmentManager());
-                cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
-                if (cargafragment.getFragment() != null){
-                    cargafragment.setTransaction(R.id.contenedor_principal);
-                }
-            }
-            if (Filtro.getTag_fragment().equals("FragmentoCloseCaja")){
-                Log.i("Fragment: ","FragmentoCloseCaja ok");
-                CargaFragment cargafragment = null;
-                cargafragment = new CargaFragment(FragmentoCaja.newInstance(),getSupportFragmentManager());
-                cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
-                if (cargafragment.getFragment() != null){
-                    cargafragment.setTransaction(R.id.contenedor_principal);
-                }
-            }
-            if (Filtro.getTag_fragment().equals("FragmentoOpenSeccion")){
-                Log.i("Fragment: ","FragmentoOpenSeccion ok");
-                CargaFragment cargafragment = null;
-                cargafragment = new CargaFragment(FragmentoSeccion.newInstance(),getSupportFragmentManager());
-                cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
-                if (cargafragment.getFragment() != null){
-                    cargafragment.setTransaction(R.id.contenedor_principal);
-                }
-            }
-            if (Filtro.getTag_fragment().equals("FragmentoCloseSeccion")){
-                Log.i("Fragment: ","FragmentoCloseSeccion ok");
-                CargaFragment cargafragment = null;
-                cargafragment = new CargaFragment(FragmentoSeccion.newInstance(),getSupportFragmentManager());
-                cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
-                if (cargafragment.getFragment() != null){
-                    cargafragment.setTransaction(R.id.contenedor_principal);
-                }
-            }
-            if (Filtro.getTag_fragment().equals("EditOpenSeccionFragment")){
-                Log.i("Fragment: ","EditOpenSeccionFragment ok");
-                CargaFragment cargafragment = null;
-                cargafragment = new CargaFragment(FragmentoSeccion.newInstance(),getSupportFragmentManager());
-                cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
-                if (cargafragment.getFragment() != null){
-                    cargafragment.setTransaction(R.id.contenedor_principal);
-                }
-            }
-            if (Filtro.getTag_fragment().equals("EditCloseSeccionFragment")){
-                Log.i("Fragment: ","EditCloseSeccionFragment ok");
-                CargaFragment cargafragment = null;
-                cargafragment = new CargaFragment(FragmentoSeccion.newInstance(),getSupportFragmentManager());
-                cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
-                if (cargafragment.getFragment() != null){
-                    cargafragment.setTransaction(R.id.contenedor_principal);
-                }
-            }
-*/
         }
     }
 
@@ -9110,12 +9034,12 @@ ge     * */
         protected void onPreExecute() {
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
-/*            pDialogPalabras = new ProgressDialog(ActividadPrincipal.this);
+            pDialogPalabras = new ProgressDialog(ActividadPrincipal.this);
             pDialogPalabras.setMessage("Cargando Palabras. Espere por favor...");
             pDialogPalabras.setIndeterminate(false);
             pDialogPalabras.setCancelable(true);
             pDialogPalabras.show();
-*/
+
         }
 
         @Override
@@ -9198,7 +9122,7 @@ ge     * */
         @Override
         protected void onPostExecute(Integer result) {
             /* Download complete. Lets update UI */
-  //          pDialogPalabras.dismiss();
+            pDialogPalabras.dismiss();
             if (result == 1) {
                 Log.i(TAG_PALABRAS, Integer.toString(lpalabras.size()));
             } else {
@@ -9339,11 +9263,25 @@ ge     * */
                             Filtro.setId(json.getInt(TAG_ID));
                             Filtro.setFactura(json.getInt(TAG_FACTURA));
 
+                            String total = json.getString("total");
+                            String obs = json.getString("obs");
+
+                            String space01 = new String(new char[01]).replace('\0', ' ');
+                            String myText= String.format("%1$,.2f", Float.parseFloat(total));
+                            myText = myText.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+                            myText = myText.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+                            String newText="";
+                            for (int ii = 0; ii < (10-myText.length()); ii++) {
+                                newText+=space01;
+                            }
+                            newText +=myText;
+                            total=Html.fromHtml(newText.replace(" ", "&nbsp;&nbsp;")).toString()+" "+ Filtro.getSimbolo();
+
                             if (!getCruge("action_ftp_update")) {
                                 Toast.makeText(ActividadPrincipal.this, getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
                             }else {
                                 CargaFragment cargafragment = null;
-                                cargafragment = new CargaFragment(FragmentoPagesFactura.newInstance(Filtro.getId(), "OPEN", json.getString(TAG_MESA_FTP) ,Filtro.getSerie(), Integer.toString(Filtro.getFactura())), getSupportFragmentManager());
+                                cargafragment = new CargaFragment(FragmentoPagesFactura.newInstance(Filtro.getId(), "OPEN", json.getString(TAG_MESA_FTP) ,Filtro.getSerie(), Integer.toString(Filtro.getFactura()),total,obs), getSupportFragmentManager());
                                 cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
                                 if (cargafragment.getFragment() != null) {
                                     cargafragment.setTransactionToBackStack(R.id.contenedor_principal);
@@ -13808,7 +13746,8 @@ ge     * */
                 Log.i("POST: ",post.optString("T_FRA")+ post.optString("NOMBRE"));
                 TipoCobro cat = new TipoCobro(post.optString("T_FRA"),
                         getPalabras(post.optString("NOMBRE").trim()),
-                        post.optInt("COPIA_PRINT"));
+                        post.optInt("COPIA_PRINT"),
+                        0);
                 tftbuffetList.add(cat);
                 tftList.add(cat);
                 Log.i("POST Longitud: ",Integer.toString(tftbuffetList.size()));
@@ -13850,14 +13789,13 @@ ge     * */
             SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); //format it as per your requirement
             String dateNow = formatter.format(currentDate.getTime());
 
-
             values.put(TAG_PID, args[0]);
             values.put(TAG_TFRA,args[1]);
             values.put(TAG_ESTADO,args[2]);
             values.put(TAG_IMPCOBRO,args[3]);
-            values.put(TAG_IMPDIFERENCIA,"0.00");
-            values.put(TAG_DTO,"0.00");
-            values.put(TAG_OBS,"");
+            values.put(TAG_IMPDIFERENCIA,args[4]);
+            values.put(TAG_DTO,args[5]);
+            values.put(TAG_OBS,args[6]);
             values.put("updated", dateNow);
             values.put("usuario", Filtro.getUsuario());
             values.put("ip",getLocalIpAddress());
@@ -13892,13 +13830,22 @@ ge     * */
             // dismiss the dialog once Factura updated
             pDialog.dismiss();
             if (result==1){
-                CargaFragment cargafragment = null;
-                cargafragment = new CargaFragment(EditCobroFacturaFragment.newInstance(pid,serie_ftp,String.valueOf(factura_ftp),"lista"),getSupportFragmentManager());
-                cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
-                if (cargafragment.getFragment() != null){
-                    cargafragment.setTransactionToBackStack(R.id.contenedor_principal);
-                    Toast.makeText(ActividadPrincipal.this, getPalabras("Cobro")+" " + getPalabras("Factura") + " " + factura_ftp, Toast.LENGTH_SHORT).show();
+                if (ArticuloCobro){
+                    control_articulos_cobro();
+                } else {
+                    CargaFragment cargafragment = null;
+                    cargafragment = new CargaFragment(EditCobroFacturaFragment.newInstance(pid,serie_ftp,String.valueOf(factura_ftp),"lista"),getSupportFragmentManager());
+                    cargafragment.getFragmentManager().addOnBackStackChangedListener(ActividadPrincipal.this);
+                    if (cargafragment.getFragment() != null){
+                        cargafragment.setTransactionToBackStack(R.id.contenedor_principal);
+                        Toast.makeText(ActividadPrincipal.this, getPalabras("Cobro")+" " + getPalabras("Factura") + " " + factura_ftp, Toast.LENGTH_SHORT).show();
+                    }
                 }
+
+            }else{
+
+                Toast.makeText(ActividadPrincipal.this, "ERROR NO "+getPalabras("Guardar") + " " + getPalabras("Cobro"), Toast.LENGTH_SHORT).show();
+
             }
         }
     }

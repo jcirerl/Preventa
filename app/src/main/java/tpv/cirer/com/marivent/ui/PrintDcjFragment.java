@@ -724,7 +724,16 @@ public class PrintDcjFragment extends Fragment {
         ///////////////////////////////////////////////////////////
         String newTextFactura=String.format("%07d", Integer.parseInt(String.valueOf(lcabeceraftp.get(position).getCabeceraFactura())));
         ///////////////////////////////////////////////////////////
-        String myTextTotal = String.format("%1$,.2f", Float.parseFloat(lcabeceraftp.get(position).getCabeceraImp_total()));
+        float imptotal =0;
+        float impcobro =0;
+        if(lcabeceraftp.get(position).getCabeceraImporte().equals("null")) {
+            imptotal = Float.parseFloat(lcabeceraftp.get(position).getCabeceraImp_total());
+            impcobro = Float.parseFloat(lcabeceraftp.get(position).getCabeceraImp_cobro());
+        }else {
+            imptotal = Float.parseFloat(lcabeceraftp.get(position).getCabeceraImporte());
+            impcobro = Float.parseFloat(lcabeceraftp.get(position).getCabeceraImporte());
+        }
+        String myTextTotal=String.format("%1$,.2f", imptotal);
         myTextTotal = myTextTotal.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
         myTextTotal = myTextTotal.replaceAll("\\s+$", ""); // Quitamos espacios derecha
         String newTextTotal="";
@@ -733,7 +742,7 @@ public class PrintDcjFragment extends Fragment {
         }
         newTextTotal +=myTextTotal;
         ///////////////////////////////////////////////////////////
-        String myTextCobro = String.format("%1$,.2f", Float.parseFloat(lcabeceraftp.get(position).getCabeceraImp_cobro()));
+        String myTextCobro = String.format("%1$,.2f", impcobro);
         myTextCobro = myTextCobro.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
         myTextCobro = myTextCobro.replaceAll("\\s+$", ""); // Quitamos espacios derecha
         String newTextCobro="";
@@ -787,14 +796,14 @@ public class PrintDcjFragment extends Fragment {
         ) + "\n";
 
         /// Sumamos importe de cada linea para tipos de cobro
-        ntfraTotal += Float.parseFloat(lcabeceraftp.get(position).getCabeceraImp_total());
-        ntfraCobro += Float.parseFloat(lcabeceraftp.get(position).getCabeceraImp_cobro());
+        ntfraTotal += imptotal;
+        ntfraCobro += impcobro;
         ntfraDif += Float.parseFloat(lcabeceraftp.get(position).getCabeceraImp_diferencia());
         /// Sumamos si tipo cobro es efectivo
         if(lcabeceraftp.get(position).getCabeceraEfectivo()==1){
-            ntEfectivo += Float.parseFloat(lcabeceraftp.get(position).getCabeceraImp_cobro());
+            ntEfectivo += impcobro;
         }else{
-            ntNoEfectivo += Float.parseFloat(lcabeceraftp.get(position).getCabeceraImp_cobro());
+            ntNoEfectivo += impcobro;
         }
         
     }
@@ -1274,7 +1283,8 @@ public class PrintDcjFragment extends Fragment {
             if (result == 1) {
                 Log.i("Cabecera Empr", Integer.toString(lcabeceraempr.size()));
 
-                urlPrint = Filtro.getUrl()+"/ListaDCJ.php";
+//                urlPrint = Filtro.getUrl()+"/ListaDCJ.php";
+                urlPrint = Filtro.getUrl()+"/ListaDCJftpcobro.php";
                 new LeerCabeceraFtp().execute(urlPrint);
 
             } else {
@@ -1498,6 +1508,7 @@ public class PrintDcjFragment extends Fragment {
                 cabeceraFtpItem.setCabeceraNombre_local(post.optString("NOMBRE_LOCAL").trim());
                 cabeceraFtpItem.setCabeceraNombre_tft(post.optString("NOMBRE_TFT").trim());
                 cabeceraFtpItem.setCabeceraEfectivo(post.optInt("EFECTIVO"));
+                cabeceraFtpItem.setCabeceraImporte(post.optString("IMPORTE")); // quitar si no coge de ftpcobro
                 lcabeceraftp.add(cabeceraFtpItem);
             }
         } catch (JSONException e) {

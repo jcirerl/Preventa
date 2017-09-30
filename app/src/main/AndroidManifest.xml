@@ -184,7 +184,7 @@
         </activity>
 
         <activity
-            android:name=".ui.SignatureActivity"
+            android:name=".ui.FirmaActivity"
             android:screenOrientation="landscape"
             android:label="Signature"
             android:parentActivityName=".ui.ActividadPrincipal" >

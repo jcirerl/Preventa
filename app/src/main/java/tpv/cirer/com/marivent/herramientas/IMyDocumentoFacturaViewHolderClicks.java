@@ -40,21 +40,27 @@ public interface IMyDocumentoFacturaViewHolderClicks {
                   String estadoDocumentoFactura,
                   String mesaDocumentoFactura,
                   String serieDocumentoFactura,
-                  String facturaDocumentoFactura );
+                  String facturaDocumentoFactura,
+                  String totalDocumentoFactura,
+                  String obsDocumentoFactura );
 
     void onCobro (Button callerButton,
                   ImageView imageDocumentoFactura,
                   String idDocumentoFactura,
                   String estadoDocumentoFactura,
                   String serieDocumentoFactura,
-                  String facturaDocumentoFactura);
+                  String facturaDocumentoFactura,
+                  String totalDocumentoFactura,
+                  String obsDocumentoFactura);
     void onDivision(Button callerButton,
                   ImageView imageDocumentoFactura,
                   String idDocumentoFactura,
                   String estadoDocumentoFactura,
                   String mesaDocumentoFactura,
                   String serieDocumentoFactura,
-                  String facturaDocumentoFactura );
+                  String facturaDocumentoFactura,
+                  String totalDocumentoFactura,
+                  String obsDocumentoFactura);
     void onFactura (Button callerButton,
                   ImageView imageDocumentoFactura,
                   String idDocumentoFactura,

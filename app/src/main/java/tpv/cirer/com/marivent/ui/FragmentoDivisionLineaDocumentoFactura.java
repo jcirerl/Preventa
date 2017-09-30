@@ -8,7 +8,6 @@ import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -90,6 +89,8 @@ public class FragmentoDivisionLineaDocumentoFactura extends Fragment {
     String cEstado;
     String tabla;
     String lintabla;
+    String cTotal;
+    String cObs;
 
     public static RecyclerView recViewdivisionlineadocumentofactura;
     public static AdaptadorLineaDocumentoFacturaHeaderAsus adaptadordivisionlineadocumentofacturaasus;
@@ -99,13 +100,15 @@ public class FragmentoDivisionLineaDocumentoFactura extends Fragment {
 
     private static FragmentoDivisionLineaDocumentoFactura DivisionLineaDocumentoFactura = null;
 
-    public static FragmentoDivisionLineaDocumentoFactura newInstance(int id, String estado, String serie, int factura) {
+    public static FragmentoDivisionLineaDocumentoFactura newInstance(int id, String estado, String serie, int factura, String total, String obs) {
         FragmentoDivisionLineaDocumentoFactura LineaDocumentoFactura = new FragmentoDivisionLineaDocumentoFactura();
         // Supply num input as an argument.
         Bundle args = new Bundle();
         args.putInt("ID", id);
         args.putString("ESTADO", estado);
         args.putString("SERIE", serie);
+        args.putString("TOTAL", total);
+        args.putString("OBS", obs);
         args.putInt("FACTURA", factura);
         LineaDocumentoFactura.setArguments(args);
         return LineaDocumentoFactura;
@@ -141,6 +144,8 @@ public class FragmentoDivisionLineaDocumentoFactura extends Fragment {
         nId = getArguments().getInt("ID", 0);
         sSerie = getArguments().getString("SERIE", "");
         cEstado = getArguments().getString("ESTADO", "");
+        cTotal = getArguments().getString("TOTAL", "0");
+        cObs = getArguments().getString("OBS", "");
 
         pid = Integer.toBinaryString(nId);
         Filtro.setCobroDesdeFactura(0);
@@ -203,13 +208,34 @@ public class FragmentoDivisionLineaDocumentoFactura extends Fragment {
                     if (!((ActividadPrincipal) getActivity()).getCruge("action_ftp_update")) {
                         Snackbar.make(view, getPalabras("No puede realizar esta accion"), Snackbar.LENGTH_SHORT).show();
                     } else {
-                        Fragment cobrofragment = null;
+                        View rootView = ((ActividadPrincipal)getActivity()).getWindow().getDecorView().findViewById(android.R.id.content);
+                        int txtViewID = getResources().getIdentifier("total_carrito", "id", BuildConfig.APPLICATION_ID);
+                        TextView txtSaldo = (TextView) rootView.findViewById(txtViewID);
+                        String cMaximo = txtSaldo.getText().toString();
+                        cMaximo = cMaximo.replace(Html.fromHtml("&nbsp;"),""); // quitamos espacios
+                        cMaximo = cMaximo.replace(Filtro.getSimbolo(),""); // quitamos moneda
+                        cMaximo = cMaximo.replace(".","");
+                        cMaximo = cMaximo.replace(",",".");
+
+                        String space01 = new String(new char[01]).replace('\0', ' ');
+                        String myText= String.format("%1$,.2f", Float.parseFloat(cMaximo));
+                        myText = myText.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+                        myText = myText.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+                        String newText="";
+                        for (int ii = 0; ii < (10-myText.length()); ii++) {
+                            newText+=space01;
+                        }
+                        newText +=myText;
+                        cTotal=Html.fromHtml(newText.replace(" ", "&nbsp;&nbsp;")).toString()+" "+ Filtro.getSimbolo();
+
+                        ((ActividadPrincipal)getActivity()).dialog_cobro(Integer.parseInt(pid),sSerie,String.valueOf(Filtro.getFactura()),cTotal,cObs,"division");
+/*                        Fragment cobrofragment = null;
                         cobrofragment = EditCobroFacturaFragment.newInstance(pid, sSerie, Integer.toString(Filtro.getFactura()), "lista");
                         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                         ft.replace(R.id.lista_coordinator, cobrofragment, cobrofragment.getClass().getName());
                         ft.addToBackStack(null);
                         ft.commit();
-                    }
+*/                    }
                 }
                           });
             btnFacturar = (FloatingActionButton)rootViewdivisionlineadocumentofactura.findViewById(R.id.btnFacturar);
@@ -248,11 +274,9 @@ public class FragmentoDivisionLineaDocumentoFactura extends Fragment {
     public void onResume() {
         super.onResume();
         if (Filtro.getCobroDesdeFactura()==1) {
-            cEstado = "CLOSE"+" "+getPalabras("Cobro");
+///            cEstado = "CLOSE"+" "+getPalabras("Cobro");
             Filtro.setFactura(nFactura);
             Filtro.setCabecera(false);
-            ((ActividadPrincipal)getActivity()).setCabecera(getPalabras("Factura")+": "+Integer.toString(Filtro.getFactura())+" "+getPalabras(cEstado),Float.parseFloat("0.00"),Filtro.getFactura());
-
         }
         new AsyncHttpTaskLineaDocumentoFactura().execute(url);
         ///      TaskHelper.execute(new AsyncHttpTaskLineaDocumentoFactura(),url);
@@ -414,6 +438,8 @@ public class FragmentoDivisionLineaDocumentoFactura extends Fragment {
 
 
                 if (!Filtro.getCabecera()) {
+//                    ((ActividadPrincipal)getActivity()).setCabecera(getPalabras("Factura")+": "+Integer.toString(Filtro.getFactura())+" "+getPalabras(cEstado),Float.parseFloat("0.00"),Filtro.getFactura());
+
                     TaskHelper.execute(new CalculaCabecera(), "ftp", "lft", "0");
                     Filtro.setCabecera(true);
                 }
@@ -497,12 +523,12 @@ public class FragmentoDivisionLineaDocumentoFactura extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(getActivity());
+/*            pDialog = new ProgressDialog(getActivity());
             pDialog.setMessage(getPalabras("Calcula")+" "+ getPalabras("Cabecera")+"..");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
             pDialog.show();
-        }
+*/        }
 
         /**
          * Creating product
@@ -656,7 +682,7 @@ public class FragmentoDivisionLineaDocumentoFactura extends Fragment {
         @Override
         protected void onPostExecute(Integer success) {
             // dismiss the dialog once done
-            pDialog.dismiss();
+//            pDialog.dismiss();
             if(traspasoticket) {
                 PrintTicket printticket = new PrintTicket(getActivity(), Filtro.getFactura(), sSerie);
                 printticket.iniciarTicket();

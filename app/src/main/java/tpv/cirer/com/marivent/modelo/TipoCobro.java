@@ -8,13 +8,16 @@ public class TipoCobro {
     private String TipoCobroT_fra;
     private String TipoCobroNombre_tft;
     private int TipoCobroCopia_print;
+    private float TipoCobroPrecio;
+
 
     public TipoCobro(){}
 
-    public TipoCobro(String t_fra, String nombre, int copia_print){
+    public TipoCobro(String t_fra, String nombre, int copia_print, float precio){
         this.TipoCobroT_fra = t_fra;
         this.TipoCobroNombre_tft = nombre;
         this.TipoCobroCopia_print = copia_print;
+        this.TipoCobroPrecio=precio;
     }
     public void setTipoCobroCopia_print(int tipocobrocopia_print){
         this.TipoCobroCopia_print = tipocobrocopia_print;
@@ -38,6 +41,12 @@ public class TipoCobro {
 
     public String getTipoCobroNombre_tft(){
         return this.TipoCobroNombre_tft;
+    }
+    public float getTipoCobroPrecio() {
+        return TipoCobroPrecio;
+    }
+    public void setTipoCobroPrecio(float tipocobroPrecio) {
+        this.TipoCobroPrecio = tipocobroPrecio;
     }
 
 }
