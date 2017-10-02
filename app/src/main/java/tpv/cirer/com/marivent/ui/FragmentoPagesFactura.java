@@ -89,7 +89,6 @@ public class FragmentoPagesFactura
         cMesa = getArguments().getString("MESA", "");
         cTotal = getArguments().getString("TOTAL", "0");
         cObs = getArguments().getString("OBS", "");
-
         /// Poner Datos CABECERA
         Filtro.setCabecera(false);
         ((ActividadPrincipal) getActivity()).setCabecera(((ActividadPrincipal) getActivity()).getPalabras("Factura")+": "+Integer.toString(nFactura)+" "+((ActividadPrincipal) getActivity()).getPalabras(cEstado)+" "+((ActividadPrincipal) getActivity()).getPalabras("Mesa")+": "+cMesa,0.00,nFactura);

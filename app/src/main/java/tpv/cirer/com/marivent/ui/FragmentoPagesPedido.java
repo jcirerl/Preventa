@@ -56,7 +56,7 @@ public class FragmentoPagesPedido extends Fragment {
 
     private static FragmentoPagesPedido PagesPedido = null;
 
-    public static FragmentoPagesPedido newInstance(int id, String estado, String mesa, String pedido) {
+    public static FragmentoPagesPedido newInstance( int id, String estado, String mesa, String pedido) {
         FragmentoPagesPedido PagesPedido = new FragmentoPagesPedido();
         Bundle args = new Bundle();
         args.putInt("ID",id);

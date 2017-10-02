@@ -26,6 +26,8 @@ public class PlanningActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        //Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+
         setContentView(R.layout.planning_activity);
 
         timeTable = (TimeTable) findViewById(R.id.time_table);

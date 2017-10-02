@@ -132,6 +132,7 @@ import tpv.cirer.com.marivent.herramientas.ArticulosListArrayAdapterNew;
 import tpv.cirer.com.marivent.herramientas.CargaFragment;
 import tpv.cirer.com.marivent.herramientas.DatePickerFragment;
 import tpv.cirer.com.marivent.herramientas.Filtro;
+import tpv.cirer.com.marivent.herramientas.ProgressbarUtills;
 import tpv.cirer.com.marivent.herramientas.SerialExecutor;
 import tpv.cirer.com.marivent.herramientas.TaskHelper;
 import tpv.cirer.com.marivent.herramientas.Utils;
@@ -218,7 +219,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     ProgressDialog pDialogtft,pDialogTipoare,pDialogUserrel,pDialogGrup,pDialogTerminal,pDialogFra,pDialogCruge,pDialogPlato,pDialogFac,pDialogPalabras,
             pDialogEmpr,pDialogLocal,pDialogSec,pDialogSecFechas,pDialogCaja,pDialogTurno,pDialogMesa,pDialogRango,pDialogEmpleado,pDialogMoneda;
     ProgressDialog pDialog,pDialogParam,pDialogZonas;
-    
+    public static ProgressbarUtills progressbarUtills;
     public static TextView itempedido;
     public static TextView itemseccion;
     public static TextView itemcaja;
@@ -514,6 +515,9 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+
+
         setContentView(R.layout.actividad_principal);
 
         if (android.os.Build.VERSION.SDK_INT > 9) {
@@ -524,6 +528,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         position_usuario = 0;
 
         tooltips = new ToolTipManager(this);
+        progressbarUtills = new ProgressbarUtills();
 
  /*        Toolbar toolbar1 = (Toolbar) findViewById(R.id.appbar1);
         setSupportActionBar(toolbar1);

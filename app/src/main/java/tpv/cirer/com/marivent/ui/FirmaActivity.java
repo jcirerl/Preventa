@@ -90,6 +90,7 @@ public class FirmaActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
 
         // 1. get passed intent
         Intent intent = getIntent();

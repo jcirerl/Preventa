@@ -27,6 +27,8 @@ public class ActividadInicio extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+
         //Getting the permission status
         int result = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
 

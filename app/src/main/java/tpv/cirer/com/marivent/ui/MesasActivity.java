@@ -15,8 +15,8 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.Html;
 import android.text.InputType;
@@ -72,6 +72,7 @@ import tpv.cirer.com.marivent.herramientas.ArticulosListArrayAdapter;
 import tpv.cirer.com.marivent.herramientas.BadgeView;
 import tpv.cirer.com.marivent.herramientas.CircleArea;
 import tpv.cirer.com.marivent.herramientas.DecoratedTextViewDrawable;
+import tpv.cirer.com.marivent.herramientas.ExceptionHandler;
 import tpv.cirer.com.marivent.herramientas.Filtro;
 import tpv.cirer.com.marivent.herramientas.SerialExecutor;
 import tpv.cirer.com.marivent.modelo.Articulo;
@@ -97,7 +98,7 @@ import static tpv.cirer.com.marivent.ui.ActividadPrincipal.mSerialExecutorActivi
  * Created by JUAN on 04/11/2016.
  */
 
-public class MesasActivity extends FragmentActivity implements ArticulosListArrayAdapter.OnHeadlineSelectedListenerArticulos{
+public class MesasActivity extends AppCompatActivity implements ArticulosListArrayAdapter.OnHeadlineSelectedListenerArticulos{
     // Variables para detect click circle
     private static final String TAG_CIRCLE = "CirclesDrawingView";
     boolean flag = false;
@@ -186,8 +187,10 @@ public class MesasActivity extends FragmentActivity implements ArticulosListArra
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mesas);
+        //Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
 
+        setContentView(R.layout.mesas);
+        ((AppCompatActivity)this).getSupportActionBar().setTitle(getPalabras("Mesas"));
         // 1. get passed intent
         Intent intent = getIntent();
         // 2. get MESA, ACTION
@@ -331,6 +334,7 @@ public class MesasActivity extends FragmentActivity implements ArticulosListArra
         if (nombrezona==null) {
             nombrezona = (TextView) linearLayout.findViewById(R.id.nombre_zona);
             nombrezona.setText(getZonaNombre(lzonas.get(0).getZonasZona()));
+            ((AppCompatActivity)this).getSupportActionBar().setTitle(getPalabras("Mesas")+" "+getZonaNombre(lzonas.get(0).getZonasZona()));
         }
         viewzonaList = new ArrayList<View>();
         for (int i = 0; i < lzonas.size(); i++) {
@@ -404,6 +408,7 @@ public class MesasActivity extends FragmentActivity implements ArticulosListArra
 
             }
             nombrezona.setText(getZonaNombre(v.getTag().toString().trim()));
+            MesasActivity.this.getSupportActionBar().setTitle(getPalabras("Mesas")+" "+getZonaNombre(v.getTag().toString().trim()));
 
             // Rellenar string toolbar_mesas
             mesaplanningList = new ArrayList<Mesa>();

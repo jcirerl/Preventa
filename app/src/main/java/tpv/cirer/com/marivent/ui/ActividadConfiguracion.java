@@ -17,6 +17,7 @@ public class ActividadConfiguracion extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         setContentView(R.layout.actividad_configuracion);
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();

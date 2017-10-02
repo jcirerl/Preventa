@@ -118,7 +118,10 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
- ////       LoginActivity.this.requestWindowFeature(Window.FEATURE_LEFT_ICON);
+
+        //Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+
+        ////       LoginActivity.this.requestWindowFeature(Window.FEATURE_LEFT_ICON);
         setContentView(R.layout.control_login);
 ////        getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.marivent);
   /*  this.titulo.setText("Login");
