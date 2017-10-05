@@ -1,6 +1,7 @@
 package tpv.cirer.com.marivent.herramientas;
 
 import android.view.View;
+import android.widget.ImageView;
 
 /**
  * Created by JUAN on 06/09/2017.
@@ -8,8 +9,10 @@ import android.view.View;
 
 public interface IMyArticulosNewViewHolderClicks {
     void onPotato(View caller,
+                  ImageView imageArticulo,
                   String action,
                   String codigoArticulo,
-                  String nombreArticulo);
+                  String nombreArticulo,
+                  String positionArticulo);
 
 }

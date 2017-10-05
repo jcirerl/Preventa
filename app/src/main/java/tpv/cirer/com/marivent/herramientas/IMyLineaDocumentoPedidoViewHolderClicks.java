@@ -30,6 +30,7 @@ public interface IMyLineaDocumentoPedidoViewHolderClicks {
                  String cantLineaDocumentoPedido,
                  String swfacturaLineaDocumentoPedido,
                  String individualLineaDocumentoPedido);
+    void onActivo(String activo);
 
     void onTomato(ImageView callerImage);
     //    public void onPotato(View caller);

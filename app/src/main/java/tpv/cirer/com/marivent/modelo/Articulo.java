@@ -26,6 +26,8 @@ public class Articulo {
     private String ArticuloDescripcion;
     private String ArticuloIngredientes;
     private String ArticuloAutor;
+    private int ArticuloSw_tipo_are;
+    private int ArticuloSw_suma_precio_individual;
 
     public Articulo(int id,
                     String articulo,
@@ -63,7 +65,9 @@ public class Articulo {
                     int tiva_id,
                     int dependientetipoplatomaestro,
                     int excluyentebuffet,
-                    int activobuffet) {
+                    int activobuffet,
+                    int sw_tipo_are,
+                    int sw_suma_precio_indivisual) {
         this.ArticuloId = id;
         this.ArticuloArticulo = articulo;
         this.ArticuloNombre = nombre;
@@ -78,6 +82,8 @@ public class Articulo {
         this.ArticuloDependientetipoplatomaestro = dependientetipoplatomaestro;
         this.ArticuloExcluyentebuffet = excluyentebuffet;
         this.ArticuloActivobuffet = activobuffet;
+        this.ArticuloSw_tipo_are = sw_tipo_are;
+        this.ArticuloSw_suma_precio_individual = sw_suma_precio_indivisual;
     }
     public Articulo() {
     }
@@ -219,6 +225,18 @@ public class Articulo {
     }
     public void setArticuloAutor(String articuloAutor) {
         this.ArticuloAutor = articuloAutor;
+    }
+    public int getArticuloSw_tipo_are() {
+        return ArticuloSw_tipo_are;
+    }
+    public void setArticuloSw_tipo_are(int idsw_tipo_are) {
+        this.ArticuloSw_tipo_are = idsw_tipo_are;
+    }
+    public int getArticuloSw_suma_precio_individual() {
+        return ArticuloSw_suma_precio_individual;
+    }
+    public void setArticuloSw_suma_precio_individual(int idsw_suma_precio_individual) {
+        this.ArticuloSw_suma_precio_individual = idsw_suma_precio_individual;
     }
 
 }

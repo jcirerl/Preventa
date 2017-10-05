@@ -127,4 +127,21 @@
         android:layout_toEndOf="@+id/checkbox"
         android:layout_toRightOf="@+id/checkbox"
         android:paddingLeft="@dimen/row_padding" />
+    <Button
+        android:id="@+id/btnswtipoare"
+        style="@style/RowTitle"
+        android:layout_gravity="center"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/name"
+        android:layout_toRightOf="@+id/name"
+        android:drawableLeft="@android:drawable/ic_input_add"
+        android:layout_marginLeft="10dp"
+        android:gravity="center"
+        android:text=""
+        android:background="@drawable/button_bg_transparent"/>
+
 </LinearLayout>

@@ -17,7 +17,7 @@ import android.graphics.drawable.Drawable;
 import tpv.cirer.com.marivent.R;
 
 /**
- * Drawable con un contador flotante
+ * Drawables con un contador flotante
  */
 public class BadgeDrawable extends Drawable {
 

@@ -56,6 +56,7 @@ import tpv.cirer.com.marivent.herramientas.StringUtil;
 import tpv.cirer.com.marivent.modelo.CabeceraEmpr;
 import tpv.cirer.com.marivent.modelo.CabeceraFtp;
 import tpv.cirer.com.marivent.modelo.Dcj;
+import tpv.cirer.com.marivent.modelo.DocumentoFactura;
 import tpv.cirer.com.marivent.modelo.DocumentoFacturaIva;
 import tpv.cirer.com.marivent.print.ShowMsg;
 
@@ -136,7 +137,7 @@ public class PrintDcjFragment extends Fragment {
     LinearLayout rootView;
     // Progress Dialog
     private ProgressDialog pDialog;
-
+    private static List<DocumentoFactura> ldocumentofacturadif;
     // JSON parser class
     JSONParser jsonParser = new JSONParser();
     JSONParserNew jsonParserNew = new JSONParserNew();
@@ -256,6 +257,7 @@ public class PrintDcjFragment extends Fragment {
         btnImprimir.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0)
             {
+                ldocumentofacturadif = new ArrayList<DocumentoFactura>();
                 urlPrint = Filtro.getUrl()+"/CabeceraEMPR.php";
                 new LeerCabeceraEmpr().execute(urlPrint);
 
@@ -381,6 +383,37 @@ public class PrintDcjFragment extends Fragment {
             }
         }
         return "**";
+    }
+    public boolean comprobar_dif(String grupo, String empresa, String local, String seccion, String caja, String serie, int factura){
+        boolean success=false;
+//        Log.i("dif",grupo+empresa+local+seccion+caja+serie+String.valueOf(factura));
+        for(DocumentoFactura d : ldocumentofacturadif){
+            if(d.getDocumentoFacturaGrupo().equals(grupo) &&
+                d.getDocumentoFacturaEmpresa().equals(empresa) &&
+                    d.getDocumentoFacturaLocal().equals(local) &&
+                        d.getDocumentoFacturaSeccion().equals(seccion) &&
+                            d.getDocumentoFacturaCaja().equals(caja) &&
+                                d.getDocumentoFacturaSerie().equals(serie) &&
+                                    d.getDocumentoFacturaFactura()==factura){
+                                        success = true;
+//                Log.i("dif find",grupo+empresa+local+seccion+caja+serie+String.valueOf(factura));
+
+                break;
+            }
+        }
+        if(!success){
+            DocumentoFactura documentofacturaItem = new DocumentoFactura();
+            documentofacturaItem.setDocumentoFacturaGrupo(grupo);
+            documentofacturaItem.setDocumentoFacturaEmpresa(empresa);
+            documentofacturaItem.setDocumentoFacturaLocal(local);
+            documentofacturaItem.setDocumentoFacturaSeccion(seccion);
+            documentofacturaItem.setDocumentoFacturaCaja(caja);
+            documentofacturaItem.setDocumentoFacturaSerie(serie);
+            documentofacturaItem.setDocumentoFacturaFactura(factura);
+            ldocumentofacturadif.add(documentofacturaItem);
+//            Log.i("dif creado",grupo+empresa+local+seccion+caja+serie+String.valueOf(factura));
+        }
+        return success;
     }
 
     public void CabEmprListDcj() {
@@ -726,6 +759,7 @@ public class PrintDcjFragment extends Fragment {
         ///////////////////////////////////////////////////////////
         float imptotal =0;
         float impcobro =0;
+        float impdif=0;
         if(lcabeceraftp.get(position).getCabeceraImporte().equals("null")) {
             imptotal = Float.parseFloat(lcabeceraftp.get(position).getCabeceraImp_total());
             impcobro = Float.parseFloat(lcabeceraftp.get(position).getCabeceraImp_cobro());
@@ -751,7 +785,21 @@ public class PrintDcjFragment extends Fragment {
         }
         newTextCobro +=myTextCobro;
         ///////////////////////////////////////////////////////////
-        String myTextDiferencia = String.format("%1$,.2f", Float.parseFloat(lcabeceraftp.get(position).getCabeceraImp_diferencia()));
+        if (!lcabeceraftp.get(position).getCabeceraImp_diferencia().trim().equals("0.00")){
+             if (comprobar_dif(
+                     Filtro.getGrupo().trim(),
+                     Filtro.getEmpresa().trim(),
+                     Filtro.getLocal().trim(),
+                     lcabeceraftp.get(position).getCabeceraNombre_seccion().trim(),
+                     lcabeceraftp.get(position).getCabeceraNombre_caja().trim(),
+                     lcabeceraftp.get(position).getCabeceraSerie().trim(),
+                     lcabeceraftp.get(position).getCabeceraFactura())){
+                 impdif=0;
+             }else{
+                 impdif=Float.parseFloat(lcabeceraftp.get(position).getCabeceraImp_diferencia());
+             }
+        }
+        String myTextDiferencia = String.format("%1$,.2f", impdif);
         myTextDiferencia = myTextDiferencia.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
         myTextDiferencia = myTextDiferencia.replaceAll("\\s+$", ""); // Quitamos espacios derecha
         String newTextDiferencia="";
@@ -798,7 +846,7 @@ public class PrintDcjFragment extends Fragment {
         /// Sumamos importe de cada linea para tipos de cobro
         ntfraTotal += imptotal;
         ntfraCobro += impcobro;
-        ntfraDif += Float.parseFloat(lcabeceraftp.get(position).getCabeceraImp_diferencia());
+        ntfraDif += impdif;
         /// Sumamos si tipo cobro es efectivo
         if(lcabeceraftp.get(position).getCabeceraEfectivo()==1){
             ntEfectivo += impcobro;

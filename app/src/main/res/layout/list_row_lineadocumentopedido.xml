@@ -161,15 +161,30 @@
            android:drawableLeft="@android:drawable/ic_delete"
            android:gravity="center"
            android:text="@string/restar"/>
-       <TextView
+    <Button
+        android:id="@+id/btnActive"
+        style="@style/ButtonBorder.Accent"
+        android:layout_gravity="center"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/btnMinus"
+        android:layout_toRightOf="@+id/btnMinus"
+        android:layout_marginLeft="20dp"
+        android:drawableLeft="@android:drawable/ic_lock_power_off"
+        android:gravity="center"/>
+
+    <TextView
            android:id="@+id/obs"
            style="@style/RowSubtitle"
            android:layout_gravity="center"
            android:layout_alignParentBottom="true"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
-           android:layout_toEndOf="@+id/btnMinus"
-           android:layout_toRightOf="@+id/btnMinus"
+           android:layout_toEndOf="@+id/btnActive"
+           android:layout_toRightOf="@+id/btnActive"
            android:background="?attr/selectableItemBackgroundBorderless"
            android:clickable="true"
            android:layout_marginLeft="10dp" />

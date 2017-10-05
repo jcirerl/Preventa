@@ -630,12 +630,12 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
                     xWhereLpd += " AND lpd.PEDIDO=" + Filtro.getPedido();
                 }
             }
-/*            if (xWhereLpd.equals("")) {
+            if (xWhereLpd.equals("")) {
                 xWhereLpd += " WHERE lpd.SWPEDIDO=1";
             } else {
                 xWhereLpd += " AND lpd.SWPEDIDO=1";
             }
-*/
+
             cSqlLpd += xWhereLpd;
             if(cSqlLpd.equals("")) {
                 cSqlLpd="Todos";
@@ -1372,28 +1372,30 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
             newTextCant +=myTextCant;
             ///////////////////////////////////////////////////////////
             int lennombre = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoNombre().trim().length();
-            String myTextNombre = String.format("%1$-19s", String.valueOf(llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoNombre().substring(0,(lennombre>19 ? 19 : lennombre))));
+            String myTextNombre = String.format("%1$-42s", String.valueOf(llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoNombre().substring(0,(lennombre>42 ? 42 : lennombre))));
             myTextNombre = myTextNombre.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
             myTextNombre = myTextNombre.replaceAll("\\s+$", ""); // Quitamos espacios derecha
             String newTextNombre=myTextNombre;
-            for (int ii = 0; ii < (19-myTextNombre.length()); ii++) {
+            for (int ii = 0; ii < (42-myTextNombre.length()); ii++) {
                 newTextNombre+=space01;
             }
+            ///////////////////////////////////////////////////////////
+            pedido = pedido + String.format("%-48s",newTextCant+" "+newTextNombre) + "\n";
             ///////////////////////////////////////////////////////////
             String myTextObs;
             int lenobs = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoObs().trim().length();
             if (llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoObs().trim().length()>0) {
-                myTextObs = String.format("%1$-23s", String.valueOf(llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoObs().substring(0,(lenobs>23 ? 23 : lenobs))));
+                myTextObs = String.format("%1$-48s", String.valueOf(llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoObs().substring(0,(lenobs>48 ? 48 : lenobs))));
             }else{
-                myTextObs = String.format("%1$-23s", "");
+                myTextObs = String.format("%1$-48s", "");
             }
             myTextObs = myTextObs.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
             myTextObs = myTextObs.replaceAll("\\s+$", ""); // Quitamos espacios derecha
             String newTextObs = myTextObs;
-            for (int ii = 0; ii < (23 - myTextObs.length()); ii++) {
+            for (int ii = 0; ii < (48 - myTextObs.length()); ii++) {
                 newTextObs += space01;
             }
-            pedido = pedido + String.format("%-48s",newTextCant+" "+newTextNombre+" "+newTextObs) + "\n";
+            pedido = pedido + String.format("%-48s",newTextObs) + "\n";
 
         }
 
@@ -1489,7 +1491,10 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
                     ShowMsg.showStatus(EposException.SUCCESS, status[0], battery[0], getActivity());
                 }
                 if(!optionprint){
-                    getActivity().onBackPressed();
+                    btnSend.setAlpha(0.3f); // COLOR APAGADO PEDIDO CERRADO
+                    btnSend.setEnabled(false);
+
+///                    getActivity().onBackPressed();
 //                    cEstado ="OPEN PRINT";
 //                    btnSend.setEnabled(false);
 //                    btnSend.setAlpha(0.3f); // COLOR APAGADO PEDIDO CERRADO

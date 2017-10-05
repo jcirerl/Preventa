@@ -5,15 +5,23 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.RippleDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.StateListDrawable;
+import android.graphics.drawable.shapes.RoundRectShape;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -58,6 +66,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -72,7 +81,6 @@ import tpv.cirer.com.marivent.herramientas.ArticulosListArrayAdapter;
 import tpv.cirer.com.marivent.herramientas.BadgeView;
 import tpv.cirer.com.marivent.herramientas.CircleArea;
 import tpv.cirer.com.marivent.herramientas.DecoratedTextViewDrawable;
-import tpv.cirer.com.marivent.herramientas.ExceptionHandler;
 import tpv.cirer.com.marivent.herramientas.Filtro;
 import tpv.cirer.com.marivent.herramientas.SerialExecutor;
 import tpv.cirer.com.marivent.modelo.Articulo;
@@ -231,7 +239,6 @@ public class MesasActivity extends AppCompatActivity implements ArticulosListArr
 
 //        Toast.makeText(this, getPalabras("Articulo") + " " + saldo, Toast.LENGTH_SHORT).show();
     }
-
     /**
      * Search and creates new (if needed) circle based on touch area
      *
@@ -347,7 +354,7 @@ public class MesasActivity extends AppCompatActivity implements ArticulosListArr
 /*            Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
             Log.i("Button Image",Integer.toString(bitmap.getWidth())+" "+Integer.toString(bitmap.getHeight()));
             Bitmap bMapScaled = Bitmap.createScaledBitmap(bitmap, Filtro.getOpmesas(), Filtro.getOpmesas(), true);
-            Drawable d1 = new BitmapDrawable(getResources(),bMapScaled); //Converting bitmap into drawable
+            Drawables d1 = new BitmapDrawable(getResources(),bMapScaled); //Converting bitmap into drawable
 */
             btnzona.setCompoundDrawablesWithIntrinsicBounds(  null,  null, null, d );
 
@@ -448,7 +455,7 @@ public class MesasActivity extends AppCompatActivity implements ArticulosListArr
 
 ////           image.setLayoutParams(new ViewGroup.LayoutParams(264, 246));
      //            image.setBackgroundResource(R.drawable.house_kitchen_table);
-//            Drawable icon1=this.getResources(). getDrawable( R.drawable.house_kitchen_table);
+//            Drawables icon1=this.getResources(). getDrawable( R.drawable.house_kitchen_table);
             //show icon to the left of text
 ///            image.setCompoundDrawablesWithIntrinsicBounds( null, null, null, icon1 );
 //            if (model.getMesaXCoordenate()!=0.00000){image.setX(model.getMesaXCoordenate());}
@@ -462,7 +469,7 @@ public class MesasActivity extends AppCompatActivity implements ArticulosListArr
             Log.i("Button Image",Integer.toString(bitmap.getWidth())+" "+Integer.toString(bitmap.getHeight()));
 
 /////            Bitmap new_icon = resizeBitmapImageFn(bitmap, 500); //resizing the bitmap
-/////            Drawable d1 = new BitmapDrawable(getResources(),new_icon); //Converting bitmap into drawable
+/////            Drawables d1 = new BitmapDrawable(getResources(),new_icon); //Converting bitmap into drawable
 
 ////            ImageView iv = (ImageView) findViewById(R.id.imageView);
 ////            Bitmap bMap = BitmapFactory.decodeResource(getResources(), R.drawable.picture);
@@ -484,7 +491,7 @@ public class MesasActivity extends AppCompatActivity implements ArticulosListArr
             image.setCompoundDrawablesWithIntrinsicBounds( (model.getMesaApertura()>0 ? dpedidos : null), (model.getMesaApertura()>0 ? dfacturas : null), null, d1 );
   ///          image.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ok, 0, 0, 0);
             // find the image map in the view
-
+//            image.setBackground(Drawables.getSelectableDrawableFor(Color.TRANSPARENT));
 
             image.setBackgroundColor(Color.TRANSPARENT);
             image.setText(model.getMesaMesa().trim());
@@ -587,6 +594,105 @@ public class MesasActivity extends AppCompatActivity implements ArticulosListArr
         }
         return super.onKeyDown(keyCode, event);
     }
+    public static class Drawables {
+
+        @NonNull
+        public static Drawable getSelectableDrawableFor(int color) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                StateListDrawable stateListDrawable = new StateListDrawable();
+                stateListDrawable.addState(
+                        new int[]{android.R.attr.state_pressed},
+                        new ColorDrawable(lightenOrDarken(color, 0.20D))
+                );
+                stateListDrawable.addState(
+                        new int[]{android.R.attr.state_focused},
+                        new ColorDrawable(lightenOrDarken(color, 0.40D))
+                );
+                stateListDrawable.addState(
+                        new int[]{},
+                        new ColorDrawable(color)
+                );
+                return stateListDrawable;
+            } else {
+                ColorStateList pressedColor = ColorStateList.valueOf(lightenOrDarken(color, 0.2D));
+                ColorDrawable defaultColor = new ColorDrawable(color);
+                Drawable rippleColor = getRippleColor(color);
+                return new RippleDrawable(
+                        pressedColor,
+                        defaultColor,
+                        rippleColor
+                );
+            }
+        }
+
+        @NonNull
+        private static Drawable getRippleColor(int color) {
+            float[] outerRadii = new float[8];
+            Arrays.fill(outerRadii, 3);
+            RoundRectShape r = new RoundRectShape(outerRadii, null, null);
+            ShapeDrawable shapeDrawable = new ShapeDrawable(r);
+            shapeDrawable.getPaint().setColor(color);
+            return shapeDrawable;
+        }
+
+        private static int lightenOrDarken(int color, double fraction) {
+            if (canLighten(color, fraction)) {
+                return lighten(color, fraction);
+            } else {
+                return darken(color, fraction);
+            }
+        }
+
+        private static int lighten(int color, double fraction) {
+            int red = Color.red(color);
+            int green = Color.green(color);
+            int blue = Color.blue(color);
+            red = lightenColor(red, fraction);
+            green = lightenColor(green, fraction);
+            blue = lightenColor(blue, fraction);
+            int alpha = Color.alpha(color);
+            return Color.argb(alpha, red, green, blue);
+        }
+
+        private static int darken(int color, double fraction) {
+            int red = Color.red(color);
+            int green = Color.green(color);
+            int blue = Color.blue(color);
+            red = darkenColor(red, fraction);
+            green = darkenColor(green, fraction);
+            blue = darkenColor(blue, fraction);
+            int alpha = Color.alpha(color);
+
+            return Color.argb(alpha, red, green, blue);
+        }
+
+        private static boolean canLighten(int color, double fraction) {
+            int red = Color.red(color);
+            int green = Color.green(color);
+            int blue = Color.blue(color);
+            return canLightenComponent(red, fraction)
+                    && canLightenComponent(green, fraction)
+                    && canLightenComponent(blue, fraction);
+        }
+
+        private static boolean canLightenComponent(int colorComponent, double fraction) {
+            int red = Color.red(colorComponent);
+            int green = Color.green(colorComponent);
+            int blue = Color.blue(colorComponent);
+            return red + (red * fraction) < 255
+                    && green + (green * fraction) < 255
+                    && blue + (blue * fraction) < 255;
+        }
+
+        private static int darkenColor(int color, double fraction) {
+            return (int) Math.max(color - (color * fraction), 0);
+        }
+
+        private static int lightenColor(int color, double fraction) {
+            return (int) Math.min(color + (color * fraction), 255);
+        }
+
+    }
     private final class MyTouchListenerZona implements View.OnTouchListener {
         public boolean onTouch(final View view, MotionEvent motionEvent) {
             switch (motionEvent.getActionMasked()) {
@@ -624,7 +730,7 @@ public class MesasActivity extends AppCompatActivity implements ArticulosListArr
 
 //            int pixel = bitmap.getPixel(x,y);
 
-//            Drawable drawable = view.getBackground();
+//            Drawables drawable = view.getBackground();
             Bitmap bitmap =  getBitmapFromView(view);
 //            int transparency = ((bitmap.getPixel(rawX,rawY) & 0xff000000) >> 24);
             int alpha = Color.alpha(bitmap.getPixel(pixelX,pixelY));
@@ -1079,7 +1185,7 @@ public class MesasActivity extends AppCompatActivity implements ArticulosListArr
                         //                    new AlertDialog.Builder(MesasActivity.this).setTitle("Operaciones con Mesa").setMessage("Hola").setNeutralButton(getResources().getString(R.string.accept),null).show();
                         AlertDialog.Builder alert = new AlertDialog.Builder(MesasActivity.this);
 //                        image = (Button)layout.findViewWithTag(Filtro.getMesa());
-                        Drawable d = LoadImageFromWebOperations(getMesaImagen(Filtro.getMesa()));
+                        Drawables d = LoadImageFromWebOperations(getMesaImagen(Filtro.getMesa()));
                         alert.setIcon(d);
                         alert.setTitle(ActividadPrincipal.getPalabras("Operaciones")+" "+ActividadPrincipal.getPalabras("Mesa")+" " + Filtro.getMesa() + " " + (getMesas(Filtro.getMesa(), 0) ? ActividadPrincipal.getPalabras("CERRADO") : ActividadPrincipal.getPalabras("ABIERTO")))
                                 .setItems(opciones, new DialogInterface.OnClickListener() {
@@ -2233,7 +2339,10 @@ public class MesasActivity extends AppCompatActivity implements ArticulosListArr
                         post.optInt("TIVA_ID"),
                         post.optInt("DEPENDIENTETIPOPLATOMAESTRO"),
                         post.optInt("EXCLUYENTEBUFFET"),
-                        post.optInt("ACTIVOBUFFET")
+                        post.optInt("ACTIVOBUFFET"),
+                        post.optInt("SW_TIPO_ARE"),
+                        post.optInt("SW_SUMA_PRECIO_INDIVIDUAL")
+
                 );
                 Log.i("ImagenUrl",articuloItem.getArticuloUrlimagen());
 
@@ -2638,7 +2747,6 @@ public class MesasActivity extends AppCompatActivity implements ArticulosListArr
                                 image.setAlpha(1.0f); // abro mesa
 
                                 Snackbar.make(layout, ActividadPrincipal.getPalabras("Mesa")+" "+ActividadPrincipal.getPalabras("ABIERTA"), Snackbar.LENGTH_SHORT).show();
-
                                 itemmesas.setText(Integer.toString(Integer.parseInt(itemmesas.getText().toString())+1));
                                 if (Integer.parseInt(itemmesas.getText().toString()) == 0) {
                                     itemmesas.setTextColor(Filtro.getColorItemZero());

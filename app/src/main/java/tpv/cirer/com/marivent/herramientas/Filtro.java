@@ -1,6 +1,7 @@
 package tpv.cirer.com.marivent.herramientas;
 
 public class Filtro {
+    private static float totalcobro;
     private static String totaldivision;
     private static boolean oppedidodirectomesa;
     private static boolean opfacturadirectomesa;
@@ -126,7 +127,7 @@ public class Filtro {
         printDeviceType=0;
         printPrinterName="";
         printLanguage=0;
-
+        totalcobro = 0;
         colorItem =0;
         colorItemZero=0;
 
@@ -256,6 +257,11 @@ public class Filtro {
         optipoarticulo = idoptipoarticulo;
     }
     public static float getOptipoarticulo() { return optipoarticulo;
+    }
+    public static void setTotalcobro(float idtotalcobro) {
+        totalcobro = idtotalcobro;
+    }
+    public static float getTotalcobro() { return totalcobro;
     }
 
     public static boolean getOppedidomesa() {

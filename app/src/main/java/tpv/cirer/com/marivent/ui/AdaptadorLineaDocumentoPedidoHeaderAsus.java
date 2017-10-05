@@ -187,6 +187,14 @@ public class AdaptadorLineaDocumentoPedidoHeaderAsus  extends RecyclerView.Adapt
                     }
 
                 }
+                public void onActivo(String activo) {
+                    Log.d("VEGETABLES", "To-m8-tohs");
+
+                    if (activo.equals("0")){
+                    }else{
+                    }
+
+                }
 
                 public void onTomato(ImageView callerImage) { Log.d("VEGETABLES", "To-m8-tohs"); }
 
@@ -380,6 +388,8 @@ public class AdaptadorLineaDocumentoPedidoHeaderAsus  extends RecyclerView.Adapt
 
         public Button AddCantLineaDocumentoPedido;
         public Button MinCantLineaDocumentoPedido;
+        public Button ActiveLineaDocumentoPedido;
+
         public TextView ArticuloLineaDocumentoPedido;
         public TextView NombreLineaDocumentoPedido;
         public TextView CantLineaDocumentoPedido;
@@ -414,9 +424,11 @@ public class AdaptadorLineaDocumentoPedidoHeaderAsus  extends RecyclerView.Adapt
 
             this.AddCantLineaDocumentoPedido = (Button) itemView.findViewById(R.id.btnAdd);
             this.MinCantLineaDocumentoPedido = (Button) itemView.findViewById(R.id.btnMinus);
+            this.ActiveLineaDocumentoPedido = (Button) itemView.findViewById(R.id.btnActive);
 
             this.AddCantLineaDocumentoPedido.setOnClickListener(this);
             this.MinCantLineaDocumentoPedido.setOnClickListener(this);
+            this.ActiveLineaDocumentoPedido.setOnClickListener(this);
 
             //       this.MinCant.setOnClickListener(this);
 
@@ -436,6 +448,10 @@ public class AdaptadorLineaDocumentoPedidoHeaderAsus  extends RecyclerView.Adapt
 
             AddCantLineaDocumentoPedido.setText(ActividadPrincipal.getPalabras("Sumar"));
             MinCantLineaDocumentoPedido.setText(ActividadPrincipal.getPalabras("Restar"));
+            AddCantLineaDocumentoPedido.setEnabled(false);
+            MinCantLineaDocumentoPedido.setEnabled(false);
+            MinCantLineaDocumentoPedido.setAlpha(0.3f); // COLOR APAGADO PEDIDO CERRADO
+            AddCantLineaDocumentoPedido.setAlpha(0.3f); // COLOR APAGADO PEDIDO CERRADO
         }
         @Override
         public void onClick(View v) {
@@ -460,6 +476,21 @@ public class AdaptadorLineaDocumentoPedidoHeaderAsus  extends RecyclerView.Adapt
                                 String.valueOf(this.SwFacturaLineaDocumentoPedido.getText()),
                                 String.valueOf(this.IndividualLineaDocumentoPedido.getText())
                         );
+                        break;
+                    case R.id.btnActive:
+                        if(this.AddCantLineaDocumentoPedido.isEnabled()){
+                            this.AddCantLineaDocumentoPedido.setEnabled(false);
+                            this.MinCantLineaDocumentoPedido.setEnabled(false);
+                            this.MinCantLineaDocumentoPedido.setAlpha(0.3f);
+                            this.AddCantLineaDocumentoPedido.setAlpha(0.3f);
+                            mListenerLineaDocumentoPedido.onActivo("1");
+                        }else{
+                            this.AddCantLineaDocumentoPedido.setEnabled(true);
+                            this.MinCantLineaDocumentoPedido.setEnabled(true);
+                            this.MinCantLineaDocumentoPedido.setAlpha(1.0f);
+                            this.AddCantLineaDocumentoPedido.setAlpha(1.0f);
+                            mListenerLineaDocumentoPedido.onActivo("0");
+                        }
                         break;
                 }
 //            mListener.onTomato((ImageView)v);
@@ -516,6 +547,12 @@ public class AdaptadorLineaDocumentoPedidoHeaderAsus  extends RecyclerView.Adapt
                             String individualLineaDocumentoPedido) {
 
         }
+
+        @Override
+        public void onActivo(String activo) {
+
+        }
+
 
         @Override
         public void onTomato(ImageView callerImage) {

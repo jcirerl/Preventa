@@ -56,7 +56,7 @@ public class AdaptadorArticulosHeader extends RecyclerView.Adapter<RecyclerView.
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_articuloscode_row, parent, false);
             return new VHItem(v, new IMyArticulosNewViewHolderClicks() {
                 //    public void onPotato(View caller) { Log.d("VEGETABLES", "Poh-tah-tos"); };
-                public void onPotato(View caller, final String action, final String codigoArticulo, final String nombreArticulo) {
+                public void onPotato(View caller, final ImageView imageArticulo, final String action, final String codigoArticulo, final String nombreArticulo, final String positionArticulo) {
 
                     Log.i("onPotato","OK");
                     try {
@@ -272,7 +272,7 @@ public class AdaptadorArticulosHeader extends RecyclerView.Adapter<RecyclerView.
         }
 
         @Override
-        public void onPotato(View caller,  String action, String codigoArticulo, String nombreArticulo) {
+        public void onPotato(View caller, ImageView imageArticulo, String action, String codigoArticulo, String nombreArticulo, String positionArticulo) {
 
         }
         //    public void onPotato(View caller);

@@ -322,7 +322,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     int ArticuloIdGrupo;
     int nArticuloPositionSelected;
     private List<Articulos> articulosList;
-    private List<ArticulosNew> articulosListNew;
+    public static List<ArticulosNew> articulosListNew;
 
 
     int idPedido;
@@ -338,6 +338,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     private ArrayList<Integer> mSelectedItemsCant;
     private ArrayList<Integer> mSelectedItemsTipoPlato;
     private ArrayList<Float> mSelectedItemsPreu;
+    private ArrayList<Integer> mSelectedItemsTipoare;
 
     MenuItem itemCarrito;
     public static LayerDrawable iconCarrito;
@@ -1746,7 +1747,11 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                             Log.i("ARE BUFFET", "OK");
 
                             indiceCategoria = x; // Ya no lo empleamos
-                            dialog_buffet();
+                            if (null!=larticulobuffet) {
+                                dialog_buffet();
+                            }else{
+                                Toast.makeText(getApplicationContext(), getPalabras("No")+" "+getPalabras("Abierto")+" BUFFET", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
                             Log.e(TAG, "Failed to fetch data!");
                             Toast.makeText(getApplicationContext(), getPalabras("No existe")+" "+getPalabras("Tipo")+" "+getPalabras("Articulo")+" BUFFET", Toast.LENGTH_SHORT).show();
@@ -2700,6 +2705,8 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         newText +=myText;
         txtBoxTotalCobro.setText(Html.fromHtml(newText.replace(" ", "&nbsp;&nbsp;")).toString()+" "+ Filtro.getSimbolo());
 
+        Filtro.setTotalcobro(totalfactura-totalcobro);
+
         myText = String.format("%1$,.2f", (totalfactura-totalcobro));
         myText = myText.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
         myText = myText.replaceAll("\\s+$", ""); // Quitamos espacios derecha
@@ -2743,6 +2750,10 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         }
 
     }
+    public void onArticulosNewTipoare(String codigo, String name) {
+        Log.i("Articulo Are : ", codigo+" "+name);
+    }
+
     public void onArticulosNewTipoplato(String codigo, int pos) {
         for (ArticulosNew articulo : articulosListNew) { //iterate element by element in a list
             if (articulo.getCodigo().equals(codigo))  {
@@ -3914,13 +3925,14 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
      String[] articulos = new String[tftList.size()];
      String space01 = new String(new char[01]).replace('\0', ' ');
 
+
      articulosList = new ArrayList<Articulos>();
 
      for (int i = 0; i < tftList.size(); i++) {
          //////////////////////////////////////////////////////////
          articulos[i] =  StringUtils.rightPad(tftList.get(i).getTipoCobroNombre_tft().trim(),32,space01);
 
-///            Drawable d = LoadImageFromWebOperations(comidas.get(indiceSeccion).get(i).getUrlimagen());
+///            Drawables d = LoadImageFromWebOperations(comidas.get(indiceSeccion).get(i).getUrlimagen());
          CheckBox opcion = new CheckBox(this);
          String valor = "";
 
@@ -3932,6 +3944,8 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
              valor = valor.replace(Html.fromHtml("&nbsp;"), ""); //Quitamos espacion
              valor = valor.replace(".", "");
              valor = valor.replace(",", ".");
+
+             Filtro.setTotalcobro(Float.parseFloat(valor)); // PASAMOS VALOR TOTAL FACTURA A TOTAL COBRO
          }
 
          articulosList.add(new Articulos(articulos[i], "COBRO", opcion, Float.parseFloat(valor), id, serie, factura ));
@@ -4029,7 +4043,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 
      alert.setTitle(getPalabras("Cobro")+" "+getPalabras("Factura")+" "+serie+" "+factura);
-//     Drawable d = LoadImageFromWebOperations(lcategoria.get(indiceCategoria).getCategoriaUrlimagen());
+//     Drawables d = LoadImageFromWebOperations(lcategoria.get(indiceCategoria).getCategoriaUrlimagen());
      alert.setIcon(R.drawable.visa32);
      alert.setView(layout);
      alert.setSingleChoiceItems( adapter, -1, new DialogInterface.OnClickListener() {
@@ -4212,7 +4226,17 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
      dialogo.show();
      Window window = dialogo.getWindow();
-     window.setLayout(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
+     switch (Filtro.getOptipotablet()) {
+         case 0:
+             window.setLayout(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
+             break;
+         case 1:
+             window.setLayout(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
+             break;
+         case 2:
+             window.setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
+             break;
+     }
      dialogo.getWindow().clearFlags( WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
      dialogo.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
  }
@@ -4438,7 +4462,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             articulos[i] =  StringUtils.rightPad(larticulobuffet.get(i).getArticuloNombre().trim(),32,space01)+" ("+
                     myTextPreu.toString()+" "+Filtro.getSimbolo()+")";
 
-///            Drawable d = LoadImageFromWebOperations(comidas.get(indiceSeccion).get(i).getUrlimagen());
+///            Drawables d = LoadImageFromWebOperations(comidas.get(indiceSeccion).get(i).getUrlimagen());
             CheckBox opcion = new CheckBox(this);
             final Button btnIncrease = new Button(this);
             final Button btnDecrement = new Button(this);
@@ -13926,11 +13950,11 @@ ge     * */
                 imagelogo = new_iconscreen; // GUARDAMOS EL ICONO MODIFICADO .
 /*
                 /// Leemos i cargamos la imagen para LOGO SCREEN
-                Drawable d = LoadImageFromWebOperations(localList.get(position).getLocalUrlimagen());
+                Drawables d = LoadImageFromWebOperations(localList.get(position).getLocalUrlimagen());
                 Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
 //*                Bitmap new_iconscreen = resizeBitmapImageFn(bitmap, localList.get(position).getLocalResize_logo_screen()); //resizing the bitmap 500: ricoparico 75 Marivent
                 Bitmap new_iconscreen = getResizedBitmap(bitmap,localList.get(position).getLocalResize_logo_screen_width(),localList.get(position).getLocalResize_logo_screen_height());
-                Drawable d1screen = new BitmapDrawable(getResources(),new_iconscreen); //Converting bitmap into drawable
+                Drawables d1screen = new BitmapDrawable(getResources(),new_iconscreen); //Converting bitmap into drawable
                 getSupportActionBar().setIcon(d1screen); //also displays wide logo_ricoparico
                 imagelogo = new_iconscreen; // GUARDAMOS EL ICONO MODIFICADO .
 */
@@ -15667,7 +15691,9 @@ ge     * */
                         post.optInt("TIVA_ID"),
                         post.optInt("DEPENDIENTETIPOPLATOMAESTRO"),
                         post.optInt("EXCLUYENTEBUFFET"),
-                        post.optInt("ACTIVOBUFFET")
+                        post.optInt("ACTIVOBUFFET"),
+                        post.optInt("SW_TIPO_ARE"),
+                        post.optInt("SW_SUMA_PRECIO_INDIVIDUAL")
                 );
                 Log.i("ImagenUrl",articuloItem.getArticuloUrlimagen());
 
@@ -15838,7 +15864,9 @@ ge     * */
                                                      post.optInt("TIVA_ID"),
                                                      post.optInt("DEPENDIENTETIPOPLATOMAESTRO"),
                                                      post.optInt("EXCLUYENTEBUFFET"),
-                                                     post.optInt("ACTIVOBUFFET")
+                                                     post.optInt("ACTIVOBUFFET"),
+                                                     post.optInt("SW_TIPO_ARE"),
+                                                     post.optInt("SW_SUMA_PRECIO_INDIVIDUAL")
                 );
                 Log.i("ImagenUrl",articuloItem.getArticuloUrlimagen());
 
@@ -15891,7 +15919,7 @@ ge     * */
             articulos[i] =  StringUtils.rightPad(myTextNombreArticulo,32,space01)+" ("+
                     myTextPreu.toString()+" "+Filtro.getSimbolo()+")";
 
-///            Drawable d = LoadImageFromWebOperations(larticulo.get(i).getArticuloUrlimagen());
+///            Drawables d = LoadImageFromWebOperations(larticulo.get(i).getArticuloUrlimagen());
             CheckBox opcion = new CheckBox(this);
 
             Spinner cmbToolbarPlato = new Spinner(this);
@@ -15918,7 +15946,20 @@ ge     * */
             adapter_plato.setDropDownViewResource(R.layout.appbar_filter_list);
 
 
-            articulosListNew.add(new ArticulosNew(larticulo.get(i).getArticuloArticulo(), articulos[i], "GRUPO", opcion, cmbToolbarPlato, adapter_plato, positionplato, larticulo.get(i).getArticuloUrlimagen(), larticulo.get(i).getArticuloDependientetipoplatomaestro(),larticulo.get(i).getArticuloPrecio() ));
+            articulosListNew.add(new ArticulosNew(
+                    larticulo.get(i).getArticuloArticulo(),
+                    articulos[i],
+                    "GRUPO",
+                    opcion,
+                    cmbToolbarPlato,
+                    adapter_plato,
+                    positionplato,
+                    larticulo.get(i).getArticuloUrlimagen(),
+                    larticulo.get(i).getArticuloDependientetipoplatomaestro(),
+                    larticulo.get(i).getArticuloPrecio(),
+                    larticulo.get(i).getArticuloSw_tipo_are(),
+                    larticulo.get(i).getArticuloSw_suma_precio_individual()
+            ));
         }
 
 
@@ -15961,8 +16002,9 @@ ge     * */
                             if (articulo.getChecked())  {
                                 mSelectedItems.add(i);
                                 mSelectedItemsTipoPlato.add(articulo.getPosicionplato());
-
-                                precioGrupo += articulo.getPreu();
+                                if(articulo.getSw_suma_precio_individual()==1){
+                                    precioGrupo += articulo.getPreu();
+                                }
                                 Log.i("Articulo OK OK: ", articulo.getName()+" "+articulo.getPosicionplato());
                             }
                             i++;
@@ -15981,8 +16023,6 @@ ge     * */
                                     "",
                                     Integer.toString(ArticuloIdGrupo),
                                     Filtro.getTipoPlato());
-
-
                         }
                     }
                 })
@@ -16028,7 +16068,7 @@ ge     * */
         dialog.show();
 */
     }
-    private void populate_dialog_are() {
+     private void populate_dialog_are() {
         String[] articulos = new String[larticulo.size()];
         String space01 = new String(new char[01]).replace('\0', ' ');
 
@@ -16050,7 +16090,7 @@ ge     * */
 */
 
             articulos[i] =  larticulo.get(i).getArticuloNombre();
-///            Drawable d = LoadImageFromWebOperations(larticulo.get(i).getArticuloUrlimagen());
+///            Drawables d = LoadImageFromWebOperations(larticulo.get(i).getArticuloUrlimagen());
 
             articulosList.add(new Articulos(articulos[i], "ARTICULO" ,larticulo.get(i).getArticuloUrlimagen()));
 
@@ -16131,7 +16171,7 @@ ge     * */
 */
             articulos[i] =  StringUtils.rightPad(larticulo.get(i).getArticuloNombre().trim(),32,space01);
 
-///            Drawable d = LoadImageFromWebOperations(larticulo.get(i).getArticuloUrlimagen());
+///            Drawables d = LoadImageFromWebOperations(larticulo.get(i).getArticuloUrlimagen());
             CheckBox opcion = new CheckBox(this);
 
             Spinner cmbToolbarPlato = new Spinner(this);

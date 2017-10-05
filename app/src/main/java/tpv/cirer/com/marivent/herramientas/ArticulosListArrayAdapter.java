@@ -151,17 +151,42 @@ public class ArticulosListArrayAdapter  extends ArrayAdapter<Articulos> {
             viewHolder.preu.setOnKeyListener(new View.OnKeyListener() {
                 @Override
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                        final EditText Caption = (EditText) v;
+                    EditText myEditText = (EditText) v;
+                    String value = myEditText.getText().toString();
+                    int pos = 0;
+
+                    Log.i("Edittext","setOnKeyListener");
+                    if (keyCode == EditorInfo.IME_ACTION_SEARCH ||
+                            keyCode == EditorInfo.IME_ACTION_DONE ||
+                            event.getAction() == KeyEvent.ACTION_DOWN &&
+                                    event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+//                        if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                        value = value.replace(Html.fromHtml("&nbsp;"), "");
+                        value = value.replace(Filtro.getSimbolo(), "");
+                        value = value.replace(".", "");
+                        value = value.replace(",", ".");
+                        if(value.trim().length()==0){
+                            value="0.00";
+                        }
+                        myEditText.setText(String.format("%1$,.2f", Double.valueOf(value)));
+
+                        // Ponerse al final del edittext
+                        pos = myEditText.getText().length();
+                        myEditText.setSelection(pos);
+                        myEditText.setTextColor(Color.RED);
+                        myEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                        KeyListener keyListener = DigitsKeyListener.getInstance("-,1234567890");
+                        myEditText.setKeyListener(keyListener);
+
                         float nSaldo = 0;
-                        String value = Caption.getText().toString();
+//                        String value = Caption.getText().toString();
                         value = value.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
                         value = value.replaceAll("\\s+$", ""); // Quitamos espacios derecha
-                        if (value.matches("") || !value.matches("-?\\d+(\\,\\d+)?")) {
+                        if (value.matches("")){// || !value.matches("-?\\d+(\\,\\d+)?")) {
                             Toast.makeText(context, getPalabras("Valor")+" "+getPalabras("Vacio")+" " + getPalabras("Precio"), Toast.LENGTH_SHORT).show();
                             //            this.btnGuardar.setEnabled(false);
-                            Caption.setText("0");
-                            String cValor = Caption.getText().toString();
+                            myEditText.setText("0");
+                            String cValor = myEditText.getText().toString();
                             cValor = cValor.replace(Html.fromHtml("&nbsp;"), "");
                             cValor = cValor.replace(".", "");
                             cValor = cValor.replace(",", ".");
@@ -180,10 +205,10 @@ public class ArticulosListArrayAdapter  extends ArrayAdapter<Articulos> {
                             newText += myText;
                             viewHolder.preu.setText(Html.fromHtml(newText.replace(" ", "&nbsp;&nbsp;")).toString());
                             nSaldo = 0;
-                            hideKeyboard(context,Caption);
+                            hideKeyboard(context,myEditText);
 
                         } else {
-                            String cValor = Caption.getText().toString();
+                            String cValor = myEditText.getText().toString();
                             cValor = cValor.replace(Html.fromHtml("&nbsp;"), "");
                             cValor = cValor.replace(".", "");
                             cValor = cValor.replace(",", ".");
@@ -286,20 +311,21 @@ public class ArticulosListArrayAdapter  extends ArrayAdapter<Articulos> {
                                     break;
                             }
                             // the user is done typing.
-                            hideKeyboard(context,Caption);
+                            hideKeyboard(context,myEditText);
                         }
 
                        return true;
+                    }else {
+                        return false;
                     }
-                    return false;
                 }
             });
-            viewHolder.preu.setOnClickListener(new View.OnClickListener() {
+/*            viewHolder.preu.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View view) {
                     final EditText Caption = (EditText) view;
-
+                    Log.i("Edittext","setOnCLickListener");
                     String valor = Caption.getText().toString();
                     int pos = 0;
                     valor = valor.replace(Filtro.getSimbolo(), ""); //Quitamos simbolo moneda
@@ -321,7 +347,7 @@ public class ArticulosListArrayAdapter  extends ArrayAdapter<Articulos> {
 
                 }
             });
-            viewHolder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+*/            viewHolder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     Log.i("Checkbox", "Click");
@@ -455,13 +481,15 @@ public class ArticulosListArrayAdapter  extends ArrayAdapter<Articulos> {
                             viewHolder.preu.setVisibility(isChecked ? View.VISIBLE : View.GONE);
                             if(isChecked){
                                 if (list.get(position).getName().trim().equals("CREDITO")){
-                                    viewHolder.add.setBackgroundResource(R.drawable.signature);
                                     viewHolder.add.setVisibility(View.VISIBLE);
+                                    viewHolder.add.setCompoundDrawablesWithIntrinsicBounds(R.drawable.signature, 0, 0, 0);
+//                                    viewHolder.add.setBackgroundResource(R.drawable.signature);
                                 }else{
                                     viewHolder.add.setVisibility(View.GONE);
                                 }
                                 list.get(position).setChecked(true);
-                                list.get(position).setImporte(list.get(position).getPreu());
+//                                list.get(position).setImporte(list.get(position).getPreu());
+                                list.get(position).setImporte(Filtro.getTotalcobro());
 
                                 String space01 = new String(new char[01]).replace('\0', ' ');
                                 String myText="";

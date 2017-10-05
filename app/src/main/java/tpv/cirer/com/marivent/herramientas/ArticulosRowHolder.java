@@ -31,6 +31,7 @@ public class ArticulosRowHolder extends RecyclerView.ViewHolder implements View.
     public TextView importe;
     public TextView preu;
     public TextView codigo;
+    public Button swtipoare;
 
     public ArticulosRowHolder.IMyArticulosViewHolderClicks mListener;
 
@@ -47,11 +48,13 @@ public class ArticulosRowHolder extends RecyclerView.ViewHolder implements View.
         this.preu = (TextView) view.findViewById(R.id.preu);
         this.importe = (TextView) view.findViewById(R.id.importe);
         this.codigo = (TextView) view.findViewById(R.id.codigo);
+        this.swtipoare = (Button) view.findViewById(R.id.btnswtipoare);
 
         this.checkbox.setOnClickListener(this);
 
         this.cmbtoolbarplato.setOnItemSelectedListener(this);
         this.imagen.setOnClickListener(this);
+        this.swtipoare.setOnClickListener(this);
         view.setOnClickListener(this);
 
     }
@@ -125,7 +128,11 @@ public class ArticulosRowHolder extends RecyclerView.ViewHolder implements View.
                 }else{
                     cmbtoolbarplato.setVisibility(View.GONE);
                 }
-
+                if(ArticulosNew.getSw_tipo_are()==0) {
+                    swtipoare.setVisibility(View.GONE);
+                }else{
+                    swtipoare.setVisibility(View.VISIBLE);
+                }
                 break;
         }
 
@@ -138,27 +145,44 @@ public class ArticulosRowHolder extends RecyclerView.ViewHolder implements View.
             if (this.checkbox.isChecked()){
                 mListener.onPotato(
                         v,
+                        this.imagen,
                         "CHECKBOX",
                         String.valueOf(this.codigo.getText().toString()),
-                        String.valueOf("1")
+                        String.valueOf("1"),
+                        String.valueOf(getAdapterPosition())
                 );
             }else{
                 mListener.onPotato(
                         v,
+                        this.imagen,
                         "CHECKBOX",
                         String.valueOf(this.codigo.getText().toString()),
-                        String.valueOf("0")
+                        String.valueOf("0"),
+                        String.valueOf(getAdapterPosition())
                 );
             }
         }
         if (v instanceof ImageView) {
             mListener.onPotato(
                     v,
+                    this.imagen,
                     "IMAGEN",
                     String.valueOf(this.codigo.getText().toString()),
-                    String.valueOf(this.name.getText())
+                    String.valueOf(this.name.getText()),
+                    String.valueOf(getAdapterPosition())
             );
         }
+        if (v instanceof Button) {
+            mListener.onPotato(
+                    v,
+                    this.imagen,
+                    "BUTTON",
+                    String.valueOf(this.codigo.getText().toString()),
+                    String.valueOf(this.name.getText()),
+                    String.valueOf(getAdapterPosition())
+            );
+        }
+
     }
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position,
@@ -168,9 +192,11 @@ public class ArticulosRowHolder extends RecyclerView.ViewHolder implements View.
             Log.i("Item selected view",spinner.getClass().getName().toString());
         mListener.onPotato(
                 view,
+                this.imagen,
                 "SPINNER",
                 String.valueOf(this.codigo.getText().toString()),
-                String.valueOf(position)
+                String.valueOf(position),
+                String.valueOf(getAdapterPosition())
         );
 
 //        }
@@ -182,6 +208,6 @@ public class ArticulosRowHolder extends RecyclerView.ViewHolder implements View.
     }
 
     public static interface IMyArticulosViewHolderClicks {
-        void onPotato(View caller, String action, String codigoArticulo ,String nombreArticulo);
+        void onPotato(View caller, ImageView imageArticulo, String action, String codigoArticulo ,String nombreArticulo, String postionArticulo);
     }
 }
