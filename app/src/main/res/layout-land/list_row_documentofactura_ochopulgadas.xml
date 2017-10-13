@@ -75,7 +75,7 @@
         android:layout_toRightOf="@+id/factura"
         android:paddingLeft="@dimen/row_padding" />
 
-    <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
+    <tpv.cirer.com.restaurante.herramientas.AutoResizeTextView
         android:id="@+id/nombremesa"
         style="@style/RowTitle"
         android:layout_width="40dp"
@@ -86,7 +86,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:paddingLeft="@dimen/row_padding" />
-    <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
+    <tpv.cirer.com.restaurante.herramientas.AutoResizeTextView
         android:id="@+id/estado"
         style="@style/RowTitle"
         android:layout_width="50dp"
@@ -95,7 +95,7 @@
         android:layout_toEndOf="@+id/nombremesa"
         android:layout_toRightOf="@+id/nombremesa"
         android:paddingLeft="@dimen/row_padding" />
-    <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
+    <tpv.cirer.com.restaurante.herramientas.AutoResizeTextView
         android:id="@+id/empleado"
         style="@style/RowTitle"
         android:layout_width="110dp"
@@ -106,7 +106,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:paddingLeft="@dimen/row_padding" />
-    <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
+    <tpv.cirer.com.restaurante.herramientas.AutoResizeTextView
         android:id="@+id/caja"
         style="@style/RowTitle"
         android:layout_width="50dp"
@@ -115,7 +115,7 @@
         android:layout_toEndOf="@+id/empleado"
         android:layout_toRightOf="@+id/empleado"
         android:paddingLeft="@dimen/row_padding" />
-    <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
+    <tpv.cirer.com.restaurante.herramientas.AutoResizeTextView
         android:id="@+id/turno"
         style="@style/RowTitle"
         android:layout_width="50dp"
@@ -163,7 +163,7 @@
         android:layout_toEndOf="@+id/turno"
         android:layout_toRightOf="@+id/turno"
         android:paddingLeft="@dimen/row_padding" />
-    <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
+    <tpv.cirer.com.restaurante.herramientas.AutoResizeTextView
         android:id="@+id/nombretft"
         style="@style/RowTitle"
         android:layout_width="50dp"

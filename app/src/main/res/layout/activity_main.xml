@@ -1,4 +1,4 @@
-<tpv.cirer.com.marivent.herramientas.InteractiveLineGraphView
+<tpv.cirer.com.restaurante.herramientas.InteractiveLineGraphView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/chart"

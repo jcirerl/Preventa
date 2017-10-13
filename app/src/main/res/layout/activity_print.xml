@@ -3,5 +3,5 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="tpv.cirer.com.marivent.ui.PrintActivity"
+    tools:context="tpv.cirer.com.restaurante.ui.PrintActivity"
     tools:ignore="MergeRootFrame" />

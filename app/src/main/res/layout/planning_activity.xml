@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="tpv.cirer.com.marivent.ui.PlanningActivity">
+    tools:context="tpv.cirer.com.restaurante.ui.PlanningActivity">
 
-    <tpv.cirer.com.marivent.herramientas.TimeTable android:id="@+id/time_table"
+    <tpv.cirer.com.restaurante.herramientas.TimeTable
+        android:id="@+id/time_table"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 </RelativeLayout>

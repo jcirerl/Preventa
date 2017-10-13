@@ -56,7 +56,7 @@
         android:layout_toRightOf="@+id/pedido"
         android:paddingLeft="@dimen/row_padding" />
 
-    <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
+    <tpv.cirer.com.restaurante.herramientas.AutoResizeTextView
         android:id="@+id/comensales"
         style="@style/RowTitle"
         android:layout_width="40dp"
@@ -68,7 +68,7 @@
         android:clickable="true"
         android:paddingLeft="@dimen/row_padding" />
 
-    <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
+    <tpv.cirer.com.restaurante.herramientas.AutoResizeTextView
         android:id="@+id/nombremesa"
         style="@style/RowTitle"
         android:layout_width="120dp"
@@ -80,7 +80,7 @@
         android:clickable="true"
         android:paddingLeft="@dimen/row_padding" />
 
-    <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
+    <tpv.cirer.com.restaurante.herramientas.AutoResizeTextView
         android:id="@+id/estado"
         style="@style/RowTitle"
         android:layout_width="120dp"
@@ -90,7 +90,7 @@
         android:layout_toRightOf="@+id/nombremesa"
         android:paddingLeft="@dimen/row_padding" />
 
-    <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
+    <tpv.cirer.com.restaurante.herramientas.AutoResizeTextView
         android:id="@+id/empleado"
         style="@style/RowTitle"
         android:layout_width="140dp"
@@ -101,7 +101,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:paddingLeft="@dimen/row_padding" />
-    <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
+    <tpv.cirer.com.restaurante.herramientas.AutoResizeTextView
         android:id="@+id/caja"
         style="@style/RowTitle"
         android:layout_width="105dp"
@@ -110,7 +110,7 @@
         android:layout_toEndOf="@+id/empleado"
         android:layout_toRightOf="@+id/empleado"
         android:paddingLeft="@dimen/row_padding" />
-    <tpv.cirer.com.marivent.herramientas.AutoResizeTextView
+    <tpv.cirer.com.restaurante.herramientas.AutoResizeTextView
         android:id="@+id/turno"
         style="@style/RowTitle"
         android:layout_width="110dp"
