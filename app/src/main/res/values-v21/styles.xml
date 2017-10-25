@@ -3,6 +3,7 @@
 
     <style name="Theme.RicoPaRico" parent="Base.AppTheme">
     </style>
+    <!-- Base application theme. -->
 
     <style name="Theme.ConNavigationDrawer" parent="Base.AppTheme">
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>

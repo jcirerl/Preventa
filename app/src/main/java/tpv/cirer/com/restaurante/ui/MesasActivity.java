@@ -2527,6 +2527,7 @@ public class MesasActivity extends AppCompatActivity implements ArticulosListArr
                 mesaItem.setMesaComensales(post.getInt("COMENSALES"));
                 mesaItem.setMesaT_mesa(post.optString("T_MESA"));
                 mesaItem.setMesaMensaje(post.optString("MENSAJE"));
+                mesaItem.setMesaCalendario(post.optString("CALENDARIO"));
                 mesaplanningList.add(mesaItem);
 
             }

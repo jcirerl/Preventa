@@ -14,6 +14,13 @@
 
         <item name="android:windowBackground">@color/window_background</item>
     </style>
+    <!-- Base application theme. -->
+    <style name="Base.AppThemePlanning" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimaryPlanning</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkPlanning</item>
+        <item name="colorAccent">@color/colorAccentPlanning</item>
+    </style>
 
     <style name="Theme.ConNavigationDrawer" parent="Base.AppTheme"/>
     <style name="RowTitle">

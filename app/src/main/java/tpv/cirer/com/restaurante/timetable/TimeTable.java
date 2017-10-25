@@ -1,4 +1,4 @@
-package tpv.cirer.com.restaurante.herramientas;
+package tpv.cirer.com.restaurante.timetable;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -22,6 +22,8 @@ import java.util.List;
 
 import tpv.cirer.com.restaurante.R;
 
+
+
 /**
  * Created by Wiebe Geertsma on 14-11-2016.
  * E-mail: e.w.geertsma@gmail.com
@@ -37,7 +39,7 @@ public class TimeTable extends FrameLayout
 	private int columns;
 	
 	private FastItemAdapter guideXadapter, guideYadapter, gridAdapter;
-
+	
 	public TimeTable(Context context)
 	{
 		super(context);
@@ -96,9 +98,9 @@ public class TimeTable extends FrameLayout
 		addView(view);
 		requestLayout();
 	}
-
+	
 	/**
-	 * Sets the items to be displayed.
+	 * Sets the items to be displayed. 
 	 * 
 	 * @param items the items to be displayed.
 	 */
@@ -110,7 +112,7 @@ public class TimeTable extends FrameLayout
 			left.add(Calendar.MONTH, -1);
 			left.setTimeInMillis(calendarToMidnightMillis(left));
 			right = Calendar.getInstance();
-			right.add(Calendar.MONTH, 2);
+			right.add(Calendar.MONTH, 1);
 			right.setTimeInMillis(calendarToMidnightMillis(right));
 			setTimeRange(left, right);
 		}
@@ -136,7 +138,7 @@ public class TimeTable extends FrameLayout
 			Pair<String, List<IGridItem>> pair = null;
 			for(Pair<String, List<IGridItem>> p : pairs)
 			{
-				if(p.first.equals(item.getMesaName()))
+				if(p.first.equals(item.getPersonName()))
 				{
 					pair = p;
 					break;
@@ -144,7 +146,7 @@ public class TimeTable extends FrameLayout
 			}
 			
 			if(pair == null)
-				pair = new Pair<String, List<IGridItem>>(item.getMesaName(), new ArrayList<IGridItem>());
+				pair = new Pair<String, List<IGridItem>>(item.getPersonName(), new ArrayList<IGridItem>());
 			
 			pair.second.add(item);
 			
@@ -168,9 +170,9 @@ public class TimeTable extends FrameLayout
 			allGridItems.addAll(l);
 			
 			for(int i = 0; i < l.size() / columns; i++)
-	    		itemsY.add(new GuideYItem(i == 0 ? r.getMesaName() : "")); // only write the name once.
-			}
-
+				itemsY.add(new GuideYItem(i == 0 ? r.getPersonName() : "")); // only write the name once.
+		}
+		
 		if (gridAdapter == null)
 		{
 			gridAdapter = new FastItemAdapter<>();
@@ -192,7 +194,6 @@ public class TimeTable extends FrameLayout
 			@Override
 			public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e)
 			{
-
 				return true;
 			}
 			
@@ -235,10 +236,6 @@ public class TimeTable extends FrameLayout
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy)
 			{
 				super.onScrolled(recyclerView, dx, dy);
-				if (state == RecyclerView.SCROLL_STATE_IDLE)
-				{
-					return;
-				}
 				
 				final LinearLayoutManager managerX = (LinearLayoutManager) observedList.get(0).getLayoutManager();
 				final LinearLayoutManager managerY = (LinearLayoutManager) observedList.get(1).getLayoutManager();

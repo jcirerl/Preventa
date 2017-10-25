@@ -24,7 +24,7 @@
             android:title="@string/item_nfc" />
         <item
             android:id="@+id/item_web"
-            android:icon="@drawable/logo"
+            android:icon="@drawable/icon_web"
             android:title="@string/item_web" />
     </group>
 

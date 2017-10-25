@@ -10,6 +10,10 @@
     <color name="primaryColor">#484848</color>
     <color name="accentColor">#F87652</color>
 
+    <color name="colorPrimaryPlanning">#3F51B5</color>
+    <color name="colorPrimaryDarkPlanning">#303F9F</color>
+    <color name="colorAccentPlanning">#FF4081</color>
+
     <color name="background_footer_item_grid_categorias">#90000000</color>
 
     <color name="color_light">#ffffff</color>

@@ -173,6 +173,7 @@ import tpv.cirer.com.restaurante.modelo.Userrel;
 import tpv.cirer.com.restaurante.modelo.Zonas;
 import tpv.cirer.com.restaurante.print.PrintTicket;
 import tpv.cirer.com.restaurante.servicios.ServiceMesas;
+import tpv.cirer.com.restaurante.timetable.MainActivity;
 
 import static tpv.cirer.com.restaurante.print.PrintTicket.getResizedBitmap;
 import static tpv.cirer.com.restaurante.ui.LoginActivity.lcruge;
@@ -296,6 +297,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     String obs;
     String comensales;
     String valuemesa;
+    String valueusermessage;
     String oldvaluemesa;
     String newvaluemesa;
     String valueempleado;
@@ -1445,8 +1447,9 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
                 break;
             case R.id.item_planning:
                 if(getCruge("action_mesas_admin")){
-                    startActivity(new Intent(this, PlanningActivity.class));
-                 }
+//                    startActivity(new Intent(this, PlanningActivity.class));
+                    startActivity(new Intent(this, MainActivity.class));
+                }
                 break;
             case R.id.item_pedido:
                 if(getCruge("action_pdd_admin")){
@@ -5369,7 +5372,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             }
 //        }
     }
-    public void onUpdateMessageSelected(int id, int activo, int comensales, String mesa) {
+    public void onUpdateMessageSelected(int id, int activo, int comensales, String mesa, String user) {
 /*        if (!getCruge("action_message_update")){
             Toast.makeText(this, getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
         }else {
@@ -5377,7 +5380,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                 Toast.makeText(this, getPalabras("Mensaje")+" " + Integer.toString(activo) + " " + id, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, getPalabras("Activar")+" "+ getPalabras("Mensaje")+" "+Integer.toString(activo)+" "+ id, Toast.LENGTH_SHORT).show();
-                new UpdateMessage().execute(Integer.toString(id), Integer.toString(comensales), mesa, "message");
+                new UpdateMessage().execute(Integer.toString(id), Integer.toString(comensales), mesa, "message", user);
             }
 //        }
     }
@@ -5953,6 +5956,7 @@ ge     * */
             comensales = args[1];
             valuemesa = args[2];
             tabla = args[3];
+            valueusermessage = args[4];
             // updating UI from Background Thread
             runOnUiThread(new Runnable() {
                 @Override
@@ -5993,6 +5997,7 @@ ge     * */
                                 cargafragment.setTransaction(R.id.contenedor_principal);
                             }
                             pDialog.dismiss();
+//                            new UpdateMesaAperturaOnMessage().execute("1",comensales,valuemesa,valueusermessage);
                             new UpdateMesaAperturaOn().execute("1",comensales,valuemesa);
                         } else {
                             Toast.makeText(ActividadPrincipal.this, "ERROR NO "+getPalabras("Modificar")+" "+getPalabras("Mensaje")+" "+getPalabras("Linea"), Toast.LENGTH_SHORT).show();
@@ -7579,7 +7584,284 @@ ge     * */
         }
 
     }
-     /**
+    class UpdateMesaAperturaOnMessage extends AsyncTask<String, String, Integer> {
+
+        /**
+         * Before starting background thread Show Progress Dialog
+         * */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(ActividadPrincipal.this);
+            pDialog.setMessage("ON "+getPalabras("Apertura")+" "+getPalabras("Mesa")+"..");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
+        }
+
+        /**
+         * Creating product
+         * */
+        @Override
+        protected Integer doInBackground(String... args) {
+            pid = args[0];
+            comensales = args[1];
+            valuemesa = args[2];
+            valueusermessage = args[3];
+            // updating UI from Background Thread
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    // Check for success tag
+/*                    try {
+                        int success;
+                        Calendar currentDate = Calendar.getInstance(); //Get the current date
+                        SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); //format it as per your requirement
+                        String dateNow = formatter.format(currentDate.getTime());
+
+                        String cSql = "";
+                        String xWhere = "";
+
+                        if(!(Filtro.getGrupo().equals(""))) {
+                            if (xWhere.equals("")) {
+                                xWhere += " WHERE mesas.GRUPO='" + Filtro.getGrupo() + "'";
+                            } else {
+                                xWhere += " AND mesas.GRUPO='" + Filtro.getGrupo() + "'";
+                            }
+                        }
+                        if(!(Filtro.getEmpresa().equals(""))) {
+                            if (xWhere.equals("")) {
+                                xWhere += " WHERE mesas.EMPRESA='" + Filtro.getEmpresa() + "'";
+                            } else {
+                                xWhere += " AND mesas.EMPRESA='" + Filtro.getEmpresa() + "'";
+                            }
+                        }
+                        if(!(Filtro.getLocal().equals(""))) {
+                            if (xWhere.equals("")) {
+                                xWhere += " WHERE mesas.LOCAL='" + Filtro.getLocal() + "'";
+                            } else {
+                                xWhere += " AND mesas.LOCAL='" + Filtro.getLocal() + "'";
+                            }
+                        }
+                        if(!(Filtro.getSeccion().equals(""))) {
+                            if (xWhere.equals("")) {
+                                xWhere += " WHERE mesas.SECCION='" + Filtro.getSeccion() + "'";
+                            } else {
+                                xWhere += " AND mesas.SECCION='" + Filtro.getSeccion() + "'";
+                            }
+                        }
+                        if(!(Filtro.getCaja().equals(""))) {
+                            if (xWhere.equals("")) {
+                                xWhere += " WHERE mesas.CAJA='" + Filtro.getCaja() + "'";
+                            } else {
+                                xWhere += " AND mesas.CAJA='" + Filtro.getCaja() + "'";
+                            }
+                        }
+                        if(!(Filtro.getRango().equals(""))) {
+                            if (xWhere.equals("")) {
+                                xWhere += " WHERE mesas.RANGO='" + Filtro.getRango() + "'";
+                            } else {
+                                xWhere += " AND mesas.RANGO='" + Filtro.getRango() + "'";
+                            }
+                        }
+
+                        xWhere += " AND mesas.MESA='"+valuemesa+"'";
+
+                        cSql += xWhere;
+                        if(cSql.equals("")) {
+                            cSql="Todos";
+                        }
+                        Log.i("Sql Lista",cSql);
+*/
+                    final AlertDialog.Builder alert = new AlertDialog.Builder(ActividadPrincipal.this);
+                    final EditText inputcomensales = new EditText(ActividadPrincipal.this);
+                    inputcomensales.setText(String.format("%02d", Integer.parseInt(comensales)));
+
+                    // Ponerse al final del edittext
+                    int poscomensales = inputcomensales.getText().length();
+                    inputcomensales.setSelection(poscomensales);
+
+                    inputcomensales.setTextColor(Color.RED);
+                    inputcomensales.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+                    KeyListener keyListener = DigitsKeyListener.getInstance("1234567890");
+                    inputcomensales.setKeyListener(keyListener);
+                    alert.setTitle(getPalabras("Modificar")+" "+getPalabras("Comensales"));
+                    alert.setView(inputcomensales);
+                    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            String value = inputcomensales.getText().toString();
+                            if (value.matches("")) {
+                                Toast.makeText(getApplicationContext(), getPalabras("Valor")+" "+getPalabras("Vacio")+" " + getPalabras("Comensales"), Toast.LENGTH_SHORT).show();
+                                //            this.btnGuardar.setEnabled(false);
+                            } else {
+
+                                value = value.replace(".", "");
+                                value = value.replace(",", "");
+
+                                inputcomensales.setText(String.format("%2d", Integer.valueOf(value)));
+                                comensales=inputcomensales.getText().toString();
+                                try {
+                                    int success;
+                                    Calendar currentDate = Calendar.getInstance(); //Get the current date
+                                    SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); //format it as per your requirement
+                                    String dateNow = formatter.format(currentDate.getTime());
+
+                                    String cSql = "";
+                                    String xWhere = "";
+
+                                    if(!(Filtro.getGrupo().equals(""))) {
+                                        if (xWhere.equals("")) {
+                                            xWhere += " WHERE mesas.GRUPO='" + Filtro.getGrupo() + "'";
+                                        } else {
+                                            xWhere += " AND mesas.GRUPO='" + Filtro.getGrupo() + "'";
+                                        }
+                                    }
+                                    if(!(Filtro.getEmpresa().equals(""))) {
+                                        if (xWhere.equals("")) {
+                                            xWhere += " WHERE mesas.EMPRESA='" + Filtro.getEmpresa() + "'";
+                                        } else {
+                                            xWhere += " AND mesas.EMPRESA='" + Filtro.getEmpresa() + "'";
+                                        }
+                                    }
+                                    if(!(Filtro.getLocal().equals(""))) {
+                                        if (xWhere.equals("")) {
+                                            xWhere += " WHERE mesas.LOCAL='" + Filtro.getLocal() + "'";
+                                        } else {
+                                            xWhere += " AND mesas.LOCAL='" + Filtro.getLocal() + "'";
+                                        }
+                                    }
+                                    if(!(Filtro.getSeccion().equals(""))) {
+                                        if (xWhere.equals("")) {
+                                            xWhere += " WHERE mesas.SECCION='" + Filtro.getSeccion() + "'";
+                                        } else {
+                                            xWhere += " AND mesas.SECCION='" + Filtro.getSeccion() + "'";
+                                        }
+                                    }
+                                    if(!(Filtro.getCaja().equals(""))) {
+                                        if (xWhere.equals("")) {
+                                            xWhere += " WHERE mesas.CAJA='" + Filtro.getCaja() + "'";
+                                        } else {
+                                            xWhere += " AND mesas.CAJA='" + Filtro.getCaja() + "'";
+                                        }
+                                    }
+                                    if(!(Filtro.getRango().equals(""))) {
+                                        if (xWhere.equals("")) {
+                                            xWhere += " WHERE mesas.RANGO='" + Filtro.getRango() + "'";
+                                        } else {
+                                            xWhere += " AND mesas.RANGO='" + Filtro.getRango() + "'";
+                                        }
+                                    }
+
+                                    xWhere += " AND mesas.MESA='"+valuemesa+"'";
+
+                                    cSql += xWhere;
+                                    if(cSql.equals("")) {
+                                        cSql="Todos";
+                                    }
+                                    Log.i("Sql Lista",cSql);
+                                    // Building Parameters
+                                    ContentValues values = new ContentValues();
+                                    values.put("filtro",cSql);
+                                    values.put("apertura", pid);
+                                    values.put("comensales",comensales);
+                                    values.put("updated", dateNow);
+                                    values.put("usuario", valueusermessage);
+                                    values.put("ip",getLocalIpAddress());
+
+                                    // getting JSON Object
+                                    // Note that create product url accepts POST method
+                                    JSONObject json = jsonParserNew.makeHttpRequest(url_updatemesa_mesa,
+                                            "POST", values);
+
+                                    // check log cat fro response
+                                    //            Log.d("Create Response", json.toString());
+
+                                    // check for success tag
+
+                                    success = json.getInt(TAG_SUCCESS);
+                                    if (success == 1) {
+                                        Toast.makeText(ActividadPrincipal.this, "ON "+getPalabras("Apertura")+" "+getPalabras("Mesa")+" "+valuemesa, Toast.LENGTH_SHORT).show();
+                                        itemmesas.setText(Integer.toString(Integer.parseInt(itemmesas.getText().toString())+1));
+                                        if (Integer.parseInt(itemmesas.getText().toString()) == 0) {
+                                            itemmesas.setTextColor(Filtro.getColorItemZero());
+                                        } else {
+                                            itemmesas.setTextColor(Filtro.getColorItem());
+                                        }
+                                    } else {
+                                        Toast.makeText(ActividadPrincipal.this, "ERROR NO ON "+getPalabras("Apertura")+" "+getPalabras("Mesa")+" "+valuemesa, Toast.LENGTH_SHORT).show();
+                                        // failed to create product
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                                //                                               Snackbar.make(view, "Creando Documento Pedido", Snackbar.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), inputcomensales.getText().toString(),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+                    alert.setNegativeButton(getPalabras("Cancelar"), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            dialog.cancel();
+                        }
+                    });
+                    alert.show();
+/*
+                        // Building Parameters
+                        ContentValues values = new ContentValues();
+                        values.put("filtro",cSql);
+                        values.put("apertura", pid);
+                        values.put("comensales",comensales);
+                        values.put("updated", dateNow);
+                        values.put("usuario", Filtro.getUsuario());
+                        values.put("ip",getLocalIpAddress());
+
+                        // getting JSON Object
+                        // Note that create product url accepts POST method
+                        JSONObject json = jsonParserNew.makeHttpRequest(url_updatemesa_mesa,
+                                "POST", values);
+
+                        // check log cat fro response
+                        //            Log.d("Create Response", json.toString());
+
+                        // check for success tag
+
+                        success = json.getInt(TAG_SUCCESS);
+                        if (success == 1) {
+                            Toast.makeText(ActividadPrincipal.this, "ON "+getPalabras("Apertura")+" "+getPalabras("Mesa")+" "+valuemesa, Toast.LENGTH_SHORT).show();
+                            itemmesas.setText(Integer.toString(Integer.parseInt(itemmesas.getText().toString())+1));
+                            if (Integer.parseInt(itemmesas.getText().toString()) == 0) {
+                                itemmesas.setTextColor(Filtro.getColorItemZero());
+                            } else {
+                                itemmesas.setTextColor(Filtro.getColorItem());
+                            }
+                        } else {
+                            Toast.makeText(ActividadPrincipal.this, "ERROR NO ON "+getPalabras("Apertura")+" "+getPalabras("Mesa")+" "+valuemesa, Toast.LENGTH_SHORT).show();
+                            // failed to create product
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+*/                }
+            });
+
+            return null;
+        }
+
+        /**
+         * After completing background task Dismiss the progress dialog
+         * **/
+        @Override
+        protected void onPostExecute(Integer success) {
+            // dismiss the dialog once done
+            pDialog.dismiss();
+        }
+
+    }
+    /**
      * Background Async Task to Create new product
      * */
     class UpdateMesaAperturaOn extends AsyncTask<String, String, Integer> {
@@ -12090,7 +12372,7 @@ ge     * */
                     while ((line = r.readLine()) != null) {
                         response.append(line);
                     }
-                    Log.i("JSON-->", response.toString());
+                    Log.i("JSON MESAS-->", response.toString());
 
                     for (Iterator<Mesa> it = mesasList.iterator(); it.hasNext();){
                         Mesa mesa = it.next();
@@ -12132,9 +12414,11 @@ ge     * */
             Log.i("Longitud Datos: ",Integer.toString(posts.length()));
             for (int ii = 0; ii < posts.length(); ii++) {
                 JSONObject post = posts.optJSONObject(ii);
-                Mesa cat = new Mesa(post.optString("MESA"),
+                Mesa cat = new Mesa(
+                        post.optString("MESA"),
                         getPalabras(post.optString("NOMBRE").trim()),
-                        post.optString("T_MESA"));
+                        post.optString("T_MESA"),
+                        post.optString("CALENDARIO").trim());
                 mesasList.add(cat);
 
             }
@@ -12304,7 +12588,8 @@ ge     * */
                 JSONObject post = posts.optJSONObject(ii);
                 Mesa cat = new Mesa(post.optString("MESA"),
                         getPalabras(post.optString("NOMBRE").trim()),
-                        post.optInt("COMENSALES"));
+                        post.optInt("COMENSALES"),
+                        post.optString("CALENDARIO").trim());
                 mesaList.add(cat);
 
             }
@@ -12477,7 +12762,8 @@ ge     * */
                 Mesa cat = new Mesa(post.optString("MESA"),
                         getPalabras(post.optString("NOMBRE").trim()),
                         post.optInt("COMENSALES"),
-                        post.optString("MENSAJE"));
+                        post.optString("MENSAJE"),
+                        post.optString("CALENDARIO").trim());
                 mesaListBuffet.add(cat);
 
             }
@@ -12645,7 +12931,8 @@ ge     * */
                 JSONObject post = posts.optJSONObject(ii);
                 Mesa cat = new Mesa(post.optString("MESA"),
                         getPalabras(post.optString("NOMBRE").trim()),
-                        post.optInt("COMENSALES"));
+                        post.optInt("COMENSALES"),
+                        post.optString("CALENDARIO").trim());
                 mesaList.add(cat);
 
             }

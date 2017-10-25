@@ -100,7 +100,7 @@ public class SplashScreen extends AppCompatActivity {
                     SharedPreferences pref =
                             PreferenceManager.getDefaultSharedPreferences(
                                     SplashScreen.this);
-                    Filtro.setOpurl(pref.getString("opurl", "HOSTING"));
+                    Filtro.setOpurl(pref.getString("opurl", "LOCAL"));
                     Filtro.setIdioma(pref.getString("opidioma", "ESP"));
                     Filtro.setOpgrid(Integer.parseInt(pref.getString("opgrid", "8")));
                     Filtro.setOpmesas(Integer.parseInt(pref.getString("opmesas", "128")));
@@ -731,12 +731,12 @@ public class SplashScreen extends AppCompatActivity {
         protected void onPreExecute() {
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
-            pDialogPalabras = new ProgressDialog(SplashScreen.this);
+/*            pDialogPalabras = new ProgressDialog(SplashScreen.this);
             pDialogPalabras.setMessage("Cargando Palabras. Espere por favor...");
             pDialogPalabras.setIndeterminate(false);
             pDialogPalabras.setCancelable(true);
             pDialogPalabras.show();
-
+*/
         }
 
         @Override
@@ -819,7 +819,7 @@ public class SplashScreen extends AppCompatActivity {
         @Override
         protected void onPostExecute(Integer result) {
             /* Download complete. Lets update UI */
-            pDialogPalabras.dismiss();
+//            pDialogPalabras.dismiss();
             if (result == 1) {
                 Log.i(TAG_PALABRAS, Integer.toString(lpalabras.size()));
             } else {

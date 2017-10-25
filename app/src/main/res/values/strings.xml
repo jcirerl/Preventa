@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">"TPV Restaurante"</string>
+    <string name="app_name_timetable">"TimeTable"</string>
     <string name="titulopersonalizado">TPV Android</string>
     <string name="app_description">A sample application that allows you to navigate a simple line graph using touch gestures.</string>
     <string name="action_zoom_in">Demo zoom in</string>

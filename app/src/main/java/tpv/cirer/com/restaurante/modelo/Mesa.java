@@ -18,24 +18,28 @@ public class Mesa {
     private int MesaComensales;
     private String MesaT_mesa;
     private String MesaMensaje;
+    private String MesaCalendario;
 
     public Mesa(){}
 
-    public Mesa(String Mesa, String nombre, String t_mesa){
+    public Mesa(String Mesa, String nombre, String t_mesa, String calendario){
         this.MesaMesa = Mesa;
         this.MesaNombre_Mesas = nombre;
         this.MesaT_mesa = t_mesa;
+        this.MesaCalendario = calendario;
      }
-    public Mesa(String Mesa, String nombre, int comensales){
+    public Mesa(String Mesa, String nombre, int comensales, String calendario){
         this.MesaMesa = Mesa;
         this.MesaNombre_Mesas = nombre;
         this.MesaComensales = comensales;
+        this.MesaCalendario = calendario;
     }
-    public Mesa(String Mesa, String nombre, int comensales, String mensaje){
+    public Mesa(String Mesa, String nombre, int comensales, String mensaje, String calendario){
         this.MesaMesa = Mesa;
         this.MesaNombre_Mesas = nombre;
         this.MesaComensales = comensales;
         this.MesaMensaje = mensaje;
+        this.MesaCalendario = calendario;
     }
 
     public float getMesaXCoordenate() {
@@ -131,6 +135,13 @@ public class Mesa {
     }
     public void setMesaComensales(int mesaComensales) {
         this.MesaComensales = mesaComensales;
+    }
+    public String getMesaCalendario() {
+        return MesaCalendario;
+    }
+
+    public void setMesaCalendario(String mesacalendario) {
+        this.MesaCalendario = mesacalendario;
     }
 
 }

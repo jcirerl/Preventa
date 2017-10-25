@@ -109,6 +109,19 @@
                 android:value="tpv.cirer.com.restaurante.ui.SplashScreen" />
         </activity>
         <activity
+            android:name=".timetable.MainActivity"
+            android:label="@string/app_name_timetable"
+            android:screenOrientation="landscape"
+            android:icon="@drawable/ic_launcher"
+            android:supportsRtl="true"
+            android:theme="@style/Base.AppThemePlanning"
+            android:parentActivityName="tpv.cirer.com.restaurante.ui.ActividadPrincipal" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="tpv.cirer.com.restaurante.ui.ActividadPrincipal" />
+        </activity>
+
+        <activity
             android:name=".magstripe.MagstripeReaderActivity"
             android:label="@string/app_name_mag"
             android:screenOrientation="landscape"

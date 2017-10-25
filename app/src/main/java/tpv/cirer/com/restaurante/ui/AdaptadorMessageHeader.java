@@ -124,16 +124,18 @@ public class AdaptadorMessageHeader extends RecyclerView.Adapter<RecyclerView.Vi
                                      String idMessage,
                                      String activoMessage,
                                      String comensalesMessage,
+                                     String userMessage,
                                      String mesaMessage ) {
                     Log.d("UPDATE BUTTON", "+");
                     final int idMESSAGE = Integer.parseInt(idMessage);
                     final int activoMESSAGE = Integer.parseInt(activoMessage);
                     final String mesaMESSAGE = mesaMessage;
+                    final String userMESSAGE = userMessage;
                     comensalesMessage = comensalesMessage.replace(Html.fromHtml("&nbsp;"), "");
                     final int comensalesMESSAGE = Integer.parseInt(comensalesMessage);
 
                     try {
-                        mCallbackMessage.onUpdateMessageSelected(idMESSAGE,activoMESSAGE,comensalesMESSAGE,mesaMESSAGE);
+                        mCallbackMessage.onUpdateMessageSelected(idMESSAGE,activoMESSAGE,comensalesMESSAGE,mesaMESSAGE,userMESSAGE);
                     } catch (ClassCastException exception) {
                         // do something
                     }
@@ -348,6 +350,7 @@ public class AdaptadorMessageHeader extends RecyclerView.Adapter<RecyclerView.Vi
                                 String.valueOf(this.IdMessage.getText()),
                                 String.valueOf(this.ActivoMessage.getText()),
                                 String.valueOf(this.ComensalesMessage.getText()),
+                                String.valueOf(this.UserMessage.getText()),
                                 String.valueOf(this.MesaMessage.getText()));
                         break;
                     case R.id.btnDelete:
@@ -393,6 +396,7 @@ public class AdaptadorMessageHeader extends RecyclerView.Adapter<RecyclerView.Vi
                              String idMessage,
                              String activoMessage,
                              String comensalesMessage,
+                             String userMessage,
                              String mesaMessage) {
 
         }
@@ -425,7 +429,7 @@ public class AdaptadorMessageHeader extends RecyclerView.Adapter<RecyclerView.Vi
     // La actividad contenedora debe implementar esta interfaz
     public interface OnHeadlineSelectedListenerMessageHeader {
         void onDeleteMessageSelected(int id, int activo);
-        void onUpdateMessageSelected(int id, int activo, int comensales, String mesa);
+        void onUpdateMessageSelected(int id, int activo, int comensales, String mesa, String user);
     }
     /*para filtro*/
     public void setFilter(List<Message> Messages) {

@@ -61,8 +61,8 @@ public class EmployeePlanItem extends AbstractGridItem
         Calendar start = Calendar.getInstance();
         Calendar end = Calendar.getInstance();
         Calendar hoy = Calendar.getInstance();
-        int r1 = -rand.nextInt(12);
-        int r2 = rand.nextInt(12);
+        int r1 = -rand.nextInt(24);
+        int r2 = rand.nextInt(24);
 
         start.add(Calendar.DATE, r1);
         end.add(Calendar.DATE, r2);

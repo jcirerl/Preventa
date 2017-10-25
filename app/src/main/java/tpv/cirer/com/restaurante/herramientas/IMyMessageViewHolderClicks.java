@@ -21,6 +21,7 @@ public interface IMyMessageViewHolderClicks {
                          String idMessage,
                          String activoMessage,
                          String comensalesMessage,
+                         String userMessage,
                          String mesaMessage);
 
     void onDelete(Button callerButton,
