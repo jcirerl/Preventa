@@ -24,6 +24,7 @@ public class LineaDocumentoPedido {
 
     private String LineaDocumentoPedidoUrlimagen;
     private String LineaDocumentoPedidoTipo_iva;
+    private String LineaDocumentoPedidoTerminal;
 
     private int LineaDocumentoPedidoPedido;
     private int LineaDocumentoPedidoTiva_id;
@@ -31,6 +32,8 @@ public class LineaDocumentoPedido {
     private int LineaDocumentoPedidoSwPedido;
     private int LineaDocumentoPedidoId;
     private int LineaDocumentoPedidoIndividual;
+    private int LineaDocumentoPedidoIdRelacion;
+    private int LineaDocumentoPedidoPrincipal;
 
     private int idDrawable;
 
@@ -38,6 +41,12 @@ public class LineaDocumentoPedido {
 
     public int getIdDrawable() {
         return idDrawable;
+    }
+    public int getLineaDocumentoPedidoPrincipal() {
+        return LineaDocumentoPedidoPrincipal;
+    }
+    public void setLineaDocumentoPedidoPrincipal(int lineaDocumentoPedidoPrincipal) {
+        this.LineaDocumentoPedidoPrincipal = lineaDocumentoPedidoPrincipal;
     }
     public int getLineaDocumentoPedidoIndividual() {
         return LineaDocumentoPedidoIndividual;
@@ -166,6 +175,12 @@ public class LineaDocumentoPedido {
     public void setLineaDocumentoPedidoId(int lineadocumentopedidoId) {
         this.LineaDocumentoPedidoId = lineadocumentopedidoId;
     }
+    public int getLineaDocumentoPedidoIdRelacion() {
+        return LineaDocumentoPedidoIdRelacion;
+    }
+    public void setLineaDocumentoPedidoIdRelacion(int lineaDocumentoPedidoIdRelacion) {
+        this.LineaDocumentoPedidoIdRelacion = lineaDocumentoPedidoIdRelacion;
+    }
 
  
     public int getLineaDocumentoPedidoPedido() {
@@ -194,6 +209,13 @@ public class LineaDocumentoPedido {
     }
     public void setLineaDocumentoPedidoNombre_plato(String lineaDocumentoPedidoNombre_plato) {
         this.LineaDocumentoPedidoNombre_plato = lineaDocumentoPedidoNombre_plato;
+    }
+    public String getLineaDocumentoPedidoTerminal() {
+        return LineaDocumentoPedidoTerminal;
+    }
+
+    public void setLineaDocumentoPedidoTerminal(String lineadocumentopedidoterminal) {
+        this.LineaDocumentoPedidoTerminal = lineadocumentopedidoterminal;
     }
 
 

@@ -2341,8 +2341,8 @@ public class MesasActivity extends AppCompatActivity implements ArticulosListArr
                         post.optInt("EXCLUYENTEBUFFET"),
                         post.optInt("ACTIVOBUFFET"),
                         post.optInt("SW_TIPO_ARE"),
-                        post.optInt("SW_SUMA_PRECIO_INDIVIDUAL")
-
+                        post.optInt("SW_SUMA_PRECIO_INDIVIDUAL"),
+                        post.optInt("PRINCIPAL")
                 );
                 Log.i("ImagenUrl",articuloItem.getArticuloUrlimagen());
 

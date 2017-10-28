@@ -138,6 +138,7 @@ import tpv.cirer.com.restaurante.herramientas.TaskHelper;
 import tpv.cirer.com.restaurante.herramientas.Utils;
 import tpv.cirer.com.restaurante.herramientas.WrapContentLinearLayoutManager;
 import tpv.cirer.com.restaurante.modelo.Articulo;
+import tpv.cirer.com.restaurante.modelo.ArticuloNotificacionTerminal;
 import tpv.cirer.com.restaurante.modelo.Articulos;
 import tpv.cirer.com.restaurante.modelo.ArticulosNew;
 import tpv.cirer.com.restaurante.modelo.CabeceraEmpr;
@@ -173,7 +174,6 @@ import tpv.cirer.com.restaurante.modelo.Userrel;
 import tpv.cirer.com.restaurante.modelo.Zonas;
 import tpv.cirer.com.restaurante.print.PrintTicket;
 import tpv.cirer.com.restaurante.servicios.ServiceMesas;
-import tpv.cirer.com.restaurante.timetable.MainActivity;
 
 import static tpv.cirer.com.restaurante.print.PrintTicket.getResizedBitmap;
 import static tpv.cirer.com.restaurante.ui.LoginActivity.lcruge;
@@ -219,7 +219,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
 
     ProgressDialog pDialogtft,pDialogTipoare,pDialogUserrel,pDialogGrup,pDialogTerminal,pDialogFra,pDialogCruge,pDialogPlato,pDialogFac,pDialogPalabras,
             pDialogEmpr,pDialogLocal,pDialogSec,pDialogSecFechas,pDialogCaja,pDialogTurno,pDialogMesa,pDialogRango,pDialogEmpleado,pDialogMoneda;
-    ProgressDialog pDialog,pDialogParam,pDialogZonas;
+    ProgressDialog pDialog,pDialogParam,pDialogZonas,pDialogAreNotif;
     public static ProgressbarUtills progressbarUtills;
     public static TextView itempedido;
     public static TextView itemseccion;
@@ -257,6 +257,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     String TAG_MESA_FTP = "mesa";
     String TAG_FAC = "FACTURA";
     String TAG_TFT = "TFT: ";
+    String TAG_ARENOTIF = "ARE NOTIF";
 
     public static boolean usuario_identificado;
     public static int position_usuario;
@@ -390,7 +391,8 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     public static ArrayList<Observacion> lobservacion;
     public static List<CabeceraEmpr> lcabeceraempr;
     public static ArrayList<Articulo> larticulobuffet;
-
+    public static ArrayList<ArticuloNotificacionTerminal> larticulonotificacionterminal;
+    
     private static int IndiceSeccion;
 
     private String url_tipoare;
@@ -419,7 +421,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     private static String URL_MONEDAS;
     private static String URL_TERMINALES;
     private static String URL_ARTICULOS;
-    private static String URL_OBSERVACIONES;
+    private static String URL_ARTICULONOTIFICACIONTERMINAL;
     private static String URL_PARAMS;
     private static String URL_ZONAS;
     
@@ -665,7 +667,11 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         // RELLENAMOS TIPOS DE ARTICULOS
         url_tipoare = Filtro.getUrl() + "/RellenaListaTiposArticulo.php";
         lcategoria = new ArrayList<Categoria>();
- 
+
+        // RELLENAMOS ARTICULOS NOTIFICACION TERMINAL
+        URL_ARTICULONOTIFICACIONTERMINAL = Filtro.getUrl() + "/RellenaListaARENOTIFTERMINAL.php";
+        larticulonotificacionterminal = new ArrayList<ArticuloNotificacionTerminal>();
+
         // RELLENAMOS ZONAS
         lzonas = new ArrayList<Zonas>();
         URL_ZONAS = Filtro.getUrl() + "/RellenaListaZonas.php";
@@ -1447,8 +1453,8 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
                 break;
             case R.id.item_planning:
                 if(getCruge("action_mesas_admin")){
-//                    startActivity(new Intent(this, PlanningActivity.class));
-                    startActivity(new Intent(this, MainActivity.class));
+                    startActivity(new Intent(this, PlanningActivity.class));
+            //                    startActivity(new Intent(this, MainActivity.class));
                 }
                 break;
             case R.id.item_pedido:
@@ -2798,7 +2804,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                 }else {
                     if (Integer.parseInt(individual)==1){
                         Toast.makeText(this, getPalabras("Crear")+" "+getPalabras("Linea")+" " + getPalabras("Comida")+" "+ articulo, Toast.LENGTH_SHORT).show();
-                        new CreaLineaDocumentoPedido().execute(articulo, nombre, precio, tiva,"1","1","","0",Filtro.getTipoPlato());
+                        new CreaLineaDocumentoPedido().execute(articulo, nombre, precio, tiva,"1","1","","0",Filtro.getTipoPlato(),"0");
                     }else{
                         nArticuloPositionSelected = 0;
 
@@ -6431,6 +6437,7 @@ ge     * */
             values.put("swfactura", args[5]);
             values.put("idrelacion", args[7]);
             values.put("tipoplato", args[8]);
+            values.put("principal", args[9]);
             values.put("updated", dateNow);
             values.put("creado", dateNow);
             values.put("usuario", Filtro.getUsuario());
@@ -14338,6 +14345,8 @@ ge     * */
                 TaskHelper.execute(new GetMesaBuffet(),URL_MESA_BUFFET);
                 /// almacenar zonas en arraylist
                 TaskHelper.execute(new GetZonas(), URL_ZONAS);
+                /// almacenar artticulonotificacionterminal en arraylist
+                TaskHelper.execute(new GetAreNotifTerminal(), URL_ARTICULONOTIFICACIONTERMINAL);
 
                 ///////////////////////////////////////////////////////////////
                 TaskHelper.execute(new GetSeccionFechas(), URL_SECCIONES_FECHAS);
@@ -15731,17 +15740,17 @@ ge     * */
             }
         }
     }
-/*    public class GetAreBuffet extends AsyncTask<String, Void, Integer> {
+    public class GetAreNotifTerminal extends AsyncTask<String, Void, Integer> {
 
         @Override
         protected void onPreExecute() {
             //setProgressBarIndeterminateVisibility(true);
             super.onPreExecute();
-            pDialog = new ProgressDialog(ActividadPrincipal.this);
-            pDialog.setMessage(ActividadPrincipal.getPalabras("Cargando")+" "+ActividadPrincipal.getPalabras("Articulos")+"...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
-            pDialog.show();
+            pDialogAreNotif = new ProgressDialog(ActividadPrincipal.this);
+            pDialogAreNotif.setMessage(getPalabras("Cargando")+" "+getPalabras("Articulos")+" "+getPalabras("Notificacion")+"...");
+            pDialogAreNotif.setIndeterminate(false);
+            pDialogAreNotif.setCancelable(true);
+            pDialogAreNotif.show();
         }
 
         @Override
@@ -15751,36 +15760,31 @@ ge     * */
             String xWhere = "";
             if(!(Filtro.getGrupo().equals(""))) {
                 if (xWhere.equals("")) {
-                    xWhere += " WHERE are.GRUPO='" + Filtro.getGrupo() + "'";
+                    xWhere += " WHERE arenotifterminal.GRUPO='" + Filtro.getGrupo() + "'";
                 } else {
-                    xWhere += " AND are.GRUPO='" + Filtro.getGrupo() + "'";
+                    xWhere += " AND arenotifterminal.GRUPO='" + Filtro.getGrupo() + "'";
                 }
             }
             if(!(Filtro.getEmpresa().equals(""))) {
                 if (xWhere.equals("")) {
-                    xWhere += " WHERE are.EMPRESA='" + Filtro.getEmpresa() + "'";
+                    xWhere += " WHERE arenotifterminal.EMPRESA='" + Filtro.getEmpresa() + "'";
                 } else {
-                    xWhere += " AND are.EMPRESA='" + Filtro.getEmpresa() + "'";
+                    xWhere += " AND arenotifterminal.EMPRESA='" + Filtro.getEmpresa() + "'";
                 }
             }
             if(!(Filtro.getLocal().equals(""))) {
                 if (xWhere.equals("")) {
-                    xWhere += " WHERE are.LOCAL='" + Filtro.getLocal() + "'";
+                    xWhere += " WHERE arenotifterminal.LOCAL='" + Filtro.getLocal() + "'";
                 } else {
-                    xWhere += " AND are.LOCAL='" + Filtro.getLocal() + "'";
+                    xWhere += " AND arenotifterminal.LOCAL='" + Filtro.getLocal() + "'";
                 }
             }
             if(!(Filtro.getSeccion().equals(""))) {
                 if (xWhere.equals("")) {
-                    xWhere += " WHERE are.SECCION='" + Filtro.getSeccion() + "'";
+                    xWhere += " WHERE arenotifterminal.SECCION='" + Filtro.getSeccion() + "'";
                 } else {
-                    xWhere += " AND are.SECCION='" + Filtro.getSeccion() + "'";
+                    xWhere += " AND arenotifterminal.SECCION='" + Filtro.getSeccion() + "'";
                 }
-            }
-            if (xWhere.equals("")) {
-                xWhere += " WHERE are.TIPO_ARE='" + params[1] + "'";
-            } else {
-                xWhere += " AND are.TIPO_ARE='" + params[1] + "'";
             }
 
             cSql += xWhere;
@@ -15831,16 +15835,16 @@ ge     * */
                     while ((line = r.readLine()) != null) {
                         response.append(line);
                     }
-                    Log.i("JSON-->", response.toString());
-                    Log.i("Longitud Antes: ",Integer.toString(larticulo.size()));
-                    for (Iterator<Articulo> it = larticulo.iterator(); it.hasNext();){
-                        Articulo articulo = it.next();
+                    Log.i("JSON ARENOTIF-->", response.toString());
+                    Log.i("Longitud Antes: ",Integer.toString(larticulonotificacionterminal.size()));
+                    for (Iterator<ArticuloNotificacionTerminal> it = larticulonotificacionterminal.iterator(); it.hasNext();){
+                        ArticuloNotificacionTerminal articulo = it.next();
                         it.remove();
                     }
 
-                    Log.i("Longitud Despues: ",Integer.toString(larticulo.size()));
+                    Log.i("Longitud Despues: ",Integer.toString(larticulonotificacionterminal.size()));
 
-                    parseResultArticulos(response.toString());
+                    parseResultArticuloNotificacionTerminal(response.toString());
                     result = 1; // Successful
                 }else{
                     result = 0; //"Failed to fetch data!";
@@ -15857,18 +15861,40 @@ ge     * */
 
         @Override
         protected void onPostExecute(Integer result) {
-            pDialog.dismiss();
+            pDialogAreNotif.dismiss();
             if (result == 1) {
-                Log.i("ARE BUFFET", "OK");
+                Log.i(TAG_ARENOTIF, "OK");
      //           dialog_buffet();
             } else {
                 Log.e(TAG, "Failed to fetch data!");
-                Toast.makeText(getApplicationContext(), getPalabras("No existe articulo BUFFET"), Toast.LENGTH_SHORT).show();
-
             }
         }
     }
-*/
+    private void parseResultArticuloNotificacionTerminal(String result) {
+        try {
+            JSONObject response = new JSONObject(result);
+            JSONArray posts = response.optJSONArray("posts");
+            Log.i("Longitud Datos: ",Integer.toString(posts.length()));
+            for (int ii = 0; ii < posts.length(); ii++) {
+                JSONObject post = posts.optJSONObject(ii);
+                ArticuloNotificacionTerminal articuloItem = new ArticuloNotificacionTerminal(
+                        post.optInt("ID"),
+                        post.optString("GRUPO"),
+                        post.optString("EMPRESA"),
+                        post.optString("LOCAL"),
+                        post.optString("SECCION"),
+                        post.optString("ARTICULO"),
+                        post.optString("TERMINAL")
+                );
+             //   Log.i("AreNotifTerminal: ",articuloItem.getArticuloArticulo());
+
+                larticulonotificacionterminal.add(articuloItem);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
    public class GetAreAreBuffet extends AsyncTask<String, Void, Integer> {
 
     @Override
@@ -16025,7 +16051,8 @@ ge     * */
                         post.optInt("EXCLUYENTEBUFFET"),
                         post.optInt("ACTIVOBUFFET"),
                         post.optInt("SW_TIPO_ARE"),
-                        post.optInt("SW_SUMA_PRECIO_INDIVIDUAL")
+                        post.optInt("SW_SUMA_PRECIO_INDIVIDUAL"),
+                        post.optInt("PRINCIPAL")
                 );
                 Log.i("ImagenUrl",articuloItem.getArticuloUrlimagen());
 
@@ -16198,7 +16225,8 @@ ge     * */
                                                      post.optInt("EXCLUYENTEBUFFET"),
                                                      post.optInt("ACTIVOBUFFET"),
                                                      post.optInt("SW_TIPO_ARE"),
-                                                     post.optInt("SW_SUMA_PRECIO_INDIVIDUAL")
+                                                     post.optInt("SW_SUMA_PRECIO_INDIVIDUAL"),
+                                                     post.optInt("PRINCIPAL")
                 );
                 Log.i("ImagenUrl",articuloItem.getArticuloUrlimagen());
 
@@ -16290,7 +16318,8 @@ ge     * */
                     larticulo.get(i).getArticuloDependientetipoplatomaestro(),
                     larticulo.get(i).getArticuloPrecio(),
                     larticulo.get(i).getArticuloSw_tipo_are(),
-                    larticulo.get(i).getArticuloSw_suma_precio_individual()
+                    larticulo.get(i).getArticuloSw_suma_precio_individual(),
+                    larticulo.get(i).getArticuloPrincipal()
             ));
         }
 
@@ -16346,15 +16375,18 @@ ge     * */
                         // or return them to the component that opened the dialog
                         if (mSelectedItems.size()>0) {
                             ArticuloGrupo = true;
-                            new CreaLineaDocumentoPedido().execute(ArticuloCodigoGrupo,
+                            new CreaLineaDocumentoPedido().execute(
+                                    ArticuloCodigoGrupo,
                                     ArticuloNombreGrupo,
                                     ArticuloPrecioGrupo,
                                     ArticuloTivaGrupo,
                                     "0",
                                     "1",
-                                    "",
+                                    ArticuloNombreGrupo,
                                     Integer.toString(ArticuloIdGrupo),
-                                    Filtro.getTipoPlato());
+                                    Filtro.getTipoPlato(),
+                                    "0"
+                            );
                         }
                     }
                 })
@@ -16589,7 +16621,8 @@ ge     * */
                                                                    "1",
                                                                    "",
                                                                    Integer.toString(ArticuloIdGrupo),
-                                                                   Filtro.getTipoPlato());
+                                                                   Filtro.getTipoPlato(),
+                                                                   "0");
 
 
 /*                            String[] idarticulos = new String[mSelectedItems.size()];
@@ -16634,7 +16667,9 @@ ge     * */
                     "0",
                     ArticuloNombreGrupo,
                     Integer.toString(ArticuloIdGrupo),
-                    lplato.get(mSelectedItemsTipoPlato.get(nArticuloPositionSelected)).getPlatoTipoPlato());
+                    lplato.get(mSelectedItemsTipoPlato.get(nArticuloPositionSelected)).getPlatoTipoPlato(),
+                    Integer.toString(larticulo.get(mSelectedItems.get(nArticuloPositionSelected)).getArticuloPrincipal())
+                    );
 //                    larticulo.get(mSelectedItems.get(nArticuloPositionSelected)).getArticuloTipoPlato());
              nArticuloPositionSelected++;
         }else{

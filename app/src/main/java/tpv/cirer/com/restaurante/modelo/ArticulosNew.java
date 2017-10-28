@@ -29,6 +29,7 @@ public class ArticulosNew {
     private int dependientetipoplatomaestro;
     private int sw_tipo_are;
     private int sw_suma_precio_individual;
+    private int principal;
 
     public ArticulosNew() {
     }
@@ -56,7 +57,8 @@ public class ArticulosNew {
                         int dependietetipoplatomaestro, 
                         float preu, 
                         int sw_tipo_are,
-                        int sw_suma_precio_individual  ){
+                        int sw_suma_precio_individual,
+                        int principal){
         this.codigo = codigo;
         this.name = name;
         this.code = code;
@@ -70,6 +72,7 @@ public class ArticulosNew {
         this.preu = preu;
         this.sw_tipo_are = sw_tipo_are;
         this.sw_suma_precio_individual = sw_suma_precio_individual;
+        this.principal = principal;
     }
     public ArticulosNew(String name, String code, String urlimagen){
         this.name = name;
@@ -153,6 +156,12 @@ public class ArticulosNew {
     }
     public void setSw_suma_precio_individual(int idsw_suma_precio_individual) {
         this.sw_suma_precio_individual = idsw_suma_precio_individual;
+    }
+    public int getPrincipal() {
+        return principal;
+    }
+    public void setPrincipal(int idprincipal) {
+        this.principal = idprincipal;
     }
 
 }

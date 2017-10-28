@@ -1,9 +1,11 @@
 package tpv.cirer.com.restaurante.ui;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,6 +22,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +37,7 @@ import com.epson.eposprint.Builder;
 import com.epson.eposprint.EposException;
 import com.epson.eposprint.Print;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -95,6 +99,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
     public static final String TAG = "Lista LPD";
     String TAG_SALDO = "saldo";
     private static String url_update_cabecera;
+    String tpvpedido="";
 
     static final int SEND_TIMEOUT = 10 * 1000;
     // JSON parser class
@@ -293,7 +298,8 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
                             nPosition = 0;
                             setImpresora(nPosition);
      ///                       urlPrint = Filtro.getUrl() + "/RellenaListaLPDprintsec.php"; // ORDENADO POR TIPO ARTICULO
-                            urlPrint = Filtro.getUrl() + "/RellenaListaLPDprintsecplato.php";    // ORDENADO POR TIPO PLATO
+     ///                       urlPrint = Filtro.getUrl() + "/RellenaListaLPDprintsecplato.php";    // ORDENADO POR TIPO PLATO
+                            urlPrint = Filtro.getUrl() + "/RellenaListaLPDprintsecplatoAgrupado.php";    // ORDENADO POR TIPO PLATO
                             new LeerLineasLpd().execute(urlPrint,Integer.toString(nPosition));
                        }
                     }
@@ -309,6 +315,8 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
                     }else {
                         Snackbar.make(view, ActividadPrincipal.getPalabras("Imprimir")+" "+ActividadPrincipal.getPalabras("Pedido"), Snackbar.LENGTH_SHORT).show();
 //                    new WSPedido().execute();
+                        nPosition = ActividadPrincipal.cmbToolbarTerminal.getSelectedItemPosition();
+                        setImpresora(nPosition);
                         optionprint = true;
 /**** Anulado lo carga desde ACTIVIDAD PRINCIPAL
                         urlPrint = Filtro.getUrl() + "/CabeceraEMPR.php";
@@ -1274,6 +1282,8 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
     }
     public void crearPedidoPlato() {
         String space01 = new String(new char[01]).replace('\0', ' ');
+
+        tpvpedido="";
         pedido = "";
         pedidocabeceraantesmesa="";
         pedidocabeceramesa="";
@@ -1293,7 +1303,6 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
         }
 
         pedidocabeceraantesmesa = pedidocabeceraantesmesa + separador;
-
         // DATOS PEDIDO
         for (int i = 0; i < lcabecerapdd.size(); i++) {
             //LOCAL
@@ -1350,58 +1359,232 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
 
         pedidocabeceradespuesmesa = pedidocabeceradespuesmesa + separador;
         boolean primer = true;
+        boolean primeridrelacion = true;
+        boolean optionlinea = true;
+        int oldidrelacion=0;
         String oldtipoplato="";
-        // DATOS LINEAS PEDIDO
+        String TextNom="";
+        String TextObs="";
+        String TextObsPrincipal="";
+        String terminal =terminalList.get(nPosition).getTerminalTerminal().trim();
+        String terminalArticulo = "";
+            // DATOS LINEAS PEDIDO
         for (int i = 0; i < llineadocumentopedidoprint.size(); i++) {
-            if ((primer) || (!oldtipoplato.equals(llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoTipoPlato()))){
+            if ((primer) || (!oldtipoplato.equals(llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoTipoPlato()))) {
+                if (!primer && optionlinea) {
+                    pedido = pedido + StringUtils.repeat("_", 48) + "\n";
+                }
                 primer = false;
                 oldtipoplato = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoTipoPlato();
-                pedido = pedido +  "\n";
-                pedido = pedido + String.format("%-24s",llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoNombre_plato()) + "\n";
-                pedido = pedido +  "\n";
+                pedido = pedido + "\n";
+                pedido = pedido + String.format("%-24s", llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoNombre_plato()) + "\n";
+                pedido = pedido + "\n";
 
             }
 
-            String myTextCant = String.format("%1$,.2f", Float.parseFloat(llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoCant()));
-            myTextCant = myTextCant.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
-            myTextCant = myTextCant.replaceAll("\\s+$", ""); // Quitamos espacios derecha
-            String newTextCant="";
-            for (int ii = 0; ii < (6-myTextCant.length()); ii++) {
-                newTextCant+=space01;
-            }
-            newTextCant +=myTextCant;
-            ///////////////////////////////////////////////////////////
-            int lennombre = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoNombre().trim().length();
-            String myTextNombre = String.format("%1$-42s", String.valueOf(llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoNombre().substring(0,(lennombre>42 ? 42 : lennombre))));
-            myTextNombre = myTextNombre.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
-            myTextNombre = myTextNombre.replaceAll("\\s+$", ""); // Quitamos espacios derecha
-            String newTextNombre=myTextNombre;
-            for (int ii = 0; ii < (42-myTextNombre.length()); ii++) {
-                newTextNombre+=space01;
-            }
-            ///////////////////////////////////////////////////////////
-            pedido = pedido + String.format("%-48s",newTextCant+" "+newTextNombre) + "\n";
-            ///////////////////////////////////////////////////////////
-            String myTextObs;
-            int lenobs = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoObs().trim().length();
-            if (llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoObs().trim().length()>0) {
-                myTextObs = String.format("%1$-48s", String.valueOf(llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoObs().substring(0,(lenobs>48 ? 48 : lenobs))));
+            if (optionprint) {
+/*                if ((primer) || (!oldtipoplato.equals(llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoTipoPlato()))) {
+                    if (!primer && optionlinea) {
+                        pedido = pedido + StringUtils.repeat("_", 48) + "\n";
+                    }
+                    primer = false;
+                    oldtipoplato = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoTipoPlato();
+                    pedido = pedido + "\n";
+                    pedido = pedido + String.format("%-24s", llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoNombre_plato()) + "\n";
+                    pedido = pedido + "\n";
+
+                }
+*/
+                if ((primeridrelacion)) {
+                    if (llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoIdRelacion() != 0) {
+                        primeridrelacion = false;
+                        oldidrelacion = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoIdRelacion();
+                    }
+                } else {
+                    if (oldidrelacion != llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoIdRelacion()) {
+                        if (optionlinea) {
+                            pedido = pedido + StringUtils.repeat("_", 48) + "\n";
+                        }
+                        oldidrelacion = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoIdRelacion();
+                    }
+                }
+
+                String myTextCant = String.format("%1$,.2f", Float.parseFloat(llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoCant()));
+                myTextCant = myTextCant.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+                myTextCant = myTextCant.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+                String newTextCant = "";
+                for (int ii = 0; ii < (6 - myTextCant.length()); ii++) {
+                    newTextCant += space01;
+                }
+                newTextCant += myTextCant;
+                ///////////////////////////////////////////////////////////
+//            pedido = pedido + "TERMINAL TERMINAL "+ terminalList.get(nPosition).getTerminalTerminal().trim() + "\n";
+//            pedido = pedido + "TERMINAL ARTICULO "+ llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoTerminal().trim() + "\n";
+
+                String newText = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoNombre().trim();
+                int lennombre = newText.length();
+                String myTextNombre = String.format("%1$-42s", String.valueOf(newText.substring(0, (lennombre > 42 ? 42 : lennombre))));
+                myTextNombre = myTextNombre.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+                myTextNombre = myTextNombre.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+                String newTextNombre = myTextNombre;
+                for (int ii = 0; ii < (42 - myTextNombre.length()); ii++) {
+                    newTextNombre += space01;
+                }
+                ///////////////////////////////////////////////////////////
+                pedido = pedido + String.format("%-48s", newTextCant + " " + newTextNombre) + "\n";
+                ///////////////////////////////////////////////////////////
+                if (llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoPrincipal() == 1) {
+                    TextNom = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoNombre();
+                    TextNom = TextNom.replace(Html.fromHtml("&nbsp;"), "");
+                    TextNom = TextNom.replace('\u00a0', ' ').trim();
+                    TextNom = TextNom.replace(" ", "");
+                    TextObs = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoObs();
+                    TextObs = TextObs.replace(Html.fromHtml("&nbsp;"), "");
+                    TextObs = TextObs.replace('\u00a0', ' ').trim();
+                    TextObs = TextObs.replace(" ", "");
+                    TextObsPrincipal = TextObs;
+                } else {
+                    TextObs = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoObs();
+                    TextObs = TextObs.replace(Html.fromHtml("&nbsp;"), "");
+                    TextObs = TextObs.replace('\u00a0', ' ').trim();
+                    TextObs = TextObs.replace(" ", "");
+                    TextNom = TextObsPrincipal;
+                }
+                optionlinea = true;
+//            pedido = pedido +"NOMBRE "+ TextNom + "\n";
+//            pedido = pedido + "OBS "+TextObs + "\n";
+                if (TextObs.length() > 0 && !TextNom.equals(TextObs)) {
+                    String myTextObs;
+                    int lenobs = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoObs().trim().length();
+                    if (llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoObs().trim().length() > 0) {
+                        myTextObs = String.format("%1$-48s", String.valueOf(llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoObs().substring(0, (lenobs > 48 ? 48 : lenobs))));
+                    } else {
+                        myTextObs = String.format("%1$-48s", "");
+                    }
+                    myTextObs = myTextObs.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+                    myTextObs = myTextObs.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+                    String newTextObs = myTextObs;
+                    for (int ii = 0; ii < (48 - myTextObs.length()); ii++) {
+                        newTextObs += space01;
+                    }
+                    pedido = pedido + String.format("%-48s", newTextObs) + "\n";
+                }
+                if (llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoIdRelacion() == 0) {
+                    pedido = pedido + StringUtils.repeat("_", 48) + "\n";
+                    optionlinea = false;
+                }
             }else{
-                myTextObs = String.format("%1$-48s", "");
-            }
-            myTextObs = myTextObs.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
-            myTextObs = myTextObs.replaceAll("\\s+$", ""); // Quitamos espacios derecha
-            String newTextObs = myTextObs;
-            for (int ii = 0; ii < (48 - myTextObs.length()); ii++) {
-                newTextObs += space01;
-            }
-            pedido = pedido + String.format("%-48s",newTextObs) + "\n";
+                terminalArticulo = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoTerminal().trim();
+                int idrelacion = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoIdRelacion();
+                int principal = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoPrincipal();
+                if ((idrelacion==0 && terminal.equals(terminalArticulo)) ||
+                        (principal==1) ||
+                        (principal==0 && terminal.equals(terminalArticulo))) {
+                    if ((primeridrelacion)) {
+                        if (llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoIdRelacion() != 0) {
+                            primeridrelacion = false;
+                            oldidrelacion = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoIdRelacion();
+                        }
+                    } else {
+                        if (oldidrelacion != llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoIdRelacion()) {
+                            if (optionlinea) {
+                                pedido = pedido + StringUtils.repeat("_", 48) + "\n";
+                            }
+                            oldidrelacion = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoIdRelacion();
+                        }
+                    }
 
+                    String myTextCant = String.format("%1$,.2f", Float.parseFloat(llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoCant()));
+                    myTextCant = myTextCant.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+                    myTextCant = myTextCant.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+                    String newTextCant = "";
+                    for (int ii = 0; ii < (6 - myTextCant.length()); ii++) {
+                        newTextCant += space01;
+                    }
+                    newTextCant += myTextCant;
+                    ///////////////////////////////////////////////////////////
+//            pedido = pedido + "TERMINAL TERMINAL "+ terminalList.get(nPosition).getTerminalTerminal().trim() + "\n";
+//            pedido = pedido + "TERMINAL ARTICULO "+ llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoTerminal().trim() + "\n";
+
+                    String newText = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoNombre().trim();
+                    if (!terminal.equals(terminalArticulo)) {
+                        newText = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoNombre().trim() + "(" + terminalArticulo + ")";
+                    }
+                    int lennombre = newText.length();
+                    String myTextNombre = String.format("%1$-42s", String.valueOf(newText.substring(0, (lennombre > 42 ? 42 : lennombre))));
+                    myTextNombre = myTextNombre.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+                    myTextNombre = myTextNombre.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+                    String newTextNombre = myTextNombre;
+                    for (int ii = 0; ii < (42 - myTextNombre.length()); ii++) {
+                        newTextNombre += space01;
+                    }
+                    ///////////////////////////////////////////////////////////
+                    pedido = pedido + String.format("%-48s", newTextCant + " " + newTextNombre) + "\n";
+                    ///////////////////////////////////////////////////////////
+                    if (llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoPrincipal() == 1) {
+                        TextNom = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoNombre();
+                        TextNom = TextNom.replace(Html.fromHtml("&nbsp;"), "");
+                        TextNom = TextNom.replace('\u00a0', ' ').trim();
+                        TextNom = TextNom.replace(" ", "");
+                        TextObs = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoObs();
+                        TextObs = TextObs.replace(Html.fromHtml("&nbsp;"), "");
+                        TextObs = TextObs.replace('\u00a0', ' ').trim();
+                        TextObs = TextObs.replace(" ", "");
+                        TextObsPrincipal = TextObs;
+                    } else {
+                        TextObs = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoObs();
+                        TextObs = TextObs.replace(Html.fromHtml("&nbsp;"), "");
+                        TextObs = TextObs.replace('\u00a0', ' ').trim();
+                        TextObs = TextObs.replace(" ", "");
+                        TextNom = TextObsPrincipal;
+                    }
+                    optionlinea = true;
+//            pedido = pedido +"NOMBRE "+ TextNom + "\n";
+//            pedido = pedido + "OBS "+TextObs + "\n";
+                    if (TextObs.length() > 0 && !TextNom.equals(TextObs)) {
+                        String myTextObs;
+                        int lenobs = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoObs().trim().length();
+                        if (llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoObs().trim().length() > 0) {
+                            myTextObs = String.format("%1$-48s", String.valueOf(llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoObs().substring(0, (lenobs > 48 ? 48 : lenobs))));
+                        } else {
+                            myTextObs = String.format("%1$-48s", "");
+                        }
+                        myTextObs = myTextObs.replaceAll("^\\s+", ""); // Quitamos espacios izquierda
+                        myTextObs = myTextObs.replaceAll("\\s+$", ""); // Quitamos espacios derecha
+                        String newTextObs = myTextObs;
+                        for (int ii = 0; ii < (48 - myTextObs.length()); ii++) {
+                            newTextObs += space01;
+                        }
+                        pedido = pedido + String.format("%-48s", newTextObs) + "\n";
+                    }
+                    if (llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoIdRelacion() == 0) {
+                        pedido = pedido + StringUtils.repeat("_", 48) + "\n";
+                        optionlinea = false;
+                    }
+                }
+            }
         }
 
-        pedidofinal = separador + "\n\n\n\n\n\n";
-        ImprimirPedido();
-///***        Toast.makeText(getActivity(), pedido, Toast.LENGTH_SHORT).show();
+        pedidofinal = StringUtils.repeat("_", 48) + "\n\n\n\n\n\n";
+//*****        ImprimirPedido();
+        /// PARA VISUALIZAR POR PANTALLA PRUEBAS /////////////////////////////////////////
+        tpvpedido+=pedidocabeceraantesmesa;
+        tpvpedido+=pedidocabeceramesa;
+        tpvpedido+=pedidocabeceradespuesmesa;
+        tpvpedido+=pedido;
+        tpvpedido+=pedidofinal;
+
+ //       Toast.makeText(getActivity(), tpvpedido, Toast.LENGTH_SHORT).show();
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+        alertDialog.setMessage(tpvpedido);
+        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                return ;
+            }
+        });
+        alertDialog.create();
+        alertDialog.show();
+        //////////////////////////////////////////////////////////////////////////////////
         if (!optionprint) {
             comprobar_terminales();
 /*            nPosition += 1;
@@ -1798,7 +1981,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
                 if (result == 1) {
                     Log.i("Cabecera Pdd", Integer.toString(lcabecerapdd.size()));
                     if (optionprint) {
-                        urlPrint = Filtro.getUrl() + "/RellenaListaLPD.php";
+                        urlPrint = Filtro.getUrl() + "/RellenaListaLPDprintsecplatoAgrupado.php";
                         new LeerLineasLpd().execute(urlPrint);
                     }else{
                         urlPrint = Filtro.getUrl()+"/RellenaListaPDDIVA.php";
@@ -1909,9 +2092,9 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
 
             if (!optionprint){
                 if (xWhere.equals("")) {
-                    xWhere += " WHERE are.TERMINAL='" + terminalList.get(Integer.parseInt(params[1])).getTerminalTerminal() + "'";
+                    xWhere += " WHERE (are.TERMINAL='" + terminalList.get(Integer.parseInt(params[1])).getTerminalTerminal() + "' OR lpd.PRINCIPAL=1)";
                 } else {
-                    xWhere += " AND are.TERMINAL='" + terminalList.get(Integer.parseInt(params[1])).getTerminalTerminal() + "'";
+                    xWhere += " AND (are.TERMINAL='" + terminalList.get(Integer.parseInt(params[1])).getTerminalTerminal() + "' OR lpd.PRINCIPAL=1)";
                 }
                 Log.i("Print LPD", terminalList.get(Integer.parseInt(params[1])).getTerminalTerminal());
 
@@ -1961,7 +2144,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
                     while ((line = r.readLine()) != null) {
                         response.append(line);
                     }
-                    Log.i("JSON-->", response.toString());
+                    Log.i("JSON lpdprint-->", response.toString());
                     Log.i("Longitud Antes: ",Integer.toString(llineadocumentopedidoprint.size()));
                     for (Iterator<LineaDocumentoPedido> it = llineadocumentopedidoprint.iterator(); it.hasNext();){
                         LineaDocumentoPedido lineadocumentopedido = it.next();
@@ -2019,9 +2202,10 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
         nPosition += 1;
         if (nPosition < terminalList.size()) {
             setImpresora(nPosition);
-            urlPrint = Filtro.getUrl() + "/RellenaListaLPDprintsecplato.php";
+            urlPrint = Filtro.getUrl() + "/RellenaListaLPDprintsecplatoAgrupado.php";
             new LeerLineasLpd().execute(urlPrint, Integer.toString(nPosition));
         }else{
+            nPosition = ActividadPrincipal.cmbToolbarTerminal.getSelectedItemPosition();
             setImpresora(ActividadPrincipal.cmbToolbarTerminal.getSelectedItemPosition());
 
 
@@ -2057,6 +2241,9 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
                 lineadocumentopedidoItem.setLineaDocumentoPedidoNombre_tipoare(post.optString("NOMBRE_TIPOARE"));
                 lineadocumentopedidoItem.setLineaDocumentoPedidoTipoPlato(post.optString("TIPOPLATO"));
                 lineadocumentopedidoItem.setLineaDocumentoPedidoNombre_plato(post.optString("NOMBRE_PLATO"));
+                lineadocumentopedidoItem.setLineaDocumentoPedidoTerminal(post.optString("TERMINAL"));
+                lineadocumentopedidoItem.setLineaDocumentoPedidoIdRelacion(post.optInt("IDRELACION"));
+                lineadocumentopedidoItem.setLineaDocumentoPedidoPrincipal(post.optInt("PRINCIPAL"));
                 llineadocumentopedidoprint.add(lineadocumentopedidoItem);
             }
         } catch (JSONException e) {

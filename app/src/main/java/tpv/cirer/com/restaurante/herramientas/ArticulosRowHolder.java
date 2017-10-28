@@ -121,6 +121,12 @@ public class ArticulosRowHolder extends RecyclerView.ViewHolder implements View.
                 minus.setVisibility(View.GONE);
                 preu.setVisibility(View.GONE);
                 importe.setVisibility(View.GONE);
+                if(ArticulosNew.getPrincipal()==0) {
+                    checkbox.setVisibility(View.VISIBLE);
+                }else{
+                    checkbox.setVisibility(View.GONE);
+                }
+
                 if(ArticulosNew.getDependientetipoplatomaestro()==0) {
                     cmbtoolbarplato.setVisibility(View.VISIBLE);
                     cmbtoolbarplato.setAdapter(ArticulosNew.getAdapter_plato());

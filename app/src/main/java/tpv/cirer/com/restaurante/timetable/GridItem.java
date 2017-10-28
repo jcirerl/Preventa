@@ -105,9 +105,9 @@ public class GridItem extends AbstractItem<GridItem, GridItem.ViewHolder>
 					model.onClick(view);
 				}
 			});
-		}
-		else
+		}else {
 			holder.itemView.setBackgroundResource(isToday ? R.drawable.item_today_bg : isWeekend ? R.drawable.item_weekend_bg : R.drawable.item_bg);
+		}
 	}
 	
 	public boolean isStart()

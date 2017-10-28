@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.0'
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
     useLibrary 'org.apache.http.legacy'
     packagingOptions {
         pickFirst  'META-INF/*'
@@ -21,7 +21,7 @@ android {
     defaultConfig {
         applicationId "tpv.cirer.com.restaurante"
         minSdkVersion 22  // NECESARIO PARA EASYREDSYS SDK 24 PARA LLOLIPOP 21,22 //16 android mashallow 6.0.1 evita problema leer directorio
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
