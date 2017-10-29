@@ -1,6 +1,7 @@
 package tpv.cirer.com.restaurante.ui;
 
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -880,7 +881,7 @@ public class MesasActivity extends AppCompatActivity implements ArticulosListArr
                             String[] test = getResources().getStringArray(R.array.menu_mesas);
                             String[] opciones;
                             if (getMesas(Filtro.getMesa(), 0)) {
-                                opciones = new String[1];
+                                opciones = new String[3];
                                 for (int i = 0; i < opciones.length; i++) {
                                     opciones[i] = ActividadPrincipal.getPalabras(test[i]);
                                 }
@@ -951,11 +952,11 @@ public class MesasActivity extends AppCompatActivity implements ArticulosListArr
                                                                             }
                                                                         });
                                                                         alertcomensales.show();
-                                                                    }else{
-                                                                        int x=0;
-                                                                        String ArticuloCodigoGrupo="";
-                                                                        String ArticuloNombreGrupo="";
-                                                                        for(x=0;x<lcategoria.size();x++) {
+                                                                    } else {
+                                                                        int x = 0;
+                                                                        String ArticuloCodigoGrupo = "";
+                                                                        String ArticuloNombreGrupo = "";
+                                                                        for (x = 0; x < lcategoria.size(); x++) {
                                                                             if (lcategoria.get(x).getCategoriaTipo_are().equals(lparam.get(0).getDEFAULT_TIPO_ARTICULO_BUFFET().trim())) {
                                                                                 ArticuloCodigoGrupo = lcategoria.get(x).getCategoriaTipo_are();
                                                                                 ArticuloNombreGrupo = lcategoria.get(x).getCategoriaNombre_tipoare();
@@ -968,7 +969,7 @@ public class MesasActivity extends AppCompatActivity implements ArticulosListArr
                                                                             populate_dialog_buffet(x);
                                                                         } else {
                                                                             Log.e(TAG, "Failed to fetch data!");
-                                                                            Toast.makeText(getApplicationContext(), getPalabras("No existe")+" "+getPalabras("Tipo")+" "+getPalabras("Articulo")+" BUFFET", Toast.LENGTH_SHORT).show();
+                                                                            Toast.makeText(getApplicationContext(), getPalabras("No existe") + " " + getPalabras("Tipo") + " " + getPalabras("Articulo") + " BUFFET", Toast.LENGTH_SHORT).show();
                                                                         }
 //                                                                        Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("Es una Mesa Tipo BUFFET"), Toast.LENGTH_SHORT).show();
                                                                     }
@@ -977,10 +978,67 @@ public class MesasActivity extends AppCompatActivity implements ArticulosListArr
                                                                 Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("Mesa") + " " + ActividadPrincipal.getPalabras("ABIERTA"), Toast.LENGTH_SHORT).show();
                                                             }
                                                             break;
+                                                        case 1: // GOOGLE CALENDAR
+                                                            if (!ActividadPrincipal.getCruge("action_googlecalendar")) {
+                                                                Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
+                                                            } else {
+//                                                              Log.i("urlcalendar",getMesaCalendario(Filtro.getMesa()).trim());
+                                                                // 1. create an intent pass class name or intnet action name
+                                                                Intent intent = new Intent(MesasActivity.this, WebgooglecalendarActivity.class);
+
+                                                                // 2. put ID_CALENDAR
+                                                                intent.putExtra("id_calendar", getMesaCalendario(Filtro.getMesa()).trim());
+
+                                                                // 3. start the activity
+                                                                startActivityForResult(intent, 1);
+
+                                                            }
+                                                            break;
+                                                        case 2:
+                                                            // INSERTAR GOOGLE CALENDAR
+                                                            if (!ActividadPrincipal.getCruge("action_googlecalendar")) {
+                                                                Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
+                                                            } else {
+                                                                final Intent intent = new Intent("android.intent.action.MAIN");
+                                                                intent.setComponent(new ComponentName("com.example.quickstart","com.example.quickstart.CalendarActivity"));
+                                                                intent.putExtra("id_calendar", getMesaCalendario(Filtro.getMesa()).trim());
+                                                                startActivityForResult(intent, 1);
+//                                                            startActivity(intent);
+                                                            }
+                                                            break;
                                                     }
                                                 } else {
                                                     switch (which) {
-                                                        case 0: //Cerrar Mesa
+                                                        case 0: // GOOGLE CALENDAR
+                                                            if (!ActividadPrincipal.getCruge("action_googlecalendar")) {
+                                                                Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
+                                                            } else {
+
+                                                                // 1. create an intent pass class name or intnet action name
+                                                                Intent intent = new Intent(MesasActivity.this,WebgooglecalendarActivity.class);
+
+                                                                // 2. put ID_CALENDAR
+                                                                intent.putExtra("id_calendar",  getMesaCalendario(Filtro.getMesa()).trim());
+
+                                                                // 3. start the activity
+                                                                startActivityForResult(intent, 1);
+
+                                                            }
+                                                            break;
+                                                        case 1:
+                                                            // INSERTAR GOOGLE CALENDAR
+                                                            if (!ActividadPrincipal.getCruge("action_googlecalendar")) {
+                                                                Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
+                                                            } else {
+                                                                final Intent intent = new Intent("android.intent.action.MAIN");
+                                                                intent.setComponent(new ComponentName("com.example.quickstart","com.example.quickstart.CalendarActivity"));
+                                                                intent.putExtra("id_calendar", getMesaCalendario(Filtro.getMesa()).trim());
+                                                                startActivityForResult(intent, 1);
+//                                                            startActivity(intent);
+                                                            }
+                                                            break;
+
+                                                        case 2: //Cerrar Mesa
                                                             if (getMesas(Filtro.getMesa(), 1)) {
                                                                 if (!ActividadPrincipal.getCruge("action_mesas_update")) {
                                                                     Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
@@ -993,7 +1051,7 @@ public class MesasActivity extends AppCompatActivity implements ArticulosListArr
                                                                 Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("Mesa") + " " + ActividadPrincipal.getPalabras("CERRADA"), Toast.LENGTH_SHORT).show();
                                                             }
                                                             break;
-                                                        case 1:
+                                                        case 3:
                                                             if (getMesas(Filtro.getMesa(), 1)) {
                                                                 if (!ActividadPrincipal.getCruge("action_pdd_create")) {
                                                                     Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
@@ -1005,7 +1063,7 @@ public class MesasActivity extends AppCompatActivity implements ArticulosListArr
                                                                 Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("Mesa") + " " + ActividadPrincipal.getPalabras("CERRADA"), Toast.LENGTH_SHORT).show();
                                                             }
                                                             break;
-                                                        case 2:
+                                                        case 4:
                                                             if (getMesas(Filtro.getMesa(), 1)) {
                                                                 if (!ActividadPrincipal.getCruge("action_pdd_admin")) {
                                                                     Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
@@ -1022,7 +1080,7 @@ public class MesasActivity extends AppCompatActivity implements ArticulosListArr
                                                                 Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("Mesa") + " " + ActividadPrincipal.getPalabras("CERRADA"), Toast.LENGTH_SHORT).show();
                                                             }
                                                             break;
-                                                        case 3:
+                                                        case 5:
                                                             if (getMesas(Filtro.getMesa(), 1)) {
                                                                 if (!ActividadPrincipal.getCruge("action_ftp_create")) {
                                                                     Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
@@ -1034,7 +1092,7 @@ public class MesasActivity extends AppCompatActivity implements ArticulosListArr
                                                                 Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("Mesa") + " " + ActividadPrincipal.getPalabras("CERRADA"), Toast.LENGTH_SHORT).show();
                                                             }
                                                             break;
-                                                        case 4:
+                                                        case 6:
                                                             if (getMesas(Filtro.getMesa(), 1)) {
                                                                 if (!ActividadPrincipal.getCruge("action_ftp_create")) {
                                                                     Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
@@ -1045,7 +1103,7 @@ public class MesasActivity extends AppCompatActivity implements ArticulosListArr
                                                                 Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("Mesa") + " " + ActividadPrincipal.getPalabras("CERRADA"), Toast.LENGTH_SHORT).show();
                                                             }
                                                             break;
-                                                        case 5:
+                                                        case 7:
                                                             if (getMesas(Filtro.getMesa(), 1)) {
                                                                 if (!ActividadPrincipal.getCruge("action_ftp_admin")) {
                                                                     Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
@@ -1062,7 +1120,7 @@ public class MesasActivity extends AppCompatActivity implements ArticulosListArr
                                                                 Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("Mesa") + " " + ActividadPrincipal.getPalabras("CERRADA"), Toast.LENGTH_SHORT).show();
                                                             }
                                                             break;
-                                                        case 6:
+                                                        case 8:
                                                             if (getMesas(Filtro.getMesa(), 1)) {
                                                                 if (!ActividadPrincipal.getCruge("action_mesas_update")) {
                                                                     Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
@@ -1786,6 +1844,16 @@ public class MesasActivity extends AppCompatActivity implements ArticulosListArr
         }
         return success;
     }
+    private String getMesaCalendario (String search){
+//        Log.i("Mesa Valor: ",search);
+        for(Mesa d : mesaplanningList){
+            if(d.getMesaMesa() != null && d.getMesaMesa().contains(search)){
+                return d.getMesaCalendario();
+            }
+        }
+        return "";
+    }
+
     private String getMesaImagen (String search){
 //        Log.i("Mesa Valor: ",search);
         for(Mesa d : mesaplanningList){

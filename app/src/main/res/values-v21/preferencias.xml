@@ -2,6 +2,8 @@
 <resources>
     <string-array name="menu_mesas">
         <item>Abrir</item>
+        <item>GOOGLE Calendar</item>
+        <item>Insertar GOOGLE Calendar</item>
         <item>Cerrar</item>
         <item>Insertar Pedidos</item>
         <item>Consultar Pedidos</item>
@@ -18,6 +20,8 @@
         <item>5</item>
         <item>6</item>
         <item>7</item>
+        <item>8</item>
+        <item>9</item>
     </integer-array>
     <string-array name="name_array">
         <item>Abrir</item>

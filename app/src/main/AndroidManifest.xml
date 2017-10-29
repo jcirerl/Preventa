@@ -166,6 +166,17 @@
                 android:value="tpv.cirer.com.restaurante.ui.ActividadPrincipal" />
         </activity>
         <activity
+            android:name="tpv.cirer.com.restaurante.ui.WebgooglecalendarActivity"
+            android:label="@string/titulopersonalizado"
+            android:screenOrientation="landscape"
+            android:icon="@drawable/logo"
+            android:theme="@style/Base.AppTheme"
+            android:parentActivityName="tpv.cirer.com.restaurante.ui.MesasActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="tpv.cirer.com.restaurante.ui.MesasActivity" />
+        </activity>
+        <activity
             android:name="tpv.cirer.com.restaurante.ui.WebadminActivity"
             android:label="@string/titulopersonalizado"
             android:screenOrientation="landscape"
@@ -176,6 +187,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="tpv.cirer.com.restaurante.ui.ActividadPrincipal" />
         </activity>
+
         <activity
             android:name="tpv.cirer.com.restaurante.ui.WebeasyredsysActivity"
             android:label="@string/titulopersonalizado"

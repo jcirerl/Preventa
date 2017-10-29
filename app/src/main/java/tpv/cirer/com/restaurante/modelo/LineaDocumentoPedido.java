@@ -34,10 +34,26 @@ public class LineaDocumentoPedido {
     private int LineaDocumentoPedidoIndividual;
     private int LineaDocumentoPedidoIdRelacion;
     private int LineaDocumentoPedidoPrincipal;
+    private int LineaDocumentoPedidoPrint;
+    private String LineaDocumentoPedidoTerminalNotif;
 
     private int idDrawable;
 
     public LineaDocumentoPedido(){}
+
+    public int getLineaDocumentoPedidoPrint() {
+        return LineaDocumentoPedidoPrint;
+    }
+    public void setLineaDocumentoPedidoPrint(int lineaDocumentoPedidoPrint) {
+        this.LineaDocumentoPedidoPrint = lineaDocumentoPedidoPrint;
+    }
+
+    public String getLineaDocumentoPedidoTerminalNotif() {
+        return LineaDocumentoPedidoTerminalNotif;
+    }
+    public void setLineaDocumentoPedidoTerminalNotif(String lineaDocumentoPedidoTerminalNotif) {
+        this.LineaDocumentoPedidoTerminalNotif = lineaDocumentoPedidoTerminalNotif;
+    }
 
     public int getIdDrawable() {
         return idDrawable;
