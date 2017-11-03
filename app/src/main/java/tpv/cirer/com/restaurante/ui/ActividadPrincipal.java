@@ -475,7 +475,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
     private ArrayList<Empresa> emprList;
     private Spinner cmbToolbarEmpr;
 
-    private ArrayList<Local> localList;
+    public static ArrayList<Local> localList;
     private Spinner cmbToolbarLocal;
 
     private ArrayList<Seccion> secList;
@@ -10884,7 +10884,9 @@ ge     * */
                                                   post.optInt("RESIZE_LOGO_PRINT_WIDTH"),
                                                   post.optInt("RESIZE_LOGO_PRINT_HEIGHT"),
                                                   post.optString("URL_ADMIN").trim(),
-                                                  post.optString("URL_REDSYS").trim()
+                                                  post.optString("URL_REDSYS").trim(),
+                                                  post.optString("POBLACION").trim(),
+                                                  post.optString("EMAIL").trim()
                             );
                             Filtro.setUrl_admin(cat.getLocalUrl_admin());
                             Filtro.setUrl_redsys(cat.getLocalUrl_redsys());

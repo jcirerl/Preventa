@@ -14,6 +14,8 @@ public class Local {
     private int LocalResize_logo_screen_height;
     private String LocalUrl_admin;
     private String LocalUrl_redsys;
+    private String LocalPoblacion;
+    private String LocalEmail;
 
     public Local(){}
 
@@ -25,7 +27,9 @@ public class Local {
                  int localResize_logo_print_width,
                  int localResize_logo_print_height,
                  String localUrl_admin,
-                 String localUrl_redsys){
+                 String localUrl_redsys,
+                 String localPoblacion,
+                 String localEmail){
         this.LocalLocal = local;
         this.LocalNombre_local = nombre;
         this.LocalUrlimagen=urlimagen;
@@ -35,7 +39,22 @@ public class Local {
         this.LocalResize_logo_print_height=localResize_logo_print_height;
         this.LocalUrl_admin = localUrl_admin;
         this.LocalUrl_redsys =localUrl_redsys;
+        this.LocalPoblacion = localPoblacion;
+        this.LocalEmail =localEmail;
     }
+    public String getLocalPoblacion() {
+        return LocalPoblacion;
+    }
+    public void setLocalPoblacion(String localPoblacion) {
+        this.LocalPoblacion = localPoblacion;
+    }
+    public String getLocalEmail() {
+        return LocalEmail;
+    }
+    public void setLocalEmail(String localEmail) {
+        this.LocalEmail = localEmail;
+    }
+
     public String getLocalUrl_redsys() {
         return LocalUrl_redsys;
     }

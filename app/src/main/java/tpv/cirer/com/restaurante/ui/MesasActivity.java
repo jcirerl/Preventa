@@ -999,11 +999,23 @@ public class MesasActivity extends AppCompatActivity implements ArticulosListArr
                                                             if (!ActividadPrincipal.getCruge("action_googlecalendar")) {
                                                                 Toast.makeText(getApplicationContext(), ActividadPrincipal.getPalabras("No puede realizar esta accion"), Toast.LENGTH_SHORT).show();
                                                             } else {
+                                                                Log.i("event",getMesaCalendario(Filtro.getMesa()).trim()+","+
+                                                                        getPalabras("Reserva")+","+
+                                                                        getPalabras("Mesa")+" "+Filtro.getMesa()+","+
+                                                                        ActividadPrincipal.localList.get(0).getLocalPoblacion()+","+
+                                                                        ActividadPrincipal.localList.get(0).getLocalEmail()
+                                                                );
+
                                                                 final Intent intent = new Intent("android.intent.action.MAIN");
                                                                 intent.setComponent(new ComponentName("com.example.quickstart","com.example.quickstart.CalendarActivity"));
+
                                                                 intent.putExtra("id_calendar", getMesaCalendario(Filtro.getMesa()).trim());
+                                                                intent.putExtra("titulo",getPalabras("Reserva"));
+                                                                intent.putExtra("descripcion",getPalabras("Mesa")+" "+Filtro.getMesa());
+                                                                intent.putExtra("localizacion", ActividadPrincipal.localList.get(0).getLocalPoblacion());
+                                                                intent.putExtra("correo",ActividadPrincipal.localList.get(0).getLocalEmail());
                                                                 startActivityForResult(intent, 1);
-//                                                            startActivity(intent);
+
                                                             }
                                                             break;
                                                     }
@@ -1033,6 +1045,10 @@ public class MesasActivity extends AppCompatActivity implements ArticulosListArr
                                                                 final Intent intent = new Intent("android.intent.action.MAIN");
                                                                 intent.setComponent(new ComponentName("com.example.quickstart","com.example.quickstart.CalendarActivity"));
                                                                 intent.putExtra("id_calendar", getMesaCalendario(Filtro.getMesa()).trim());
+                                                                intent.putExtra("titulo",getPalabras("Reserva"));
+                                                                intent.putExtra("descripcion",getPalabras("Mesa")+" "+Filtro.getMesa());
+                                                                intent.putExtra("localizacion", ActividadPrincipal.localList.get(0).getLocalPoblacion());
+                                                                intent.putExtra("correo",ActividadPrincipal.localList.get(0).getLocalEmail());
                                                                 startActivityForResult(intent, 1);
 //                                                            startActivity(intent);
                                                             }
