@@ -41,23 +41,21 @@
 			android:paddingRight="20dip" />-->
 		<Button
 			android:id="@+id/BtnAceptar"
+			style="@style/ButtonBorder.Accent"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginLeft="20dp"
 			android:layout_marginRight="20dp"
-			android:background="@drawable/button_bg_transparent"
-			android:textColor="#ff0000ff"
 			android:text="@string/validar" />
 
 		<Button
 			android:id="@+id/BtnSalir"
+			style="@style/ButtonBorder.Accent"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_toRightOf="@id/BtnAceptar"
 			android:layout_marginLeft="20dp"
 			android:layout_marginRight="20dp"
-			android:background="@drawable/button_bg_transparent"
-			android:textColor="#ff0000ff"
 			android:text="@string/salir" />
 
 </LinearLayout>

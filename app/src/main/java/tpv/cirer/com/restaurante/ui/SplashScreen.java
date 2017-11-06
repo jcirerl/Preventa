@@ -100,7 +100,7 @@ public class SplashScreen extends AppCompatActivity {
                     SharedPreferences pref =
                             PreferenceManager.getDefaultSharedPreferences(
                                     SplashScreen.this);
-                    Filtro.setOpurl(pref.getString("opurl", "HOSTING"));
+                    Filtro.setOpurl(pref.getString("opurl", "LOCAL")); // PENSAR CAMBIAR A HOSTING PARA RELEASE
                     Filtro.setIdioma(pref.getString("opidioma", "ESP"));
                     Filtro.setOpgrid(Integer.parseInt(pref.getString("opgrid", "8")));
                     Filtro.setOpmesas(Integer.parseInt(pref.getString("opmesas", "128")));

@@ -1297,23 +1297,28 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
                 // MODO IMPRESION NORMAL
                 llineadocumentopedidoprint.get(i).setLineaDocumentoPedidoPrint(1);
             }else{
-                // MODO ENVIO TERMINALES
-                terminalArticulo = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoTerminal().trim();
-                articulo = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoArticulo().trim();
-                if(terminal.equals(terminalArticulo)){
-                    // articulo terminal coincide con terminal a enviar
-                    llineadocumentopedidoprint.get(i).setLineaDocumentoPedidoPrint(1);
-                }else {
-                    // articulo terminal no coincide con terminal a enviar
-                    // hay que recorrer articulonotificacionterminal
-                    for (int j = 0; j < larticulonotificacionterminal.size(); j++) {
-                        // COMPARAMOS ARTICULO DENTRO DE NOTIFICACIONES POR SI EXISTE NOTIFICACION OTRA SECCION
-                        if(articulo.equals(larticulonotificacionterminal.get(j).getArticuloArticulo().trim())) {
-                            // si articulo terminal coincide TERMINAL A NOTIFICAR
-                            if (terminal.equals(larticulonotificacionterminal.get(j).getArticuloTerminal().trim())) {
-                                llineadocumentopedidoprint.get(i).setLineaDocumentoPedidoPrint(1);
-                                llineadocumentopedidoprint.get(i).setLineaDocumentoPedidoTerminalNotif("(" + terminalArticulo + ")");
-                                break;
+                // MODIFICACION SES TORRES PARA QUE NO SALGA EL DETALLE DE LOS ARTICULOS COMPUESTOS DISTINTOS DE PRINCIPAL
+                // SI QUEREMOS QUE SALGA COMO TOCARIA HAY QUE INHABILITAR ESTE IF
+                if(llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoPrincipal()==1 ||
+                        llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoIdRelacion()==0) {
+                    // MODO ENVIO TERMINALES
+                    terminalArticulo = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoTerminal().trim();
+                    articulo = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoArticulo().trim();
+                    if (terminal.equals(terminalArticulo)) {
+                        // articulo terminal coincide con terminal a enviar
+                        llineadocumentopedidoprint.get(i).setLineaDocumentoPedidoPrint(1);
+                    } else {
+                        // articulo terminal no coincide con terminal a enviar
+                        // hay que recorrer articulonotificacionterminal
+                        for (int j = 0; j < larticulonotificacionterminal.size(); j++) {
+                            // COMPARAMOS ARTICULO DENTRO DE NOTIFICACIONES POR SI EXISTE NOTIFICACION OTRA SECCION
+                            if (articulo.equals(larticulonotificacionterminal.get(j).getArticuloArticulo().trim())) {
+                                // si articulo terminal coincide TERMINAL A NOTIFICAR
+                                if (terminal.equals(larticulonotificacionterminal.get(j).getArticuloTerminal().trim())) {
+                                    llineadocumentopedidoprint.get(i).setLineaDocumentoPedidoPrint(1);
+                                    llineadocumentopedidoprint.get(i).setLineaDocumentoPedidoTerminalNotif("(" + terminalArticulo + ")");
+                                    break;
+                                }
                             }
                         }
                     }
@@ -1427,7 +1432,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
             if(llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoPrint()==1) {
                 if ((primer) || (!oldtipoplato.equals(llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoTipoPlato()))) {
                     if (!primer && optionlinea) {
-                        pedido = pedido + StringUtils.repeat("_", 48) + "\n";
+                        pedido = pedido + StringUtils.repeat("_", 24) + "\n";
                     }
                     primer = false;
                     oldtipoplato = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoTipoPlato();
@@ -1458,7 +1463,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
                     } else {
                         if (oldidrelacion != llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoIdRelacion()) {
                             if (optionlinea) {
-                                pedido = pedido + StringUtils.repeat("_", 48) + "\n";
+                                pedido = pedido + StringUtils.repeat("_", 24) + "\n";
                             }
                             oldidrelacion = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoIdRelacion();
                         }
@@ -1525,7 +1530,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
                         pedido = pedido + String.format("%-48s", newTextObs) + "\n";
                     }
                     if (llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoIdRelacion() == 0) {
-                        pedido = pedido + StringUtils.repeat("_", 48) + "\n";
+                        pedido = pedido + StringUtils.repeat("_", 24) + "\n";
                         optionlinea = false;
                     }
                 } else {
@@ -1537,7 +1542,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
                     } else {
                         if (oldidrelacion != llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoIdRelacion()) {
                             if (optionlinea) {
-                                pedido = pedido + StringUtils.repeat("_", 48) + "\n";
+                                pedido = pedido + StringUtils.repeat("_", 24) + "\n";
                             }
                             oldidrelacion = llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoIdRelacion();
                         }
@@ -1605,7 +1610,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
                         pedido = pedido + String.format("%-48s", newTextObs) + "\n";
                     }
                     if (llineadocumentopedidoprint.get(i).getLineaDocumentoPedidoIdRelacion() == 0) {
-                        pedido = pedido + StringUtils.repeat("_", 48) + "\n";
+                        pedido = pedido + StringUtils.repeat("_", 24) + "\n";
                         optionlinea = false;
                     }
                 }

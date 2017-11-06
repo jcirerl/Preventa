@@ -20,6 +20,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -656,6 +657,11 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
         Filtro.setSearch(false);
         Filtro.setColorItemZero(ContextCompat.getColor(getApplicationContext(), R.color.green_300));
         Filtro.setColorItem(ContextCompat.getColor(getApplicationContext(), R.color.accentColor));
+
+        // COLOR BARRA NAVIGATION ABAJO TABLBT
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.green_300));
+        }
 
         lfac = new ArrayList<Fac>();
         url_fac = Filtro.getUrl() + "/get_fac.php";
@@ -16384,7 +16390,7 @@ ge     * */
                                     ArticuloTivaGrupo,
                                     "0",
                                     "1",
-                                    ArticuloNombreGrupo,
+                                    "",//ArticuloNombreGrupo,
                                     Integer.toString(ArticuloIdGrupo),
                                     Filtro.getTipoPlato(),
                                     "0"
@@ -16667,7 +16673,7 @@ ge     * */
                     Integer.toString(larticulo.get(mSelectedItems.get(nArticuloPositionSelected)).getArticuloTiva_id()),
                     "1",
                     "0",
-                    ArticuloNombreGrupo,
+                    "",//ArticuloNombreGrupo,
                     Integer.toString(ArticuloIdGrupo),
                     lplato.get(mSelectedItemsTipoPlato.get(nArticuloPositionSelected)).getPlatoTipoPlato(),
                     Integer.toString(larticulo.get(mSelectedItems.get(nArticuloPositionSelected)).getArticuloPrincipal())
