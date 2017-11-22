@@ -1,11 +1,9 @@
 package tpv.cirer.com.restaurante.ui;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -1618,9 +1616,9 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
         }
 
         pedidofinal = StringUtils.repeat("_", 48) + "\n\n\n\n\n\n";
-//*****        ImprimirPedido();
+        ImprimirPedido();
         /// PARA VISUALIZAR POR PANTALLA PRUEBAS /////////////////////////////////////////
-        tpvpedido+=pedidocabeceraantesmesa;
+/*        tpvpedido+=pedidocabeceraantesmesa;
         tpvpedido+=pedidocabeceramesa;
         tpvpedido+=pedidocabeceradespuesmesa;
         tpvpedido+=pedido;
@@ -1636,7 +1634,7 @@ public class FragmentoLineaDocumentoPedido extends Fragment implements AdapterVi
         });
         alertDialog.create();
         alertDialog.show();
-        //////////////////////////////////////////////////////////////////////////////////
+*/        //////////////////////////////////////////////////////////////////////////////////
         if (!optionprint) {
             comprobar_terminales();
 /*            nPosition += 1;

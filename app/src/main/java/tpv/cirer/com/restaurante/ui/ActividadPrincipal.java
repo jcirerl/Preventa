@@ -660,7 +660,7 @@ public class ActividadPrincipal extends AppCompatActivity implements View.OnKeyL
 
         // COLOR BARRA NAVIGATION ABAJO TABLBT
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.green_300));
+            getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.primaryColor));
         }
 
         lfac = new ArrayList<Fac>();

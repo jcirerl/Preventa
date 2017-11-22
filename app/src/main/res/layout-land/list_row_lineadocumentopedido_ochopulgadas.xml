@@ -169,7 +169,7 @@
         android:layout_alignStart="@+id/nombre"
         android:layout_below="@+id/nombre"
         android:drawableLeft="@android:drawable/ic_input_add"
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="10dp"
         android:layout_toEndOf="@+id/icon"
         android:layout_toRightOf="@+id/icon"
         android:gravity="center"
@@ -185,7 +185,7 @@
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/btnAdd"
         android:layout_toRightOf="@+id/btnAdd"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="5dp"
         android:drawableLeft="@android:drawable/ic_delete"
         android:gravity="center"
         android:text="@string/restar"/>
@@ -200,7 +200,7 @@
        android:layout_height="wrap_content"
        android:layout_toEndOf="@+id/btnMinus"
        android:layout_toRightOf="@+id/btnMinus"
-       android:layout_marginLeft="20dp"
+       android:layout_marginLeft="5dp"
        android:drawableLeft="@android:drawable/ic_lock_power_off"
        android:gravity="center"/>
 
